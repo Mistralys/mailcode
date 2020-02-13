@@ -1,0 +1,6 @@
+parameters:
+    excludes_analyse:
+        - tests/*
+        - vendor/*
+    paths:
+        - ../../src
