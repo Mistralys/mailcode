@@ -18,7 +18,7 @@ final class Parser_SafeguardTests extends MailcodeTestCase
         
         $text = $safeguard->makeSafe();
         
-        $this->assertStringContainsString($safeguard->getDelimiter().'PCH', $text);
+        $this->assertStringContainsString($safeguard->getDelimiter(), $text);
         
         // do something destructive that would usually break the command
         $text = str_replace('{', 'BRACE', $text);
@@ -28,6 +28,26 @@ final class Parser_SafeguardTests extends MailcodeTestCase
         $result = $safeguard->makeWhole($text);
         
         $this->assertEquals($original, $result);
+    }
+    
+   /**
+    * Checks that the safeguarding is indeed case neutral.
+    */
+    public function test_safeguard_caseNeutral()
+    {
+        $parser = Mailcode::create()->getParser();
+        
+        $original = 'Text with a {showvar: $VAR.NAME} VARIABLE.';
+        
+        $safeguard = $parser->createSafeguard($original);
+        
+        $text = $safeguard->makeSafe();
+        
+        $text = strtolower($text);
+        
+        $result = $safeguard->makeWhole($text);
+        
+        $this->assertEquals('text with a {showvar: $VAR.NAME} variable.', $result);
     }
     
    /**
@@ -86,7 +106,7 @@ final class Parser_SafeguardTests extends MailcodeTestCase
         
         $text = $safeguard->makeSafe();
         
-        $this->assertStringContainsString($safeguard->getDelimiter().'PCH', $text);
+        $this->assertStringContainsString($safeguard->getDelimiter(), $text);
         
         // do something destructive that would break the command with the standard delimiter
         $text = str_replace('_', 'UNDERSCORE', $text);
