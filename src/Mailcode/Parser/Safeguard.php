@@ -225,7 +225,7 @@ class Mailcode_Parser_Safeguard
             }
         }
         
-        return str_replace($placeholderStrings, array_values($replaces), $this->originalString);
+        return str_replace($placeholderStrings, array_values($replaces), $string);
     }
     
    /**
