@@ -44,4 +44,9 @@ class Mailcode_Commands_Command_ShowVariable extends Mailcode_Commands_Command
     {
         
     }
+    
+    public function generatesContent() : bool
+    {
+        return true;
+    }
 }

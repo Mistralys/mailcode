@@ -206,6 +206,8 @@ abstract class Mailcode_Commands_Command
     
     abstract public function supportsType() : bool;
     
+    abstract public function generatesContent() : bool;
+    
     public function getSupportedTypes() : array
     {
         return array();
