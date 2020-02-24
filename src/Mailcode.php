@@ -37,6 +37,15 @@ class Mailcode
     protected $commands = null;
     
    /**
+    * Creates a new mailcode instance.
+    * @return Mailcode
+    */
+    public static function create() : Mailcode
+    {
+        return new Mailcode();
+    }
+    
+   /**
     * Parses the string to detect all commands contained within.
     * 
     * @param string $string
