@@ -154,7 +154,7 @@ class Mailcode_Commands
     
     public function createCommand(string $id, string $type, string $params, string $matchedString) : Mailcode_Commands_Command
     {
-        $class = 'Mailcode_Commands_Command_'.$id;
+        $class = 'Mailcode\Mailcode_Commands_Command_'.$id;
         
         return new $class($type, $params, $matchedString);
     }
