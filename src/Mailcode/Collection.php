@@ -93,4 +93,14 @@ class Mailcode_Collection
     {
         return empty($this->errors);
     }
+    
+   /**
+    * Retrieves all commands that were detected.
+    * 
+    * @return \Mailcode\Mailcode_Commands_Command[]
+    */
+    public function getCommands()
+    {
+       return $this->commands;
+    }
 }
