@@ -63,7 +63,7 @@ class Mailcode_Parser_Safeguard
    /**
     * @var Mailcode_Collection
     */
-    protected $commands = array();
+    protected $commands;
     
    /**
     * @var string
