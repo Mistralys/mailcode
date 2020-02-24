@@ -25,3 +25,7 @@
     */
     require_once $autoloader;
     
+   /**
+    * The test case base class for the testsuites.
+    */
+    require_once TESTS_ROOT.'/assets/classes/MailcodeTestCase.php';

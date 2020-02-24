@@ -10,7 +10,13 @@
          bootstrap="tests/bootstrap.php">
     <testsuites>
         <testsuite name="Mailcode">
-            <directory suffix=".php">./tests/testsuites</directory>
+            <directory suffix=".php">./tests/testsuites/Mailcode</directory>
+        </testsuite>
+        <testsuite name="Parser">
+            <directory suffix=".php">./tests/testsuites/Parser</directory>
+        </testsuite>
+        <testsuite name="Commands">
+            <directory suffix=".php">./tests/testsuites/Commands</directory>
         </testsuite>
     </testsuites>
 </phpunit>
