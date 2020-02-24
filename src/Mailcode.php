@@ -86,4 +86,9 @@ class Mailcode
         
         return $this->commands;
     }
+    
+    public function createSafeguard(string $subject) : Mailcode_Parser_Safeguard
+    {
+        return $this->getParser()->createSafeguard($subject);
+    }
 }
