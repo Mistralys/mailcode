@@ -69,7 +69,8 @@ abstract class Mailcode_Commands_Command
     */
     public function getID() : string
     {
-        return str_replace('Mailcode_Commands_Command_', '', get_class($this));
+        $tokens = explode('_', get_class($this));
+        return array_pop($tokens);
     }
     
    /**
