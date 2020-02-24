@@ -145,7 +145,7 @@ class Mailcode_Parser_Safeguard
         return str_replace(array_values($replaces), array_keys($replaces), $this->originalString);
     }
     
-    protected function getReplaces() : array
+    protected function getReplaces(bool $highlighted=false) : array
     {
         $placeholders = $this->getPlaceholders();
         
@@ -153,7 +153,18 @@ class Mailcode_Parser_Safeguard
         
         foreach($placeholders as $placeholder)
         {
-            $replaces[$placeholder->getReplacementText()] = $placeholder->getOriginalText();
+            $replace = '';
+            
+            if($highlighted)
+            {
+                $replace = $placeholder->getHighlightedText();
+            }
+            else 
+            {
+                $replace = $placeholder->getOriginalText();
+            }
+            
+            $replaces[$placeholder->getReplacementText()] = $replace;
         }
         
         return $replaces;
@@ -191,22 +202,11 @@ class Mailcode_Parser_Safeguard
         return $this->placeholders;
     }
     
-   /**
-    * Makes the string whole again after transforming or filtering it,
-    * by replacing the command placeholders with the original commands.
-    * 
-    * @param string $string
-    * @return string
-    * @throws Mailcode_Exception 
-    *
-    * @see Mailcode_Parser_Safeguard::ERROR_INVALID_COMMANDS
-    * @see Mailcode_Parser_Safeguard::ERROR_COMMAND_PLACEHOLDER_MISSING
-    */
-    public function makeWhole(string $string) : string
+    protected function restore(string $string, bool $highlighted=false) : string
     {
         $this->requireValidCollection();
         
-        $replaces = $this->getReplaces();
+        $replaces = $this->getReplaces($highlighted);
         
         $placeholderStrings = array_keys($replaces);
         
@@ -226,6 +226,41 @@ class Mailcode_Parser_Safeguard
         }
         
         return str_replace($placeholderStrings, array_values($replaces), $string);
+    }
+    
+   /**
+    * Makes the string whole again after transforming or filtering it,
+    * by replacing the command placeholders with the original commands.
+    *
+    * @param string $string
+    * @return string
+    * @throws Mailcode_Exception
+    *
+    * @see Mailcode_Parser_Safeguard::ERROR_INVALID_COMMANDS
+    * @see Mailcode_Parser_Safeguard::ERROR_COMMAND_PLACEHOLDER_MISSING
+    */
+    public function makeWhole(string $string) : string
+    {
+        return $this->restore($string, false);
+    }
+
+   /**
+    * Like makeWhole(), but replaces the commands with a syntax
+    * highlighted version, meant for human readable texts only.
+    * 
+    * Note: the commands lose their functionality (They cannot be 
+    * parsed from that string again).
+    *
+    * @param string $string
+    * @return string
+    * @throws Mailcode_Exception
+    *
+    * @see Mailcode_Parser_Safeguard::ERROR_INVALID_COMMANDS
+    * @see Mailcode_Parser_Safeguard::ERROR_COMMAND_PLACEHOLDER_MISSING
+    */
+    public function makeHighlighted(string $string) : string
+    {
+        return $this->restore($string, true);
     }
     
    /**

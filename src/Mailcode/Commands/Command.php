@@ -196,6 +196,11 @@ abstract class Mailcode_Commands_Command
         return $this->matchedText;
     }
     
+    public function getHighlighted() : string
+    {
+        return '<pre>'.$this->matchedText.'</pre>';
+    }
+    
     abstract protected function _validate() : void;
     
     abstract public function getName() : string;

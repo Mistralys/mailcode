@@ -100,6 +100,11 @@ class Mailcode_Parser_Safeguard_Placeholder
         return $this->command->getMatchedText();
     }
     
+    public function getHighlightedText() : string
+    {
+        return $this->command->getHighlighted();
+    }
+    
     public function getCommand() : Mailcode_Commands_Command
     {
         return $this->command;
