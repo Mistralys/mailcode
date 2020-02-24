@@ -45,12 +45,6 @@ class Mailcode_Parser_Safeguard_Placeholder
     */
     protected $replacement = '';
     
-   /**
-    * Format of the placeholder, without the delimiters.
-    * @var string
-    */
-    protected $format = 'PCH%s';
-    
     public function __construct(int $id, Mailcode_Commands_Command $command, Mailcode_Parser_Safeguard $safeguard)
     {
         $this->id = $id;
@@ -79,7 +73,7 @@ class Mailcode_Parser_Safeguard_Placeholder
         $format = sprintf(
             '%1$s%2$s%1$s',
             $this->safeguard->getDelimiter(),
-            $this->format
+            '%s'
         );
         
         // the length of the placeholder, without the ID
