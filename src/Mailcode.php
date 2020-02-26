@@ -37,6 +37,11 @@ class Mailcode
     protected $commands = null;
     
    /**
+    * @var Mailcode_Variables|NULL
+    */
+    protected $variables = null;
+    
+   /**
     * Creates a new mailcode instance.
     * @return Mailcode
     */
@@ -90,5 +95,26 @@ class Mailcode
     public function createSafeguard(string $subject) : Mailcode_Parser_Safeguard
     {
         return $this->getParser()->createSafeguard($subject);
+    }
+    
+   /**
+    * Attempts to find all variables in the target string.
+    * 
+    * @param string $subject
+    * @return Mailcode_Variables_Collection_Regular
+    */
+    public function findVariables(string $subject) : Mailcode_Variables_Collection_Regular
+    {
+        return $this->createVariables()->parseString($subject);
+    }
+    
+    public function createVariables() : Mailcode_Variables
+    {
+        if(!isset($this->variables))
+        {
+            $this->variables = new Mailcode_Variables();
+        }
+        
+        return $this->variables;
     }
 }
