@@ -103,4 +103,21 @@ class Mailcode_Collection
     {
        return $this->commands;
     }
+    
+    public function addCommands(array $commands) : Mailcode_Collection
+    {
+        foreach($commands as $command)
+        {
+            $this->addCommand($command);
+        }
+        
+        return $this;
+    }
+    
+    public function mergeWith(Mailcode_Collection $collection) : Mailcode_Collection
+    {
+        $this->addCommands($collection->getCommands());
+        
+        return $this;
+    }
 }
