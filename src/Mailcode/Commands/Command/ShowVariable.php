@@ -20,6 +20,9 @@ namespace Mailcode;
  */
 class Mailcode_Commands_Command_ShowVariable extends Mailcode_Commands_Command
 {
+    // TODO needs real code
+    const VALIDATION_VARIABLE_COUNT_MISMATCH = 112001;
+    
     public function getName() : string
     {
         return 'showvar';
@@ -40,9 +43,24 @@ class Mailcode_Commands_Command_ShowVariable extends Mailcode_Commands_Command
         return true;
     }
 
-    protected function _validate() : void
+    protected function validateSyntax_require_variable()
     {
-        
+         $amount = $this->getVariables()->countVariables();
+         
+         if($amount === 1)
+         {
+             return;
+         }
+         
+         $this->validationResult->makeError(
+            t('Command has %1$s variables, %2$s expected.', $amount, 1),
+            self::VALIDATION_VARIABLE_COUNT_MISMATCH
+         );
+    }
+    
+    protected function getValidations() : array
+    {
+        return array('require_variable');
     }
     
     public function generatesContent() : bool
