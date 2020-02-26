@@ -67,4 +67,22 @@ class Mailcode_Variables_Collection_Regular extends Mailcode_Variables_Collectio
     {
         return $this->invalid;
     }
+    
+   /**
+    * @return Mailcode_Variables_Collection_Regular
+    */
+    public function mergeWith(Mailcode_Variables_Collection $collection) : Mailcode_Variables_Collection
+    {
+        parent::mergeWith($collection);
+        
+        // also inherit any invalid variables
+        if($collection instanceof Mailcode_Variables_Collection_Regular)
+        {
+            $invalid = $collection->getInvalid();
+            
+            $this->invalid->mergeWith($invalid);
+        }
+        
+        return $this;
+    }
 }
