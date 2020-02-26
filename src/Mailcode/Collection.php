@@ -120,4 +120,16 @@ class Mailcode_Collection
         
         return $this;
     }
+    
+    public function getVariables() : Mailcode_Variables_Collection
+    {
+        $collection = new Mailcode_Variables_Collection_Regular();
+        
+        foreach($this->commands as $command)
+        {
+            $collection->mergeWith($command->getVariables());
+        }
+        
+        return $collection;
+    }
 }
