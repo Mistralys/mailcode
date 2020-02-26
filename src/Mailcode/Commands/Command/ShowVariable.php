@@ -37,7 +37,7 @@ class Mailcode_Commands_Command_ShowVariable extends Mailcode_Commands_Command
 
     public function requiresParameters(): bool
     {
-        return false;
+        return true;
     }
 
     protected function _validate() : void
