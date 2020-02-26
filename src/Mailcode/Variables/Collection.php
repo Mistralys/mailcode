@@ -185,4 +185,23 @@ abstract class Mailcode_Variables_Collection
         
         return $result;
     }
+
+   /**
+    *  Merges the variables collection with the target collection
+    *  by inheriting all that collection's variables.
+    *  
+    * @param Mailcode_Variables_Collection $collection
+    * @return Mailcode_Variables_Collection
+    */
+    public function mergeWith(Mailcode_Variables_Collection $collection) : Mailcode_Variables_Collection
+    {
+        $variables = $collection->getGroupedByHash();
+        
+        foreach($variables as $variable)
+        {
+            $this->add($variable);
+        }
+        
+        return $this;
+    }
 }
