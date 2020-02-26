@@ -5,6 +5,8 @@ use Mailcode\Mailcode_Collection_Error_Command;
 use Mailcode\Mailcode_Collection_Error_Message;
 use Mailcode\Mailcode_Commands_Command;
 use Mailcode\Mailcode_Parser;
+use Mailcode\Mailcode_Commands_Command_ShowVariable;
+use Mailcode\Mailcode_Variables_Variable;
 
 final class Parser_ParserTests extends MailcodeTestCase
 {
@@ -30,7 +32,7 @@ final class Parser_ParserTests extends MailcodeTestCase
         $parser = Mailcode::create()->getParser();
         
         $collection = $parser->parseString(
-            "Line with {showvar: CUSTOMER.NAME}"
+            "Line with {showvar: \$CUSTOMER.NAME}"
         );
         
         $this->assertSame(1, $collection->countCommands());
@@ -42,7 +44,7 @@ final class Parser_ParserTests extends MailcodeTestCase
         $parser = Mailcode::create()->getParser();
         
         $collection = $parser->parseString(
-            "Line with {ShowVar: CUSTOMER.NAME}"
+            "Line with {ShowVar: \$CUSTOMER.NAME}"
         );
         
         $this->assertSame(1, $collection->countCommands());
@@ -59,7 +61,10 @@ final class Parser_ParserTests extends MailcodeTestCase
             {
                 \tshowvar: 
 
-                CUSTOMER.NAME
+                \$CUSTOMER
+
+        .
+                NAME
 
                 }"
         );
@@ -73,8 +78,8 @@ final class Parser_ParserTests extends MailcodeTestCase
         $parser = Mailcode::create()->getParser();
         
         $collection = $parser->parseString(
-            "Line with {showvar: CUSTOMER.NAME}
-            and another one further {showvar: ADDRESS.LINE1} down."
+            "Line with {showvar: \$CUSTOMER.NAME}
+            and another one further {showvar: \$ADDRESS.LINE1} down."
         );
         
         $this->assertSame(2, $collection->countCommands());
@@ -85,10 +90,10 @@ final class Parser_ParserTests extends MailcodeTestCase
         $parser = Mailcode::create()->getParser();
         
         $collection = $parser->parseString(
-            "Line with {showvar: CUSTOMER.NAME}
-            and another one further {showvar: ADDRESS.LINE1} down.
-            The third line has a duplicate: {showvar: CUSTOMER.NAME}.
-            The fourth is the same, but not a duplicate: {   showvar  : CUSTOMER.NAME}"
+            "Line with {showvar: \$CUSTOMER.NAME}
+            and another one further {showvar: \$ADDRESS.LINE1} down.
+            The third line has a duplicate: {showvar: \$CUSTOMER.NAME}.
+            The fourth is the same, but not a duplicate: {   showvar  : \$CUSTOMER.NAME}"
         );
         
         $this->assertSame(3, $collection->countCommands());
@@ -99,7 +104,7 @@ final class Parser_ParserTests extends MailcodeTestCase
         $parser = Mailcode::create()->getParser();
         
         $collection = $parser->parseString(
-            "Line with {foo: CUSTOMER.NAME} {showvar: ADDRESS.LINE1}"
+            "Line with {foo: \$CUSTOMER.NAME} {showvar: \$ADDRESS.LINE1}"
         );
         
         $this->assertFalse($collection->isValid());
@@ -119,7 +124,7 @@ final class Parser_ParserTests extends MailcodeTestCase
         $parser = Mailcode::create()->getParser();
         
         $collection = $parser->parseString(
-            "Line with {showvar foo: CUSTOMER.NAME}"
+            "Line with {showvar foo: \$CUSTOMER.NAME}"
         );
         
         $this->assertFalse($collection->isValid());
@@ -129,5 +134,53 @@ final class Parser_ParserTests extends MailcodeTestCase
         $this->assertInstanceof(Mailcode_Collection_Error_Command::class, $errors[0]);
         $this->assertSame(Mailcode_Commands_Command::VALIDATION_ADDONS_NOT_SUPPORTED, $errors[0]->getCode());
         $this->assertTrue($errors[0]->isTypeNotSupported());
+    }
+    
+    public function test_parseString_invalidVariableName()
+    {
+        $parser = Mailcode::create()->getParser();
+        
+        $collection = $parser->parseString(
+            "Line with {showvar: \$FOO.8AR}"
+        );
+        
+        $this->assertFalse($collection->isValid());
+        
+        $errors = $collection->getErrors();
+        
+        $this->assertInstanceof(Mailcode_Collection_Error_Command::class, $errors[0]);
+        $this->assertSame(Mailcode_Variables_Variable::VALIDATION_ERROR_NAME_NUMERIC, $errors[0]->getCode());
+    }
+
+    public function test_parseString_invalidVariablePath()
+    {
+        $parser = Mailcode::create()->getParser();
+        
+        $collection = $parser->parseString(
+            "Line with {showvar: \$3OO.BAR}"
+        );
+        
+        $this->assertFalse($collection->isValid());
+        
+        $errors = $collection->getErrors();
+        
+        $this->assertInstanceof(Mailcode_Collection_Error_Command::class, $errors[0]);
+        $this->assertSame(Mailcode_Variables_Variable::VALIDATION_ERROR_PATH_NUMERIC, $errors[0]->getCode());
+    }
+    
+    public function test_parseString_noVariable()
+    {
+        $parser = Mailcode::create()->getParser();
+        
+        $collection = $parser->parseString(
+            "Line with {showvar: FOO.BAR}"
+        );
+        
+        $this->assertFalse($collection->isValid());
+        
+        $errors = $collection->getErrors();
+        
+        $this->assertInstanceof(Mailcode_Collection_Error_Command::class, $errors[0]);
+        $this->assertSame(Mailcode_Commands_Command_ShowVariable::VALIDATION_VARIABLE_COUNT_MISMATCH, $errors[0]->getCode());
     }
 }
