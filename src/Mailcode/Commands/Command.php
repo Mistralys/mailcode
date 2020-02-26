@@ -24,6 +24,8 @@ abstract class Mailcode_Commands_Command
     
     const ERROR_NO_VALIDATION_RESULT_AVAILABLE = 46002;
     
+    const ERROR_MISSING_VALIDATION_METHOD = 46003;
+    
     const VALIDATION_MISSING_PARAMETERS = 1;
     
     const VALIDATION_ADDONS_NOT_SUPPORTED = 2;
@@ -134,8 +136,6 @@ abstract class Mailcode_Commands_Command
 
         $this->validateSyntax();
         
-        $this->_validate();
-        
         return $this->validationResult;
     }
     
@@ -153,7 +153,47 @@ abstract class Mailcode_Commands_Command
         );
     }
     
-    protected function validateSyntax()
+    protected $validations = array(
+        'params',
+        'type_supported',
+        'type_unsupported',
+        'variables'
+    );
+    
+    protected function validateSyntax() : void
+    {
+        $validations = array_merge($this->validations, $this->getValidations());
+        
+        foreach($validations as $validation)
+        {
+            $method = 'validateSyntax_'.$validation;
+            
+            if(!method_exists($this, $method))
+            {
+                throw new Mailcode_Exception(
+                    'Missing validation method',
+                    sprintf(
+                        'The method [%s] is missing from class [%s].',
+                        $method,
+                        get_class($this)
+                    ),
+                    self::ERROR_MISSING_VALIDATION_METHOD
+                );
+            }
+            
+            $this->$method();
+            
+            // break off at the first validation issue
+            if(!$this->validationResult->isValid())
+            {
+                return;
+            }
+        }
+    }
+    
+    abstract protected function getValidations() : array;
+    
+    protected function validateSyntax_params()
     {
         if($this->requiresParameters() && empty($this->paramsString))
         {
@@ -163,32 +203,57 @@ abstract class Mailcode_Commands_Command
             );
             return;
         }
-        
-        if($this->supportsType() && !empty($this->type))
+    }
+    
+    protected function validateSyntax_type_supported()
+    {
+        if(!$this->supportsType() || empty($this->type))
         {
-            $types = $this->getSupportedTypes();
-
-            if(!in_array($this->type, $types))
-            {
-                $this->validationResult->makeError(
-                    t('The command addon %1$s is not supported.', $this->type).' '.
-                    t('Valid addons are %1$s.', implode(', ', $types)),
-                    self::VALIDATION_ADDON_NOT_SUPPORTED
-                );
-                
-                return;
-            }
+            return;
         }
         
-        if(!$this->supportsType() && !empty($this->type))
+        $types = $this->getSupportedTypes();
+
+        if(!in_array($this->type, $types))
         {
             $this->validationResult->makeError(
-                t('Command addons are not supported (the %1$s part).', $this->type),
-                self::VALIDATION_ADDONS_NOT_SUPPORTED
+                t('The command addon %1$s is not supported.', $this->type).' '.
+                t('Valid addons are %1$s.', implode(', ', $types)),
+                self::VALIDATION_ADDON_NOT_SUPPORTED
             );
             
             return;
         }
+    }
+    
+    protected function validateSyntax_type_unsupported()
+    {
+        if($this->supportsType() || empty($this->type))
+        {
+            return;
+        }
+        
+        $this->validationResult->makeError(
+            t('Command addons are not supported (the %1$s part).', $this->type),
+            self::VALIDATION_ADDONS_NOT_SUPPORTED
+        );
+    }
+    
+    protected function validateSyntax_variables()
+    {
+        $vars = $this->getVariables();
+        
+        if(!$vars->hasInvalid()) 
+        {
+            return;
+        }
+        
+        $error = $vars->getInvalid()->getFirstError();
+        
+        $this->validationResult->makeError(
+            $error->getErrorMessage(),
+            $error->getCode()
+        );
     }
     
     public function hasType() : bool
@@ -232,8 +297,6 @@ abstract class Mailcode_Commands_Command
         return '';
     }
     
-    abstract protected function _validate() : void;
-    
     abstract public function getName() : string;
     
     abstract public function getLabel() : string;
@@ -247,5 +310,10 @@ abstract class Mailcode_Commands_Command
     public function getSupportedTypes() : array
     {
         return array();
+    }
+    
+    public function getVariables() : Mailcode_Variables_Collection_Regular
+    {
+        return Mailcode::create()->findVariables($this->paramsString);
     }
 }
