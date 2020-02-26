@@ -191,6 +191,26 @@ abstract class Mailcode_Commands_Command
         }
     }
     
+    public function hasType() : bool
+    {
+        return $this->supportsType() && !empty($this->type);
+    }
+    
+    public function getType() : string
+    {
+        if($this->supportsType())
+        {
+            return $this->type;
+        }
+        
+        return '';
+    }
+    
+    public function hasParameters() : bool
+    {
+        return $this->requiresParameters() && !empty($this->paramsString);
+    }
+    
     public function getMatchedText() : string
     {
         return $this->matchedText;
@@ -198,7 +218,18 @@ abstract class Mailcode_Commands_Command
     
     public function getHighlighted() : string
     {
-        return '<pre>'.$this->matchedText.'</pre>';
+        $highlighter = new Mailcode_Commands_Highlighter($this);
+        return $highlighter->highlight();
+    }
+    
+    public function getParamsString() : string
+    {
+        if($this->requiresParameters())
+        {
+            return $this->paramsString;
+        }
+        
+        return '';
     }
     
     abstract protected function _validate() : void;
