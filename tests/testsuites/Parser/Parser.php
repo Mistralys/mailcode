@@ -96,7 +96,10 @@ final class Parser_ParserTests extends MailcodeTestCase
             The fourth is the same, but not a duplicate: {   showvar  : \$CUSTOMER.NAME}"
         );
         
-        $this->assertSame(3, $collection->countCommands());
+        $hashed = $collection->getGroupedByHash();
+        
+        $this->assertSame(4, $collection->countCommands());
+        $this->assertSame(3, count($hashed));
     }
     
     public function test_parseString_unknownCommandName()
