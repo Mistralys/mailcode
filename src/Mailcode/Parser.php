@@ -22,8 +22,8 @@ class Mailcode_Parser
 {
     const COMMAND_REGEX_PARTS = array( 
         '{\s*([a-z]+)\s*}',
-        '{\s*([a-z]+)\s*:([^}]+)}',
-        '{\s*([a-z]+)\s+([a-z]+)\s*:([^}]+)}'
+        '{\s*([a-z]+)\s*:([^}]*)}',
+        '{\s*([a-z]+)\s+([a-z]+)\s*:([^}]*)}'
     );
     
    /**
@@ -173,5 +173,17 @@ class Mailcode_Parser
     public function createSafeguard(string $subject) : Mailcode_Parser_Safeguard
     {
         return new Mailcode_Parser_Safeguard($this, $subject);
+    }
+    
+   /**
+    * Creates a statement parser, which is used to validate arbitrary
+    * command statements.
+    * 
+    * @param string $statement
+    * @return Mailcode_Parser_Statement
+    */
+    public function createStatement(string $statement) : Mailcode_Parser_Statement
+    {
+        return new Mailcode_Parser_Statement($statement);
     }
 }
