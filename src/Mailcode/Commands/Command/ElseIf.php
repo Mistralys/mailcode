@@ -57,4 +57,9 @@ class Mailcode_Commands_Command_ElseIf extends Mailcode_Commands_Command_Type_Si
     {
         return array();
     }
+    
+    public function getParentName() : string
+    {
+        return 'if';
+    }
 }

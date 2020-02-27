@@ -47,6 +47,11 @@ class Mailcode_Commands_Command_Else extends Mailcode_Commands_Command_Type_Sibl
 
     protected function getValidations(): array
     {
-        
+        return array();
+    }
+    
+    public function getParentName() : string
+    {
+        return 'if';
     }
 }
