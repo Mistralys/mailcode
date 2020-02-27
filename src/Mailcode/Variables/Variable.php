@@ -25,10 +25,9 @@ use AppUtils\OperationResult;
  */
 class Mailcode_Variables_Variable
 {
-    // TODO make a real error code when internet is back
-    const VALIDATION_ERROR_PATH_NUMERIC = 111001;
+    const VALIDATION_ERROR_PATH_NUMERIC = 48201;
     
-    const VALIDATION_ERROR_NAME_NUMERIC = 111002;
+    const VALIDATION_ERROR_NAME_NUMERIC = 48202;
     
    /**
     * @var string
