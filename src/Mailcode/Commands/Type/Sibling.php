@@ -20,5 +20,10 @@ namespace Mailcode;
  */
 abstract class Mailcode_Commands_Command_Type_Sibling extends Mailcode_Commands_Command
 {
+    abstract public function getParentName() : string;
     
+    public function getCommandType() : string
+    {
+        return 'Sibling';
+    }
 }

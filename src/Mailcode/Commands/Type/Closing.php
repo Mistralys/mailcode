@@ -20,5 +20,8 @@ namespace Mailcode;
  */
 abstract class Mailcode_Commands_Command_Type_Closing extends Mailcode_Commands_Command
 {
-    
+    public function getCommandType() : string
+    {
+        return 'Closing';
+    }
 }

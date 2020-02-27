@@ -20,5 +20,10 @@ namespace Mailcode;
  */
 abstract class Mailcode_Commands_Command_Type_Opening extends Mailcode_Commands_Command
 {
+    abstract public function getSiblings() : array;
     
+    public function getCommandType() : string
+    {
+        return 'Opening';
+    }
 }
