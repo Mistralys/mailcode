@@ -18,10 +18,9 @@ namespace Mailcode;
  * @subpackage Commands
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Mailcode_Commands_Command_ShowVariable extends Mailcode_Commands_Command
+class Mailcode_Commands_Command_ShowVariable extends Mailcode_Commands_Command_Type_Standalone
 {
-    // TODO needs real code
-    const VALIDATION_VARIABLE_COUNT_MISMATCH = 112001;
+    const VALIDATION_VARIABLE_COUNT_MISMATCH = 48401;
     
     public function getName() : string
     {
