@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use AppUtils\OperationResult;
+
 /**
  * Commands collection: container for commands.
  *
@@ -31,6 +33,11 @@ class Mailcode_Collection
     protected $errors = array();
     
    /**
+    * @var OperationResult|NULL
+    */
+    protected $validationResult;
+    
+   /**
     * Adds a command to the collection.
     * 
     * @param Mailcode_Commands_Command $command
@@ -38,11 +45,11 @@ class Mailcode_Collection
     */
     public function addCommand(Mailcode_Commands_Command $command) : Mailcode_Collection
     {
-        $hash = $command->getHash();
+        $this->commands[] = $command;
         
-        if(!isset($this->commands[$hash])) {
-            $this->commands[$hash] = $command;
-        }
+        // reset the collection's validation result, since it 
+        // depends on the commands.
+        $this->validationResult = null;
         
         return $this;
     }
@@ -86,22 +93,63 @@ class Mailcode_Collection
     */
     public function getErrors()
     {
-        return $this->errors;
+        $result = $this->getValidationResult();
+        
+        $errors = $this->errors;
+        
+        if(!$result->isValid())
+        {
+            $errors[] = new Mailcode_Collection_Error_Message(
+                '',
+                $result->getCode(),
+                $result->getErrorMessage()
+            );
+        }
+        
+        return $errors;
     }
     
     public function isValid() : bool
     {
-        return empty($this->errors);
+        $errors = $this->getErrors();
+        
+        return empty($errors);
     }
     
    /**
-    * Retrieves all commands that were detected.
+    * Retrieves all commands that were detected, in the exact order
+    * they were found.
     * 
     * @return \Mailcode\Mailcode_Commands_Command[]
     */
     public function getCommands()
     {
        return $this->commands;
+    }
+    
+   /**
+    * Retrieves all unique commands by their matched
+    * string hash: this ensures only commands that were
+    * written the exact same way (including spacing)
+    * are returned.
+    * 
+    * @return \Mailcode\Mailcode_Commands_Command[]
+    */
+    public function getGroupedByHash()
+    {
+        $hashes = array();
+        
+        foreach($this->commands as $command)
+        {
+            $hash = $command->getHash();
+            
+            if(!isset($hashes[$hash]))
+            {
+                $hashes[$hash] = $command;
+            }
+        }
+            
+        return array_values($hashes);
     }
     
     public function addCommands(array $commands) : Mailcode_Collection
@@ -131,5 +179,34 @@ class Mailcode_Collection
         }
         
         return $collection;
+    }
+    
+    public function getValidationResult() : OperationResult
+    {
+        if(isset($this->validationResult))
+        {
+            return $this->validationResult;
+        }
+        
+        $nesting = new Mailcode_Collection_NestingValidator($this);
+        
+        $this->validationResult = $nesting->validate(); 
+        
+        return $this->validationResult;
+    }
+    
+    public function hasErrorCode(int $code) : bool
+    {
+        $errors = $this->getErrors();
+        
+        foreach($errors as $error)
+        {
+            if($error->getCode() === $code)
+            {
+                return true;
+            }
+        }
+        
+        return false;
     }
 }
