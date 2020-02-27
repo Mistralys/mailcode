@@ -20,6 +20,8 @@ namespace Mailcode;
  */
 class Mailcode_Commands_Command_If extends Mailcode_Commands_Command_Type_Opening
 {
+    const VALIDATION_VARIABLE_COUNT_MISMATCH = 49201;
+    
     public function getName() : string
     {
         return 'if';
@@ -44,7 +46,7 @@ class Mailcode_Commands_Command_If extends Mailcode_Commands_Command_Type_Openin
     {
         $amount = $this->getVariables()->countVariables();
         
-        if($amount === 1)
+        if($amount >= 1)
         {
             return;
         }
@@ -57,7 +59,14 @@ class Mailcode_Commands_Command_If extends Mailcode_Commands_Command_Type_Openin
     
     protected function getValidations() : array
     {
-        return array('require_variable');
+        $validations = array();
+        
+        if($this->getType() === 'variable')
+        {
+            $validations[] = 'require_variable';
+        }
+        
+        return $validations;
     }
     
     public function generatesContent() : bool
@@ -73,14 +82,10 @@ class Mailcode_Commands_Command_If extends Mailcode_Commands_Command_Type_Openin
         );
     }
     
-    public function getRole() : string
-    {
-        return self::ROLE_OPENING;
-    }
-
     public function getSiblings() : array
     {
         return array(
+            'else',
             'elseif'
         );
     }
