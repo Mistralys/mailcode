@@ -21,19 +21,14 @@ namespace Mailcode;
 abstract class Mailcode_Commands_Command
 {
     const ERROR_NON_DUMMY_OPERATION = 46001;
-    
     const ERROR_NO_VALIDATION_RESULT_AVAILABLE = 46002;
-    
     const ERROR_MISSING_VALIDATION_METHOD = 46003;
     
     const VALIDATION_MISSING_PARAMETERS = 48301;
-    
     const VALIDATION_ADDONS_NOT_SUPPORTED = 48302;
-    
     const VALIDATION_ADDON_NOT_SUPPORTED = 48303;
-    
     const VALIDATION_UNKNOWN_COMMAND_NAME = 48304;
-    
+
    /**
     * @var string
     */
@@ -59,11 +54,17 @@ abstract class Mailcode_Commands_Command
     */
     protected $validationResult = null;
     
+   /**
+    * @var \Mailcode\Mailcode
+    */
+    protected $mailcode;
+    
     public function __construct(string $type='', string $paramsString='', string $matchedText='')
     {
         $this->type = $type;
         $this->paramsString = $paramsString;
         $this->matchedText = $matchedText;
+        $this->mailcode = Mailcode::create();
     }
     
    /**
@@ -306,7 +307,7 @@ abstract class Mailcode_Commands_Command
     abstract public function supportsType() : bool;
     
     abstract public function generatesContent() : bool;
-    
+
     public function getSupportedTypes() : array
     {
         return array();
