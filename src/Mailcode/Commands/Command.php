@@ -308,6 +308,8 @@ abstract class Mailcode_Commands_Command
     
     abstract public function generatesContent() : bool;
 
+    abstract public function getCommandType() : string;
+    
     public function getSupportedTypes() : array
     {
         return array();
