@@ -49,9 +49,4 @@ class Mailcode_Commands_Command_For extends Mailcode_Commands_Command_Type_Openi
     {
         return false;
     }
-    
-    public function getSiblings() : array
-    {
-        return array();
-    }
 }

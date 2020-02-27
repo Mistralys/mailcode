@@ -81,12 +81,4 @@ class Mailcode_Commands_Command_If extends Mailcode_Commands_Command_Type_Openin
             'command'
         );
     }
-    
-    public function getSiblings() : array
-    {
-        return array(
-            'else',
-            'elseif'
-        );
-    }
 }
