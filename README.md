@@ -13,16 +13,16 @@ First draft of the type of commands planned:
 
 {if variable: $CUSTOMER.NAME == "value"}
 {elseif variable: $CUSTOMER.NAME == "blabla"}
-{endif}
+{end}
 
 {if command:velocity statement}
-{endif}
+{end}
 
 {command:raw command statement}
 
 {for: $NAME in $CUSTOMER.NAMES}
     {showvar: $NAME}
-{endfor}
+{end}
 ```
 
 This follows the same structure everywhere:
