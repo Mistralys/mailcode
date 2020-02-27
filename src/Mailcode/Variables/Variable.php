@@ -25,9 +25,12 @@ use AppUtils\OperationResult;
  */
 class Mailcode_Variables_Variable
 {
-    const VALIDATION_ERROR_PATH_NUMERIC = 48201;
+    const ERROR_MISSING_VALIDATION_METHOD = 48601;
     
+    const VALIDATION_ERROR_PATH_NUMERIC = 48201;
     const VALIDATION_ERROR_NAME_NUMERIC = 48202;
+    const VALIDATION_ERROR_PATH_UNDERSCORE = 48203;
+    const VALIDATION_ERROR_NAME_UNDERSCORE = 48204;
     
    /**
     * @var string
@@ -93,49 +96,112 @@ class Mailcode_Variables_Variable
     
     public function isValid() : bool
     {
-        $this->validate();
-        
-        return $this->validationResult->isValid();
+        return $this->getValidationResult()->isValid();
     }
     
     public function getValidationResult() : OperationResult
     {
-        $this->validate();
-        
-        return $this->validationResult;
-    }
-    
-    protected function validate() : void
-    {
         if(isset($this->validationResult))
         {
-            return;
+            return $this->validationResult;
         }
         
         $this->validationResult = new OperationResult($this);
         
-        if(is_numeric(substr($this->path, 0, 1))) 
+        $this->validate();
+        
+        return $this->validationResult;
+    }
+
+    protected $validations = array(
+        'number_path',
+        'number_name',
+        'underscore_path',
+        'underscore_name'
+    );
+    
+    protected function validate() : void
+    {
+        foreach($this->validations as $validation)
         {
-            $this->validationResult->makeError(
-                t(
-                    'The path %1$s of variable %2$s must begin with a letter.', 
-                    $this->path, 
-                    $this->getFullName()
-                ),
-                self::VALIDATION_ERROR_PATH_NUMERIC
-            );
+            $method = 'validate_'.$validation;
+            
+            if(!method_exists($this, $method))
+            {
+                throw new Mailcode_Exception(
+                    'Unknown validation method',
+                    sprintf(
+                        'The method [%s] is missing in class [%s].',
+                        $method,
+                        get_class($this)
+                    ),
+                    self::ERROR_MISSING_VALIDATION_METHOD
+                );
+            }
+            
+            $this->$method();
+            
+            if(!$this->validationResult->isValid())
+            {
+                return;
+            }
+        }
+    }
+    
+    protected function validate_number_path()
+    {
+        $this->validateNumber($this->path, self::VALIDATION_ERROR_PATH_NUMERIC);
+    }
+    
+    protected function validate_number_name()
+    {
+        $this->validateNumber($this->name, self::VALIDATION_ERROR_NAME_NUMERIC);
+    }
+    
+    protected function validate_underscore_path()
+    {
+        $this->validateUnderscore($this->path, self::VALIDATION_ERROR_PATH_UNDERSCORE);
+    }
+    
+    protected function validate_underscore_name()
+    {
+        $this->validateUnderscore($this->name, self::VALIDATION_ERROR_NAME_UNDERSCORE);
+    }
+    
+    protected function validateNumber(string $value, int $errorCode)
+    {
+        if(!is_numeric(substr($value, 0, 1)))
+        {
+            return;
         }
         
-        if(is_numeric(substr($this->name, 0, 1)))
+        $this->validationResult->makeError(
+            t(
+                'The %1$s in variable %2$s must begin with a letter.',
+                $value,
+                $this->getFullName()
+            ),
+            $errorCode
+        );
+    }
+    
+    protected function validateUnderscore(string $value, int $errorCode)
+    {
+        $length = strlen($value);
+        
+        // trimming underscores does not change the length: no underscores at start or end of string.
+        if(strlen(trim($value, '_')) == $length)
         {
-            $this->validationResult->makeError(
-                t(
-                    'The name %1$s of variable %2$s must begin with a letter.',
-                    $this->name,
-                    $this->getFullName()
-                ),
-                self::VALIDATION_ERROR_NAME_NUMERIC
-            );
+            return;
         }
+        
+        $this->validationResult->makeError(
+            t(
+                'The %1$s in variable %2$s may not start or end with an underscore.',
+                $value,
+                $this->getFullName()
+            ),
+            $errorCode
+        );
     }
 }
