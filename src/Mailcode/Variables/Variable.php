@@ -57,6 +57,16 @@ class Mailcode_Variables_Variable
     */
     protected $validationResult = null;
     
+   /**
+    * @var array<string>
+    */
+    protected $validations = array(
+        'number_path',
+        'number_name',
+        'underscore_path',
+        'underscore_name'
+    );
+    
     public function __construct(string $path, string $name, string $matchedText)
     {
         $this->path = $path;
@@ -113,13 +123,6 @@ class Mailcode_Variables_Variable
         return $this->validationResult;
     }
 
-    protected $validations = array(
-        'number_path',
-        'number_name',
-        'underscore_path',
-        'underscore_name'
-    );
-    
     protected function validate() : void
     {
         foreach($this->validations as $validation)
@@ -148,27 +151,27 @@ class Mailcode_Variables_Variable
         }
     }
     
-    protected function validate_number_path()
+    protected function validate_number_path() : void
     {
         $this->validateNumber($this->path, self::VALIDATION_ERROR_PATH_NUMERIC);
     }
     
-    protected function validate_number_name()
+    protected function validate_number_name() : void
     {
         $this->validateNumber($this->name, self::VALIDATION_ERROR_NAME_NUMERIC);
     }
     
-    protected function validate_underscore_path()
+    protected function validate_underscore_path() : void
     {
         $this->validateUnderscore($this->path, self::VALIDATION_ERROR_PATH_UNDERSCORE);
     }
     
-    protected function validate_underscore_name()
+    protected function validate_underscore_name() : void
     {
         $this->validateUnderscore($this->name, self::VALIDATION_ERROR_NAME_UNDERSCORE);
     }
     
-    protected function validateNumber(string $value, int $errorCode)
+    protected function validateNumber(string $value, int $errorCode) : void
     {
         if(!is_numeric(substr($value, 0, 1)))
         {
@@ -185,7 +188,7 @@ class Mailcode_Variables_Variable
         );
     }
     
-    protected function validateUnderscore(string $value, int $errorCode)
+    protected function validateUnderscore(string $value, int $errorCode) : void
     {
         $length = strlen($value);
         
