@@ -39,47 +39,55 @@ class Mailcode_Parser_Statement
     */
     protected $result;
     
-    protected $operands = array(
-        '==',
-        '<=',
-        '>=',
-        '!=',
-        '=',
-        '+',
-        '-',
-        '/',
-        '*'
-    );
+   /**
+    * @var Mailcode_Parser_Statement_Tokenizer|NULL
+    */
+    protected $tokenizer;
+    
+   /**
+    * @var Mailcode_Parser_Statement_Info|NULL
+    */
+    protected $info;
     
     public function __construct(string $statement)
     {
         $this->statement = $statement;
+        $this->result = new OperationResult($this);
+        $this->tokenizer = new Mailcode_Parser_Statement_Tokenizer($this);
+        
+        $this->validate();
+    }
+    
+    public function getStatementString() : string
+    {
+        return $this->statement;
     }
     
     public function isValid() : bool
     {
-        return $this->getValidationResult()->isValid();
+        return $this->result->isValid();
     }
     
     public function getValidationResult() : OperationResult
     {
-        if(isset($this->result))
+        return $this->result;
+    }
+    
+    public function getInfo() : Mailcode_Parser_Statement_Info
+    {
+        if(isset($this->info))
         {
-            return $this->result;
+            return $this->info; 
         }
         
-        $this->result = new OperationResult($this);
+        $this->info = new Mailcode_Parser_Statement_Info($this->tokenizer);
         
-        $this->validate();
-        
-        return $this->result;
+        return $this->info;
     }
     
     protected function validate() : void
     {
-        $statement = trim($this->statement);
-        
-        if(empty($statement))
+        if(!$this->tokenizer->hasTokens())
         {
             $this->result->makeError(
                 t('Empty statement'),
@@ -89,135 +97,19 @@ class Mailcode_Parser_Statement
             return;
         }
         
-        $tokenized = $this->tokenize($statement);        
+        $unknown = $this->tokenizer->getFirstUnknown();
         
-        $leftover = $this->removeTokens($tokenized);
-        $leftover = str_replace(' ', '', $leftover);
-         
-        if(!empty($leftover))
+        if($unknown)
         {
             $this->result->makeError(
-               t('Unquoted string literals found:').' "'.$leftover.'"',
+               t('Unquoted string literal found:').' ('.$unknown->getMatchedText().')',
                 self::VALIDATION_UNQUOTED_STRING_LITERALS
             );
         }
-        
-        /*
-        echo PHP_EOL;
-        print_r(array(
-            'statement' => $this->statement,
-            'tokenized' => $tokenized,
-            'leftover' => $leftover
-        ));
-        echo PHP_EOL;
-        */
     }
     
-    protected function removeTokens(string $statement) : string
+    public function getNormalized() : string
     {
-        $matches = array();
-        preg_match_all('/'.sprintf($this->token, '[A-Z0-9_]+').'/sx', $statement, $matches, PREG_PATTERN_ORDER);
-        
-        foreach($matches[0] as $match)
-        {
-            $statement = str_replace($match, '', $statement);
-        }
-        
-        return $statement;
-    }
-    
-    protected $token = '__TOKEN_%s__';
-    
-    protected $tokens = array(
-        'variables',
-        'escaped_quotes',
-        'operands',
-        'string_literals',
-        'numbers'
-    );
-    
-    protected function tokenize(string $statement) : string
-    {
-        $tokenized = trim($statement);
-        
-        foreach($this->tokens as $token)
-        {
-            $method = 'tokenize_'.$token;
-            
-            if(!method_exists($this, $method))
-            {
-                throw new Mailcode_Exception(
-                    'Unknown statement token.',    
-                    sprintf(
-                        'The tokenize method [%s] is not present in class [%s].',
-                        $method,
-                        get_class($this)
-                    ),
-                    self::ERROR_TOKENIZE_METHOD_MISSING
-                );
-            }
-            
-            $tokenized = $this->$method($tokenized);
-        }
-        
-        return $tokenized;
-    }
-    
-    protected function tokenize_escaped_quotes(string $tokenized) : string
-    {
-        return str_replace('\"', '__QUOTE__', $tokenized);
-    }
-
-    protected function tokenize_variables(string $tokenized) : string
-    {
-        $vars = Mailcode::create()->findVariables($tokenized)->getGroupedByHash();
-        
-        foreach($vars as $var)
-        {
-            $tokenized = str_replace($var->getMatchedText(), $this->getToken('VARIABLE'), $tokenized);
-        }
-        
-        return $tokenized;
-    }
-    
-    protected function tokenize_operands(string $tokenized) : string
-    {
-        foreach($this->operands as $operand)
-        {
-            $tokenized = str_replace($operand, $this->getToken('OPERAND'), $tokenized);
-        }
-        
-        return $tokenized;
-    }
-    
-    protected function tokenize_string_literals(string $tokenized) : string
-    {
-        $matches = array();
-        preg_match_all('/"(.*)"/sx', $tokenized, $matches, PREG_PATTERN_ORDER);
-        
-        foreach($matches[0] as $match)
-        {
-            $tokenized = str_replace($match, $this->getToken('STRING_LITERAL'), $tokenized);
-        }
-        
-        return $tokenized;
-    }
-    
-    protected function tokenize_numbers(string $tokenized) : string
-    {
-        $matches = array();
-        preg_match_all('/[0-9]+\s*[.,]\s*[0-9]+|[0-9]+/sx', $tokenized, $matches, PREG_PATTERN_ORDER);
-        
-        foreach($matches[0] as $match)
-        {
-            $tokenized = str_replace($match, $this->getToken('NUMBER'), $tokenized);
-        }
-        
-        return $tokenized;
-    }
-    
-    protected function getToken(string $name) : string
-    {
-        return sprintf($this->token, $name);
+        return $this->tokenizer->getNormalized();
     }
 }
