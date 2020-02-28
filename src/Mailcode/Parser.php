@@ -121,7 +121,7 @@ class Mailcode_Parser
     * Parses a single regex match: determines which named group
     * matches, and retrieves the according information.
     * 
-    * @param array $matches The regex results array.
+    * @param array[] $matches The regex results array.
     * @param int $index The matched index.
     * @return Mailcode_Parser_Match
     */
