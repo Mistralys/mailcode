@@ -145,6 +145,10 @@ class Mailcode_Parser_Safeguard
         return str_replace(array_values($replaces), array_keys($replaces), $this->originalString);
     }
     
+   /**
+    * @param bool $highlighted
+    * @return string[]string
+    */
     protected function getReplaces(bool $highlighted=false) : array
     {
         $placeholders = $this->getPlaceholders();
