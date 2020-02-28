@@ -28,6 +28,7 @@ abstract class Mailcode_Commands_Command
     const VALIDATION_ADDONS_NOT_SUPPORTED = 48302;
     const VALIDATION_ADDON_NOT_SUPPORTED = 48303;
     const VALIDATION_UNKNOWN_COMMAND_NAME = 48304;
+    const VALIDATION_INVALID_PARAMS_STATEMENT = 48305;
 
    /**
     * @var string
@@ -59,12 +60,33 @@ abstract class Mailcode_Commands_Command
     */
     protected $mailcode;
     
+   /**
+    * @var \Mailcode\Mailcode_Parser_Statement
+    */
+    protected $params;
+
+   /**
+    * @var string[] 
+    */
+    protected $validations = array(
+        'params',
+        'type_supported',
+        'type_unsupported'
+    );
+    
     public function __construct(string $type='', string $paramsString='', string $matchedText='')
     {
         $this->type = $type;
         $this->paramsString = $paramsString;
         $this->matchedText = $matchedText;
         $this->mailcode = Mailcode::create();
+        
+        $this->init();
+    }
+    
+    protected function init() : void
+    {
+        
     }
     
    /**
@@ -154,13 +176,6 @@ abstract class Mailcode_Commands_Command
         );
     }
     
-    protected $validations = array(
-        'params',
-        'type_supported',
-        'type_unsupported',
-        'variables'
-    );
-    
     protected function validateSyntax() : void
     {
         $validations = array_merge($this->validations, $this->getValidations());
@@ -192,11 +207,19 @@ abstract class Mailcode_Commands_Command
         }
     }
     
+   /**
+    * @return string[]
+    */
     abstract protected function getValidations() : array;
     
-    protected function validateSyntax_params()
+    protected function validateSyntax_params() : void
     {
-        if($this->requiresParameters() && empty($this->paramsString))
+        if(!$this->requiresParameters())
+        {
+            return;
+        }
+        
+        if(empty($this->paramsString))
         {
             $this->validationResult->makeError(
                 t('Parameters have to be specified.'),
@@ -204,9 +227,21 @@ abstract class Mailcode_Commands_Command
             );
             return;
         }
+        
+        $this->params = $this->mailcode->getParser()->createStatement($this->paramsString);
+        
+        if(!$this->params->isValid())
+        {
+            $error = $this->params->getValidationResult();
+            
+            $this->validationResult->makeError(
+                t('Invalid parameters:').' '.$error->getErrorMessage(), 
+                self::VALIDATION_INVALID_PARAMS_STATEMENT
+            );
+        }
     }
     
-    protected function validateSyntax_type_supported()
+    protected function validateSyntax_type_supported() : void
     {
         if(!$this->supportsType() || empty($this->type))
         {
@@ -227,7 +262,7 @@ abstract class Mailcode_Commands_Command
         }
     }
     
-    protected function validateSyntax_type_unsupported()
+    protected function validateSyntax_type_unsupported() : void
     {
         if($this->supportsType() || empty($this->type))
         {
@@ -237,23 +272,6 @@ abstract class Mailcode_Commands_Command
         $this->validationResult->makeError(
             t('Command addons are not supported (the %1$s part).', $this->type),
             self::VALIDATION_ADDONS_NOT_SUPPORTED
-        );
-    }
-    
-    protected function validateSyntax_variables()
-    {
-        $vars = $this->getVariables();
-        
-        if(!$vars->hasInvalid()) 
-        {
-            return;
-        }
-        
-        $error = $vars->getInvalid()->getFirstError();
-        
-        $this->validationResult->makeError(
-            $error->getErrorMessage(),
-            $error->getCode()
         );
     }
     
@@ -284,6 +302,11 @@ abstract class Mailcode_Commands_Command
     
     public function getHighlighted() : string
     {
+        if(!$this->isValid())
+        {
+            return '';
+        }
+        
         $highlighter = new Mailcode_Commands_Highlighter($this);
         return $highlighter->highlight();
     }
@@ -298,6 +321,11 @@ abstract class Mailcode_Commands_Command
         return '';
     }
     
+    public function getParams() : ?Mailcode_Parser_Statement
+    {
+        return $this->params;
+    }
+    
     abstract public function getName() : string;
     
     abstract public function getLabel() : string;
@@ -310,6 +338,38 @@ abstract class Mailcode_Commands_Command
 
     abstract public function getCommandType() : string;
     
+    public function getNormalized() : string
+    {
+        if(!$this->isValid())
+        {
+            return '';
+        }
+        
+        $parts = array();
+        $parts[] = '{'.$this->getName();
+        
+        if($this->supportsType() && $this->hasType())
+        {
+            $parts[] = ' '.$this->getType();
+        }
+        
+        if($this->requiresParameters() && isset($this->params))
+        {
+            $parts[] = ': ';
+            $parts[] = $this->params->getNormalized();
+        }
+        
+        $parts[] = '}';
+        
+        return implode('', $parts);
+    }
+    
+   /**
+    * Retrieves the names of all the command's supported types: the part
+    * between the command name and the colon. Example: {command type: params}.
+    * 
+    * @return string[]
+    */
     public function getSupportedTypes() : array
     {
         return array();
