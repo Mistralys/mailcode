@@ -60,7 +60,7 @@ class Mailcode_Commands_Highlighter
         $this->parts[] = '<wbr>';
     }
     
-    protected function appendParams()
+    protected function appendParams() : void
     {
         if($this->command->hasParameters())
         {
@@ -68,6 +68,11 @@ class Mailcode_Commands_Highlighter
         }
     }
     
+   /**
+    * @param string[] $classes
+    * @param string $content
+    * @return string
+    */
     protected function renderTag(array $classes, string $content) : string
     {
         $parts = array();
