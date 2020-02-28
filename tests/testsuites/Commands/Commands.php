@@ -4,6 +4,7 @@ use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands;
 use Mailcode\Mailcode_Commands_Command_ShowVariable;
 use Mailcode\Mailcode_Exception;
+use Mailcode\Mailcode_Commands_Command;
 
 final class Mailcode_CommandsTests extends MailcodeTestCase
 {
@@ -96,5 +97,43 @@ final class Mailcode_CommandsTests extends MailcodeTestCase
         $this->assertTrue($collection->idExists('ShowVariable'));
         
         $this->assertFalse($collection->idExists('foo'));
+    }
+    
+    public function test_normalize()
+    {
+        $tests = array(
+            array(
+                'label' => 'Showvar',
+                'string' => '  {  showvar  : $FOO.BAR  }  ',
+                'expected' => '{showvar: $FOO.BAR}'
+            ),
+            array(
+                'label' => 'Else ',
+                'string' => '  {  else  }  ',
+                'expected' => '{else}'
+            ),
+            array(
+                'label' => 'Setvar with newlines in the parameters',
+                'string' => '  
+                {  
+                    setvar: 
+                    $FOO.BAR
+                    = 
+                    "Text"  
+                }  ',
+                'expected' => '{setvar: $FOO.BAR = "Text"}'
+            )
+        );
+        
+        foreach($tests as $test)
+        {
+            $collection = Mailcode::create()->parseString($test['string']);
+            $commands = $collection->getCommands();
+            
+            /* @var $command Mailcode_Commands_Command */
+            $command = array_pop($commands);
+            
+            $this->assertEquals($test['expected'], $command->getNormalized());
+        }
     }
 }

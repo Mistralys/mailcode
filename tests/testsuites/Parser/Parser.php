@@ -5,8 +5,6 @@ use Mailcode\Mailcode_Collection_Error_Command;
 use Mailcode\Mailcode_Collection_Error_Message;
 use Mailcode\Mailcode_Commands_Command;
 use Mailcode\Mailcode_Parser;
-use Mailcode\Mailcode_Commands_Command_ShowVariable;
-use Mailcode\Mailcode_Variables_Variable;
 
 final class Parser_ParserTests extends MailcodeTestCase
 {
@@ -152,7 +150,7 @@ final class Parser_ParserTests extends MailcodeTestCase
         $errors = $collection->getErrors();
         
         $this->assertInstanceof(Mailcode_Collection_Error_Command::class, $errors[0]);
-        $this->assertSame(Mailcode_Variables_Variable::VALIDATION_ERROR_NAME_NUMERIC, $errors[0]->getCode());
+        $this->assertSame(Mailcode_Commands_Command::VALIDATION_INVALID_PARAMS_STATEMENT, $errors[0]->getCode());
     }
 
     public function test_parseString_invalidVariablePath()
@@ -168,7 +166,7 @@ final class Parser_ParserTests extends MailcodeTestCase
         $errors = $collection->getErrors();
         
         $this->assertInstanceof(Mailcode_Collection_Error_Command::class, $errors[0]);
-        $this->assertSame(Mailcode_Variables_Variable::VALIDATION_ERROR_PATH_NUMERIC, $errors[0]->getCode());
+        $this->assertSame(Mailcode_Commands_Command::VALIDATION_INVALID_PARAMS_STATEMENT, $errors[0]->getCode());
     }
     
     public function test_parseString_noVariable()
@@ -184,6 +182,6 @@ final class Parser_ParserTests extends MailcodeTestCase
         $errors = $collection->getErrors();
         
         $this->assertInstanceof(Mailcode_Collection_Error_Command::class, $errors[0]);
-        $this->assertSame(Mailcode_Commands_Command_ShowVariable::VALIDATION_VARIABLE_COUNT_MISMATCH, $errors[0]->getCode());
+        $this->assertSame(Mailcode_Commands_Command::VALIDATION_INVALID_PARAMS_STATEMENT, $errors[0]->getCode());
     }
 }

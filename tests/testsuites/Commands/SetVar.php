@@ -19,35 +19,35 @@ final class Mailcode_SetVarTests extends MailcodeTestCase
                 'label' => 'With double equals sign',
                 'string' => '{setvar: $FOO.BAR == "Text"}',
                 'valid' => false,
-                'code' => Mailcode_Commands_Command_SetVariable::VALIDATION_NOT_SINGLE_EQUALS_SIGN
+                'code' => Mailcode_Commands_Command_SetVariable::VALIDATION_NOT_ASSIGNMENT_STATEMENT
             ),
             array(
-                'label' => 'With missing variable',
+                'label' => 'With invalid variable',
                 'string' => '{setvar: FOOBAR = "Text"}',
                 'valid' => false,
-                'code' => Mailcode_Commands_Command_SetVariable::VALIDATION_VARIABLE_LEFT_UNRECOGNIZED
+                'code' => Mailcode_Commands_Command::VALIDATION_INVALID_PARAMS_STATEMENT
             ),
             array(
                 'label' => 'With missing value',
                 'string' => '{setvar: $FOO.BAR = }',
                 'valid' => false,
-                'code' => Mailcode_Commands_Command_SetVariable::VALIDATION_EMPTY_ASSIGNMENT
+                'code' => Mailcode_Commands_Command_SetVariable::VALIDATION_NOT_ASSIGNMENT_STATEMENT
             ),
             array(
                 'label' => 'With missing variable',
                 'string' => '{setvar: = "Text"}',
                 'valid' => false,
-                'code' => Mailcode_Commands_Command_SetVariable::VALIDATION_EMPTY_ASSIGNMENT
+                'code' => Mailcode_Commands_Command_SetVariable::VALIDATION_NOT_ASSIGNMENT_STATEMENT
             ),
             array(
                 'label' => 'With invalid string value',
                 'string' => '{setvar: $FOO.BAR = Text}',
                 'valid' => false,
-                'code' => Mailcode_Commands_Command_SetVariable::VALIDATION_ASSIGNMENT_STATEMENT_INVALID
+                'code' => Mailcode_Commands_Command::VALIDATION_INVALID_PARAMS_STATEMENT
             ),
             array(
                 'label' => 'With valid string value',
-                'string' => '{setvar: $FOO.BAR = "Text" + 6}',
+                'string' => '{setvar: $FOO.BAR = 4 + 6}',
                 'valid' => true,
                 'code' => 0
             ),
@@ -63,6 +63,12 @@ final class Mailcode_SetVarTests extends MailcodeTestCase
                 'valid' => true,
                 'code' => 0
             ),
+            array(
+                'label' => 'With valid variable multiplication',
+                'string' => '{setvar: $FOO.BAR = $OTHER.VAR * 2}',
+                'valid' => true,
+                'code' => 0
+            )
         );
         
         foreach($tests as $test)

@@ -69,13 +69,13 @@ final class Mailcode_Commands_NestingTests extends MailcodeTestCase
     public function test_wrongParent()
     {
         $string =
-        '{for: $NAME in $FOO.BAR}
+        '{for: $NAME in: $FOO.BAR}
             {else}
         {end}';
         
         $collection = Mailcode::create()->parseString($string);
         
         $this->assertFalse($collection->isValid());
-        $this->assertTrue($collection->hasErrorCode(Mailcode_Collection_NestingValidator::VALIDATION_SIBLING_WRONG_PARENT));
+        $this->assertTrue($collection->hasErrorCode(Mailcode_Collection_NestingValidator::VALIDATION_SIBLING_WITHOUT_PARENT));
     }
 }
