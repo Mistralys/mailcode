@@ -20,26 +20,10 @@ namespace Mailcode;
  */
 class Mailcode_Commands_Command_SetVariable extends Mailcode_Commands_Command_Type_Standalone
 {
-    const VALIDATION_MISSING_EQUALS_SIGN = 48501;
-    const VALIDATION_NOT_SINGLE_EQUALS_SIGN = 48502;
-    const VALIDATION_EMPTY_ASSIGNMENT = 48503;
-    const VALIDATION_VARIABLE_LEFT_UNRECOGNIZED = 48504;
-    const VALIDATION_ASSIGNMENT_STATEMENT_INVALID = 48505;
+    const ERROR_NO_VARIABLE_AVAILABLE = 49401;
+    const ERROR_NO_VARIABLE_IN_ASSIGNMENT = 49403;
     
-   /**
-    * @var string[]
-    */
-    protected $parts = array();
-    
-   /**
-    * @var Mailcode_Variables_Variable
-    */
-    protected $leftVar;
-    
-   /**
-    * @var Mailcode_Parser_Statement
-    */
-    protected $statement;
+    const VALIDATION_NOT_ASSIGNMENT_STATEMENT = 48501;
     
     public function getName() : string
     {
@@ -61,92 +45,67 @@ class Mailcode_Commands_Command_SetVariable extends Mailcode_Commands_Command_Ty
         return true;
     }
     
-    protected function validateSyntax_equals_sign()
+    /**
+     * Retrieves the variable to show.
+     *
+     * NOTE: Only available once the command has been
+     * validated. Always use isValid() first.
+     *
+     * @throws Mailcode_Exception
+     * @return Mailcode_Variables_Variable
+     */
+    public function getVariable() : Mailcode_Variables_Variable
     {
-        $amount = substr_count($this->paramsString, '=');
+        $variable = $this->params->getInfo()->getVariableByIndex(0);
         
-        if($amount === 1)
+        if($variable)
         {
-            return;
+            return $variable->getVariable();
         }
         
-        if($amount < 1)
-        {
-            $this->validationResult->makeError(
-                t('The quality operator (=) is missing.'),
-                self::VALIDATION_MISSING_EQUALS_SIGN
-            );
-        }
-        else
-        {
-            $this->validationResult->makeError(
-                t('Only a single equality operator (=) should be used for variable assignment.'),
-                self::VALIDATION_NOT_SINGLE_EQUALS_SIGN
-            );
-        }
-    }
-    
-    protected function validateSyntax_split_parts()
-    {
-        $this->parts = \AppUtils\ConvertHelper::explodeTrim('=', $this->paramsString);
-        
-        if(count($this->parts) === 2) 
-        {
-            return;
-        }
-        
-        $this->validationResult->makeError(
-            t('Command has an empty assignment on either part of the equals sign.'),
-            self::VALIDATION_EMPTY_ASSIGNMENT
+        throw new Mailcode_Exception(
+            'No variable at position #0 in statement.',
+            'This signifies an error in the statement handling: a variable assignment should have a variable in the first token.',
+            self::ERROR_NO_VARIABLE_IN_ASSIGNMENT
         );
     }
     
-    protected function validateSyntax_left()
+    /**
+     * Retrieves the full name of the variable to show.
+     *
+     * NOTE: Only available once the command has been
+     * validated. Always use isValid() first.
+     *
+     * @throws Mailcode_Exception
+     * @return string
+     */
+    public function getVariableName() : string
     {
-        // any variables we may find have already been validated.
-        $vars = $this->mailcode->findVariables($this->parts[0])->getGroupedByName();
-        
-        if(count($vars) === 1)
-        {
-            $this->leftVar = array_shift($vars);
-            return;
-        }
-        
-        $this->validationResult->makeError(
-            t('The name of the variable being set, %1$s, could not be recognized.', '"'.$this->parts[0].'"'),
-            self::VALIDATION_VARIABLE_LEFT_UNRECOGNIZED
-        );
+        return $this->getVariable()->getFullName();
     }
     
-    protected function validateSyntax_right()
+    protected function validateSyntax_assignment() : void
     {
-        $this->statement = $this->mailcode->getParser()->createStatement($this->parts[1]);
-        
-        if($this->statement->isValid())
+        if($this->params->getInfo()->isVariableAssignment())
         {
             return;
         }
         
-        $result = $this->statement->getValidationResult();
-        
         $this->validationResult->makeError(
-            t('The assignment statement is invalid:').' '.$result->getErrorMessage(),
-            self::VALIDATION_ASSIGNMENT_STATEMENT_INVALID
+            t('Not a variable assignment.').' '.t('Is the equality sign (=) present?'),
+            self::VALIDATION_NOT_ASSIGNMENT_STATEMENT
         );
     }
     
     protected function getValidations() : array
     {
         return array(
-            'equals_sign', 
-            'split_parts',
-            'left',
-            'right'
+            'assignment', 
         );
     }
     
     public function generatesContent() : bool
     {
-        return true;
+        return false;
     }
 }
