@@ -20,6 +20,15 @@ namespace Mailcode;
  */
 class Mailcode_Commands_Command_Comment extends Mailcode_Commands_Command_Type_Standalone
 {
+    protected function init() : void
+    {
+        // automatically quote the parameters, since comments don't require any.
+        if(!strstr($this->paramsString, '"'))
+        {
+            $this->paramsString = '"'.$this->paramsString.'"';
+        }
+    }
+    
     public function getName() : string
     {
         return 'comment';
