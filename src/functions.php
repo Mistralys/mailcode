@@ -21,7 +21,7 @@ function t()
  * because this file is included in the files list in the
  * composer.json, guaranteeing it is always loaded.
  */
-function init()
+function init() : void
 {
     if(!class_exists('\AppLocalize\Localization')) {
         return;
