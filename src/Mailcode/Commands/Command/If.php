@@ -22,6 +22,11 @@ class Mailcode_Commands_Command_If extends Mailcode_Commands_Command_Type_Openin
 {
     const VALIDATION_VARIABLE_COUNT_MISMATCH = 49201;
     
+   /**
+    * @var Mailcode_Variables_Variable
+    */
+    protected $variable;
+    
     public function getName() : string
     {
         return 'if';
@@ -42,7 +47,32 @@ class Mailcode_Commands_Command_If extends Mailcode_Commands_Command_Type_Openin
         return true;
     }
     
-    protected function validateSyntax_require_variable()
+    public function isCommand() : bool
+    {
+        return $this->type === 'command' || empty($this->type); 
+    }
+    
+    public function isVariable() : bool
+    {
+        return $this->type === 'variable';
+    }
+    
+   /**
+    * Available only if the command is of type "variable".
+    * 
+    * @return Mailcode_Variables_Variable|NULL
+    */
+    public function getVariable() : ?Mailcode_Variables_Variable
+    {
+        if(isset($this->variable))
+        {
+            return $this->variable;
+        }
+        
+        return null;
+    }
+    
+    protected function validateSyntax_require_variable() : void
     {
         $amount = $this->getVariables()->countVariables();
         
