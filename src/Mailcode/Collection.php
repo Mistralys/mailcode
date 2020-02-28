@@ -151,7 +151,13 @@ class Mailcode_Collection
             
         return array_values($hashes);
     }
-    
+
+   /**
+    * Adds several commands at once.
+    * 
+    * @param Mailcode_Commands_Command[] $commands
+    * @return Mailcode_Collection
+    */
     public function addCommands(array $commands) : Mailcode_Collection
     {
         foreach($commands as $command)
