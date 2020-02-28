@@ -20,6 +20,8 @@ namespace Mailcode;
  */
 class Mailcode_Commands_Command_For extends Mailcode_Commands_Command_Type_Opening
 {
+    const VALIDATION_INVALID_FOR_STATEMENT = 49701;
+    
     public function getName() : string
     {
         return 'for';
@@ -42,11 +44,32 @@ class Mailcode_Commands_Command_For extends Mailcode_Commands_Command_Type_Openi
     
     protected function getValidations() : array
     {
-        return array();
+        return array(
+            'statement'
+        );
     }
     
     public function generatesContent() : bool
     {
         return false;
+    }
+    
+    protected function validateSyntax_statement() : void
+    {
+        $info = $this->params->getInfo();
+        
+        $variable = $info->getVariableByIndex(0);
+        $keyword = $info->getKeywordByIndex(1);
+        $container = $info->getVariableByIndex(2);
+        
+        if($variable && $keyword && $container && $keyword->isForIn())
+        {
+            return;
+        }
+        
+        $this->validationResult->makeError(
+            t('Not a valid for loop.').' '.t('Is the %1$s keyword missing?', 'in:'),
+            self::VALIDATION_INVALID_FOR_STATEMENT
+        );
     }
 }
