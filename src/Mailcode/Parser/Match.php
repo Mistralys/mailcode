@@ -21,12 +21,24 @@ namespace Mailcode;
  */
 class Mailcode_Parser_Match
 {
+   /**
+    * @var string
+    */
     protected $name;
     
+   /**
+    * @var string
+    */
     protected $type;
     
+   /**
+    * @var string
+    */
     protected $params;
     
+   /**
+    * @var string
+    */
     protected $matchedString;
     
     public function __construct(string $name, string $type, string $params, string $matchedString)
