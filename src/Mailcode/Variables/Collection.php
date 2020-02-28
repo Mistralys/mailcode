@@ -21,9 +21,7 @@ namespace Mailcode;
 abstract class Mailcode_Variables_Collection
 {
    /**
-    * Stores variables by their hash.
-    * 
-    * @var array[string]Mailcode_Variables_Variable
+    * @var Mailcode_Variables_Variable[]
     */
     protected $variables = array();
     
@@ -39,9 +37,7 @@ abstract class Mailcode_Variables_Collection
     
     public function add(Mailcode_Variables_Variable $variable) : Mailcode_Variables_Collection
     {
-        $hash = $variable->getHash();
-        
-        $this->variables[$hash] = $variable;
+        $this->variables[] = $variable;
         
         return $this;
     }
@@ -126,7 +122,14 @@ abstract class Mailcode_Variables_Collection
     */
     public function getGroupedByHash()
     {
-        return $this->sortVariables($this->variables);
+        $entries = array();
+        
+        foreach($this->variables as $variable)
+        {
+            $entries[$variable->getHash()] = $variable;
+        }
+        
+        return $this->sortVariables($entries);
     }
     
    /**
@@ -144,6 +147,15 @@ abstract class Mailcode_Variables_Collection
         }
         
         return $this->sortVariables($entries);
+    }
+    
+   /**
+    * Retrieves all variables, in the order they were addded.
+    * @return \Mailcode\Mailcode_Variables_Variable[]
+    */
+    public function getAll()
+    {
+        return $this->variables;
     }
     
    /**
@@ -171,7 +183,7 @@ abstract class Mailcode_Variables_Collection
     * Takes a list of variables and sorts them, throwing away
     * the source array's keys.
     * 
-    * @param array $entries
+    * @param Mailcode_Variables_Variable[] $entries
     * @return Mailcode_Variables_Variable[]
     */
     protected function sortVariables(array $entries)
