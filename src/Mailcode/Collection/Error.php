@@ -20,10 +20,19 @@ namespace Mailcode;
  */
 abstract class Mailcode_Collection_Error
 {
+   /**
+    * @var integer
+    */
     protected $code = 0;
-    
+
+   /**
+    * @var string
+    */
     protected $matchedText = '';
-    
+
+   /**
+    * @var string
+    */
     protected $message = '';
     
     public function getCode() : int
