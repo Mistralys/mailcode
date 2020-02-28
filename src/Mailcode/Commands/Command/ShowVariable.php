@@ -20,7 +20,14 @@ namespace Mailcode;
  */
 class Mailcode_Commands_Command_ShowVariable extends Mailcode_Commands_Command_Type_Standalone
 {
+    const ERROR_NO_VARIABLE_AVAILABLE = 49301;
+    
     const VALIDATION_VARIABLE_COUNT_MISMATCH = 48401;
+    
+   /**
+    * @var Mailcode_Variables_Variable|NULL
+    */
+    protected $variable;
     
     public function getName() : string
     {
@@ -41,13 +48,54 @@ class Mailcode_Commands_Command_ShowVariable extends Mailcode_Commands_Command_T
     {
         return true;
     }
-
-    protected function validateSyntax_require_variable()
+    
+   /**
+    * Retrieves the variable to show.
+    * 
+    * NOTE: Only available once the command has been
+    * validated. Always use isValid() first.
+    * 
+    * @throws Mailcode_Exception
+    * @return Mailcode_Variables_Variable
+    */
+    public function getVariable() : Mailcode_Variables_Variable
     {
-         $amount = $this->getVariables()->countVariables();
+        $this->validate();
+        
+        if(isset($this->variable))
+        {
+            return $this->variable;
+        }
+        
+        throw new Mailcode_Exception(
+            'No variable available.',
+            'No variable is present at this time, or the validation failed.',
+            self::ERROR_NO_VARIABLE_AVAILABLE
+        );
+    }
+    
+   /**
+    * Retrieves the full name of the variable to show.
+    * 
+    * NOTE: Only available once the command has been
+    * validated. Always use isValid() first.
+    * 
+    * @throws Mailcode_Exception
+    * @return string
+    */
+    public function getVariableName() : string
+    {
+        return $this->getVariable()->getFullName();
+    }
+
+    protected function validateSyntax_require_variable() : void
+    {
+         $vars = $this->getVariables()->getGroupedByName();
+         $amount = count($vars);
          
          if($amount === 1)
          {
+             $this->variable = array_pop($vars);
              return;
          }
          
