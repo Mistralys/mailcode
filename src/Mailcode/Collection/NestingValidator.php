@@ -93,7 +93,7 @@ class Mailcode_Collection_NestingValidator
         return $this->validationResult;
     }
 
-    protected function validate_Unclosed()
+    protected function validate_Unclosed() : void
     {
         $leftover = $this->getOpenCommand();
         
@@ -132,19 +132,19 @@ class Mailcode_Collection_NestingValidator
         return null;
     }
     
-    protected function validate_Standalone(Mailcode_Commands_Command_Type_Standalone $command)
+    protected function validate_Standalone(Mailcode_Commands_Command_Type_Standalone $command) : void
     {
         // standalone commands have no nesting issues
     }
     
-    protected function validate_Opening(Mailcode_Commands_Command_Type_Opening $command)
+    protected function validate_Opening(Mailcode_Commands_Command_Type_Opening $command) : void
     {
         $this->log(sprintf('Opening %s', $command->getName()));
         
         $this->stack[] = $command;
     }
     
-    protected function validate_Sibling(Mailcode_Commands_Command_Type_Sibling $command)
+    protected function validate_Sibling(Mailcode_Commands_Command_Type_Sibling $command) : void
     {
         $parent = $this->getOpenCommand();
         
@@ -179,7 +179,7 @@ class Mailcode_Collection_NestingValidator
         $this->log(sprintf('Sibling command %s in %s', $command->getName(), $parent->getName()));
     }
     
-    protected function validate_Closing(Mailcode_Commands_Command_Type_Closing $command)
+    protected function validate_Closing(Mailcode_Commands_Command_Type_Closing $command) : void
     {
         if(empty($this->stack))
         {
