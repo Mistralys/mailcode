@@ -10,15 +10,15 @@ final class Factory_FactoryTests extends MailcodeTestCase
         $tests = array(
             array(
                 'label' => 'Variable name without $',
-                'cmd' => Mailcode_Factory::setVariable('VAR.NAME', 'Some text')
+                'cmd' => Mailcode_Factory::setVar('VAR.NAME', 'Some text')
             ),
             array(
                 'label' => 'Variable name with $',
-                'cmd' => Mailcode_Factory::setVariable('$VAR.NAME', 'Some text')
+                'cmd' => Mailcode_Factory::setVar('$VAR.NAME', 'Some text')
             ),
             array(
                 'label' => 'Unquoted params',
-                'cmd' => Mailcode_Factory::setVariable('$VAR.NAME', '6 + 2', false)
+                'cmd' => Mailcode_Factory::setVar('$VAR.NAME', '6 + 2', false)
             )
         );
         
@@ -30,7 +30,7 @@ final class Factory_FactoryTests extends MailcodeTestCase
     {
         $this->expectException(Mailcode_Factory_Exception::class);
         
-        Mailcode_Factory::setVariable('$FOO.BAR', 'Some text', false);
+        Mailcode_Factory::setVar('$FOO.BAR', 'Some text', false);
     }
     
     public function test_showVar()
@@ -38,11 +38,11 @@ final class Factory_FactoryTests extends MailcodeTestCase
         $tests = array(
             array(
                 'label' => 'Variable name without $',
-                'cmd' => Mailcode_Factory::showVariable('VAR.NAME')
+                'cmd' => Mailcode_Factory::showVar('VAR.NAME')
             ),
             array(
                 'label' => 'Variable name with $',
-                'cmd' => Mailcode_Factory::showVariable('$VAR.NAME')
+                'cmd' => Mailcode_Factory::showVar('$VAR.NAME')
             )
         );
         
@@ -53,7 +53,7 @@ final class Factory_FactoryTests extends MailcodeTestCase
     {
         $this->expectException(Mailcode_Factory_Exception::class);
         
-        Mailcode_Factory::showVariable('UNKNOWNVAR');
+        Mailcode_Factory::showVar('UNKNOWNVAR');
     }
     
     public function test_elseIf()
