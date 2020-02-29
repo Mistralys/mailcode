@@ -74,6 +74,11 @@ abstract class Mailcode_Commands_Command
         'type_unsupported'
     );
     
+   /**
+    * @var string
+    */
+    protected $comment = '';
+    
     public function __construct(string $type='', string $paramsString='', string $matchedText='')
     {
         $this->type = $type;
@@ -96,6 +101,31 @@ abstract class Mailcode_Commands_Command
     {
         $tokens = explode('_', get_class($this));
         return array_pop($tokens);
+    }
+    
+   /**
+    * Sets an optional comment that is not used anywhere, but
+    * can be used by the application to track why a command is
+    * used somewhere. 
+    * 
+    * @param string $comment
+    * @return Mailcode_Commands_Command
+    */
+    public function setComment(string $comment) : Mailcode_Commands_Command
+    {
+        $this->comment = $comment;
+        
+        return $this;
+    }
+    
+   /**
+    * Retrieves the previously set comment, if any.
+    * 
+    * @return string
+    */
+    public function getComment() : string
+    {
+        return $this->comment;
     }
     
    /**
@@ -375,8 +405,18 @@ abstract class Mailcode_Commands_Command
         return array();
     }
     
+   /**
+    * Retrieves all variable names used in the command.
+    * 
+    * @return Mailcode_Variables_Collection_Regular
+    */
     public function getVariables() : Mailcode_Variables_Collection_Regular
     {
         return Mailcode::create()->findVariables($this->paramsString);
+    }
+    
+    public function __toString()
+    {
+        return $this->getNormalized();
     }
 }
