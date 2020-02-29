@@ -9,17 +9,26 @@ final class Variables_VariablesTests extends MailcodeTestCase
     {
         $vars = Mailcode::create()->createVariables();
         
-        $collection1 = $vars->parseString('$FOO.BAR.$BAR.FOO');
+        $collection1 = $vars->parseString('
+            $FOO.BAR 
+            $BAR.FOO
+        ');
         
         $this->assertSame(2, $collection1->countVariables());
         
-        $collection2 = $vars->parseString('$FOO.BAR,$ANOTHER.ONE');
+        $collection2 = $vars->parseString('
+            $FOO.BAR 
+            $ANOTHER.ONE 
+            $FOO . BAR
+        ');
 
-        $this->assertSame(2, $collection2->countVariables());
+        $this->assertSame(3, $collection2->countVariables());
         
         $merged = $collection1->mergeWith($collection2);
         
-        $this->assertSame(3, $merged->countVariables());
+        $this->assertSame(5, $merged->countVariables(), '5 variables in total, ungrouped');
+        $this->assertSame(4, count($merged->getGroupedByHash()), '4 variables grouped by hash');
+        $this->assertSame(3, count($merged->getGroupedByName()), '3 variables grouped by name');
     }
     
     public function test_collection_mergeInvalid()
@@ -32,7 +41,7 @@ final class Variables_VariablesTests extends MailcodeTestCase
         
         $collection2 = $vars->parseString('$FOO.BAR,$1NOTHER.ONE');
         
-        $this->assertSame(2, $collection2->countVariables());
+        $this->assertSame(1, $collection2->countVariables());
         
         $merged = $collection1->mergeWith($collection2);
         
@@ -40,19 +49,24 @@ final class Variables_VariablesTests extends MailcodeTestCase
         
         if($merged instanceof Mailcode_Variables_Collection_Regular)
         {
-            $this->assertSame(2, $merged->countVariables());
+            $this->assertSame(3, $merged->countVariables());
+            $this->assertSame(2, count($merged->getGroupedByName()));
             $this->assertSame(1, $merged->getInvalid()->countVariables());
         }
     }
     
     public function test_collection_commandVariables()
     {
-        $collection = Mailcode::create()->parseString(
-            "{showvar: \$FOO.BAR} {showvar: \$BAR.FOO} {showvar: \$ANOTHER.ONE} {showvar: \$FOO.BAR}"
+        $collection = Mailcode::create()->parseString("
+            {showvar: \$FOO.BAR} 
+            {showvar: \$BAR.FOO} 
+            {showvar: \$ANOTHER.ONE} 
+            {showvar: \$FOO.BAR}"
         );
         
         $vars = $collection->getVariables();
         
-        $this->assertSame(3, $vars->countVariables());
+        $this->assertSame(4, $vars->countVariables());
+        $this->assertSame(3, count($vars->getGroupedByName()));
     }
 }
