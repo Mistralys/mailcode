@@ -55,6 +55,8 @@ class Mailcode_Parser_Safeguard
     
     const ERROR_EMPTY_DELIMITER = 47803;
     
+    const ERROR_PLACEHOLDER_NOT_FOUND = 47804;
+    
    /**
     * @var Mailcode_Parser
     */
@@ -90,6 +92,11 @@ class Mailcode_Parser_Safeguard
     * @var string
     */
     protected $delimiter = '__';
+    
+   /**
+    * @var array|NULL
+    */
+    protected $placeholderStrings;
     
     public function __construct(Mailcode_Parser $parser, string $subject)
     {
@@ -190,7 +197,7 @@ class Mailcode_Parser_Safeguard
         
         $this->placeholders = array();
         
-        $cmds = $this->getCollection()->getCommands();
+        $cmds = $this->getCollection()->getGroupedByHash();
         
         foreach($cmds as $command)
         {
@@ -308,6 +315,95 @@ class Mailcode_Parser_Safeguard
                 $this->originalString
             ),
             self::ERROR_INVALID_COMMANDS
+        );
+    }
+    
+   /**
+    * Retrieves a list of all placeholder IDs used in the text.
+    * 
+    * @return string[]
+    */
+    public function getPlaceholderStrings() : array
+    {
+        if(isset($this->placeholderStrings))
+        {
+            return $this->placeholderStrings;
+        }
+        
+        $placeholders = $this->getPlaceholders();
+        
+        $this->placeholderStrings = array();
+        
+        foreach($placeholders as $placeholder)
+        {
+            $this->placeholderStrings[] = $placeholder->getReplacementText();
+        }
+        
+        return $this->placeholderStrings;
+    }
+    
+    public function isPlaceholder(string $subject)
+    {
+        $ids = $this->getPlaceholderStrings();
+        
+        return in_array($subject, $ids);
+    }
+    
+   /**
+    * Retrieves a placeholder instance by its ID.
+    * 
+    * @param int $id
+    * @throws Mailcode_Exception If the placeholder was not found.
+    * @return Mailcode_Parser_Safeguard_Placeholder
+    */
+    public function getPlaceholderByID(int $id) : Mailcode_Parser_Safeguard_Placeholder
+    {
+        $placeholders = $this->getPlaceholders();
+        
+        foreach($placeholders as $placeholder)
+        {
+            if($placeholder->getID() === $id)
+            {
+                return $placeholder;
+            }
+        }
+        
+        throw new Mailcode_Exception(
+            'No such safeguard placeholder.',
+            sprintf(
+                'The placeholder ID [%s] is not present in the safeguard instance.',
+                $id
+            ),
+            self::ERROR_PLACEHOLDER_NOT_FOUND
+        );
+    }
+    
+   /**
+    * Retrieves a placeholder instance by its replacement text.
+    * 
+    * @param string $string
+    * @throws Mailcode_Exception
+    * @return Mailcode_Parser_Safeguard_Placeholder
+    */
+    public function getPlaceholderByString(string $string) : Mailcode_Parser_Safeguard_Placeholder
+    {
+        $placeholders = $this->getPlaceholders();
+        
+        foreach($placeholders as $placeholder)
+        {
+            if($placeholder->getReplacementText() === $string)
+            {
+                return $placeholder;
+            }
+        }
+        
+        throw new Mailcode_Exception(
+            'No such safeguard placeholder.',
+            sprintf(
+                'The placeholder replacement string [%s] is not present in the safeguard instance.',
+                $string
+            ),
+            self::ERROR_PLACEHOLDER_NOT_FOUND
         );
     }
 }
