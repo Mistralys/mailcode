@@ -215,4 +215,24 @@ class Mailcode_Collection
         
         return false;
     }
+    
+   /**
+    * Retrieves only show variable commands in the collection, if any.
+    * 
+    * @return \Mailcode\Mailcode_Commands_Command_ShowVariable[]
+    */
+    public function getShowVariableCommands()
+    {
+        $result = array();
+        
+        foreach($this->commands as $command)
+        {
+            if($command instanceof Mailcode_Commands_Command_ShowVariable)
+            {
+                $result[] = $command;
+            }
+        }
+        
+        return $result;
+    }
 }
