@@ -3,7 +3,7 @@
  * File containing the {@see Mailcode_Factory} class.
  *
  * @package Mailcode
- * @subpackage Core
+ * @subpackage Utilities
  * @see Mailcode_Factory
  */
 
@@ -15,7 +15,7 @@ namespace Mailcode;
  * Factory utility used to create commands.
  *
  * @package Mailcode
- * @subpackage Core
+ * @subpackage Utilities
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
 class Mailcode_Factory
@@ -25,12 +25,17 @@ class Mailcode_Factory
     const ERROR_UNEXPECTED_COMMAND_TYPE = 50002;
     
    /**
+    * @var Mailcode_Renderer
+    */
+    protected static $renderer;
+    
+   /**
     * Creates a ShowVariable command.
     * 
     * @param string $variableName A variable name, with or without the $ sign prepended.
     * @return Mailcode_Commands_Command_ShowVariable
     */
-    public static function showVariable(string $variableName) : Mailcode_Commands_Command_ShowVariable
+    public static function showVar(string $variableName) : Mailcode_Commands_Command_ShowVariable
     {
         $variableName = self::_filterVariableName($variableName);
         
@@ -56,7 +61,7 @@ class Mailcode_Factory
     * 
     * @see Mailcode_Factory::ERROR_INVALID_COMMAND_CREATED
     */
-    public static function setVariable(string $variableName, string $value, bool $quoteValue=true) : Mailcode_Commands_Command_SetVariable
+    public static function setVar(string $variableName, string $value, bool $quoteValue=true) : Mailcode_Commands_Command_SetVariable
     {
         $variableName = self::_filterVariableName($variableName);
         
@@ -76,6 +81,19 @@ class Mailcode_Factory
         self::_checkCommand($cmd);
         
         return $cmd;
+    }
+    
+   /**
+    * Like setVar(), but treats the value as a string literal
+    * and automatically adds quotes to it.
+    * 
+    * @param string $variableName
+    * @param string $value
+    * @return Mailcode_Commands_Command_SetVariable
+    */
+    public static function setVarString(string $variableName, string $value) : Mailcode_Commands_Command_SetVariable
+    {
+        return self::setVar($variableName, $value, true);
     }
     
     public static function comment(string $comments) : Mailcode_Commands_Command_Comment
@@ -187,6 +205,18 @@ class Mailcode_Factory
         
         throw self::_exceptionUnexpectedType($cmd);
     }
+
+    public static function ifVarString(string $variable, string $operand, string $value) : Mailcode_Commands_Command_If
+    {
+        $cmd = self::_buildIfVar('If', $variable, $operand, $value, true);
+        
+        if($cmd instanceof Mailcode_Commands_Command_If)
+        {
+            return $cmd;
+        }
+        
+        throw self::_exceptionUnexpectedType($cmd);
+    }
     
     public static function ifVarEquals(string $variable, string $value, bool $quoteValue=false) : Mailcode_Commands_Command_If
     {
@@ -199,10 +229,34 @@ class Mailcode_Factory
         
         throw self::_exceptionUnexpectedType($cmd);
     }
+
+    public static function ifVarEqualsString(string $variable, string $value) : Mailcode_Commands_Command_If
+    {
+        $cmd = self::_buildIfVar('If', $variable, '==', $value, true);
+        
+        if($cmd instanceof Mailcode_Commands_Command_If)
+        {
+            return $cmd;
+        }
+        
+        throw self::_exceptionUnexpectedType($cmd);
+    }
     
     public static function ifVarNotEquals(string $variable, string $value, bool $quoteValue=false) : Mailcode_Commands_Command_If
     {
         $cmd = self::_buildIfVar('If', $variable, '!=', $value, $quoteValue);
+        
+        if($cmd instanceof Mailcode_Commands_Command_If)
+        {
+            return $cmd;
+        }
+        
+        throw self::_exceptionUnexpectedType($cmd);
+    }
+
+    public static function ifVarNotEqualsString(string $variable, string $value) : Mailcode_Commands_Command_If
+    {
+        $cmd = self::_buildIfVar('If', $variable, '!=', $value, true);
         
         if($cmd instanceof Mailcode_Commands_Command_If)
         {
@@ -235,6 +289,18 @@ class Mailcode_Factory
         
         throw self::_exceptionUnexpectedType($cmd);
     }
+
+    public static function elseIfVarString(string $variable, string $operand, string $value) : Mailcode_Commands_Command_ElseIf
+    {
+        $cmd = self::_buildIfVar('ElseIf', $variable, $operand, $value, true);
+        
+        if($cmd instanceof Mailcode_Commands_Command_ElseIf)
+        {
+            return $cmd;
+        }
+        
+        throw self::_exceptionUnexpectedType($cmd);
+    }
     
     public static function elseIfVarEquals(string $variable, string $value, bool $quoteValue=false) : Mailcode_Commands_Command_ElseIf
     {
@@ -247,10 +313,34 @@ class Mailcode_Factory
         
         throw self::_exceptionUnexpectedType($cmd);
     }
+
+    public static function elseIfVarEqualsString(string $variable, string $value) : Mailcode_Commands_Command_ElseIf
+    {
+        $cmd = self::_buildIfVar('ElseIf', $variable, '==', $value, true);
+        
+        if($cmd instanceof Mailcode_Commands_Command_ElseIf)
+        {
+            return $cmd;
+        }
+        
+        throw self::_exceptionUnexpectedType($cmd);
+    }
     
     public static function elseIfVarNotEquals(string $variable, string $value, bool $quoteValue=false) : Mailcode_Commands_Command_ElseIf
     {
         $cmd = self::_buildIfVar('ElseIf', $variable, '!=', $value, $quoteValue);
+        
+        if($cmd instanceof Mailcode_Commands_Command_ElseIf)
+        {
+            return $cmd;
+        }
+        
+        throw self::_exceptionUnexpectedType($cmd);
+    }
+
+    public static function elseIfVarNotEqualsString(string $variable, string $value) : Mailcode_Commands_Command_ElseIf
+    {
+        $cmd = self::_buildIfVar('ElseIf', $variable, '!=', $value, true);
         
         if($cmd instanceof Mailcode_Commands_Command_ElseIf)
         {
@@ -301,5 +391,27 @@ class Mailcode_Factory
             null,
             $command
         );
+    }
+    
+   /**
+    * Creates a renderer instance, which can be used to easily
+    * create and convert commands to strings.
+    * 
+    * @return Mailcode_Renderer
+    */
+    public static function createRenderer() : Mailcode_Renderer
+    {
+        return new Mailcode_Renderer();
+    }
+    
+   /**
+    * Creates a printer instance, which works like the renderer,
+    * but outputs the generated strings to standard output.
+    * 
+    * @return Mailcode_Printer
+    */
+    public static function createPrinter() : Mailcode_Printer
+    {
+        return new Mailcode_Printer();
     }
 }
