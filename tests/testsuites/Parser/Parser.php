@@ -184,4 +184,28 @@ final class Parser_ParserTests extends MailcodeTestCase
         $this->assertInstanceof(Mailcode_Collection_Error_Command::class, $errors[0]);
         $this->assertSame(Mailcode_Commands_Command::VALIDATION_INVALID_PARAMS_STATEMENT, $errors[0]->getCode());
     }
+    
+    public function test_parseHTML()
+    {
+        $string = '
+<p>We need some text here, apparently.</p>
+<p>{showvar: $CUSTOMER.CUSTOMER_ID}</p>
+<p>{if variable: $FOO.BAR == "NOPE"}</p>
+<p>Some text here in the IF command.</p>
+<p>{end}</p>
+<p>
+    <strong>Some text&nbsp;{showvar: $CUSTOMER.CUSTOMER_ID}</strong>
+    <strong>&#8203; with variable</strong>
+</p>
+<p>And only a variable:</p>
+<p><strong>{showvar: $CUSTOMER.CUSTOMER_ID}</strong></p>
+';
+        $safe = Mailcode::create()->createSafeguard($string);
+        
+        $subject = $safe->makeSafe();
+        
+        $safe->makeWhole($subject);
+        
+        $this->addToAssertionCount(1);
+    }
 }
