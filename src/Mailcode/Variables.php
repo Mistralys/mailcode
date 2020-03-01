@@ -20,7 +20,12 @@ namespace Mailcode;
  */
 class Mailcode_Variables
 {
-    const REGEX_VARIABLE_NAME = '/\$\s*([A-Z0-9_]+)\s*\.\s*([A-Z0-9_]+)/sx';
+    const REGEX_VARIABLE_NAME = '/\$\s*([A-Z0-9_]+)\s*\.\s*([A-Z0-9_]+)|\$\s*([A-Z0-9_]+)/six';
+    
+   /**
+    * @var Mailcode_Variables_Collection_Regular
+    */
+    protected $collection;
     
    /**
     * Parses the specified string to find all variable names contained within, if any.
@@ -30,24 +35,50 @@ class Mailcode_Variables
     */
     public function parseString(string $subject) : Mailcode_Variables_Collection_Regular
     {
-        $collection = new Mailcode_Variables_Collection_Regular();
+        $this->collection = new Mailcode_Variables_Collection_Regular();
         
         $matches = array();
         preg_match_all(self::REGEX_VARIABLE_NAME, $subject, $matches, PREG_PATTERN_ORDER);
         
         if(!isset($matches[0]) || empty($matches[0]))
         {
-            return $collection;
+            return $this->collection;
         }
         
         foreach($matches[0] as $idx => $matchedText)
         {
-            $path = $matches[1][$idx];
-            $name = $matches[2][$idx];
-            
-            $collection->add(new Mailcode_Variables_Variable($path, $name, $matchedText));
+            if(!empty($matches[3][$idx]))
+            {
+                $this->addSingle($matches[3][$idx], $matchedText);
+            }
+            else 
+            {
+                $this->addPathed($matches[1][$idx], $matches[2][$idx], $matchedText);
+            }
         }
         
-        return $collection;
+        return $this->collection;
+    }
+    
+    protected function addSingle(string $name, string $matchedText) : void
+    {
+        // ignore US style numbers like $451
+        if(is_numeric($name))
+        {
+            return;
+        }
+        
+        $this->collection->add(new Mailcode_Variables_Variable('', $name, $matchedText));
+    }
+    
+    protected function addPathed(string $path, string $name, string $matchedText) : void
+    {
+        // ignore US style numbers like $45.12
+        if(is_numeric($path.'.'.$name))
+        {
+            return;
+        }
+        
+        $this->collection->add(new Mailcode_Variables_Variable($path, $name, $matchedText));
     }
 }
