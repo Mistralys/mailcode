@@ -235,4 +235,16 @@ class Mailcode_Collection
         
         return $result;
     }
+    
+    public function getFirstCommand() : ?Mailcode_Commands_Command
+    {
+        $commands = $this->getCommands();
+        
+        if(!empty($commands))
+        {
+            return array_shift($commands);
+        }
+        
+        return null;
+    }
 }
