@@ -36,11 +36,4 @@ class Mailcode_Variables_Collection_Invalid extends Mailcode_Variables_Collectio
     {
         return $this->getFirst()->getValidationResult();
     }
-        
-    public function getFirst() : Mailcode_Variables_Variable
-    {
-        reset($this->variables);
-        
-        return $this->variables[key($this->variables)];
-    }
 }
