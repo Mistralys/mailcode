@@ -216,4 +216,16 @@ abstract class Mailcode_Variables_Collection
         
         return $this;
     }
+
+    public function getFirst() : ?Mailcode_Variables_Variable
+    {
+        $variables = $this->getAll();
+        
+        if(!empty($variables))
+        {
+            return array_shift($variables);
+        }
+        
+        return null;
+    }
 }
