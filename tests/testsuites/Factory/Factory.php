@@ -53,7 +53,7 @@ final class Factory_FactoryTests extends MailcodeTestCase
     {
         $this->expectException(Mailcode_Factory_Exception::class);
         
-        Mailcode_Factory::showVar('UNKNOWNVAR');
+        Mailcode_Factory::showVar('0INVALIDVAR');
     }
     
     public function test_elseIf()
@@ -158,5 +158,13 @@ final class Factory_FactoryTests extends MailcodeTestCase
         );
         
         $this->addToAssertionCount(count($tests));
+    }
+    
+    public function test_filterVariableName()
+    {
+        $var = Mailcode_Factory::showVar('     $FOO   .     BAR    ');
+        
+        $this->assertTrue($var->isValid());
+        $this->assertSame('{showvar: $FOO.BAR}', $var->getNormalized());
     }
 }

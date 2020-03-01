@@ -74,8 +74,13 @@ final class Mailcode_Commands_NestingTests extends MailcodeTestCase
         {end}';
         
         $collection = Mailcode::create()->parseString($string);
+        $errors = $collection->getErrors();
+        
+        $this->assertSame(1, count($errors));
+        
+        $error = array_pop($errors);
         
         $this->assertFalse($collection->isValid());
-        $this->assertTrue($collection->hasErrorCode(Mailcode_Collection_NestingValidator::VALIDATION_SIBLING_WITHOUT_PARENT));
+        $this->assertSame($error->getCode(), Mailcode_Collection_NestingValidator::VALIDATION_SIBLING_WRONG_PARENT);
     }
 }
