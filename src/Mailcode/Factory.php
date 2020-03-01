@@ -352,6 +352,8 @@ class Mailcode_Factory
     
     protected static function _filterVariableName(string $name) : string
     {
+        $name = preg_replace('/\s/', '', $name);
+        
         return '$'.ltrim($name, '$');
     }
     
