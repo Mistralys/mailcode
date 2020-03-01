@@ -406,4 +406,11 @@ class Mailcode_Parser_Safeguard
             self::ERROR_PLACEHOLDER_NOT_FOUND
         );
     }
+    
+    public function hasPlaceholders() : bool
+    {
+        $placeholders = $this->getPlaceholders();
+        
+        return !empty($placeholders);
+    }
 }
