@@ -94,7 +94,7 @@ class Mailcode_Parser_Safeguard
     protected $delimiter = '__';
     
    /**
-    * @var array|NULL
+    * @var string[]|NULL
     */
     protected $placeholderStrings;
     
@@ -342,7 +342,7 @@ class Mailcode_Parser_Safeguard
         return $this->placeholderStrings;
     }
     
-    public function isPlaceholder(string $subject)
+    public function isPlaceholder(string $subject) : bool
     {
         $ids = $this->getPlaceholderStrings();
         
