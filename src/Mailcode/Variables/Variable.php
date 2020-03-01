@@ -76,6 +76,11 @@ class Mailcode_Variables_Variable
     
     public function getFullName() : string
     {
+        if(empty($this->path))
+        {
+            return '$'.$this->name;
+        }
+        
         return '$'.$this->path.'.'.$this->name;
     }
     
@@ -190,6 +195,12 @@ class Mailcode_Variables_Variable
     
     protected function validateUnderscore(string $value, int $errorCode) : void
     {
+        // allow empty paths
+        if(empty($value))
+        {
+            return;
+        }
+        
         $length = strlen($value);
         
         // trimming underscores does not change the length: no underscores at start or end of string.
