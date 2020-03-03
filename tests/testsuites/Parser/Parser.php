@@ -208,4 +208,31 @@ final class Parser_ParserTests extends MailcodeTestCase
         
         $this->addToAssertionCount(1);
     }
+    
+    public function test_parseWithCSS()
+    {
+        $subject = 
+'<style>
+.classname{
+width:50%;
+height:45px;
+}
+</style>';
+        
+        $collection = Mailcode::create()->parseString($subject);
+        
+        $this->assertTrue($collection->isValid());
+        $this->assertFalse($collection->hasCommands());
+    }
+    
+    public function test_parseWithCSS_variant2()
+    {
+        $subject =
+        '<style>#id{width:50%}</style>';
+        
+        $collection = Mailcode::create()->parseString($subject);
+        
+        $this->assertTrue($collection->isValid());
+        $this->assertFalse($collection->hasCommands());
+    }
 }
