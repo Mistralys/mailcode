@@ -42,6 +42,11 @@ class Mailcode
     protected $variables = null;
     
    /**
+    * @var Mailcode_Translator|NULL
+    */
+    protected $translator = null;
+    
+   /**
     * Creates a new mailcode instance.
     * @return Mailcode
     */
@@ -116,5 +121,21 @@ class Mailcode
         }
         
         return $this->variables;
+    }
+    
+   /**
+    * Creates the translator, which can be used to convert commands
+    * to another supported syntax.
+    * 
+    * @return Mailcode_Translator
+    */
+    public function createTranslator() : Mailcode_Translator
+    {
+        if(!isset($this->translator))
+        {
+            $this->translator = new Mailcode_Translator(); 
+        }
+        
+        return $this->translator;
     }
 }
