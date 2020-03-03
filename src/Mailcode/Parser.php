@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use AppUtils\ConvertHelper;
+
 /**
  * Mailcode parser, capable of detecting commands in strings.
  * 
@@ -64,6 +66,8 @@ class Mailcode_Parser
     {
         $collection = new Mailcode_Collection();
         
+        $string = $this->prepareString($string);
+        
         $matches = array();
         preg_match_all(self::getRegex(), $string, $matches, PREG_PATTERN_ORDER);
         
@@ -77,6 +81,17 @@ class Mailcode_Parser
         }
         
         return $collection;
+    }
+    
+    protected function prepareString(string $subject) : string
+    {
+        if(!ConvertHelper::isStringHTML($subject))
+        {
+            return $subject;
+        }
+
+        // remove all <style> tags to avoid conflicts with CSS code
+        return preg_replace('%<style\b[^>]*>(.*?)</style>%six', '', $subject);
     }
     
    /**
