@@ -311,7 +311,7 @@ class Mailcode_Parser_Safeguard
         throw new Mailcode_Exception(
             'Cannot safeguard invalid commands',
             sprintf(
-                'The collection contains invalid commands. Safeguarding is only allowed with valid commands. Source string:<br>'.
+                'The collection contains invalid commands. Safeguarding is only allowed with valid commands. Source string:<br>%s'.
                 $this->originalString
             ),
             self::ERROR_INVALID_COMMANDS
