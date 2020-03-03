@@ -24,5 +24,8 @@
         <testsuite name="Variables">
             <directory suffix=".php">./tests/testsuites/Variables</directory>
         </testsuite>
+        <testsuite name="Translator">
+            <directory suffix=".php">./tests/testsuites/Translator</directory>
+        </testsuite>
     </testsuites>
 </phpunit>
