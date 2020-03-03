@@ -2,36 +2,83 @@
 
 # Mailcode Syntax parser
 
-First draft of the type of commands planned: 
+The mailcode syntax was created for preprocessor commands in emailings.
+
+Mailcode is verbose by design, without shorthand notations, for both better readability and performance. It has been developed to unify interchangeable backend preprocessor syntaxes
+into one language that's easy to use. 
+
+## The syntax
+
+All commands follow the same structure.
+
+Parameterless:
 
 ```
+{command}
+```
+
+With parameters:
+
+```
+{command [subtype]: parameters,keywords}
+```
+
+The subtype can switch between modes of the same command.
+
+## Supported commands
+
+### Display variable values
+```
 {showvar: $CUSTOMER.NAME}
+```
 
-{comment: This is a comment.}
+### Set a variable
 
+```
 {setvar: $CUSTOMER.NAME = "value"}
+```
 
-{if variable: $CUSTOMER.NAME == "value"}
-{elseif variable: $CUSTOMER.NAME == "blabla"}
+### IF conditionals
+
+Variable-based conditions:
+
+```
+{if variable: $CUSTOMER.NAME == "John"}
+    Hi, John.
+{elseif variable: $CUSTOMER.NAME == "Jack"}
+    Howdy, Jack.
 {end}
+```
 
-{if command:velocity statement}
+Non-variable based conditions:
+
+```
+{if: 6 + 2 == 8}
+    It means 8.
 {end}
+```
 
-{command:raw command statement}
+### Loops
 
+```
 {for: $NAME in $CUSTOMER.NAMES}
     {showvar: $NAME}
 {end}
 ```
 
-This follows the same structure everywhere:
+### Comments
+
+Comments do not have to be quoted, but can be.
 
 ```
-{command [type]}
-
-{command [type]: params}
+{comment: This is a comment.}
+{comment: "This is a quoted comment."}
 ```
+
+## Format compatibility
+
+Mailcode mixes well with HTML and XML. Its strict syntax makes it easy to distinguish it from most text formats. with the notable exception of CSS. In HTML, all style tags are
+ignored.
 
 ## Safeguarding commands when filtering texts
 
@@ -89,3 +136,34 @@ foreach($placeholders as $placeholder)
     $original = $placeholder->getOriginalText(); // the original command text
 }
 ```
+
+## Translation to other syntaxes
+
+The translator class makes it easy to convert documents with mailcode to other syntaxes, like the bundled Apache Velocity converter.
+
+### Translating whole strings
+
+```php
+// create the safeguarder instance for the subject string
+$safeguard = Mailcode::create()->createSafeguard($string);
+
+// create the translator
+$apache = Mailcode::create()->createTranslator()->createSyntax('ApacheVelocity');
+
+// convert all commands in the safeguarded string
+$convertedString = $apache->translateSafeguard($safeguard);
+```
+
+### Translating single commands
+
+```php
+// create the translator
+$apache = Mailcode::create()->createTranslator()->createSyntax('ApacheVelocity');
+
+// create a command
+$command = Mailcode_Factory::setVariable('VAR.NAME', '8');
+
+// convert it to an apache velocity command string
+$apacheString = $apache->translateCommand($command);
+```
+
