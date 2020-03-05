@@ -102,7 +102,7 @@ class Mailcode_Parser_Statement
         if($unknown)
         {
             $this->result->makeError(
-               t('Unquoted string literal found:').' ('.$unknown->getMatchedText().')',
+               t('Unquoted string literal found:').' ('.htmlspecialchars($unknown->getMatchedText()).')',
                 self::VALIDATION_UNQUOTED_STRING_LITERALS
             );
         }
