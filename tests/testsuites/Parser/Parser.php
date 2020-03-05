@@ -235,4 +235,15 @@ height:45px;
         $this->assertTrue($collection->isValid());
         $this->assertFalse($collection->hasCommands());
     }
+    
+    public function test_parseNumbersInStringLiterals()
+    {
+        $parser = Mailcode::create()->getParser();
+        
+        $collection = $parser->parseString(
+            'Line with {setvar: $FOOBAR = "44578,45"}'
+        );
+        
+        $this->assertTrue($collection->isValid());
+    }
 }
