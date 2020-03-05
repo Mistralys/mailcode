@@ -105,6 +105,16 @@ class Mailcode_Parser_Safeguard
     }
     
    /**
+    * Retrieves the string the safeguard was created for.
+    * 
+    * @return string
+    */
+    public function getOriginalString() : string
+    {
+        return $this->originalString;
+    }
+    
+   /**
     * Sets the delimiter character sequence used to prepend
     * and append to the placeholders.
     * 
