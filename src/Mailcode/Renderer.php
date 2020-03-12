@@ -50,7 +50,7 @@ class Mailcode_Renderer
         return $this->command2string(Mailcode_Factory::showVar($variableName));
     }
     
-    public function setVar(string $variableName, string $value, bool $quoteValue) : string
+    public function setVar(string $variableName, string $value, bool $quoteValue=false) : string
     {
         return $this->command2string(Mailcode_Factory::setVar($variableName, $value, $quoteValue));
     }
@@ -65,7 +65,7 @@ class Mailcode_Renderer
         return $this->command2string(Mailcode_Factory::if($condition, $type));
     }
     
-    public function ifVar(string $variable, string $operand, string $value, bool $quoteValue) : string
+    public function ifVar(string $variable, string $operand, string $value, bool $quoteValue=false) : string
     {
         return $this->command2string(Mailcode_Factory::ifVar($variable, $operand, $value, $quoteValue));
     }
@@ -75,7 +75,7 @@ class Mailcode_Renderer
         return $this->command2string(Mailcode_Factory::ifVarString($variable, $operand, $value));
     }
     
-    public function ifVarEquals(string $variable, string $value, bool $quoteValue) : string
+    public function ifVarEquals(string $variable, string $value, bool $quoteValue=false) : string
     {
         return $this->command2string(Mailcode_Factory::ifVarEquals($variable, $value, $quoteValue));
     }
@@ -85,7 +85,7 @@ class Mailcode_Renderer
         return $this->command2string(Mailcode_Factory::ifVarEqualsString($variable, $value));    
     }
     
-    public function ifVarNotEquals(string $variable, string $value, bool $quoteValue) : string
+    public function ifVarNotEquals(string $variable, string $value, bool $quoteValue=false) : string
     {
         return $this->command2string(Mailcode_Factory::ifVarNotEquals($variable, $value, $quoteValue));
     }
@@ -100,7 +100,7 @@ class Mailcode_Renderer
         return $this->command2string(Mailcode_Factory::elseIf($condition, $type));
     }
     
-    public function elseIfVar(string $variable, string $operand, string $value, bool $quoteValue) : string
+    public function elseIfVar(string $variable, string $operand, string $value, bool $quoteValue=false) : string
     {
         return $this->command2string(Mailcode_Factory::elseIfVar($variable, $operand, $value, $quoteValue));
     }
@@ -110,7 +110,7 @@ class Mailcode_Renderer
         return $this->command2string(Mailcode_Factory::elseIfVarString($variable, $operand, $value));
     }
     
-    public function elseIfVarEquals(string $variable, string $value, bool $quoteValue) : string
+    public function elseIfVarEquals(string $variable, string $value, bool $quoteValue=false) : string
     {
         return $this->command2string(Mailcode_Factory::elseIfVarEquals($variable, $value, $quoteValue));
     }
@@ -120,7 +120,7 @@ class Mailcode_Renderer
         return $this->command2string(Mailcode_Factory::elseIfVarEqualsString($variable, $value));
     }
     
-    public function elseIfVarNotEquals(string $variable, string $value, bool $quoteValue) : string
+    public function elseIfVarNotEquals(string $variable, string $value, bool $quoteValue=false) : string
     {
         return $this->command2string(Mailcode_Factory::elseIfVarNotEquals($variable, $value, $quoteValue));
     }
