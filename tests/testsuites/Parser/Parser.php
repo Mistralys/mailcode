@@ -246,4 +246,15 @@ height:45px;
         
         $this->assertTrue($collection->isValid());
     }
+    
+    public function test_quotesInComments()
+    {
+        $parser = Mailcode::create()->getParser();
+        
+        $collection = $parser->parseString(
+            'Line with {comment: He said, "Foo me!" :D }'
+        );
+        
+        $this->assertTrue($collection->isValid());
+    }
 }
