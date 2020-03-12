@@ -22,8 +22,10 @@ class Mailcode_Commands_Command_Comment extends Mailcode_Commands_Command_Type_S
 {
     protected function init() : void
     {
+        $this->paramsString = trim($this->paramsString);
+        
         // automatically quote the parameters, since comments don't require any.
-        if(!strstr($this->paramsString, '"'))
+        if(substr($this->paramsString, 0, 1) != '"')
         {
             $this->paramsString = '"'.$this->paramsString.'"';
         }
