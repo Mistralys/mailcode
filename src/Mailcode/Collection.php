@@ -22,6 +22,8 @@ use AppUtils\OperationResult;
  */
 class Mailcode_Collection
 {
+    const ERROR_CANNOT_RETRIEVE_FIRST_ERROR = 52301;
+    
    /**
     * @var Mailcode_Commands_Command[]
     */
@@ -107,6 +109,22 @@ class Mailcode_Collection
         }
         
         return $errors;
+    }
+    
+    public function getFirstError() : Mailcode_Collection_Error
+    {
+        $errors = $this->getErrors();
+        
+        if(!empty($errors))
+        {
+            return array_shift($errors);
+        }
+        
+        throw new Mailcode_Exception(
+            'Cannot retrieve first error: no errors detected',
+            null,
+            self::ERROR_CANNOT_RETRIEVE_FIRST_ERROR
+        );
     }
     
     public function isValid() : bool
