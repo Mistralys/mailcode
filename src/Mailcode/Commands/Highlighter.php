@@ -56,8 +56,11 @@ class Mailcode_Commands_Highlighter
             $this->parts[] = ' '.$this->renderTag(array('command-type'), $this->command->getType());
         }
         
-        $this->parts[] = $this->renderTag(array('hyphen'), ':');
-        $this->parts[] = '<wbr>';
+        if($this->command->requiresParameters())
+        {
+            $this->parts[] = $this->renderTag(array('hyphen'), ':');
+            $this->parts[] = '<wbr>';
+        }
     }
     
     protected function appendParams() : void
