@@ -49,6 +49,11 @@ class Mailcode_Renderer
     {
         return $this->command2string(Mailcode_Factory::showVar($variableName));
     }
+
+    public function showSnippet(string $snippetName) : string
+    {
+        return $this->command2string(Mailcode_Factory::showSnippet($snippetName));
+    }
     
     public function setVar(string $variableName, string $value, bool $quoteValue=false) : string
     {
