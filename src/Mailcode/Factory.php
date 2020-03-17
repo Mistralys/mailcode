@@ -49,6 +49,27 @@ class Mailcode_Factory
         
         return $cmd;
     }
+
+   /**
+    * Creates a ShowSnippet command.
+    *
+    * @param string $snippetName A snippet name, with or without the $ sign prepended.
+    * @return Mailcode_Commands_Command_ShowSnippet
+    */
+    public static function showSnippet(string $snippetName) : Mailcode_Commands_Command_ShowSnippet
+    {
+        $snippetName = self::_filterVariableName($snippetName);
+        
+        $cmd = new Mailcode_Commands_Command_ShowSnippet(
+            '',
+            $snippetName,
+            '{showsnippet:'.$snippetName.'}'
+        );
+        
+        self::_checkCommand($cmd);
+        
+        return $cmd;
+    }
     
    /**
     * Creates a SetVariable command.
