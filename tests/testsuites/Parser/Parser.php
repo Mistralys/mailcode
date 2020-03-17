@@ -257,4 +257,22 @@ height:45px;
         
         $this->assertTrue($collection->isValid());
     }
+    
+    public function test_htmlEntities()
+    {
+        $parser = Mailcode::create()->getParser();
+        
+        $collection = $parser->parseString(
+            '{if: 6 &gt; 2}Here{end}'
+        );
+        
+        $message = '';
+        if(!$collection->isValid())
+        {
+            $message = $collection->getFirstError()->getMessage();
+        }
+        
+        $this->assertTrue($collection->isValid(), $message);
+        $this->assertSame(2, $collection->countCommands());    
+    }
 }

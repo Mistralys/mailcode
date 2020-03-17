@@ -56,6 +56,29 @@ final class Factory_FactoryTests extends MailcodeTestCase
         Mailcode_Factory::showVar('0INVALIDVAR');
     }
     
+    public function test_showSnippet()
+    {
+        $tests = array(
+            array(
+                'label' => 'Variable name without $',
+                'cmd' => Mailcode_Factory::showSnippet('snippet_name')
+            ),
+            array(
+                'label' => 'Variable name with $',
+                'cmd' => Mailcode_Factory::showSnippet('$snippet_name')
+            )
+        );
+        
+        $this->addToAssertionCount(count($tests));
+    }
+    
+    public function test_showSnippet_error()
+    {
+        $this->expectException(Mailcode_Factory_Exception::class);
+        
+        Mailcode_Factory::showSnippet('0invalid_var');
+    }
+    
     public function test_elseIf()
     {
         $tests = array(
