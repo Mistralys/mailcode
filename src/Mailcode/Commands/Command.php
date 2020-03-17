@@ -82,7 +82,7 @@ abstract class Mailcode_Commands_Command
     public function __construct(string $type='', string $paramsString='', string $matchedText='')
     {
         $this->type = $type;
-        $this->paramsString = $paramsString;
+        $this->paramsString = html_entity_decode($paramsString);
         $this->matchedText = $matchedText;
         $this->mailcode = Mailcode::create();
         
