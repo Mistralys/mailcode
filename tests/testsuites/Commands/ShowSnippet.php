@@ -22,10 +22,10 @@ final class Mailcode_ShowSnippetTests extends MailcodeTestCase
                 'code' => Mailcode_Commands_Command::VALIDATION_INVALID_PARAMS_STATEMENT
             ),
             array(
-                'label' => 'With several variables',
-                'string' => '{showsnippet: $foobar $barfoo}',
+                'label' => 'Without variable',
+                'string' => '{showsnippet: "Some text"}',
                 'valid' => false,
-                'code' => Mailcode_Commands_Command_ShowSnippet::VALIDATION_VARIABLE_COUNT_MISMATCH
+                'code' => Mailcode_Commands_Command_ShowSnippet::VALIDATION_VARIABLE_MISSING
             ),
             array(
                 'label' => 'With valid variable',

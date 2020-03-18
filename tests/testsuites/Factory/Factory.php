@@ -190,4 +190,52 @@ final class Factory_FactoryTests extends MailcodeTestCase
         $this->assertTrue($var->isValid());
         $this->assertSame('{showvar: $FOO.BAR}', $var->getNormalized());
     }
+    
+    public function test_ifContains()
+    {
+        $tests = array(
+            array(
+                'label' => 'Variable name without $',
+                'cmd' => Mailcode_Factory::ifContains('FOO.BAR', 'Value')
+            ),
+            array(
+                'label' => 'Variable name with $',
+                'cmd' => Mailcode_Factory::ifContains('$VAR.NAME', 'Value')
+            ),
+            array(
+                'label' => 'Search for number',
+                'cmd' => Mailcode_Factory::ifContains('$VAR.NAME', '64')
+            ),
+            array(
+                'label' => 'Search for text with quotes',
+                'cmd' => Mailcode_Factory::ifContains('$VAR.NAME', 'It\'s a "weird" foo.')
+            )
+        );
+        
+        $this->addToAssertionCount(count($tests));
+    }
+    
+    public function test_elseIfContains()
+    {
+        $tests = array(
+            array(
+                'label' => 'Variable name without $',
+                'cmd' => Mailcode_Factory::elseIfContains('FOO.BAR', 'Value')
+            ),
+            array(
+                'label' => 'Variable name with $',
+                'cmd' => Mailcode_Factory::elseIfContains('$VAR.NAME', 'Value')
+            ),
+            array(
+                'label' => 'Search for number',
+                'cmd' => Mailcode_Factory::elseIfContains('$VAR.NAME', '64')
+            ),
+            array(
+                'label' => 'Search for text with quotes',
+                'cmd' => Mailcode_Factory::elseIfContains('$VAR.NAME', 'It\'s a "weird" foo.')
+            )
+        );
+        
+        $this->addToAssertionCount(count($tests));
+    }
 }

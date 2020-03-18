@@ -49,6 +49,21 @@ final class Translator_ApacheVelocityTests extends MailcodeTestCase
                 'mailcode' => Mailcode_Factory::end(),
                 'expected' => '#{end}'
             ),
+            array(
+                'label' => 'If contains',
+                'mailcode' => Mailcode_Factory::ifContains('FOO.BAR', 'Value'),
+                'expected' => '#if($FOO.BAR.matches("(?s)Value"))'
+            ),
+            array(
+                'label' => 'If contains with slash',
+                'mailcode' => Mailcode_Factory::ifContains('FOO.BAR', 'Va\lue'),
+                'expected' => '#if($FOO.BAR.matches("(?s)Va\\\\lue"))'
+            ),
+            array(
+                'label' => 'If contains with special characters',
+                'mailcode' => Mailcode_Factory::ifContains('FOO.BAR', '6 + 4 * 3'),
+                'expected' => '#if($FOO.BAR.matches("(?s)6 \+ 4 \* 3"))'
+            )
         );
         
         $syntax = $this->translator->createSyntax('ApacheVelocity');
