@@ -18,7 +18,7 @@ namespace Mailcode;
  * @subpackage Commands
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Mailcode_Commands_Command_ElseIf extends Mailcode_Commands_Command_Type_Sibling
+class Mailcode_Commands_Command_ElseIf extends Mailcode_Commands_IfBase implements Mailcode_Commands_Command_Type_Sibling
 {
     public function getName() : string
     {
@@ -28,34 +28,6 @@ class Mailcode_Commands_Command_ElseIf extends Mailcode_Commands_Command_Type_Si
     public function getLabel() : string
     {
         return t('ELSE IF condition');
-    }
-    
-    public function supportsType(): bool
-    {
-        return true;
-    }
-
-    public function requiresParameters(): bool
-    {
-        return true;
-    }
-
-    public function generatesContent(): bool
-    {
-        return false;
-    }
-
-    public function getSupportedTypes() : array
-    {
-        return array(
-            'variable',
-            'command'
-        );
-    }
-    
-    protected function getValidations(): array
-    {
-        return array();
     }
     
     public function getParentName() : string
