@@ -39,7 +39,8 @@ class Mailcode_Factory
     {
         $variableName = self::_filterVariableName($variableName);
         
-        $cmd = new Mailcode_Commands_Command_ShowVariable(
+        $cmd = Mailcode::create()->getCommands()->createCommand(
+            'ShowVariable',
             '',
             $variableName,
             '{showvar:'.$variableName.'}'
@@ -47,7 +48,12 @@ class Mailcode_Factory
         
         self::_checkCommand($cmd);
         
-        return $cmd;
+        if($cmd instanceof Mailcode_Commands_Command_ShowVariable)
+        {
+            return $cmd;
+        }
+        
+        throw self::_exceptionUnexpectedType('ShowVariable', $cmd);
     }
 
    /**
@@ -60,7 +66,8 @@ class Mailcode_Factory
     {
         $snippetName = self::_filterVariableName($snippetName);
         
-        $cmd = new Mailcode_Commands_Command_ShowSnippet(
+        $cmd = Mailcode::create()->getCommands()->createCommand(
+            'ShowSnippet',
             '',
             $snippetName,
             '{showsnippet:'.$snippetName.'}'
@@ -68,7 +75,12 @@ class Mailcode_Factory
         
         self::_checkCommand($cmd);
         
-        return $cmd;
+        if($cmd instanceof Mailcode_Commands_Command_ShowSnippet)
+        {
+            return $cmd;
+        }
+        
+        throw self::_exceptionUnexpectedType('ShowSnippet', $cmd);
     }
     
    /**
@@ -93,7 +105,8 @@ class Mailcode_Factory
         
         $params = $variableName.' = '.$value;
         
-        $cmd = new Mailcode_Commands_Command_SetVariable(
+        $cmd = Mailcode::create()->getCommands()->createCommand(
+            'SetVariable',
             '', // type
             $params,
             '{setvar: '.$params.'}'
@@ -101,7 +114,12 @@ class Mailcode_Factory
         
         self::_checkCommand($cmd);
         
-        return $cmd;
+        if($cmd instanceof Mailcode_Commands_Command_SetVariable)
+        {
+            return $cmd;
+        }
+        
+        throw self::_exceptionUnexpectedType('SetVariable', $cmd);
     }
     
    /**
@@ -119,9 +137,10 @@ class Mailcode_Factory
     
     public static function comment(string $comments) : Mailcode_Commands_Command_Comment
     {
-        $cmd = new Mailcode_Commands_Command_Comment(
-            '', // type,
-            $comments, // params,
+        $cmd = Mailcode::create()->getCommands()->createCommand(
+            'Comment',
+            '', // type
+            $comments, // params
             sprintf(
                 '{comment: %s}',
                 $comments
@@ -130,36 +149,53 @@ class Mailcode_Factory
         
         self::_checkCommand($cmd);
         
-        return $cmd;
+        if($cmd instanceof Mailcode_Commands_Command_Comment)
+        {
+            return $cmd;
+        }
+        
+        throw self::_exceptionUnexpectedType('Comment', $cmd);
     }
     
     public static function else() : Mailcode_Commands_Command_Else
     {
-        $cmd = new Mailcode_Commands_Command_Else(
-            '', // type,
-            '', // params,
+        $cmd = Mailcode::create()->getCommands()->createCommand(
+            'Else', 
+            '', 
+            '', 
             '{else}'
         );
         
         self::_checkCommand($cmd);
         
-        return $cmd;
+        if($cmd instanceof Mailcode_Commands_Command_Else)
+        {
+            return $cmd;
+        }
+        
+        throw self::_exceptionUnexpectedType('Else', $cmd);
     }
     
     public static function end() : Mailcode_Commands_Command_End
     {
-        $cmd = new Mailcode_Commands_Command_End(
-            '', // type,
-            '', // params,
+        $cmd = Mailcode::create()->getCommands()->createCommand(
+            'End',
+            '',
+            '',
             '{end}'
         );
         
         self::_checkCommand($cmd);
         
-        return $cmd;
+        if($cmd instanceof Mailcode_Commands_Command_End)
+        {
+            return $cmd;
+        }
+        
+        throw self::_exceptionUnexpectedType('End', $cmd);
     }
     
-    protected static function _buildIf(string $cmd, string $condition, string $type='') : Mailcode_Commands_Command
+    protected static function _buildIf(string $ifType, string $params, string $type='') : Mailcode_Commands_IfBase
     {
         $stringType = $type;
         
@@ -168,25 +204,29 @@ class Mailcode_Factory
             $stringType = ' '.$type;
         }
         
-        $class = '\Mailcode\Mailcode_Commands_Command_'.$cmd;
-        
-        $cmd = new $class(
-            $type, // type,
-            $condition, // params,
+        $command = Mailcode::create()->getCommands()->createCommand(
+            $ifType, 
+            $type, 
+            $params, 
             sprintf(
                 '{%s%s: %s}',
-                strtolower($cmd),
+                strtolower($ifType),
                 $stringType,
-                $condition
+                $params
             )
         );
         
-        self::_checkCommand($cmd);
+        self::_checkCommand($command);
         
-        return $cmd;
+        if($command instanceof Mailcode_Commands_IfBase)
+        {
+            return $command;
+        }
+        
+        throw self::_exceptionUnexpectedType('IfBase', $command);
     }
   
-    protected static function _buildIfVar(string $cmd, string $variable, string $operand, string $value, bool $quoteValue=false) : Mailcode_Commands_Command
+    protected static function _buildIfVar(string $ifType, string $variable, string $operand, string $value, bool $quoteValue=false) : Mailcode_Commands_IfBase
     {
         if($quoteValue)
         {
@@ -200,175 +240,218 @@ class Mailcode_Factory
             $value
         );
         
-        return self::_buildIf($cmd, $condition, 'variable');
+        return self::_buildIf($ifType, $condition, 'variable');
     }
     
     public static function if(string $condition, string $type='') : Mailcode_Commands_Command_If
     {
-        $cmd = self::_buildIf('If', $condition, $type);
+        $command = self::_buildIf('If', $condition, $type);
         
-        if($cmd instanceof Mailcode_Commands_Command_If)
+        if($command instanceof Mailcode_Commands_Command_If)
         {
-            return $cmd;
+            return $command;
         }
-        
-        throw self::_exceptionUnexpectedType($cmd);
+       
+        throw self::_exceptionUnexpectedType('If', $command);
     }
     
-    public static function ifVar(string $variable, string $operand, string $value, bool $quoteValue=false) : Mailcode_Commands_Command_If
+    public static function ifVar(string $variable, string $operand, string $value, bool $quoteValue=false) : Mailcode_Commands_Command_If_Variable
     {
-        $cmd = self::_buildIfVar('If', $variable, $operand, $value, $quoteValue);
+        $command = self::_buildIfVar('If', $variable, $operand, $value, $quoteValue);
         
-        if($cmd instanceof Mailcode_Commands_Command_If)
+        if($command instanceof Mailcode_Commands_Command_If_Variable)
         {
-            return $cmd;
+            return $command;
         }
         
-        throw self::_exceptionUnexpectedType($cmd);
+        throw self::_exceptionUnexpectedType('IfVar', $command);
     }
 
-    public static function ifVarString(string $variable, string $operand, string $value) : Mailcode_Commands_Command_If
+    public static function ifVarString(string $variable, string $operand, string $value) : Mailcode_Commands_Command_If_Variable
     {
-        $cmd = self::_buildIfVar('If', $variable, $operand, $value, true);
+        $command = self::_buildIfVar('If', $variable, $operand, $value, true);
         
-        if($cmd instanceof Mailcode_Commands_Command_If)
+        if($command instanceof Mailcode_Commands_Command_If_Variable)
         {
-            return $cmd;
+            return $command;
         }
         
-        throw self::_exceptionUnexpectedType($cmd);
+        throw self::_exceptionUnexpectedType('IfVarString', $command);
     }
     
-    public static function ifVarEquals(string $variable, string $value, bool $quoteValue=false) : Mailcode_Commands_Command_If
+    public static function ifVarEquals(string $variable, string $value, bool $quoteValue=false) : Mailcode_Commands_Command_If_Variable
     {
-        $cmd = self::_buildIfVar('If', $variable, '==', $value, $quoteValue);
+        $command = self::_buildIfVar('If', $variable, '==', $value, $quoteValue);
         
-        if($cmd instanceof Mailcode_Commands_Command_If)
+        if($command instanceof Mailcode_Commands_Command_If_Variable)
         {
-            return $cmd;
+            return $command;
         }
         
-        throw self::_exceptionUnexpectedType($cmd);
+        throw self::_exceptionUnexpectedType('IfVarEquals', $command);
     }
 
     public static function ifVarEqualsString(string $variable, string $value) : Mailcode_Commands_Command_If
     {
-        $cmd = self::_buildIfVar('If', $variable, '==', $value, true);
+        $command = self::_buildIfVar('If', $variable, '==', $value, true);
         
-        if($cmd instanceof Mailcode_Commands_Command_If)
+        if($command instanceof Mailcode_Commands_Command_If_Variable)
         {
-            return $cmd;
+            return $command;
         }
         
-        throw self::_exceptionUnexpectedType($cmd);
+        throw self::_exceptionUnexpectedType('IfarEqualsString', $command);
     }
     
-    public static function ifVarNotEquals(string $variable, string $value, bool $quoteValue=false) : Mailcode_Commands_Command_If
+    public static function ifVarNotEquals(string $variable, string $value, bool $quoteValue=false) : Mailcode_Commands_Command_If_Variable
     {
-        $cmd = self::_buildIfVar('If', $variable, '!=', $value, $quoteValue);
+        $command = self::_buildIfVar('If', $variable, '!=', $value, $quoteValue);
         
-        if($cmd instanceof Mailcode_Commands_Command_If)
+        if($command instanceof Mailcode_Commands_Command_If_Variable)
         {
-            return $cmd;
+            return $command;
         }
         
-        throw self::_exceptionUnexpectedType($cmd);
+        throw self::_exceptionUnexpectedType('IfVarNotEquals', $command);
     }
 
-    public static function ifVarNotEqualsString(string $variable, string $value) : Mailcode_Commands_Command_If
+    public static function ifVarNotEqualsString(string $variable, string $value) : Mailcode_Commands_Command_If_Variable
     {
-        $cmd = self::_buildIfVar('If', $variable, '!=', $value, true);
+        $command = self::_buildIfVar('If', $variable, '!=', $value, true);
         
-        if($cmd instanceof Mailcode_Commands_Command_If)
+        if($command instanceof Mailcode_Commands_Command_If_Variable)
         {
-            return $cmd;
+            return $command;
         }
         
-        throw self::_exceptionUnexpectedType($cmd);
+        throw self::_exceptionUnexpectedType('IfVarNotEqualsString', $command);
     }
     
     public static function elseIf(string $condition, string $type='') : Mailcode_Commands_Command_ElseIf
     {
-        $cmd = self::_buildIf('ElseIf', $condition, $type);
+        $command = self::_buildIf('ElseIf', $condition, $type);
         
-        if($cmd instanceof Mailcode_Commands_Command_ElseIf)
+        if($command instanceof Mailcode_Commands_Command_ElseIf)
         {
-            return $cmd;
+            return $command;
         }
         
-        throw self::_exceptionUnexpectedType($cmd);
+        throw self::_exceptionUnexpectedType('ElseIf', $command);
     }
     
-    public static function elseIfVar(string $variable, string $operand, string $value, bool $quoteValue=false) : Mailcode_Commands_Command_ElseIf
+    public static function elseIfVar(string $variable, string $operand, string $value, bool $quoteValue=false) : Mailcode_Commands_Command_ElseIf_Variable
     {
-        $cmd = self::_buildIfVar('ElseIf', $variable, $operand, $value, $quoteValue);
+        $command = self::_buildIfVar('ElseIf', $variable, $operand, $value, $quoteValue);
         
-        if($cmd instanceof Mailcode_Commands_Command_ElseIf)
+        if($command instanceof Mailcode_Commands_Command_ElseIf_Variable)
         {
-            return $cmd;
+            return $command;
         }
         
-        throw self::_exceptionUnexpectedType($cmd);
+        throw self::_exceptionUnexpectedType('ElseIfVariable', $command);
     }
 
-    public static function elseIfVarString(string $variable, string $operand, string $value) : Mailcode_Commands_Command_ElseIf
+    public static function elseIfVarString(string $variable, string $operand, string $value) : Mailcode_Commands_Command_ElseIf_Variable
     {
-        $cmd = self::_buildIfVar('ElseIf', $variable, $operand, $value, true);
+        $command = self::_buildIfVar('ElseIf', $variable, $operand, $value, true);
         
-        if($cmd instanceof Mailcode_Commands_Command_ElseIf)
+        if($command instanceof Mailcode_Commands_Command_ElseIf_Variable)
         {
-            return $cmd;
+            return $command;
         }
         
-        throw self::_exceptionUnexpectedType($cmd);
+        throw self::_exceptionUnexpectedType('ElseIfVarString', $command);
     }
     
-    public static function elseIfVarEquals(string $variable, string $value, bool $quoteValue=false) : Mailcode_Commands_Command_ElseIf
+    public static function elseIfVarEquals(string $variable, string $value, bool $quoteValue=false) : Mailcode_Commands_Command_ElseIf_Variable
     {
-        $cmd = self::_buildIfVar('ElseIf', $variable, '==', $value, $quoteValue);
+        $command = self::_buildIfVar('ElseIf', $variable, '==', $value, $quoteValue);
         
-        if($cmd instanceof Mailcode_Commands_Command_ElseIf)
+        if($command instanceof Mailcode_Commands_Command_ElseIf_Variable)
         {
-            return $cmd;
+            return $command;
         }
         
-        throw self::_exceptionUnexpectedType($cmd);
+        throw self::_exceptionUnexpectedType('ElseIfVarEquals', $command);
     }
 
-    public static function elseIfVarEqualsString(string $variable, string $value) : Mailcode_Commands_Command_ElseIf
+    public static function elseIfVarEqualsString(string $variable, string $value) : Mailcode_Commands_Command_ElseIf_Variable
     {
-        $cmd = self::_buildIfVar('ElseIf', $variable, '==', $value, true);
+        $command = self::_buildIfVar('ElseIf', $variable, '==', $value, true);
         
-        if($cmd instanceof Mailcode_Commands_Command_ElseIf)
+        if($command instanceof Mailcode_Commands_Command_ElseIf_Variable)
         {
-            return $cmd;
+            return $command;
         }
         
-        throw self::_exceptionUnexpectedType($cmd);
+        throw self::_exceptionUnexpectedType('ElseIfVarEqualsString', $command);
     }
     
-    public static function elseIfVarNotEquals(string $variable, string $value, bool $quoteValue=false) : Mailcode_Commands_Command_ElseIf
+    public static function elseIfVarNotEquals(string $variable, string $value, bool $quoteValue=false) : Mailcode_Commands_Command_ElseIf_Variable
     {
-        $cmd = self::_buildIfVar('ElseIf', $variable, '!=', $value, $quoteValue);
+        $command = self::_buildIfVar('ElseIf', $variable, '!=', $value, $quoteValue);
         
-        if($cmd instanceof Mailcode_Commands_Command_ElseIf)
+        if($command instanceof Mailcode_Commands_Command_ElseIf_Variable)
         {
-            return $cmd;
+            return $command;
         }
         
-        throw self::_exceptionUnexpectedType($cmd);
+        throw self::_exceptionUnexpectedType('ElseIfVarNotEquals', $command);
     }
 
-    public static function elseIfVarNotEqualsString(string $variable, string $value) : Mailcode_Commands_Command_ElseIf
+    public static function elseIfVarNotEqualsString(string $variable, string $value) : Mailcode_Commands_Command_ElseIf_Variable
     {
-        $cmd = self::_buildIfVar('ElseIf', $variable, '!=', $value, true);
+        $command = self::_buildIfVar('ElseIf', $variable, '!=', $value, true);
         
-        if($cmd instanceof Mailcode_Commands_Command_ElseIf)
+        if($command instanceof Mailcode_Commands_Command_ElseIf_Variable)
         {
-            return $cmd;
+            return $command;
         }
         
-        throw self::_exceptionUnexpectedType($cmd);
+        throw self::_exceptionUnexpectedType('ElseIfVarNotEqualsString', $command);
+    }
+    
+    public static function ifContains(string $variable, string $search, bool $caseInsensitive=false) : Mailcode_Commands_Command_If_Contains
+    {
+        $command = self::_buildIfContains('If', $variable, $search, $caseInsensitive);
+        
+        if($command instanceof Mailcode_Commands_Command_If_Contains)
+        {
+            return $command;
+        }
+        
+        throw self::_exceptionUnexpectedType('ElseIfContains', $command);
+    }
+    
+    public static function elseIfContains(string $variable, string $search, bool $caseInsensitive=false) : Mailcode_Commands_Command_ElseIf_Contains
+    {
+        $command = self::_buildIfContains('ElseIf', $variable, $search, $caseInsensitive);
+        
+        if($command instanceof Mailcode_Commands_Command_ElseIf_Contains)
+        {
+            return $command;
+        }
+        
+        throw self::_exceptionUnexpectedType('ElseIfContains', $command);
+    }
+    
+    protected static function _buildIfContains(string $ifType, string $variable, string $search, bool $caseInsensitive=false) : Mailcode_Commands_IfBase
+    {
+        $keyword = ' ';
+        
+        if($caseInsensitive)
+        {
+            $keyword = ' insensitive: ';
+        }
+        
+        $condition = sprintf(
+            '%s%s"%s"',
+            self::_filterVariableName($variable),
+            $keyword,
+            $search
+        );
+        
+        return self::_buildIf($ifType, $condition, 'contains');
     }
     
     protected static function _filterVariableName(string $name) : string
@@ -405,11 +488,11 @@ class Mailcode_Factory
         );
     }
     
-    protected static function _exceptionUnexpectedType(Mailcode_Commands_Command $command) : Mailcode_Factory_Exception
+    protected static function _exceptionUnexpectedType(string $type, Mailcode_Commands_Command $command) : Mailcode_Factory_Exception
     {
         return new Mailcode_Factory_Exception(
             'Invalid command class type created.',
-            null,
+            sprintf('Excepted type [%s], but created class [%s].', $type, get_class($command)),
             self::ERROR_UNEXPECTED_COMMAND_TYPE,
             null,
             $command
