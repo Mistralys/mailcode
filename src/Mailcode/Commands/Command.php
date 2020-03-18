@@ -23,6 +23,7 @@ abstract class Mailcode_Commands_Command
     const ERROR_NON_DUMMY_OPERATION = 46001;
     const ERROR_NO_VALIDATION_RESULT_AVAILABLE = 46002;
     const ERROR_MISSING_VALIDATION_METHOD = 46003;
+    const ERROR_MISSING_TYPE_INTERFACE = 46004;
     
     const VALIDATION_MISSING_PARAMETERS = 48301;
     const VALIDATION_ADDONS_NOT_SUPPORTED = 48302;
@@ -99,8 +100,10 @@ abstract class Mailcode_Commands_Command
     */
     public function getID() : string
     {
-        $tokens = explode('_', get_class($this));
-        return array_pop($tokens);
+        // account for commands with types: If_Variable should still return If.
+        $base = str_replace(Mailcode_Commands_Command::class.'_', '', get_class($this));
+        $tokens = explode('_', $base);
+        return array_shift($tokens);
     }
     
    /**
@@ -366,7 +369,39 @@ abstract class Mailcode_Commands_Command
     
     abstract public function generatesContent() : bool;
 
-    abstract public function getCommandType() : string;
+    abstract public function getDefaultType() : string;
+    
+    public final function getCommandType() : string
+    {
+        if($this instanceof Mailcode_Commands_Command_Type_Closing)
+        {
+            return 'Closing';
+        }
+        
+        if($this instanceof Mailcode_Commands_Command_Type_Opening)
+        {
+            return 'Opening';
+        }
+        
+        if($this instanceof Mailcode_Commands_Command_Type_Sibling)
+        {
+            return 'Sibling';
+        }
+        
+        if($this instanceof Mailcode_Commands_Command_Type_Standalone)
+        {
+            return 'Standalone';
+        }
+        
+        throw new Mailcode_Exception(
+            'Invalid command type',
+            sprintf(
+                'The command [%s] does not implement any of the type interfaces.',
+                get_class($this)
+            ),
+            self::ERROR_MISSING_TYPE_INTERFACE
+        );
+    }
     
     public function getNormalized() : string
     {

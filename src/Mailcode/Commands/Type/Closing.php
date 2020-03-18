@@ -18,10 +18,6 @@ namespace Mailcode;
  * @subpackage Commands
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-abstract class Mailcode_Commands_Command_Type_Closing extends Mailcode_Commands_Command
+interface Mailcode_Commands_Command_Type_Closing
 {
-    public function getCommandType() : string
-    {
-        return 'Closing';
-    }
 }
