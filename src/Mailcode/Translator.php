@@ -22,8 +22,8 @@ class Mailcode_Translator
 {
     public function createSyntax(string $syntaxID) : Mailcode_Translator_Syntax
     {
-        $class = '\Mailcode\Mailcode_Translator_Syntax_'.$syntaxID;
+        $class = '\Mailcode\Mailcode_Translator_Syntax';
         
-        return new $class();
+        return new $class($syntaxID);
     }
 }

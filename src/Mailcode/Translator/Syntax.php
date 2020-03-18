@@ -19,9 +19,19 @@ namespace Mailcode;
  * @subpackage Translator
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-abstract class Mailcode_Translator_Syntax
+class Mailcode_Translator_Syntax
 {
     const ERROR_UNKNOWN_COMMAND_TYPE = 50401;
+    
+   /**
+    * @var string
+    */
+    protected $typeID;
+    
+    public function __construct(string $typeID)
+    {
+        $this->typeID = $typeID;
+    }
     
    /**
     * Retrieves the syntax' type ID, e.g. "ApacheVelocity".
@@ -29,9 +39,7 @@ abstract class Mailcode_Translator_Syntax
     */
     public function getTypeID() : string
     {
-        $parts = explode('_', get_class($this));
-        
-        return array_pop($parts);
+        return $this->typeID;
     }
     
    /**
@@ -43,24 +51,34 @@ abstract class Mailcode_Translator_Syntax
     */
     public function translateCommand(Mailcode_Commands_Command $command) : string
     {
-        $id = $command->getID();
+        $translator = $this->createTranslator($command);
         
-        $method = '_translate'.$id;
+        return $translator->translate($command);
+    }
+    
+    protected function createTranslator(Mailcode_Commands_Command $command) : Mailcode_Translator_Command
+    {
+        $class = sprintf(
+            'Mailcode\Mailcode_Translator_Syntax_%s_%s',
+            $this->getTypeID(),
+            $command->getID()
+        );
         
-        if(!method_exists($this, $method))
+        if(!class_exists($class))
         {
             throw new Mailcode_Translator_Exception(
-                'Unknown command type in translator',
+                sprintf('Unknown command %s in translator', $command->getID()),
                 sprintf(
-                    'The method [%s] does not exist in [%s].',
-                    $method,
-                    get_class($this)
+                    'The class [%s] does not exist.',
+                    $class
                 ),
                 self::ERROR_UNKNOWN_COMMAND_TYPE
             );
         }
         
-        return $this->$method($command);
+        $translator = new $class($command);
+        
+        return $translator;
     }
     
    /**
@@ -90,18 +108,4 @@ abstract class Mailcode_Translator_Syntax
             
         return str_replace(array_keys($replaces), array_values($replaces), $subject);
     }
-    
-    abstract protected function _translateShowVariable(Mailcode_Commands_Command_ShowVariable $command) : string;
-        
-    abstract protected function _translateSetVariable(Mailcode_Commands_Command_SetVariable $command) : string;
-    
-    abstract protected function _translateIf(Mailcode_Commands_Command_If $command) : string;
-    
-    abstract protected function _translateEnd(Mailcode_Commands_Command_End $command) : string;
-        
-    abstract protected function _translateElse(Mailcode_Commands_Command_Else $command) : string;
-        
-    abstract protected function _translateElseIf(Mailcode_Commands_Command_ElseIf $command) : string;
-    
-    abstract protected function _translateFor(Mailcode_Commands_Command_For $command) : string;
 }

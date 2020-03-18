@@ -12,86 +12,47 @@ declare(strict_types=1);
 namespace Mailcode;
 
 /**
- * Allows translation mailcode to apache velocity syntax.
+ * Abstract base class for apache velocity command translation classes. 
  *
  * @package Mailcode
  * @subpackage Translator
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Translator_Syntax
+abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Translator_Command
 {
-    protected function _translateElseIf(Mailcode_Commands_Command_ElseIf $command): string
+   /**
+    * Filters the string for use in an Apache Velocity (Java)
+    * regex string: escapes all special characters.
+    * 
+    * @param string $string
+    * @return string
+    */
+    protected function filterRegexString(string $string) : string
     {
-        $params = $command->getParams();
+        $escape = array(
+            '\\',
+            '?',
+            '.',
+            '[',
+            ']',
+            '|',
+            '{',
+            '}',
+            '$',
+            '*',
+            '^',
+            '+',
+            '<',
+            '>',
+            '(',
+            ')'
+        );
         
-        if($params)
+        foreach($escape as $char)
         {
-            return sprintf(
-                '#elseif(%s)',
-                $params->getNormalized()
-            );
+            $string = str_replace($char, '\\'.$char, $string);
         }
         
-        return '';
-    }
-
-    protected function _translateElse(Mailcode_Commands_Command_Else $command): string
-    {
-        return '#{else}';
-    }
-
-    protected function _translateIf(Mailcode_Commands_Command_If $command): string
-    {
-        $params = $command->getParams();
-    
-        if($params)
-        {
-            return sprintf(
-                '#if(%s)',
-                $params->getNormalized()
-            );
-        }
-        
-        return '';
-    }
-
-    protected function _translateShowVariable(Mailcode_Commands_Command_ShowVariable $command): string
-    {
-        return '${'.ltrim($command->getVariableName(), '$').'}';
-    }
-
-    protected function _translateFor(Mailcode_Commands_Command_For $command): string
-    {
-        $params = $command->getParams();
-        
-        if($params)
-        {
-            return sprintf(
-                '#for(%s)',
-                $params->getNormalized()
-            );
-        }
-        
-        return '';
-    }
-
-    protected function _translateSetVariable(Mailcode_Commands_Command_SetVariable $command): string
-    {
-        $params = $command->getParams();
-        
-        if($params)
-        {
-            return sprintf(
-                '#set(%s)',
-                $params->getNormalized()
-            );
-        }
-        
-        return '';
-    }
-
-    protected function _translateEnd(Mailcode_Commands_Command_End $command): string
-    {
-        return '#{end}';
+        return $string;
     }
 }
