@@ -107,6 +107,18 @@ class Mailcode_Parser_Statement_Info
         return null;
     }
     
+    public function getStringLiteralByIndex(int $index) : ?Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
+    {
+        $token = $this->getTokenByIndex($index);
+        
+        if($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral)
+        {
+            return $token;
+        }
+        
+        return null;
+    }
+    
     public function getKeywordByIndex(int $index) : ?Mailcode_Parser_Statement_Tokenizer_Token_Keyword
     {
         $token = $this->getTokenByIndex($index);
@@ -144,5 +156,37 @@ class Mailcode_Parser_Statement_Info
     public function hasTokenAtIndex(int $index) : bool
     {
         return isset($this->tokens[$index]);
+    }
+    
+   /**
+    * Retrieves all string literals that were found in the command.
+    * @return \Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral[]
+    */
+    public function getStringLiterals()
+    {
+        return $this->getTokensByType('StringLiteral');
+    }
+    
+   /**
+    * Retrieves all tokens of the specified type.
+    * 
+    * @param string $type
+    * @return \Mailcode\Mailcode_Parser_Statement_Tokenizer_Token[]
+    */
+    protected function getTokensByType(string $type)
+    {
+        $class = '\Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_'.$type;
+        
+        $result = array();
+        
+        foreach($this->tokens as $token)
+        {
+            if($token instanceof $class)
+            {
+                $result[] = $token;
+            }
+        }
+        
+        return $result;
     }
 }

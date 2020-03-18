@@ -44,7 +44,8 @@ class Mailcode_Parser_Statement_Tokenizer
     * @var string[]
     */
     protected $keywords = array(
-        'in:'
+        'in:',
+        'insensitive:'
     );
     
    /**

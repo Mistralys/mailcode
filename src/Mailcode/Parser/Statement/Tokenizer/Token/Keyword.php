@@ -34,4 +34,9 @@ class Mailcode_Parser_Statement_Tokenizer_Token_Keyword extends Mailcode_Parser_
     {
         return $this->getKeyword() === 'in:';
     }
+    
+    public function isInsensitive() : bool
+    {
+        return $this->getKeyword() === 'insensitive:';
+    }
 }

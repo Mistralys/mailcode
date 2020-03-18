@@ -61,6 +61,11 @@ abstract class Mailcode_Parser_Statement_Tokenizer_Token
     {
         return str_replace('__QUOTE__', '\"', $subject);
     }
-    
+
     abstract public function getNormalized() : string;
+    
+    final public function isValue() : bool
+    {
+        return $this instanceof Mailcode_Parser_Statement_Tokenizer_Type_Value;
+    }
 }
