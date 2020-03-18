@@ -23,10 +23,17 @@ class Mailcode_Commands
 {
     const ERROR_COMMAND_NAME_DOES_NOT_EXIST = 45901;
     
+    const ERROR_COMMAND_DOES_NOT_EXIST = 45901;
+    
    /**
     * @var Mailcode_Commands_Command[]
     */
     private $commands = array();
+    
+   /**
+    * @var string[]Mailcode_Commands_Command
+    */
+    private static $dummyCommands = array();
     
    /**
     * Retrieves a list of all available command IDs.
@@ -64,7 +71,7 @@ class Mailcode_Commands
         
         foreach($ids as $id) 
         {
-            $result[] = $this->getByID($id);
+            $result[] = $this->getDummyCommand($id);
         }
         
         usort($result, function(Mailcode_Commands_Command $a, Mailcode_Commands_Command $b) 
@@ -154,8 +161,58 @@ class Mailcode_Commands
     
     public function createCommand(string $id, string $type, string $params, string $matchedString) : Mailcode_Commands_Command
     {
-        $class = 'Mailcode\Mailcode_Commands_Command_'.$id;
+        $class = $this->resolveClassName($id, $type);
+        
+        if(!class_exists($class))
+        {
+            throw new Mailcode_Exception(
+                'No such command',
+                sprintf(
+                    'The command ID [%1$s] does not exist, class [%2$s] not found.',
+                    $id,
+                    $class
+                ),
+                self::ERROR_COMMAND_DOES_NOT_EXIST
+            );
+        }
         
         return new $class($type, $params, $matchedString);
+    }
+    
+    protected function resolveClassName(string $id, string $type) : string
+    {
+        $class = 'Mailcode\Mailcode_Commands_Command_'.$id;
+        
+        $dummy = $this->getDummyCommand($id);
+        
+        if($dummy->supportsType())
+        {
+            if(empty($type))
+            {
+                $type = $dummy->getDefaultType();
+            }
+            
+            $class .= '_'.ucfirst($type);
+        }
+        
+        return $class;
+    }
+    
+   /**
+    * Retrieves the dummy command of the specified type, which
+    * is used to retrieve information on the command's capabilities.
+    *  
+    * @param string $id
+    * @return Mailcode_Commands_Command
+    */
+    private function getDummyCommand(string $id) : Mailcode_Commands_Command
+    {
+        if(!isset(self::$dummyCommands[$id]))
+        {
+            $class = 'Mailcode\Mailcode_Commands_Command_'.$id;
+            self::$dummyCommands[$id] = new $class('__dummy');
+        }
+        
+        return self::$dummyCommands[$id];
     }
 }
