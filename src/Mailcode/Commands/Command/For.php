@@ -18,7 +18,7 @@ namespace Mailcode;
  * @subpackage Commands
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Mailcode_Commands_Command_For extends Mailcode_Commands_Command_Type_Opening
+class Mailcode_Commands_Command_For extends Mailcode_Commands_Command implements Mailcode_Commands_Command_Type_Opening
 {
     const VALIDATION_INVALID_FOR_STATEMENT = 49701;
     
@@ -35,6 +35,11 @@ class Mailcode_Commands_Command_For extends Mailcode_Commands_Command_Type_Openi
     public function supportsType(): bool
     {
         return false;
+    }
+    
+    public function getDefaultType() : string
+    {
+        return '';
     }
     
     public function requiresParameters(): bool

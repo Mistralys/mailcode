@@ -18,11 +18,11 @@ namespace Mailcode;
  * @subpackage Commands
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Mailcode_Commands_Command_ShowVariable extends Mailcode_Commands_Command_Type_Standalone
+class Mailcode_Commands_Command_ShowVariable extends Mailcode_Commands_Command implements Mailcode_Commands_Command_Type_Standalone
 {
     const ERROR_NO_VARIABLE_AVAILABLE = 49301;
     
-    const VALIDATION_VARIABLE_COUNT_MISMATCH = 48401;
+    const VALIDATION_VARIABLE_MISSING = 48401;
     
    /**
     * @var Mailcode_Variables_Variable|NULL
@@ -42,6 +42,11 @@ class Mailcode_Commands_Command_ShowVariable extends Mailcode_Commands_Command_T
     public function supportsType(): bool
     {
         return false;
+    }
+    
+    public function getDefaultType() : string
+    {
+        return '';
     }
 
     public function requiresParameters(): bool

@@ -18,11 +18,11 @@ namespace Mailcode;
  * @subpackage Commands
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Mailcode_Commands_Command_ShowSnippet extends Mailcode_Commands_Command_Type_Standalone
+class Mailcode_Commands_Command_ShowSnippet extends Mailcode_Commands_Command implements Mailcode_Commands_Command_Type_Standalone
 {
     const ERROR_NO_VARIABLE_AVAILABLE = 51901;
     
-    const VALIDATION_VARIABLE_COUNT_MISMATCH = 52001;
+    const VALIDATION_VARIABLE_MISSING = 52001;
     
    /**
     * @var Mailcode_Variables_Variable|NULL
@@ -42,6 +42,11 @@ class Mailcode_Commands_Command_ShowSnippet extends Mailcode_Commands_Command_Ty
     public function supportsType(): bool
     {
         return false;
+    }
+    
+    public function getDefaultType() : string
+    {
+        return '';
     }
 
     public function requiresParameters(): bool
@@ -90,19 +95,19 @@ class Mailcode_Commands_Command_ShowSnippet extends Mailcode_Commands_Command_Ty
 
     protected function validateSyntax_require_variable() : void
     {
-         $vars = $this->getVariables()->getGroupedByName();
-         $amount = count($vars);
-         
-         if($amount === 1)
-         {
-             $this->variable = array_pop($vars);
-             return;
-         }
-         
-         $this->validationResult->makeError(
-            t('Command has %1$s variables, %2$s expected.', $amount, 1),
-            self::VALIDATION_VARIABLE_COUNT_MISMATCH
-         );
+        $info = $this->params->getInfo();
+        
+        $var = $info->getVariableByIndex(0);
+        
+        if($var)
+        {
+            return;
+        }
+        
+        $this->validationResult->makeError(
+            t('No variable specified in the command.'),
+            self::VALIDATION_VARIABLE_MISSING
+        );
     }
     
     protected function getValidations() : array

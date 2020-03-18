@@ -18,7 +18,7 @@ namespace Mailcode;
  * @subpackage Commands
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Mailcode_Commands_Command_End extends Mailcode_Commands_Command_Type_Closing
+class Mailcode_Commands_Command_End extends Mailcode_Commands_Command implements Mailcode_Commands_Command_Type_Closing
 {
     public function getName() : string
     {
@@ -33,6 +33,11 @@ class Mailcode_Commands_Command_End extends Mailcode_Commands_Command_Type_Closi
     public function supportsType(): bool
     {
         return false;
+    }
+    
+    public function getDefaultType() : string
+    {
+        return '';
     }
     
     public function requiresParameters(): bool

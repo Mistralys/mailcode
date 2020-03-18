@@ -18,12 +18,17 @@ namespace Mailcode;
  * @subpackage Commands
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Mailcode_Commands_Command_SetVariable extends Mailcode_Commands_Command_Type_Standalone
+class Mailcode_Commands_Command_SetVariable extends Mailcode_Commands_Command implements Mailcode_Commands_Command_Type_Standalone
 {
     const ERROR_NO_VARIABLE_AVAILABLE = 49401;
     const ERROR_NO_VARIABLE_IN_ASSIGNMENT = 49403;
     
     const VALIDATION_NOT_ASSIGNMENT_STATEMENT = 48501;
+    
+   /**
+    * @var Mailcode_Parser_Statement_Tokenizer_Type_Value
+    */
+    protected $value;
     
     public function getName() : string
     {
@@ -38,6 +43,11 @@ class Mailcode_Commands_Command_SetVariable extends Mailcode_Commands_Command_Ty
     public function supportsType(): bool
     {
         return false;
+    }
+    
+    public function getDefaultType() : string
+    {
+        return '';
     }
     
     public function requiresParameters(): bool
@@ -97,11 +107,30 @@ class Mailcode_Commands_Command_SetVariable extends Mailcode_Commands_Command_Ty
         );
     }
     
+    protected function validateSyntax_value() : void
+    {
+        $info = $this->params->getInfo();
+        
+        $value = $info->getTokenByIndex(2);
+        
+        if($value->isValue())
+        {
+            $this->value = $value;
+            return;
+        }
+    }
+    
     protected function getValidations() : array
     {
         return array(
-            'assignment', 
+            'assignment',
+            'value'
         );
+    }
+    
+    public function getValue() : Mailcode_Parser_Statement_Tokenizer_Type_Value
+    {
+        return $this->value;
     }
     
     public function generatesContent() : bool
