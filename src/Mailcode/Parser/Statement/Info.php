@@ -164,24 +164,11 @@ class Mailcode_Parser_Statement_Info
     */
     public function getStringLiterals()
     {
-        return $this->getTokensByType('StringLiteral');
-    }
-    
-   /**
-    * Retrieves all tokens of the specified type.
-    * 
-    * @param string $type
-    * @return \Mailcode\Mailcode_Parser_Statement_Tokenizer_Token[]
-    */
-    protected function getTokensByType(string $type)
-    {
-        $class = '\Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_'.$type;
-        
         $result = array();
         
         foreach($this->tokens as $token)
         {
-            if($token instanceof $class)
+            if($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral)
             {
                 $result[] = $token;
             }
