@@ -18,6 +18,6 @@ namespace Mailcode;
  * @subpackage Commands
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-interface Mailcode_Commands_Command_Type_Standalone
+interface Mailcode_Commands_Command_Type_Standalone extends Mailcode_Commands_Command_Type
 {
 }

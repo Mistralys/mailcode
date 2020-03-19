@@ -18,7 +18,7 @@ namespace Mailcode;
  * @subpackage Commands
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-interface Mailcode_Commands_Command_Type_Sibling
+interface Mailcode_Commands_Command_Type_Sibling extends Mailcode_Commands_Command_Type
 {
     public function getParentName() : string;
 }
