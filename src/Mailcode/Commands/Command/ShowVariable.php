@@ -24,6 +24,8 @@ class Mailcode_Commands_Command_ShowVariable extends Mailcode_Commands_Command i
     
     const VALIDATION_VARIABLE_MISSING = 48401;
     
+    const VALIDATION_VARIABLE_COUNT_MISMATCH = 48402;
+    
    /**
     * @var Mailcode_Variables_Variable|NULL
     */
