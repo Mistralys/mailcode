@@ -113,7 +113,7 @@ class Mailcode_Commands_Command_SetVariable extends Mailcode_Commands_Command im
         
         $value = $info->getTokenByIndex(2);
         
-        if($value->isValue())
+        if($value instanceof Mailcode_Parser_Statement_Tokenizer_Type_Value)
         {
             $this->value = $value;
             return;
