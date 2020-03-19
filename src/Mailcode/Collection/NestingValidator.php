@@ -40,7 +40,7 @@ class Mailcode_Collection_NestingValidator
     protected $validationResult;
     
    /**
-    * @var Mailcode_Commands_Command[]
+    * @var Mailcode_Commands_Command_Type[]
     */
     protected $stack = array();
     
