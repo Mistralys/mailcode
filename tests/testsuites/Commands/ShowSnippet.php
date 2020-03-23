@@ -3,6 +3,7 @@
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands_Command;
 use Mailcode\Mailcode_Commands_Command_ShowSnippet;
+use Mailcode\Mailcode_Factory;
 
 final class Mailcode_ShowSnippetTests extends MailcodeTestCase
 {
@@ -47,5 +48,13 @@ final class Mailcode_ShowSnippetTests extends MailcodeTestCase
                 $this->assertSame($test['code'], $errors[0]->getCode(), $test['label']);
             }
         }
+    }
+    
+    public function test_getVariable()
+    {
+        $snippet = Mailcode_Factory::showSnippet('foobar');
+        
+        $this->assertEquals('$foobar', $snippet->getVariable()->getFullName());
+        $this->assertEquals('$foobar', $snippet->getVariableName());
     }
 }
