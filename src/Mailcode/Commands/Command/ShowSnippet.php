@@ -55,10 +55,8 @@ class Mailcode_Commands_Command_ShowSnippet extends Mailcode_Commands_Command im
     }
     
    /**
-    * Retrieves the variable to show.
-    * 
-    * NOTE: Only available once the command has been
-    * validated. Always use isValid() first.
+    * Retrieves the variable to show, provided the command
+    * is valid.
     * 
     * @throws Mailcode_Exception
     * @return Mailcode_Variables_Variable
@@ -80,10 +78,8 @@ class Mailcode_Commands_Command_ShowSnippet extends Mailcode_Commands_Command im
     }
     
    /**
-    * Retrieves the full name of the variable to show.
-    * 
-    * NOTE: Only available once the command has been
-    * validated. Always use isValid() first.
+    * Retrieves the full name of the variable to show,
+    * provided the command is valid.
     * 
     * @throws Mailcode_Exception
     * @return string
@@ -101,6 +97,7 @@ class Mailcode_Commands_Command_ShowSnippet extends Mailcode_Commands_Command im
         
         if($var)
         {
+            $this->variable = $var->getVariable();
             return;
         }
         
