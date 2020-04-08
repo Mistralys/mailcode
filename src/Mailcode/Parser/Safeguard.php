@@ -57,6 +57,10 @@ class Mailcode_Parser_Safeguard
     
     const ERROR_PLACEHOLDER_NOT_FOUND = 47804;
     
+    const ERROR_UNKNOWN_FORMATTER = 47805;
+    
+    const ERROR_NOT_A_SINGLE_LINES_FORMATTER = 47806;
+    
    /**
     * @var Mailcode_Parser
     */
@@ -97,6 +101,11 @@ class Mailcode_Parser_Safeguard
     * @var string[]|NULL
     */
     protected $placeholderStrings;
+    
+   /**
+    * @var Mailcode_Parser_Safeguard_Formatter
+    */
+    protected $formatter;
     
     public function __construct(Mailcode_Parser $parser, string $subject)
     {
@@ -147,7 +156,7 @@ class Mailcode_Parser_Safeguard
    /**
     * Retrieves the safe string in which all commands have been replaced
     * by placeholder strings.
-    * 
+    *
     * @return string
     * @throws Mailcode_Exception 
     *
@@ -158,11 +167,67 @@ class Mailcode_Parser_Safeguard
         $this->requireValidCollection();
         
         $replaces = $this->getReplaces();
-                
-        return str_replace(array_values($replaces), array_keys($replaces), $this->originalString);
+        
+        $safe = str_replace(array_values($replaces), array_keys($replaces), $this->originalString);
+
+        // If a formatter has been selected, let it modify the string.
+        if(isset($this->formatter))
+        {
+            $safe = $this->formatter->format($safe);
+        }
+        
+        return $safe;
+    }
+    
+    public function selectFormatter(string $formatterID) : Mailcode_Parser_Safeguard_Formatter
+    {
+        $class = 'Mailcode\Mailcode_Parser_Safeguard_Formatter_'.$formatterID;
+        
+        if(class_exists($class))
+        {
+            $this->formatter = new $class($this);
+            
+            return $this->formatter;
+        }
+        
+        throw new Mailcode_Exception(
+            'Unknown safeguard formatter.',
+            sprintf(
+                'The formatter [%s] does not exist, could not find class [%s].',
+                $formatterID,
+                $class
+            ),
+            self::ERROR_UNKNOWN_FORMATTER
+        );
     }
     
    /**
+    * Enables the formatter that ensures that all commands that
+    * @return Mailcode_Parser_Safeguard_Formatter_SingleLines
+    */
+    public function selectSingleLinesFormatter() : Mailcode_Parser_Safeguard_Formatter_SingleLines
+    {
+        $formatter = $this->selectFormatter('SingleLines');
+        
+        if($formatter instanceof Mailcode_Parser_Safeguard_Formatter_SingleLines)
+        {
+            return $formatter;
+        }
+        
+        throw new Mailcode_Exception(
+            'Not the expected formatter',
+            sprintf(
+                'The formatter is not an instance of [%s].',
+                Mailcode_Parser_Safeguard_Formatter_SingleLines::class
+            ),
+            self::ERROR_NOT_A_SINGLE_LINES_FORMATTER
+        );
+    }
+    
+   /**
+    * Retrieves an associative array with pairs of
+    * [placeholder string => replacement text]. 
+    * 
     * @param bool $highlighted
     * @return string[]string
     */
