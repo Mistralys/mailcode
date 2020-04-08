@@ -1,3 +1,4 @@
+docs/cache
 vendor
 docs/phpstan/output.txt
 composer.lock
