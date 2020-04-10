@@ -24,7 +24,7 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ShowSnippet extends Mailcode_Tra
     {
         return sprintf(
             '${%s}',
-            $command->getVariable()->getFullName()
+            ltrim($command->getVariableName(), '$')
         );
     }
 }
