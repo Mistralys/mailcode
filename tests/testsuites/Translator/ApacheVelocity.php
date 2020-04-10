@@ -25,6 +25,11 @@ final class Translator_ApacheVelocityTests extends MailcodeTestCase
                 'expected' => '${FOO.BAR}'
             ),
             array(
+                'label' => 'Show snippet',
+                'mailcode' => Mailcode_Factory::showSnippet('$snippetname'),
+                'expected' => '${snippetname}'
+            ),
+            array(
                 'label' => 'Set variable',
                 'mailcode' => Mailcode_Factory::setVar('FOO.BAR', 'Value', true),
                 'expected' => '#set($FOO.BAR = "Value")'

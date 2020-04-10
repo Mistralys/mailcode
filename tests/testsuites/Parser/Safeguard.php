@@ -192,6 +192,15 @@ Text here
                 'label' => 'Show variable commands should not be modified (they generate content)',
                 'text' => 'This is {showvar: $FOOBAR} a regular variable.',
                 'expected' => 'This is {showvar: $FOOBAR} a regular variable.'
+            ),
+            array(
+                'label' => 'Several commands following each other',
+                'text' => '{if: 0 == 1}{if: 0 == 2}{end}{end}',
+                'expected' => 
+'{if: 0 == 1}
+{if: 0 == 2}
+{end}
+{end}'
             )
         );
         
