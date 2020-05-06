@@ -25,6 +25,21 @@ final class Translator_ApacheVelocityTests extends MailcodeTestCase
                 'expected' => '${FOO.BAR}'
             ),
             array(
+                'label' => 'Show date, default format',
+                'mailcode' => Mailcode_Factory::showDate('FOO.BAR'),
+                'expected' => '$date.format("yyyy/M/d", $FOO.BAR)'
+            ),
+            array(
+                'label' => 'Show date, german format',
+                'mailcode' => Mailcode_Factory::showDate('FOO.BAR', 'd.m.Y H:i:s'),
+                'expected' => '$date.format("d.M.yyyy H:m:s", $FOO.BAR)'
+            ),
+            array(
+                'label' => 'Show date, short year format',
+                'mailcode' => Mailcode_Factory::showDate('FOO.BAR', 'd.m.y'),
+                'expected' => '$date.format("d.M.yy", $FOO.BAR)'
+            ),
+            array(
                 'label' => 'Show snippet',
                 'mailcode' => Mailcode_Factory::showSnippet('$snippetname'),
                 'expected' => '${snippetname}'

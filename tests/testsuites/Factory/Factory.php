@@ -238,4 +238,39 @@ final class Factory_FactoryTests extends MailcodeTestCase
         
         $this->addToAssertionCount(count($tests));
     }
+    
+    public function test_showDate()
+    {
+        $tests = array(
+            array(
+                'label' => 'Variable name without $',
+                'cmd' => Mailcode_Factory::showDate('VAR.NAME')
+            ),
+            array(
+                'label' => 'Variable name with $',
+                'cmd' => Mailcode_Factory::showDate('$VAR.NAME')
+            ),
+            array(
+                'label' => 'With format string',
+                'cmd' => Mailcode_Factory::showDate('$VAR.NAME', 'd.m.Y')
+            )
+        );
+        
+        $this->addToAssertionCount(count($tests));
+    }
+    
+    public function test_showDate_variableError()
+    {
+        $this->expectException(Mailcode_Factory_Exception::class);
+        
+        Mailcode_Factory::showDate('0INVALIDVAR');
+    }
+
+    public function test_showDate_formatError()
+    {
+        $this->expectException(Mailcode_Factory_Exception::class);
+        
+        Mailcode_Factory::showDate('VAR.NAME', 'd.m.Z');
+    }
+    
 }
