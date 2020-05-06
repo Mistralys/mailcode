@@ -55,6 +55,49 @@ class Mailcode_Factory
         
         throw self::_exceptionUnexpectedType('ShowVariable', $cmd);
     }
+    
+    /**
+     * Creates a ShowDate command, used to display date variables and 
+     * format the date using date format strings.
+     *
+     * @param string $variableName A variable name, with or without the $ sign prepended.
+     * @param string $formatString A date format string, or empty string for default.
+     * @return Mailcode_Commands_Command_ShowDate
+     */
+    public static function showDate(string $variableName, string $formatString="") : Mailcode_Commands_Command_ShowDate
+    {
+        $variableName = self::_filterVariableName($variableName);
+        
+        $format = '';
+        if(!empty($formatString))
+        {
+            $format = sprintf(
+                ' "%s"',
+                $formatString
+            );
+        }
+        
+        $cmd = Mailcode::create()->getCommands()->createCommand(
+            'ShowDate',
+            '',
+            $variableName.$format,
+            sprintf(
+                '{showdate: %s%s}',
+                $variableName,
+                $format
+            )
+        );
+        
+        self::_checkCommand($cmd);
+        
+        if($cmd instanceof Mailcode_Commands_Command_ShowDate)
+        {
+            return $cmd;
+        }
+        
+        throw self::_exceptionUnexpectedType('ShowDate', $cmd);
+    }
+    
 
    /**
     * Creates a ShowSnippet command.
@@ -519,5 +562,16 @@ class Mailcode_Factory
     public static function createPrinter() : Mailcode_Printer
     {
         return new Mailcode_Printer();
+    }
+    
+   /**
+    * Gets/creates the global instance of the date format info
+    * class, used to handle date formatting aspects.
+    * 
+    * @return Mailcode_Date_FormatInfo
+    */
+    public static function createDateInfo() : Mailcode_Date_FormatInfo
+    {
+        return Mailcode_Date_FormatInfo::getInstance();
     }
 }
