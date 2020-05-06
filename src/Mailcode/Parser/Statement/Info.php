@@ -95,6 +95,14 @@ class Mailcode_Parser_Statement_Info
         return $result;
     }
     
+   /**
+    * Retrieves a variable by its position in the command's parameters.
+    * Returns null if there is no parameter at the specified index, or
+    * if it is of another type.
+    * 
+    * @param int $index Zero-based index.
+    * @return Mailcode_Parser_Statement_Tokenizer_Token_Variable|NULL
+    */
     public function getVariableByIndex(int $index) : ?Mailcode_Parser_Statement_Tokenizer_Token_Variable
     {
         $token = $this->getTokenByIndex($index);
@@ -107,6 +115,14 @@ class Mailcode_Parser_Statement_Info
         return null;
     }
     
+   /**
+    * Retrieves a string literal by its position in the command's parameters.
+    * Returns null if there is no parameter at the specified index, or
+    * if it is of another type.
+    *
+    * @param int $index Zero-based index.
+    * @return Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral|NULL
+    */
     public function getStringLiteralByIndex(int $index) : ?Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
     {
         $token = $this->getTokenByIndex($index);
@@ -119,6 +135,14 @@ class Mailcode_Parser_Statement_Info
         return null;
     }
     
+   /**
+    * Retrieves a keyword by its position in the command's parameters.
+    * Returns null if there is no parameter at the specified index, or
+    * if it is of another type.
+    *
+    * @param int $index Zero-based index.
+    * @return Mailcode_Parser_Statement_Tokenizer_Token_Keyword|NULL
+    */
     public function getKeywordByIndex(int $index) : ?Mailcode_Parser_Statement_Tokenizer_Token_Keyword
     {
         $token = $this->getTokenByIndex($index);
@@ -131,6 +155,14 @@ class Mailcode_Parser_Statement_Info
         return null;
     }
     
+   /**
+    * Retrieves an operand by its position in the command's parameters.
+    * Returns null if there is no parameter at the specified index, or
+    * if it is of another type.
+    *
+    * @param int $index Zero-based index.
+    * @return Mailcode_Parser_Statement_Tokenizer_Token_Operand|NULL
+    */
     public function getOperandByIndex(int $index) : ?Mailcode_Parser_Statement_Tokenizer_Token_Operand
     {
         $token = $this->getTokenByIndex($index);
@@ -143,6 +175,14 @@ class Mailcode_Parser_Statement_Info
         return null;
     }
     
+   /**
+    * Retrieves a parameter token by its position in the command's parameters,
+    * regardless of its type. Returns null if there is no parameter at the 
+    * specified index.
+    *
+    * @param int $index Zero-based index.
+    * @return Mailcode_Parser_Statement_Tokenizer_Token|NULL
+    */
     public function getTokenByIndex(int $index) : ?Mailcode_Parser_Statement_Tokenizer_Token
     {
         if(isset($this->tokens[$index]))
