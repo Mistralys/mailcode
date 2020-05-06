@@ -20,13 +20,32 @@ namespace Mailcode;
  */
 class Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral extends Mailcode_Parser_Statement_Tokenizer_Token implements Mailcode_Parser_Statement_Tokenizer_Type_Value
 {
+   /**
+    * Retrieves the text with the surrounding quotes.
+    * @return string
+    */
     public function getNormalized() : string
     {
         return $this->restoreQuotes($this->matchedText);
     }
     
+   /**
+    * Retrieves the text with the surrounding quotes.
+    * @return string
+    */
     public function getValue() : string
     {
         return $this->getNormalized();
+    }
+    
+   /**
+    * Retrieves the text without the surrounding quotes.
+    * @return string
+    */
+    public function getText() : string
+    {
+        $quoteless = trim($this->matchedText, '"\'');
+        
+        return $this->restoreQuotes($quoteless);
     }
 }
