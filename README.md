@@ -75,10 +75,94 @@ Comments do not have to be quoted, but can be.
 {comment: "This is a quoted comment."}
 ```
 
+## Date formats
+
+### Supported formatting characters
+
+The ShowDate command uses formatting characters that are compatibvle with PHP's date formatting functions, but only a subset of these are allowed.
+
+  * `d` Day number, with leading zeros
+  * `m` Month number, with leading zeros
+  * `y` Year, with 2 digits
+  * `Y` Year, with 4 digits
+  * `H` Hour, 24-hour format, with leading zeros
+  * `i` Minutes, with leading zeros
+  * `s` Seconds, with leading zeros 
+  
+Additionally, the following punctuation characters may be used:
+
+  * `.` Dot
+  * `/` Slash
+  * `-` Hyphen
+  * `:` Colon
+  * ` ` Space     
+
+### Accessing format information
+
+The Mailcode_Date_FormatInfo class can be used to access information on the available date formats when using the ShowDate command. It is available globally via a factory method:
+
+```php
+$dateInfo = Mailcode_Factory::createDateInfo();
+```
+
+### Setting defaults
+
+The ShowDate command uses `Y/m/d` as default date format. The format info class can be used to overwrite this:
+
+```php
+$dateInfo->setDefaultFormat('d.m.Y');
+```
+
+Once it has been set, whenever the ShowDate command is used without specifying
+a custom format string, it will use this default format.  
+
+### Accessing formatting characters programmatically
+
+To make it possible to integrate mailcode in existing documentation, the format info class offers the `getFormatCharacters()` method to get a list of all characters that can be used. 
+
+Displaying a simple text-based list of allowed characters:
+
+```php
+$characters = $dateInfo->getCharactersList();
+
+foreach($characters as $character)
+{
+    echo sprintf(
+        '%s: "%s" %s',
+        $character->getTypeLabel(),
+        $character->getChar(),
+        $character->getDescription()
+    );
+    
+    echo PHP_EOL;
+}
+```
+
+### Manually validating a date format
+
+Use the `validateFormat()` method to validate a date format string, and retrieve a validation message manually. The same method is used by the ShowDate command, but can be used separately for specific needs.
+
+```php
+$formatString = "d.m.Y H:i";
+$result = $dateInfo->validateFormat($formatString);
+
+if($result->isValid())
+{
+    echo 'Format is valid.';
+}
+else
+{
+    echo sprintf(
+        'Format is invalid: Error #%s, %s',
+        $result->getCode(),
+        $result->getErrorMessage()
+    );
+}
+```
+
 ## Format compatibility
 
-Mailcode mixes well with HTML and XML. Its strict syntax makes it easy to distinguish it from most text formats. with the notable exception of CSS. In HTML, all style tags are
-ignored.
+Mailcode mixes well with HTML and XML. Its strict syntax makes it easy to distinguish it from most text formats. with the notable exception of CSS. In HTML, all style tags are ignored.
 
 ## Safeguarding commands when filtering texts
 
@@ -167,3 +251,16 @@ $command = Mailcode_Factory::setVariable('VAR.NAME', '8');
 $apacheString = $apache->translateCommand($command);
 ```
 
+### Apache Velocity
+
+The Apache Velocity translator uses the formal reference notation for all commands, to minimize the risks of running into parsing conflicts. In general, all generated commands should be compatible from Apache Velocity 2.0 and upwards.
+
+**Formatting dates**
+
+For the date formatting to work, a DateTool object instance must be added to the context of the Velocity template, using the following command:
+
+```
+context.add("datetool", new DateTool());
+```
+
+The ShowDate command uses this to format dates, so the velocity template will throw errors if ShowDate is usedd and the $datetool variable is not present.
