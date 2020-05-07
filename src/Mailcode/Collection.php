@@ -207,7 +207,7 @@ class Mailcode_Collection
     
     public function getValidationResult() : OperationResult
     {
-        if(isset($this->validationResult))
+        if($this->validationResult instanceof OperationResult)
         {
             return $this->validationResult;
         }
