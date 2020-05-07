@@ -26,17 +26,17 @@ trait Mailcode_Traits_Commands_IfVariable
    /**
     * @var Mailcode_Parser_Statement_Tokenizer_Token_Variable|NULL
     */
-    protected $variable;
+    protected $variableToken;
     
    /**
     * @var Mailcode_Parser_Statement_Tokenizer_Token_Operand|NULL
     */
-    protected $comparator;
+    protected $comparisonToken;
     
    /**
     * @var Mailcode_Parser_Statement_Tokenizer_Type_Value|NULL
     */
-    protected $value;
+    protected $valueToken;
     
     protected function getValidations() : array
     {
@@ -53,9 +53,9 @@ trait Mailcode_Traits_Commands_IfVariable
         
         $var = $info->getVariableByIndex(0);
         
-        if($var)
+        if($var !== null)
         {
-            $this->variable = $var;
+            $this->variableToken = $var;
             return;
         }
         
@@ -71,7 +71,7 @@ trait Mailcode_Traits_Commands_IfVariable
         
         $operand = $info->getOperandByIndex(1);
         
-        if(!$operand)
+        if($operand === null)
         {
             $this->validationResult->makeError(
                 t('No operand sign after the variable name.'),
@@ -91,7 +91,7 @@ trait Mailcode_Traits_Commands_IfVariable
             return;
         }
         
-        $this->comparator = $operand;
+        $this->comparisonToken = $operand;
     }
     
     protected function validateSyntax_value() : void
@@ -100,7 +100,7 @@ trait Mailcode_Traits_Commands_IfVariable
         
         $token = $info->getTokenByIndex(2);
         
-        if(!$token)
+        if($token === null)
         {
             $this->validationResult->makeError(
                 t('Nothing found after the comparison operand.'),
@@ -112,7 +112,7 @@ trait Mailcode_Traits_Commands_IfVariable
         
         if($token instanceof Mailcode_Parser_Statement_Tokenizer_Type_Value)
         {
-            $this->value = $token;
+            $this->valueToken = $token;
             
             return;
         }
@@ -130,9 +130,9 @@ trait Mailcode_Traits_Commands_IfVariable
     */
     public function getVariable() : Mailcode_Variables_Variable
     {
-        if(isset($this->variable))
+        if($this->variableToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable)
         {
-            return $this->variable->getVariable();
+            return $this->variableToken->getVariable();
         }
         
         throw new Mailcode_Exception(
@@ -142,18 +142,24 @@ trait Mailcode_Traits_Commands_IfVariable
         );
     }
     
+   /**
+    * Retrieves the comparison operator sign.
+    * 
+    * @throws Mailcode_Exception
+    * @return string The comparison string, e.g. "==", "!=", etc.
+    */
     public function getComparator() : string
     {
-        if(!isset($this->comparator))
+        if($this->comparisonToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_Operand)
         {
-            throw new Mailcode_Exception(
-                'No comparator available',
-                null,
-                Mailcode_Commands_IfBase::ERROR_NO_COMPARATOR_AVAILABLE
-            );
+            return $this->comparisonToken->getOperand();
         }
         
-        return $this->comparator->getOperand();
+        throw new Mailcode_Exception(
+            'No comparator available',
+            null,
+            Mailcode_Commands_IfBase::ERROR_NO_COMPARATOR_AVAILABLE
+        );
     }
     
    /**
@@ -162,6 +168,15 @@ trait Mailcode_Traits_Commands_IfVariable
     */
     public function getValue() : string
     {
-        return $this->value->getValue();
+        if($this->valueToken instanceof Mailcode_Parser_Statement_Tokenizer_Type_Value)
+        {
+            return $this->valueToken->getValue();
+        }
+        
+        throw new Mailcode_Exception(
+            'No value available',
+            null,
+            Mailcode_Commands_IfBase::ERROR_NO_VALUE_AVAILABLE
+        );
     }
 }

@@ -26,12 +26,12 @@ trait Mailcode_Traits_Commands_IfContains
     /**
      * @var Mailcode_Parser_Statement_Tokenizer_Token_Variable|NULL
      */
-    protected $variable;
+    protected $variableToken;
 
    /**
     * @var Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral|NULL
     */
-    protected $literal;
+    protected $stringToken;
     
    /**
     * @var boolean
@@ -52,9 +52,9 @@ trait Mailcode_Traits_Commands_IfContains
         
         $variable = $info->getVariableByIndex(0);
         
-        if($variable)
+        if($variable !== null)
         {
-            $this->variable = $variable;
+            $this->variableToken = $variable;
             return;
         }
         
@@ -71,9 +71,9 @@ trait Mailcode_Traits_Commands_IfContains
         // first variant: variable "Search term"
         $string = $info->getStringLiteralByIndex(1);
         
-        if($string)
+        if($string !== null)
         {
-            $this->literal = $string;
+            $this->stringToken = $string;
             return;
         }
         
@@ -87,7 +87,7 @@ trait Mailcode_Traits_Commands_IfContains
         // second variant: variable insensitive: "Search term"
         $keyword = $info->getKeywordByIndex(1);
         
-        if(!$keyword)
+        if($keyword === null)
         {
             $this->validationResult->makeError(
                 t('Expected a search term or the %1$s keyword after the variable name.', 'insensitive:'),
@@ -119,9 +119,9 @@ trait Mailcode_Traits_Commands_IfContains
         
         $string = $info->getStringLiteralByIndex(2);
         
-        if($string)
+        if($string !== null)
         {
-            $this->literal = $string;
+            $this->stringToken = $string;
             return;
         }
         
@@ -138,9 +138,9 @@ trait Mailcode_Traits_Commands_IfContains
     */
     public function getVariable() : Mailcode_Variables_Variable
     {
-        if(isset($this->variable))
+        if($this->variableToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable)
         {
-            return $this->variable->getVariable();
+            return $this->variableToken->getVariable();
         }
         
         throw new Mailcode_Exception(
@@ -157,15 +157,15 @@ trait Mailcode_Traits_Commands_IfContains
     
     public function getSearchTerm() : string
     {
-        if(!isset($this->literal))
+        if($this->stringToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral)
         {
-            throw new Mailcode_Exception(
-                'No string literal available',
-                null,
-                Mailcode_Commands_IfBase::ERROR_NO_STRING_LITERAL_AVAILABLE
-            );
+            return $this->stringToken->getNormalized();
         }
         
-        return $this->literal->getNormalized();
+        throw new Mailcode_Exception(
+            'No string literal available',
+            null,
+            Mailcode_Commands_IfBase::ERROR_NO_STRING_LITERAL_AVAILABLE
+        );
     }
 }
