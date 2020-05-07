@@ -3,3 +3,4 @@ vendor
 docs/phpstan/output.txt
 composer.lock
 .phpunit.result.cache
+localization/storage.json
