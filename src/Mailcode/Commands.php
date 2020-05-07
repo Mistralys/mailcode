@@ -23,7 +23,9 @@ class Mailcode_Commands
 {
     const ERROR_COMMAND_NAME_DOES_NOT_EXIST = 45901;
     
-    const ERROR_COMMAND_DOES_NOT_EXIST = 45901;
+    const ERROR_COMMAND_DOES_NOT_EXIST = 45902;
+    
+    const ERROR_INVALID_DUMMY_COMMAND_TYPE = 45903;
     
    /**
     * @var Mailcode_Commands_Command[]
@@ -213,6 +215,15 @@ class Mailcode_Commands
             self::$dummyCommands[$id] = new $class('__dummy');
         }
         
-        return self::$dummyCommands[$id];
+        if(self::$dummyCommands[$id] instanceof Mailcode_Commands_Command)
+        {
+            return self::$dummyCommands[$id];
+        }
+        
+        throw new Mailcode_Exception(
+            'Invalid dummy command type',
+            sprintf('The stored variable type is %1$s.', gettype(self::$dummyCommands[$id])),
+            self::ERROR_INVALID_DUMMY_COMMAND_TYPE
+        );
     }
 }
