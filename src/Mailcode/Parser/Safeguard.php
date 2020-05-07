@@ -401,7 +401,7 @@ class Mailcode_Parser_Safeguard
     */
     public function getPlaceholderStrings() : array
     {
-        if(isset($this->placeholderStrings))
+        if(is_array($this->placeholderStrings))
         {
             return $this->placeholderStrings;
         }

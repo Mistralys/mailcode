@@ -69,7 +69,7 @@ class Mailcode_Commands_Command_ShowVariable extends Mailcode_Commands_Command i
     {
         $this->validate();
         
-        if(isset($this->variable))
+        if($this->variable instanceof Mailcode_Variables_Variable)
         {
             return $this->variable;
         }

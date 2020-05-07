@@ -65,7 +65,7 @@ class Mailcode_Commands_Command_ShowSnippet extends Mailcode_Commands_Command im
     {
         $this->validate();
         
-        if(isset($this->variable))
+        if($this->variable instanceof Mailcode_Variables_Variable)
         {
             return $this->variable;
         }

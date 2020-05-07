@@ -40,7 +40,7 @@ class Mailcode_Parser_Statement
     protected $result;
     
    /**
-    * @var Mailcode_Parser_Statement_Tokenizer|NULL
+    * @var Mailcode_Parser_Statement_Tokenizer
     */
     protected $tokenizer;
     
@@ -75,7 +75,7 @@ class Mailcode_Parser_Statement
     
     public function getInfo() : Mailcode_Parser_Statement_Info
     {
-        if(isset($this->info))
+        if($this->info instanceof Mailcode_Parser_Statement_Info)
         {
             return $this->info; 
         }
