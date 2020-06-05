@@ -93,6 +93,26 @@ final class Parser_SafeguardTests extends MailcodeTestCase
     }
     
    /**
+    * Ensures that calling makeWholePartial() will ignore
+    * missing placeholders.
+    */
+    public function safeguard_partial()
+    {
+        $parser = Mailcode::create()->getParser();
+        
+        $original = 'Text with {showvar: $VAR.NAME}_SPLIT_{showvar: $FOO.BAR} variables.';
+        
+        $safeguard = $parser->createSafeguard($original);
+        $safeguard->makeSafe();
+        
+        $parts = explode('_SPLIT_', $original);
+        
+        $whole = $safeguard->makeWholePartial(array_pop($parts));
+        
+        $this->assertEquals('{showvar: $FOO.BAR} variables.', $whole);
+    }
+    
+   /**
     * Test changing the placeholder delimiter characters.
     */
     public function test_setDelimiter()
