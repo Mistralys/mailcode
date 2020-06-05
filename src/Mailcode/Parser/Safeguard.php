@@ -288,7 +288,7 @@ class Mailcode_Parser_Safeguard
         return $this->placeholders;
     }
     
-    protected function restore(string $string, bool $highlighted=false) : string
+    protected function restore(string $string, bool $partial=false, bool $highlighted=false) : string
     {
         $this->requireValidCollection();
         
@@ -298,7 +298,7 @@ class Mailcode_Parser_Safeguard
         
         foreach($placeholderStrings as $search)
         {
-            if(!strstr($string, $search))
+            if(!$partial && !strstr($string, $search))
             {
                 throw new Mailcode_Exception(
                     'Command placeholder not found',
@@ -327,11 +327,33 @@ class Mailcode_Parser_Safeguard
     */
     public function makeWhole(string $string) : string
     {
-        return $this->restore($string, false);
+        return $this->restore(
+            $string, 
+            false, // partial? 
+            false // highlight?
+        );
+    }
+    
+   /**
+    * Like `makeWhole()`, but ignores missing command placeholders.
+    *
+    * @param string $string
+    * @return string
+    * @throws Mailcode_Exception
+    *
+    * @see Mailcode_Parser_Safeguard::ERROR_INVALID_COMMANDS
+    */
+    public function makeWholePartial(string $string) : string
+    {
+        return $this->restore(
+            $string,
+            true, // partial?
+            false // highlight?
+        );
     }
 
    /**
-    * Like makeWhole(), but replaces the commands with a syntax
+    * Like `makeWhole()`, but replaces the commands with a syntax
     * highlighted version, meant for human readable texts only.
     * 
     * Note: the commands lose their functionality (They cannot be 
@@ -346,7 +368,29 @@ class Mailcode_Parser_Safeguard
     */
     public function makeHighlighted(string $string) : string
     {
-        return $this->restore($string, true);
+        return $this->restore(
+            $string, 
+            false, // partial? 
+            true // highlighted?
+        );
+    }
+    
+   /**
+    * Like `makeHighlighted()`, but ignores missing command placeholders.
+    * 
+    * @param string $string
+    * @return string
+    * @throws Mailcode_Exception
+    *
+    * @see Mailcode_Parser_Safeguard::ERROR_INVALID_COMMANDS
+    */
+    public function makeHighlightedPartial(string $string) : string
+    {
+        return $this->restore(
+            $string, 
+            true, // partial? 
+            true // highlight?
+        );
     }
     
    /**
