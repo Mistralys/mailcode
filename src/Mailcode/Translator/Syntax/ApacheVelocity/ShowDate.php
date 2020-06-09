@@ -45,7 +45,7 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ShowDate extends Mailcode_Transl
     public function translate(Mailcode_Commands_Command_ShowDate $command): string
     {
         return sprintf(
-            '$date.format("%s", $date.toDate("yyyy-MM-dd HH:mm:ss.SSS", $%s))',
+            '${date.format("%s", $date.toDate("yyyy-MM-dd HH:mm:ss.SSS", $%s))}',
             $this->translateFormat($command->getFormatString()),
             ltrim($command->getVariableName(), '$')
         );
