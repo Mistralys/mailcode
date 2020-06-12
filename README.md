@@ -251,16 +251,22 @@ $command = Mailcode_Factory::setVariable('VAR.NAME', '8');
 $apacheString = $apache->translateCommand($command);
 ```
 
-### Apache Velocity
+### Translate to: Apache Velocity
 
 The Apache Velocity translator uses the formal reference notation for all commands, to minimize the risks of running into parsing conflicts. In general, all generated commands should be compatible from Apache Velocity 2.0 and upwards.
 
-**Formatting dates**
+**Requirements**
 
-For the date formatting to work, a DateTool object instance must be added to the context of the Velocity template, using the following command:
+The following tools have to be enabled in the Velocity templates:
+
+  * [DateTool](https://velocity.apache.org/tools/devel/apidocs/org/apache/velocity/tools/generic/DateTool.html)
+  * [EscapeTool](https://velocity.apache.org/tools/devel/apidocs/org/apache/velocity/tools/generic/EscapeTool.html)
+
+These tools can be added to the context of templates like this:
 
 ```
-context.add("datetool", new DateTool());
+context.add("date", new DateTool());
+context.add("esc", new EscapeTool());
 ```
 
-The ShowDate command uses this to format dates, so the velocity template will throw errors if ShowDate is usedd and the $datetool variable is not present.
+If these tools are not available, the ShowDate and ShowSnippet commands will throw errors if they are used in a template.
