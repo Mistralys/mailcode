@@ -14,20 +14,21 @@ namespace Mailcode;
 /**
  * Translates the "ShowSnippet" command to Apache Velocity.
  * 
- * NOTE: Requires the `$newline` variable to be available in
- * the template's context, containing a newline character (`\n`),
- * so the newlines can be converted to HTML breaks.
+ * NOTE: Requires the `EscapeTool` VTL tool to be enabled 
+ * for the templates.
  *
  * @package Mailcode
  * @subpackage Translator
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
+ * 
+ * @see https://velocity.apache.org/tools/devel/apidocs/org/apache/velocity/tools/generic/EscapeTool.html
  */
 class Mailcode_Translator_Syntax_ApacheVelocity_ShowSnippet extends Mailcode_Translator_Syntax_ApacheVelocity implements Mailcode_Translator_Command_ShowSnippet
 {
     public function translate(Mailcode_Commands_Command_ShowSnippet $command): string
     {
         return sprintf(
-            '${%s.replaceAll("$newline", "<br/>")}',
+            '${%s.replaceAll($esc.newline, "<br/>")}',
             ltrim($command->getVariableName(), '$')
         );
     }
