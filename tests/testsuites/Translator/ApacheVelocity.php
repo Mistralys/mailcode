@@ -42,7 +42,7 @@ final class Translator_ApacheVelocityTests extends MailcodeTestCase
             array(
                 'label' => 'Show snippet',
                 'mailcode' => Mailcode_Factory::showSnippet('$snippetname'),
-                'expected' => '${snippetname.replaceAll("$newline", "<br/>")}'
+                'expected' => '${snippetname.replaceAll($esc.newline, "<br/>")}'
             ),
             array(
                 'label' => 'Set variable',
