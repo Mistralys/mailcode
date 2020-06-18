@@ -237,4 +237,27 @@ Text here
             $this->assertEquals($test['expected'], $result, $test['label']);
         }
     }
+    
+    public function test_makeSafe_invalidCollection()
+    {
+        $parser = Mailcode::create()->getParser();
+       
+        $safeguard = $parser->createSafeguard('{if variable: $FOOBAR == "true"}');
+
+        $this->expectException(Mailcode_Exception::class);
+        
+        $safeguard->makeSafe();
+    }
+    
+    public function test_makeSafePartial()
+    {
+        $parser = Mailcode::create()->getParser();
+        
+        $safeguard = $parser->createSafeguard('{if variable: $FOOBAR == "true"}');
+        
+        $safeguard->makeSafePartial();
+        
+        // no exception = success
+        $this->addToAssertionCount(1);
+    }
 }

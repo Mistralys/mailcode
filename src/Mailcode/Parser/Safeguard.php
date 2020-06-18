@@ -166,6 +166,21 @@ class Mailcode_Parser_Safeguard
     {
         $this->requireValidCollection();
         
+        return $this->makeSafePartial();
+    }
+    
+   /**
+    * Like makeSafe(), but allows partial (invalid) commands: use this
+    * if the subject string may contain only part of the whole set of
+    * commands. 
+    * 
+    * Example: parsing a text with an opening if statement, without the 
+    * matching end statement.
+    * 
+    * @return string
+    */
+    public function makeSafePartial() : string
+    {
         $replaces = $this->getReplaces();
         
         $safe = str_replace(array_values($replaces), array_keys($replaces), $this->originalString);
