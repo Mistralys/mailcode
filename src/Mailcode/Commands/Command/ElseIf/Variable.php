@@ -1,10 +1,10 @@
 <?php
 /**
- * File containing the {@see Mailcode_Commands_Command_If_Variable} class.
+ * File containing the {@see Mailcode_Commands_Command_ElseIf_Variable} class.
  *
  * @package Mailcode
  * @subpackage Commands
- * @see Mailcode_Commands_Command_If_Variable
+ * @see Mailcode_Commands_Command_ElseIf_Variable
  */
 
 declare(strict_types=1);

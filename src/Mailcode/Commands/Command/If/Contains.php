@@ -12,7 +12,9 @@ declare(strict_types=1);
 namespace Mailcode;
 
 /**
- * Mailcode command: opening IF statement.
+ * Mailcode command: opening IF CONTAINS statement.
+ * 
+ * Checks if a variable value contains a search string.
  *
  * @package Mailcode
  * @subpackage Commands

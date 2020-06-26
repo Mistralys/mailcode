@@ -1,10 +1,10 @@
 <?php
 /**
- * File containing the {@see Mailcode_Commands_Command_If_Contains} class.
+ * File containing the {@see Mailcode_Commands_Command_ElseIf_Contains} class.
  *
  * @package Mailcode
  * @subpackage Commands
- * @see Mailcode_Commands_Command_If_Contains
+ * @see Mailcode_Commands_Command_ElseIf_Contains
  */
 
 declare(strict_types=1);
@@ -12,7 +12,9 @@ declare(strict_types=1);
 namespace Mailcode;
 
 /**
- * Mailcode command: opening IF statement.
+ * Mailcode command: opening ELSE IF CONTAINS statement.
+ * 
+ * Checks if a variable value contains a search string.
  *
  * @package Mailcode
  * @subpackage Commands

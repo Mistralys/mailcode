@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Mailcode;
 
 /**
- * Mailcode command: opening IF statement.
+ * Mailcode command: opening ELSE IF statement.
  *
  * @package Mailcode
  * @subpackage Commands
