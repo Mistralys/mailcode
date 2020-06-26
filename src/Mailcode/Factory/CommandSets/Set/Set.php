@@ -1,0 +1,50 @@
+<?php
+/**
+ * File containing the {@see Mailcode_Factory_CommandSets_Set_Set} class.
+ *
+ * @package Mailcode
+ * @subpackage Utilities
+ * @see Mailcode_Factory_CommandSets_Set_Set
+ */
+
+declare(strict_types=1);
+
+namespace Mailcode;
+
+/**
+ * Factory utility used to create commands.
+ *
+ * @package Mailcode
+ * @subpackage Utilities
+ * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
+ */
+class Mailcode_Factory_CommandSets_Set_Set extends Mailcode_Factory_CommandSets_Set
+{
+    public function setVar(string $variableName, string $value, bool $quoteValue=true) : Mailcode_Commands_Command_SetVariable
+    {
+        $variableName = $this->instantiator->filterVariableName($variableName);
+        
+        if($quoteValue)
+        {
+            $value = $this->instantiator->quoteString($value);
+        }
+        
+        $params = $variableName.' = '.$value;
+        
+        $cmd = Mailcode::create()->getCommands()->createCommand(
+            'SetVariable',
+            '', // type
+            $params,
+            '{setvar: '.$params.'}'
+        );
+        
+        $this->instantiator->checkCommand($cmd);
+        
+        if($cmd instanceof Mailcode_Commands_Command_SetVariable)
+        {
+            return $cmd;
+        }
+        
+        throw $this->instantiator->exceptionUnexpectedType('SetVariable', $cmd);
+    }
+}
