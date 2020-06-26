@@ -305,7 +305,10 @@ class Mailcode_Parser_Safeguard
     
     protected function restore(string $string, bool $partial=false, bool $highlighted=false) : string
     {
-        $this->requireValidCollection();
+        if(!$partial)
+        {
+            $this->requireValidCollection();
+        }
         
         $replaces = $this->getReplaces($highlighted);
         
