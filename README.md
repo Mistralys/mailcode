@@ -58,6 +58,22 @@ Non-variable based conditions:
 {end}
 ```
 
+Checking if a variable is empty or does not exist:
+
+```
+{if empty: $CUSTOMER.NAME}
+    Customer name is empty.
+{end}
+```
+
+Checking if a variable exists and is not empty:
+
+```
+{if not-empty: $CUSTOMER.NAME}
+    {showvar: $CUSTOMER.NAME}
+{end}
+```
+
 ### Loops
 
 ```
