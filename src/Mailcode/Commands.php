@@ -194,10 +194,27 @@ class Mailcode_Commands
                 $type = $dummy->getDefaultType();
             }
             
-            $class .= '_'.ucfirst($type);
+            $class .= '_'.$this->adjustTypeName($type);
         }
         
         return $class;
+    }
+    
+   /**
+    * Translates the command type to the expected class naming scheme.
+    * 
+    * Example: not-empty => NotEmpty
+    * 
+    * @param string $type
+    * @return string
+    */
+    private function adjustTypeName(string $type) : string
+    {
+        $type = str_replace('-', ' ', $type);
+        $type = ucwords($type);
+        $type = str_replace(' ', '', $type);
+        
+        return $type;
     }
     
    /**
