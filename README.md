@@ -277,12 +277,23 @@ The following tools have to be enabled in the Velocity templates:
 
   * [DateTool](https://velocity.apache.org/tools/devel/apidocs/org/apache/velocity/tools/generic/DateTool.html)
   * [EscapeTool](https://velocity.apache.org/tools/devel/apidocs/org/apache/velocity/tools/generic/EscapeTool.html)
+  * [StringUtils](http://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/StringUtils.html)
 
 These tools can be added to the context of templates like this:
 
 ```
 context.add("date", new DateTool());
 context.add("esc", new EscapeTool());
+context.put("StringUtils", new StringUtils());
 ```
 
-If these tools are not available, the ShowDate and ShowSnippet commands will throw errors if they are used in a template.
+NOTE: The names are case sensitive. There is a mix of cases here - they have to stay this way to be backwards compatible.
+
+Commands that require these tools:
+
+  - ShowDate (DateTool)
+  - ShowSnippet (EscapeTool)
+  - If Empty / If Not Empty (StringUtils)
+  - ElseIf Empty / ElseIf Not Empty (StringUtils)
+
+If these tools are not available, these commands will throw errors if they are used in a template.
