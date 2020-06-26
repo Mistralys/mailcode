@@ -25,7 +25,7 @@ class Mailcode_Parser
     const COMMAND_REGEX_PARTS = array( 
         '{\s*([a-z]+)\s*}',
         '{\s*([a-z]+)\s*:([^}]*)}',
-        '{\s*([a-z]+)\s+([a-z]+)\s*:([^}]*)}'
+        '{\s*([a-z]+)\s+([a-z-]+)\s*:([^}]*)}'
     );
     
    /**
