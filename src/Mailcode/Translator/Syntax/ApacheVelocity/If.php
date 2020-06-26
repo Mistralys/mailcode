@@ -39,12 +39,12 @@ class Mailcode_Translator_Syntax_ApacheVelocity_If extends Mailcode_Translator_S
         
         if($command instanceof Mailcode_Commands_Command_If_Empty)
         {
-            return $this->translateEmpty($command, false);
+            return $this->translateEmpty($command);
         }
         
         if($command instanceof Mailcode_Commands_Command_If_NotEmpty)
         {
-            return $this->translateNotEmpty($command, true);
+            return $this->translateNotEmpty($command);
         }
         
         return '';
