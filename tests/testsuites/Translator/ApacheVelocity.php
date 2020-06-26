@@ -75,14 +75,49 @@ final class Translator_ApacheVelocityTests extends MailcodeTestCase
                 'expected' => '#if($FOO.BAR.matches("(?s)Value"))'
             ),
             array(
+                'label' => 'ElseIf contains',
+                'mailcode' => Mailcode_Factory::elseIfContains('FOO.BAR', 'Value'),
+                'expected' => '#elseif($FOO.BAR.matches("(?s)Value"))'
+            ),
+            array(
                 'label' => 'If contains with slash',
                 'mailcode' => Mailcode_Factory::ifContains('FOO.BAR', 'Va\lue'),
                 'expected' => '#if($FOO.BAR.matches("(?s)Va\\\\lue"))'
             ),
             array(
+                'label' => 'ElseIf contains with slash',
+                'mailcode' => Mailcode_Factory::elseIfContains('FOO.BAR', 'Va\lue'),
+                'expected' => '#elseif($FOO.BAR.matches("(?s)Va\\\\lue"))'
+            ),
+            array(
                 'label' => 'If contains with special characters',
                 'mailcode' => Mailcode_Factory::ifContains('FOO.BAR', '6 + 4 * 3'),
                 'expected' => '#if($FOO.BAR.matches("(?s)6 \+ 4 \* 3"))'
+            ),
+            array(
+                'label' => 'ElseIf contains with special characters',
+                'mailcode' => Mailcode_Factory::elseIfContains('FOO.BAR', '6 + 4 * 3'),
+                'expected' => '#elseif($FOO.BAR.matches("(?s)6 \+ 4 \* 3"))'
+            ),
+            array(
+                'label' => 'If empty',
+                'mailcode' => Mailcode_Factory::ifEmpty('FOO.BAR'),
+                'expected' => '#if($StringUtils.isEmpty($FOO.BAR))'
+            ),
+            array(
+                'label' => 'ElseIf empty',
+                'mailcode' => Mailcode_Factory::elseIfEmpty('FOO.BAR'),
+                'expected' => '#elseif($StringUtils.isEmpty($FOO.BAR))'
+            ),
+            array(
+                'label' => 'If not empty',
+                'mailcode' => Mailcode_Factory::ifNotEmpty('FOO.BAR'),
+                'expected' => '#if(!$StringUtils.isEmpty($FOO.BAR))'
+            ),
+            array(
+                'label' => 'ElseIf not empty',
+                'mailcode' => Mailcode_Factory::elseIfNotEmpty('FOO.BAR'),
+                'expected' => '#elseif(!$StringUtils.isEmpty($FOO.BAR))'
             )
         );
         
@@ -92,7 +127,7 @@ final class Translator_ApacheVelocityTests extends MailcodeTestCase
         {
             $result = $syntax->translateCommand($test['mailcode']);
             
-            $this->assertEquals($test['expected'], $result);
+            $this->assertEquals($test['expected'], $result, $test['label']);
         }
     }
     

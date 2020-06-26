@@ -183,6 +183,22 @@ final class Factory_FactoryTests extends MailcodeTestCase
         $this->addToAssertionCount(count($tests));
     }
     
+    public function test_ifEmpty()
+    {
+        $tests = array(
+            array(
+                'label' => 'Variable without dollar sign',
+                'cmd' => Mailcode_Factory::ifEmpty('FOO.BAR')
+            ),
+            array(
+                'label' => 'Variable with dollar sign',
+                'cmd' => Mailcode_Factory::ifEmpty('$FOO.BAR')
+            ),
+        );
+        
+        $this->addToAssertionCount(count($tests));
+    }
+    
     public function test_filterVariableName()
     {
         $var = Mailcode_Factory::showVar('     $FOO   .     BAR    ');

@@ -74,7 +74,9 @@ abstract class Mailcode_Commands_IfBase extends Mailcode_Commands_Command
         return array(
             'variable',
             'command',
-            'contains'
+            'contains',
+            'empty',
+            'not-empty'
         );
     }
     

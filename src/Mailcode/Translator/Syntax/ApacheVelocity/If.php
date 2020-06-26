@@ -37,6 +37,16 @@ class Mailcode_Translator_Syntax_ApacheVelocity_If extends Mailcode_Translator_S
             return $this->translateContains($command);
         }
         
+        if($command instanceof Mailcode_Commands_Command_If_Empty)
+        {
+            return $this->translateEmpty($command, false);
+        }
+        
+        if($command instanceof Mailcode_Commands_Command_If_NotEmpty)
+        {
+            return $this->translateNotEmpty($command, true);
+        }
+        
         return '';
     }
     
@@ -78,6 +88,32 @@ class Mailcode_Translator_Syntax_ApacheVelocity_If extends Mailcode_Translator_S
             $command->getVariable()->getFullName(),
             $opts,
             $this->filterRegexString(trim($command->getSearchTerm(), '"'))
+        );
+    }
+    
+    protected function translateEmpty(Mailcode_Commands_Command_If_Empty $command) : string
+    {
+        return $this->_translateEmpty($command->getVariable(), false);
+    }
+    
+    protected function translateNotEmpty(Mailcode_Commands_Command_If_NotEmpty $command) : string
+    {
+        return $this->_translateEmpty($command->getVariable(), true);
+    }
+    
+    protected function _translateEmpty(Mailcode_Variables_Variable $variable, bool $notEmpty) : string
+    {
+        $sign = '';
+        
+        if($notEmpty)
+        {
+            $sign = '!';
+        }
+        
+        return sprintf(
+            '#if(%s$StringUtils.isEmpty(%s))',
+            $sign,
+            $variable->getFullName()
         );
     }
 }
