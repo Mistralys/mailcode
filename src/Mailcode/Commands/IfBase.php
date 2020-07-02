@@ -44,6 +44,11 @@ abstract class Mailcode_Commands_IfBase extends Mailcode_Commands_Command
         return true;
     }
     
+    public function supportsLogicKeywords() : bool
+    {
+        return true;
+    }
+    
     public function isCommand() : bool
     {
         return $this->type === 'command' || empty($this->type);

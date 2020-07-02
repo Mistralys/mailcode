@@ -47,6 +47,11 @@ class Mailcode_Commands_Command_For extends Mailcode_Commands_Command implements
         return true;
     }
     
+    public function supportsLogicKeywords() : bool
+    {
+        return false;
+    }
+    
     protected function getValidations() : array
     {
         return array(

@@ -55,6 +55,11 @@ class Mailcode_Commands_Command_Comment extends Mailcode_Commands_Command implem
     {
         return true;
     }
+    
+    public function supportsLogicKeywords() : bool
+    {
+        return false;
+    }
 
     protected function getValidations() : array
     {

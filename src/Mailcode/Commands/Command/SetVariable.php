@@ -55,6 +55,11 @@ class Mailcode_Commands_Command_SetVariable extends Mailcode_Commands_Command im
         return true;
     }
     
+    public function supportsLogicKeywords() : bool
+    {
+        return false;
+    }
+    
     /**
      * Retrieves the variable to show.
      *

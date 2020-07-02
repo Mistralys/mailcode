@@ -54,6 +54,11 @@ class Mailcode_Commands_Command_ShowSnippet extends Mailcode_Commands_Command im
         return true;
     }
     
+    public function supportsLogicKeywords() : bool
+    {
+        return false;
+    }
+    
    /**
     * Retrieves the variable to show, provided the command
     * is valid.

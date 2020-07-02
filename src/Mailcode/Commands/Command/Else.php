@@ -44,6 +44,11 @@ class Mailcode_Commands_Command_Else extends Mailcode_Commands_Command implement
     {
         return false;
     }
+    
+    public function supportsLogicKeywords() : bool
+    {
+        return false;
+    }
 
     public function generatesContent(): bool
     {

@@ -56,6 +56,11 @@ class Mailcode_Commands_Command_ShowVariable extends Mailcode_Commands_Command i
         return true;
     }
     
+    public function supportsLogicKeywords() : bool
+    {
+        return false;
+    }
+    
    /**
     * Retrieves the variable to show.
     * 
