@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use AppUtils\ConvertHelper;
+
 /**
  * Base command class with the common functionality for all commands.
  *
@@ -70,7 +72,9 @@ abstract class Mailcode_Commands_Command
     * @var string[] 
     */
     protected $validations = array(
-        'params',
+        'params_empty',
+        'params_keywords',
+        'params_parse',
         'type_supported',
         'type_unsupported'
     );
@@ -79,6 +83,11 @@ abstract class Mailcode_Commands_Command
     * @var string
     */
     protected $comment = '';
+    
+   /**
+    * @var Mailcode_Collection|NULL
+    */
+    protected $subCommands;
     
     public function __construct(string $type='', string $paramsString='', string $matchedText='')
     {
@@ -245,7 +254,7 @@ abstract class Mailcode_Commands_Command
     */
     abstract protected function getValidations() : array;
     
-    protected function validateSyntax_params() : void
+    protected function validateSyntax_params_empty() : void
     {
         if(!$this->requiresParameters())
         {
@@ -258,6 +267,37 @@ abstract class Mailcode_Commands_Command
                 t('Parameters have to be specified.'),
                 self::VALIDATION_MISSING_PARAMETERS
             );
+            return;
+        }
+    }
+    
+    protected function validateSyntax_params_keywords() : void
+    {
+        if(!$this->supportsLogicKeywords())
+        {
+            return;
+        }
+        
+        $keywords = new Mailcode_Commands_LogicKeywords($this, $this->paramsString);
+        
+        if(!$keywords->isValid())
+        {
+            $this->validationResult->makeError(
+                t('Invalid parameters:').' '.$keywords->getErrorMessage(),
+                $keywords->getCode()
+            );
+            
+            return;
+        }
+        
+        $this->paramsString = $keywords->getMainParamsString();
+        $this->subCommands = $keywords->getSubCommands();
+    }
+    
+    protected function validateSyntax_params_parse() : void
+    {
+        if(!$this->requiresParameters())
+        {
             return;
         }
         
@@ -366,6 +406,14 @@ abstract class Mailcode_Commands_Command
     abstract public function requiresParameters() : bool;
     
     abstract public function supportsType() : bool;
+    
+   /**
+    * Whether the command allows using logic keywords like "and:" or "or:"
+    * in the command parameters.
+    * 
+    * @return bool
+    */
+    abstract public function supportsLogicKeywords() : bool;
     
     abstract public function generatesContent() : bool;
 
