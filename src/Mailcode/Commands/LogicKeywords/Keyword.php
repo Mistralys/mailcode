@@ -39,7 +39,7 @@ class Mailcode_Commands_LogicKeywords_Keyword extends OperationResult
    /**
     * @var string
     */
-    private $type;
+    private $keywordType;
     
    /**
     * @var string
@@ -63,7 +63,7 @@ class Mailcode_Commands_LogicKeywords_Keyword extends OperationResult
     
     public function __construct(Mailcode_Commands_LogicKeywords $keywords, string $name, string $matchedString, string $type)
     {
-        $this->type = $type;
+        $this->keywordType = $type;
         $this->name = $name;
         $this->keywords = $keywords;
         $this->matchedString = $matchedString;
@@ -80,16 +80,16 @@ class Mailcode_Commands_LogicKeywords_Keyword extends OperationResult
     
     public function getType() : string
     {
-        return $this->getType();
+        return $this->keywordType;
     }
     
     public function getKeywordString() : string
     {
         $string = $this->name;
         
-        if(!empty($this->type))
+        if(!empty($this->keywordType))
         {
-            $string .= ' '.$this->type;
+            $string .= ' '.$this->keywordType;
         }
         
         return $string;
@@ -144,7 +144,7 @@ class Mailcode_Commands_LogicKeywords_Keyword extends OperationResult
         $string = sprintf(
             '{%s %s: %s}',
             $this->keywords->getCommand()->getName(),
-            $this->type,
+            $this->keywordType,
             $this->params
         );
         

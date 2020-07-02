@@ -21,6 +21,7 @@ namespace Mailcode;
 abstract class Mailcode_Translator_Syntax_ApacheVelocity_Base_AbstractIf extends Mailcode_Translator_Syntax_ApacheVelocity
 {
     const ERROR_CANNOT_GET_KEYWORD_SIGN = 60801;
+    const ERROR_INVALID_KEYWORD_COMMAND_TYPE = 60802;
     
     abstract protected function getCommandTemplate() : string;
 
@@ -34,7 +35,24 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity_Base_AbstractIf extends
         
         foreach($keywords as $keyword)
         {
-            $body .= ' '.$this->getSign($keyword).' '.$this->translateBody($keyword->getCommand());
+            $keyCommand = $keyword->getCommand();
+            
+            if($keyCommand instanceof Mailcode_Commands_IfBase)
+            {
+                $body .= ' '.$this->getSign($keyword).' '.$this->translateBody($keyCommand);
+            }
+            else
+            {
+                throw new Mailcode_Exception(
+                    'Keyword command type does not match expected base class.',
+                    sprintf(
+                        'Expected instance of [%s], got [%s].',
+                        Mailcode_Commands_IfBase::class,
+                        get_class($keyCommand)
+                    ),
+                    self::ERROR_INVALID_KEYWORD_COMMAND_TYPE
+                );
+            }
         }
         
         return sprintf($this->getCommandTemplate(), $body);

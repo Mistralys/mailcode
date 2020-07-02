@@ -26,6 +26,7 @@ use AppUtils\OperationResult;
 class Mailcode_Commands_LogicKeywords extends OperationResult
 {
     const ERROR_CANNOT_APPEND_INVALID_KEYWORD = 60501;
+    const ERROR_KEYWORD_MATCHED_STRING_NOT_FOUND = 60502;
     
     const VALIDATION_CANNOT_MIX_LOGIC_KEYWORDS = 60701;
     const VALIDATION_INVALID_SUB_COMMAND = 60702;
@@ -135,6 +136,9 @@ class Mailcode_Commands_LogicKeywords extends OperationResult
         }
     }
     
+   /**
+    * @return string[]
+    */
     private function detectParameters() : array
     {
         $params = $this->paramsString;
@@ -142,14 +146,7 @@ class Mailcode_Commands_LogicKeywords extends OperationResult
         
         foreach($this->keywords as $keyword)
         {
-            $search = $keyword->getMatchedString();
-            $pos = strpos($params, $search);
-            $length = strlen($search);
-            
-            $store = substr($params, 0, $pos);
-            $params = trim(substr($params, $pos+$length));
-            
-            $stack[] = $store;
+            $params = $this->detectParamsKeyword($params, $keyword, $stack);
         }
         
         $stack[] = $params;
@@ -157,6 +154,37 @@ class Mailcode_Commands_LogicKeywords extends OperationResult
         $this->mainParams = array_shift($stack);
         
         return $stack;
+    }
+
+   /**
+    * @param string $params
+    * @param Mailcode_Commands_LogicKeywords_Keyword $keyword
+    * @param string[] $stack
+    * @throws Mailcode_Exception
+    * @return string
+    */
+    private function detectParamsKeyword(string $params, Mailcode_Commands_LogicKeywords_Keyword $keyword, array &$stack) : string
+    {
+        $search = $keyword->getMatchedString();
+        $pos = strpos($params, $search, 0);
+        
+        if($pos === false)
+        {
+            throw new Mailcode_Exception(
+                'Keyword matched string not found',
+                null,
+                self::ERROR_KEYWORD_MATCHED_STRING_NOT_FOUND
+            );
+        }
+        
+        $length = strlen($search);
+        
+        $store = substr($params, 0, $pos);
+        $params = trim(substr($params, $pos+$length));
+        
+        $stack[] = $store;
+        
+        return $params;
     }
     
    /**
@@ -222,6 +250,7 @@ class Mailcode_Commands_LogicKeywords extends OperationResult
         }
         
         $amount = count($matches[0]);
+        $result = array();
         
         for($i=0; $i < $amount; $i++)
         {
