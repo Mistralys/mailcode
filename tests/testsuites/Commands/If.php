@@ -3,6 +3,7 @@
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands_Command;
 use Mailcode\Mailcode_Commands_IfBase;
+use Mailcode\Mailcode_Commands_LogicKeywords;
 
 final class Mailcode_IfTests extends MailcodeTestCase
 {
@@ -146,6 +147,57 @@ final class Mailcode_IfTests extends MailcodeTestCase
             array(
                 'label' => 'Valid statement',
                 'string' => '{if not-empty: $FOOBAR}{end}',
+                'valid' => true,
+                'code' => 0
+            )
+        );
+        
+        foreach($tests as $test)
+        {
+            $collection = Mailcode::create()->parseString($test['string']);
+            
+            $label = $test['label'].PHP_EOL;
+            
+            if(!$collection->isValid())
+            {
+                $label .= "Messages:".PHP_EOL;
+                
+                foreach($collection->getErrors() as $error)
+                {
+                    $label .= $error->getMessage().PHP_EOL;
+                }
+            }
+            
+            $label .= 'Command:'.$test['string'];
+            
+            $this->assertSame($test['valid'], $collection->isValid(), $label);
+            
+            if(!$test['valid'])
+            {
+                $error = $collection->getFirstError();
+                $this->assertSame($test['code'], $error->getCode(), $label);
+            }
+        }
+    }
+    
+    public function test_and()
+    {
+        $tests = array(
+            array(
+                'label' => 'Mixing keywords',
+                'string' => '{if empty: $BARFOO and empty: $FOO.BAR or empty: $LOPOS}{end}',
+                'valid' => false,
+                'code' => Mailcode_Commands_LogicKeywords::VALIDATION_CANNOT_MIX_LOGIC_KEYWORDS
+            ),
+            array(
+                'label' => 'Invalid subcommand',
+                'string' => '{if empty: $BARFOO and: invalid}{end}',
+                'valid' => false,
+                'code' => Mailcode_Commands_LogicKeywords::VALIDATION_INVALID_SUB_COMMAND
+            ),
+            array(
+                'label' => 'Concatenating several keywords',
+                'string' => '{if empty: $BARFOO and not-empty: $FOO.BAR and: 1+1=2 and variable: $FOO.BAR == "Lopos"}{end}',
                 'valid' => true,
                 'code' => 0
             )
