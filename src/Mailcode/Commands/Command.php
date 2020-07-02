@@ -11,8 +11,6 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
-use AppUtils\ConvertHelper;
-
 /**
  * Base command class with the common functionality for all commands.
  *
@@ -26,6 +24,7 @@ abstract class Mailcode_Commands_Command
     const ERROR_NO_VALIDATION_RESULT_AVAILABLE = 46002;
     const ERROR_MISSING_VALIDATION_METHOD = 46003;
     const ERROR_MISSING_TYPE_INTERFACE = 46004;
+    const ERROR_LOGIC_COMMANDS_NOT_SUPPORTED = 46005;
     
     const VALIDATION_MISSING_PARAMETERS = 48301;
     const VALIDATION_ADDONS_NOT_SUPPORTED = 48302;
@@ -85,9 +84,9 @@ abstract class Mailcode_Commands_Command
     protected $comment = '';
     
    /**
-    * @var Mailcode_Collection|NULL
+    * @var Mailcode_Commands_LogicKeywords|NULL
     */
-    protected $subCommands;
+    protected $logicKeywords;
     
     public function __construct(string $type='', string $paramsString='', string $matchedText='')
     {
@@ -224,29 +223,34 @@ abstract class Mailcode_Commands_Command
         
         foreach($validations as $validation)
         {
-            $method = 'validateSyntax_'.$validation;
-            
-            if(!method_exists($this, $method))
-            {
-                throw new Mailcode_Exception(
-                    'Missing validation method',
-                    sprintf(
-                        'The method [%s] is missing from class [%s].',
-                        $method,
-                        get_class($this)
-                    ),
-                    self::ERROR_MISSING_VALIDATION_METHOD
-                );
-            }
-            
-            $this->$method();
-            
             // break off at the first validation issue
-            if(!$this->validationResult->isValid())
+            if(!$this->validateSyntaxMethod($validation))
             {
                 return;
             }
         }
+    }
+    
+    protected function validateSyntaxMethod(string $validation) : bool
+    {
+        $method = 'validateSyntax_'.$validation;
+        
+        if(!method_exists($this, $method))
+        {
+            throw new Mailcode_Exception(
+                'Missing validation method',
+                sprintf(
+                    'The method [%s] is missing from class [%s].',
+                    $method,
+                    get_class($this)
+                ),
+                self::ERROR_MISSING_VALIDATION_METHOD
+            );
+        }
+        
+        $this->$method();
+        
+        return $this->validationResult->isValid();
     }
     
    /**
@@ -278,20 +282,19 @@ abstract class Mailcode_Commands_Command
             return;
         }
         
-        $keywords = new Mailcode_Commands_LogicKeywords($this, $this->paramsString);
+        $this->logicKeywords = new Mailcode_Commands_LogicKeywords($this, $this->paramsString);
         
-        if(!$keywords->isValid())
+        if(!$this->logicKeywords->isValid())
         {
             $this->validationResult->makeError(
-                t('Invalid parameters:').' '.$keywords->getErrorMessage(),
-                $keywords->getCode()
+                t('Invalid parameters:').' '.$this->logicKeywords->getErrorMessage(),
+                $this->logicKeywords->getCode()
             );
             
             return;
         }
         
-        $this->paramsString = $keywords->getMainParamsString();
-        $this->subCommands = $keywords->getSubCommands();
+        $this->paramsString = $this->logicKeywords->getMainParamsString();
     }
     
     protected function validateSyntax_params_parse() : void
@@ -453,28 +456,9 @@ abstract class Mailcode_Commands_Command
     
     public function getNormalized() : string
     {
-        if(!$this->isValid())
-        {
-            return '';
-        }
+        $normalizer = new Mailcode_Commands_Normalizer($this);
         
-        $parts = array();
-        $parts[] = '{'.$this->getName();
-        
-        if($this->supportsType() && $this->hasType())
-        {
-            $parts[] = ' '.$this->getType();
-        }
-        
-        if($this->requiresParameters() && isset($this->params))
-        {
-            $parts[] = ': ';
-            $parts[] = $this->params->getNormalized();
-        }
-        
-        $parts[] = '}';
-        
-        return implode('', $parts);
+        return $normalizer->normalize();
     }
     
    /**
@@ -501,5 +485,19 @@ abstract class Mailcode_Commands_Command
     public function __toString()
     {
         return $this->getNormalized();
+    }
+    
+    public function getLogicKeywords() : Mailcode_Commands_LogicKeywords
+    {
+        if($this->supportsLogicKeywords() && isset($this->logicKeywords))
+        {
+            return $this->logicKeywords;
+        }
+        
+        throw new Mailcode_Exception(
+            'Logic keywords are not supported',
+            'Cannot retrieve the logic keywords instance: it is only available for commands supporting logic commands.',
+            self::ERROR_LOGIC_COMMANDS_NOT_SUPPORTED
+        );
     }
 }
