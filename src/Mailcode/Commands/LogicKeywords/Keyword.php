@@ -78,6 +78,23 @@ class Mailcode_Commands_LogicKeywords_Keyword extends OperationResult
         return $this->name;
     }
     
+    public function getType() : string
+    {
+        return $this->getType();
+    }
+    
+    public function getKeywordString() : string
+    {
+        $string = $this->name;
+        
+        if(!empty($this->type))
+        {
+            $string .= ' '.$this->type;
+        }
+        
+        return $string;
+    }
+    
    /**
     * The full string that was matched in the command's parameters
     * string. Examples: "and:", "and variable:"...
