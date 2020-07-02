@@ -25,7 +25,7 @@ use AppUtils\OperationResult;
  */
 class Mailcode_Commands_LogicKeywords extends OperationResult
 {
-    const ERROR_CANNOT_CREATE_INVALID_COMMANDS = 60501;
+    const ERROR_CANNOT_APPEND_INVALID_KEYWORD = 60501;
     
     const VALIDATION_CANNOT_MIX_LOGIC_KEYWORDS = 60701;
     const VALIDATION_INVALID_SUB_COMMAND = 60702;
@@ -160,34 +160,6 @@ class Mailcode_Commands_LogicKeywords extends OperationResult
     }
     
    /**
-    * Retrieves all sub-commands that have been defined in the 
-    * command's parameters string.
-    * 
-    * @throws Mailcode_Exception
-    * @return Mailcode_Commands_Command[]
-    */
-    public function getSubCommands() : array
-    {
-        if(!$this->isValid())
-        {
-            throw new Mailcode_Exception(
-                'Cannot create invalid commands collection',
-                'Cannot use createCommands(): The logic keywords is invalid.',
-                self::ERROR_CANNOT_CREATE_INVALID_COMMANDS
-            );
-        }
-        
-        $result = array();
-        
-        foreach($this->keywords as $keyword)
-        {
-            $result[] = $keyword->getCommand();
-        }
-        
-        return $result;
-    }
-    
-   /**
     * Extracts the parameters string to use for the 
     * original command itself, omitting all the logic
     * keywords for the sub-commands.
@@ -253,14 +225,76 @@ class Mailcode_Commands_LogicKeywords extends OperationResult
         
         for($i=0; $i < $amount; $i++)
         {
-            $result[] = new Mailcode_Commands_LogicKeywords_Keyword(
-                $this, 
+            $result[] = $this->createKeyword(
                 $name, 
-                $matches[0][$i], 
-                $matches[1][$i]
+                $matches[1][$i],
+                $matches[0][$i] 
             );
         }
         
         return $result;
+    }
+    
+    public function hasKeywords() : bool
+    {
+        return !empty($this->keywords);
+    }
+    
+    public function appendAND(string $paramsString, string $type='') : Mailcode_Commands_LogicKeywords_Keyword
+    {
+        return $this->appendKeyword('and', $paramsString, $type);
+    }
+    
+    public function appendOR(string $paramsString, string $type='') : Mailcode_Commands_LogicKeywords_Keyword
+    {
+        return $this->appendKeyword('or', $paramsString, $type);
+    }
+    
+    public function appendKeyword(string $name, string $paramsString, string $type='') : Mailcode_Commands_LogicKeywords_Keyword
+    {
+        $keyword = $this->createKeyword($name, $type);
+        $keyword->setParamsString($paramsString);
+        
+        if(!$keyword->isValid())
+        {
+            throw new Mailcode_Exception(
+                'Cannot append invalid logic keyword',
+                sprintf(
+                    'The keyword [%s] cannot be added with parameters [%s] and type [%s]: it is invalid. Validation details: #%s %s',
+                    $name,
+                    $paramsString,
+                    $type,
+                    $keyword->getCode(),
+                    $keyword->getErrorMessage()
+                ),
+                self::ERROR_CANNOT_APPEND_INVALID_KEYWORD
+            );
+        }
+        
+        $this->keywords[] = $keyword;
+        
+        return $keyword;
+    }
+    
+    private function createKeyword(string $name, string $type='', string $matchedString='') : Mailcode_Commands_LogicKeywords_Keyword
+    {
+        if(empty($matchedString))
+        {
+            $matchedString = $name;
+            
+            if(!empty($type))
+            {
+                $matchedString .= ' '.$type;
+            }
+            
+            $matchedString .= ':';
+        }
+        
+        return new Mailcode_Commands_LogicKeywords_Keyword(
+            $this,
+            $name,
+            $matchedString,
+            $type
+        );
     }
 }
