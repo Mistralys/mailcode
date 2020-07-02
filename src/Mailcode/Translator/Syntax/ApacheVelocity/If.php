@@ -18,9 +18,19 @@ namespace Mailcode;
  * @subpackage Translator
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Mailcode_Translator_Syntax_ApacheVelocity_If extends Mailcode_Translator_Syntax_ApacheVelocity implements Mailcode_Translator_Command_If
+class Mailcode_Translator_Syntax_ApacheVelocity_If extends Mailcode_Translator_Syntax_ApacheVelocity_Base_AbstractIf implements Mailcode_Translator_Command_If
 {
+    protected function getCommandTemplate() : string
+    {
+        return '#if(%s)';
+    }
+    
     public function translate(Mailcode_Commands_Command_If $command): string
+    {
+        return $this->_translate($command);
+    }
+    
+    protected function translateBody(Mailcode_Commands_IfBase $command) : string
     {
         if($command instanceof Mailcode_Commands_Command_If_Command)
         {
@@ -52,42 +62,24 @@ class Mailcode_Translator_Syntax_ApacheVelocity_If extends Mailcode_Translator_S
     
     protected function translateCommand(Mailcode_Commands_Command_If_Command $command) : string
     {
-        $params = $command->getParams();
-        
-        if(!$params)
-        {
-            return '';
-        }
-        
-        return sprintf(
-            '#if(%s)',
-            $params->getNormalized()
-        );
+        return $this->_translateGeneric($command);
     }
     
     protected function translateVariable(Mailcode_Commands_Command_If_Variable $command) : string
     {
-        return sprintf(
-            '#if(%s %s %s)',
-            $command->getVariable()->getFullName(),
-            $command->getComparator(),
+        return $this->_translateVariable(
+            $command->getVariable(), 
+            $command->getComparator(), 
             $command->getValue()
         );
     }
     
     protected function translateContains(Mailcode_Commands_Command_If_Contains $command) : string
     {
-        $opts = 's';
-        if($command->isCaseInsensitive())
-        {
-            $opts = 'is';
-        }
-        
-        return sprintf(
-            '#if(%s.matches("(?%s)%s"))',
-            $command->getVariable()->getFullName(),
-            $opts,
-            $this->filterRegexString(trim($command->getSearchTerm(), '"'))
+        return $this->_translateContains(
+            $command->getVariable(), 
+            $command->isCaseInsensitive(), 
+            $command->getSearchTerm()
         );
     }
     
@@ -99,21 +91,5 @@ class Mailcode_Translator_Syntax_ApacheVelocity_If extends Mailcode_Translator_S
     protected function translateNotEmpty(Mailcode_Commands_Command_If_NotEmpty $command) : string
     {
         return $this->_translateEmpty($command->getVariable(), true);
-    }
-    
-    protected function _translateEmpty(Mailcode_Variables_Variable $variable, bool $notEmpty) : string
-    {
-        $sign = '';
-        
-        if($notEmpty)
-        {
-            $sign = '!';
-        }
-        
-        return sprintf(
-            '#if(%s$StringUtils.isEmpty(%s))',
-            $sign,
-            $variable->getFullName()
-        );
     }
 }

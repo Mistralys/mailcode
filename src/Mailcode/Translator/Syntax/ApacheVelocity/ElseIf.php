@@ -18,9 +18,19 @@ namespace Mailcode;
  * @subpackage Translator
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Mailcode_Translator_Syntax_ApacheVelocity_ElseIf extends Mailcode_Translator_Syntax_ApacheVelocity implements Mailcode_Translator_Command_ElseIf
+class Mailcode_Translator_Syntax_ApacheVelocity_ElseIf extends Mailcode_Translator_Syntax_ApacheVelocity_Base_AbstractIf implements Mailcode_Translator_Command_ElseIf
 {
+    protected function getCommandTemplate() : string
+    {
+        return '#elseif(%s)';
+    }
+    
     public function translate(Mailcode_Commands_Command_ElseIf $command): string
+    {
+        return $this->_translate($command);
+    }
+    
+    protected function translateBody(Mailcode_Commands_IfBase $command) : string
     {
         if($command instanceof Mailcode_Commands_Command_ElseIf_Command)
         {
@@ -52,24 +62,13 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ElseIf extends Mailcode_Translat
     
     protected function translateCommand(Mailcode_Commands_Command_ElseIf_Command $command) : string
     {
-        $params = $command->getParams();
-        
-        if(!$params)
-        {
-            return '';
-        }
-        
-        return sprintf(
-            '#elseif(%s)',
-            $params->getNormalized()
-        );
+        return $this->_translateGeneric($command);
     }
     
     protected function translateVariable(Mailcode_Commands_Command_ElseIf_Variable $command) : string
     {
-        return sprintf(
-            '#elseif(%s %s %s)',
-            $command->getVariable()->getFullName(),
+        return $this->_translateVariable(
+            $command->getVariable(),
             $command->getComparator(),
             $command->getValue()
         );
@@ -77,17 +76,10 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ElseIf extends Mailcode_Translat
     
     protected function translateContains(Mailcode_Commands_Command_ElseIf_Contains $command) : string
     {
-        $opts = 's';
-        if($command->isCaseInsensitive())
-        {
-            $opts = 'is';
-        }
-        
-        return sprintf(
-            '#elseif(%s.matches("(?%s)%s"))',
-            $command->getVariable()->getFullName(),
-            $opts,
-            $this->filterRegexString(trim($command->getSearchTerm(), '"'))
+        return $this->_translateContains(
+            $command->getVariable(),
+            $command->isCaseInsensitive(),
+            $command->getSearchTerm()
         );
     }
     
@@ -99,21 +91,5 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ElseIf extends Mailcode_Translat
     protected function translateNotEmpty(Mailcode_Commands_Command_ElseIf_NotEmpty $command) : string
     {
         return $this->_translateEmpty($command->getVariable(), true);
-    }
-
-    protected function _translateEmpty(Mailcode_Variables_Variable $variable, bool $notEmpty) : string
-    {
-        $sign = '';
-        
-        if($notEmpty)
-        {
-            $sign = '!';
-        }
-        
-        return sprintf(
-            '#elseif(%s$StringUtils.isEmpty(%s))',
-            $sign,
-            $variable->getFullName()
-        );
     }
 }
