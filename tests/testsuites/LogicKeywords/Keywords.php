@@ -47,6 +47,50 @@ final class LogicKeywords_KeywordsTests extends MailcodeTestCase
         $this->assertTrue($logic->hasKeywords());
     }
     
+    public function test_append_noCommand() : void
+    {
+        $cmd = Mailcode_Factory::ifEmpty('FOO.BAR');
+        
+        $logic = $cmd->getLogicKeywords();
+
+        try
+        {
+            $logic->appendAND('nothing');
+        }
+        catch(Mailcode_Exception $e)
+        {
+            $this->assertEquals(Mailcode_Commands_LogicKeywords::ERROR_CANNOT_APPEND_INVALID_KEYWORD, $e->getCode());
+            
+            // the details should contain the validation code
+            $this->assertStringContainsString(Mailcode_Commands_LogicKeywords_Keyword::VALIDATION_NO_COMMAND_CREATED, $e->getDetails());
+            return;
+        }
+
+        $this->fail('Should have triggered an exception.');
+    }
+    
+    public function test_append_invalidCommand() : void
+    {
+        $cmd = Mailcode_Factory::ifEmpty('FOO.BAR');
+        
+        $logic = $cmd->getLogicKeywords();
+        
+        try
+        {
+            $logic->appendAND('$FOOBAR = "John"', 'variable');
+        }
+        catch(Mailcode_Exception $e)
+        {
+            $this->assertEquals(Mailcode_Commands_LogicKeywords::ERROR_CANNOT_APPEND_INVALID_KEYWORD, $e->getCode());
+            
+            // the details should contain the validation code
+            $this->assertStringContainsString(Mailcode_Commands_LogicKeywords_Keyword::VALIDATION_NO_COMMAND_CREATED, $e->getDetails());
+            return;
+        }
+        
+        $this->fail('Should have triggered an exception.');
+    }
+    
     public function test_normalize() : void
     {
         $cmd = Mailcode_Factory::ifEmpty('FOO.BAR');
