@@ -98,7 +98,7 @@ class Mailcode_Commands_LogicKeywords extends OperationResult
                     ConvertHelper::implodeWithAnd($names, ', ', ' '.t('and').' ')
                 ).' '.
                 t('Only one flavor of keyword may be used within the same command.').' '.
-                t('To illustrate, you may use the %1$s keyword several times, but not the %1$s keyword and %2$s keyword at the same time.'),
+                t('To illustrate, you may use the %1$s keyword several times, but not the %1$s keyword and %2$s keyword at the same time.', '"and"', '"or"'),
                 self::VALIDATION_CANNOT_MIX_LOGIC_KEYWORDS
             );
             
