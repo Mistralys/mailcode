@@ -138,4 +138,15 @@ class Mailcode
         
         return $this->translator;
     }
+    
+   /**
+    * Creates the styler, which can be used to retrieve the 
+    * CSS required to style the highlighted commands in HTML.
+    * 
+    * @return Mailcode_Styler
+    */
+    public function createStyler() : Mailcode_Styler
+    {
+        return new Mailcode_Styler();
+    }
 }
