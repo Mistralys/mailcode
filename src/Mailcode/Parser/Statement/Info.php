@@ -199,6 +199,15 @@ class Mailcode_Parser_Statement_Info
     }
     
    /**
+    * Retrieves all tokens.
+    * @return Mailcode_Parser_Statement_Tokenizer_Token[]
+    */
+    public function getTokens() : array
+    {
+        return $this->tokens;
+    }
+    
+   /**
     * Retrieves all string literals that were found in the command.
     * @return \Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral[]
     */
