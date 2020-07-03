@@ -26,6 +26,9 @@ class Mailcode_Commands_LogicKeywords_Keyword extends OperationResult
     const ERROR_CANNOT_GET_INVALID_COMMAND = 60601;
     const ERROR_CANNOT_OVERWRITE_PARAMETERS = 60602;
     
+    const VALIDATION_NO_COMMAND_CREATED = 61101;
+    const VALIDATION_INVALID_COMMAND_CREATED = 61102;
+    
    /**
     * @var Mailcode_Commands_LogicKeywords
     */
@@ -139,8 +142,6 @@ class Mailcode_Commands_LogicKeywords_Keyword extends OperationResult
     */
     public function getCommandString() : string
     {
-        $command = $this->keywords->getCommand();
-        
         $string = sprintf(
             '{%s %s: %s}',
             $this->keywords->getCommand()->getName(),
@@ -148,24 +149,36 @@ class Mailcode_Commands_LogicKeywords_Keyword extends OperationResult
             $this->params
         );
         
-        // automatically close opening commands to be able to parse valid strings.
-        if($command instanceof Mailcode_Commands_Command_Type_Opening)
-        {
-            $string .= '{end}';
-        }
-        
         return $string;
     }
     
     private function createCommand() : void
     {
-        $this->collection = Mailcode::create()->parseString($this->getCommandString());
+        $commandString = $this->getCommandString();
         
-        if(!$this->collection->isValid())
+        $this->collection = Mailcode::create()->parseString($commandString);
+        
+        $command = $this->collection->getFirstCommand();
+        
+        if($command === null)
         {
-            $error = $this->collection->getFirstError();
-            
-            $this->makeError($error->getMessage(), $error->getCode());
+            $this->makeError(
+                t('No command could be created using the following string:').' '.
+                $this->getCommandString().' '.
+                t('The collection says:').' '.
+                $this->collection->getFirstError()->getMessage(),
+                self::VALIDATION_NO_COMMAND_CREATED
+            );
+            return;
+        }
+        
+        if(!$command->isValid())
+        {
+            $this->makeError(
+                t('Invalid command created:').' '.
+                $command->getValidationResult()->getErrorMessage(),
+                self::VALIDATION_INVALID_COMMAND_CREATED
+            );
         }
     }
     
@@ -179,7 +192,7 @@ class Mailcode_Commands_LogicKeywords_Keyword extends OperationResult
     {
         $command = $this->collection->getFirstCommand();
         
-        if($this->collection->isValid() && $command !== null)
+        if($command !== null && $command->isValid())
         {
             return $command;
         }
