@@ -97,7 +97,8 @@ class Mailcode_Commands_LogicKeywords extends OperationResult
                     'Cannot mix the logical keywords %1$s:',
                     ConvertHelper::implodeWithAnd($names, ', ', ' '.t('and').' ')
                 ).' '.
-                t('Only one keyword may be used within the same command.'),
+                t('Only one flavor of keyword may be used within the same command.').' '.
+                t('To illustrate, you may use the %1$s keyword several times, but not the %1$s keyword and %2$s keyword at the same time.'),
                 self::VALIDATION_CANNOT_MIX_LOGIC_KEYWORDS
             );
             
