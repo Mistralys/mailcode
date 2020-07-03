@@ -47,6 +47,12 @@ abstract class Mailcode_Parser_Statement_Tokenizer_Token
         $this->subject = $subject;
     }
     
+    public function getTypeID() : string
+    {
+        $parts = explode('_', get_class($this));
+        return array_pop($parts);
+    }
+    
     public function getID() : string
     {
         return $this->tokenID;
