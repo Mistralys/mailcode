@@ -4,6 +4,7 @@ use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands_Command;
 use Mailcode\Mailcode_Commands_IfBase;
 use Mailcode\Mailcode_Commands_LogicKeywords;
+use Mailcode\Mailcode_Factory;
 
 final class Mailcode_IfTests extends MailcodeTestCase
 {
@@ -178,5 +179,16 @@ final class Mailcode_IfTests extends MailcodeTestCase
                 $this->assertSame($test['code'], $error->getCode(), $label);
             }
         }
+    }
+    
+   /**
+    * Check for the issue where a zero in a command 
+    * would be stripped out when normalized.
+    */
+    public function test_normalize_zero()
+    {
+        $cmd = Mailcode_Factory::if("0 == 1");
+        
+        $this->assertEquals('{if: 0 == 1}', $cmd->getNormalized());
     }
 }

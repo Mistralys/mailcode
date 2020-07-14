@@ -231,8 +231,22 @@ Text here
             $safeguard = $parser->createSafeguard($test['text']);
             $safeguard->selectSingleLinesFormatter();
             
-            $safe = $safeguard->makeSafe();
-            $result = $safeguard->makeWhole($safe);
+            try
+            {
+                $safe = $safeguard->makeSafe();
+                $result = $safeguard->makeWhole($safe);
+            }
+            catch(Mailcode_Exception $e)
+            {
+                $this->fail(sprintf(
+                    'Exception: #%2$s %3$s %1$s Details: %4$s %1$s Safe string: %1$s %5$s',
+                    PHP_EOL,
+                    $e->getCode(),
+                    $e->getMessage(),
+                    $e->getDetails(),
+                    $safe
+                ));
+            }
             
             $this->assertEquals($test['expected'], $result, $test['label']);
         }
@@ -259,5 +273,25 @@ Text here
         
         // no exception = success
         $this->addToAssertionCount(1);
+    }
+
+   /**
+    * Ensure that the safeguarded string correctly uses the 
+    * normalized variants of the commands, not the original
+    * matched strings.
+    */
+    public function test_safeguard_normalize()
+    {
+        $parser = Mailcode::create()->getParser();
+        
+        $original = 'Text with a {showvar:        $VAR.NAME            } VARIABLE.';
+        
+        $safeguard = $parser->createSafeguard($original);
+        
+        $text = $safeguard->makeSafe();
+        
+        $result = $safeguard->makeWhole($text);
+        
+        $this->assertEquals('Text with a {showvar: $VAR.NAME} VARIABLE.', $result);
     }
 }
