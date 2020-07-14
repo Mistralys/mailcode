@@ -246,7 +246,7 @@ class Mailcode_Parser_Safeguard
     * @param bool $highlighted
     * @return string[]string
     */
-    protected function getReplaces(bool $highlighted=false) : array
+    protected function getReplaces(bool $highlighted=false, bool $normalize=false) : array
     {
         $placeholders = $this->getPlaceholders();
         
@@ -260,7 +260,11 @@ class Mailcode_Parser_Safeguard
             {
                 $replace = $placeholder->getHighlightedText();
             }
-            else 
+            else if($normalize)
+            {
+                $replace = $placeholder->getNormalizedText();
+            }
+            else
             {
                 $replace = $placeholder->getOriginalText();
             }
@@ -310,7 +314,7 @@ class Mailcode_Parser_Safeguard
             $this->requireValidCollection();
         }
         
-        $replaces = $this->getReplaces($highlighted);
+        $replaces = $this->getReplaces($highlighted, true);
         
         $placeholderStrings = array_keys($replaces);
         
