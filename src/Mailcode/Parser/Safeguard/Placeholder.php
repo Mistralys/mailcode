@@ -100,6 +100,11 @@ class Mailcode_Parser_Safeguard_Placeholder
         return $this->command->getMatchedText();
     }
     
+    public function getNormalizedText() : string
+    {
+        return $this->command->getNormalized();
+    }
+    
     public function getHighlightedText() : string
     {
         return $this->command->getHighlighted();
@@ -108,5 +113,16 @@ class Mailcode_Parser_Safeguard_Placeholder
     public function getCommand() : Mailcode_Commands_Command
     {
         return $this->command;
+    }
+    
+    public function serialize() : array
+    {
+        return array(
+            'originalText' => $this->getOriginalText(),
+            'replacementText' => $this->getReplacementText(),
+            'normalizedText' => $this->getNormalizedText(),
+            'length' => $this->getLength(),
+            'id' => $this->getID()
+        );
     }
 }
