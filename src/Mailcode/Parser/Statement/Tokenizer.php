@@ -166,7 +166,7 @@ class Mailcode_Parser_Statement_Tokenizer
         {
             $string = $token->getNormalized();
             
-            if(!empty($string))
+            if($string != '')
             {
                 $parts[] = $string;
             }
