@@ -47,6 +47,8 @@ class Mailcode_Parser_Match
         $this->type = strtolower($type);
         $this->params = trim($params);
         $this->matchedString = $matchedString;
+        
+        $this->applyFilters();
     }
     
     public function getName() : string
@@ -67,5 +69,15 @@ class Mailcode_Parser_Match
     public function getMatchedString() : string
     {
         return $this->matchedString;
+    }
+    
+    private function applyFilters() : void
+    {
+        $this->params = $this->removeNonBreakingSpaces($this->params);
+    }
+    
+    private function removeNonBreakingSpaces(string $subject) : string
+    {
+        return str_replace(array('&nbsp;', '&#160;'), ' ', $subject);
     }
 }
