@@ -70,6 +70,34 @@ final class Parser_ParserTests extends MailcodeTestCase
         $this->assertSame(1, $collection->countCommands());
         $this->assertTrue($collection->hasCommands());
     }
+    
+   /**
+    * WYSIWYG editors will enforce spaces the user adds by adding
+    * non breaking space entities. These should be filtered out,
+    * by replacing them with actual spaces. This way, these entities
+    * will be preserved when used in string literals, but stripped
+    * out otherwise. 
+    */
+    public function test_parseString_htmlSpaces()
+    {
+        $parser = Mailcode::create()->getParser();
+        
+        $collection = $parser->parseString(
+            "Line with
+            
+            {if variable: &#160; \$CUSTOMER.NAME &nbsp; == \" &nbsp; &#160; \" }
+
+            "
+        );
+        
+        $expected = '{if variable: $CUSTOMER.NAME == "     "}';
+        
+        $this->assertSame(1, $collection->countCommands());
+        $this->assertTrue($collection->hasCommands());
+        
+        $cmd = $collection->getFirstCommand();
+        $this->assertEquals($expected, $cmd->getNormalized());
+    }
 
     public function test_parseString_withSeveralCommands()
     {
