@@ -132,4 +132,20 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity_Base_AbstractIf extends
             $this->filterRegexString(trim($searchTerm, '"'))
         );
     }
+    
+    protected function _translateSearch(string $mode, Mailcode_Variables_Variable $variable, bool $caseSensitive, string $searchTerm) : string
+    {
+        $method = $mode.'With';
+        if($caseSensitive)
+        {
+            $method = $mode.'WithIgnoreCase';
+        }
+        
+        return sprintf(
+            '$StringUtils.%s(%s, "%s")',
+            $method,
+            $variable->getFullName(),
+            trim($searchTerm, '"')
+        );
+    }
 }
