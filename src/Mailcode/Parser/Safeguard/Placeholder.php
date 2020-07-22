@@ -115,6 +115,18 @@ class Mailcode_Parser_Safeguard_Placeholder
         return $this->command;
     }
     
+   /**
+    * Serializes the placeholder's information into 
+    * an array with the following keys:
+    * 
+    *   - originalText
+    *   - replacementText
+    *   - normalizedText
+    *   - length
+    *   - id
+    * 
+    * @return array<string,string|integer>
+    */
     public function serialize() : array
     {
         return array(
