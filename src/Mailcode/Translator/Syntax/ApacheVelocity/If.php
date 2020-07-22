@@ -69,7 +69,7 @@ class Mailcode_Translator_Syntax_ApacheVelocity_If extends Mailcode_Translator_S
     {
         return $this->_translateVariable(
             $command->getVariable(), 
-            $command->getComparator(), 
+            $command->getSign(), 
             $command->getValue()
         );
     }
