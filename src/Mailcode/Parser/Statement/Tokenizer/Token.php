@@ -18,7 +18,7 @@ namespace Mailcode;
  * @subpackage Parser
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-abstract class Mailcode_Parser_Statement_Tokenizer_Token
+abstract class Mailcode_Parser_Statement_Tokenizer_Token implements Mailcode_Parser_Statement_Tokenizer_TypeInterface
 {
    /**
     * @var string
@@ -47,6 +47,10 @@ abstract class Mailcode_Parser_Statement_Tokenizer_Token
         $this->subject = $subject;
     }
     
+   /**
+    * The ID of the type. i.e. the class name ("Keyword", "StringLiteral").
+    * @return string
+    */
     public function getTypeID() : string
     {
         $parts = explode('_', get_class($this));
@@ -72,6 +76,6 @@ abstract class Mailcode_Parser_Statement_Tokenizer_Token
     
     final public function isValue() : bool
     {
-        return $this instanceof Mailcode_Parser_Statement_Tokenizer_Type_Value;
+        return $this instanceof Mailcode_Parser_Statement_Tokenizer_ValueInterface;
     }
 }
