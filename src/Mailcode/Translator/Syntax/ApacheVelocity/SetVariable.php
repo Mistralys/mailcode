@@ -25,7 +25,7 @@ class Mailcode_Translator_Syntax_ApacheVelocity_SetVariable extends Mailcode_Tra
         return sprintf(
             '#set(%s = %s)',
             $command->getVariable()->getFullName(),
-            $command->getValue()->getValue()
+            $command->getAssignmentString()
         );
     }
 }
