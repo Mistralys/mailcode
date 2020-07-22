@@ -20,7 +20,7 @@ namespace Mailcode;
  * @subpackage Commands
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Mailcode_Commands_Command_ElseIf_BeginsWith extends Mailcode_Commands_Command_If
+class Mailcode_Commands_Command_ElseIf_BeginsWith extends Mailcode_Commands_Command_ElseIf
 {
     use Mailcode_Traits_Commands_IfEndsOrBeginsWith;
 }
