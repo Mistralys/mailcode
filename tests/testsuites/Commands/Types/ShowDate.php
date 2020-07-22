@@ -2,9 +2,9 @@
 
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands_Command;
-use Mailcode\Mailcode_Commands_Command_ShowDate;
 use Mailcode\Mailcode_Factory;
 use Mailcode\Mailcode_Date_FormatInfo;
+use Mailcode\Mailcode_Commands_CommonConstants;
 
 final class Mailcode_ShowDateTests extends MailcodeTestCase
 {
@@ -27,7 +27,7 @@ final class Mailcode_ShowDateTests extends MailcodeTestCase
                 'label' => 'Without variable',
                 'string' => '{showdate: "Some text"}',
                 'valid' => false,
-                'code' => Mailcode_Commands_Command_ShowDate::VALIDATION_VARIABLE_COUNT_MISMATCH
+                'code' => Mailcode_Commands_CommonConstants::VALIDATION_VARIABLE_MISSING
             ),
             array(
                 'label' => 'With valid variable, omitting format string',
