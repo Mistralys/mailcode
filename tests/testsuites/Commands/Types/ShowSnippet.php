@@ -2,8 +2,8 @@
 
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands_Command;
-use Mailcode\Mailcode_Commands_Command_ShowSnippet;
 use Mailcode\Mailcode_Factory;
+use Mailcode\Mailcode_Commands_CommonConstants;
 
 final class Mailcode_ShowSnippetTests extends MailcodeTestCase
 {
@@ -26,7 +26,7 @@ final class Mailcode_ShowSnippetTests extends MailcodeTestCase
                 'label' => 'Without variable',
                 'string' => '{showsnippet: "Some text"}',
                 'valid' => false,
-                'code' => Mailcode_Commands_Command_ShowSnippet::VALIDATION_VARIABLE_MISSING
+                'code' => Mailcode_Commands_CommonConstants::VALIDATION_VARIABLE_MISSING
             ),
             array(
                 'label' => 'With valid variable',
