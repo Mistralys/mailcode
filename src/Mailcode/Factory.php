@@ -186,6 +186,26 @@ class Mailcode_Factory
     {
         return self::$commandSets->elseIf()->elseIfVarNotEqualsString($variable, $value);
     }
+
+    public static function ifBeginsWith(string $variable, string $search, bool $caseInsensitive=false) : Mailcode_Commands_Command_If_BeginsWith
+    {
+        return self::$commandSets->if()->ifBeginsWith($variable, $search, $caseInsensitive);
+    }
+
+    public static function ifEndsWith(string $variable, string $search, bool $caseInsensitive=false) : Mailcode_Commands_Command_If_EndsWith
+    {
+        return self::$commandSets->if()->ifEndsWith($variable, $search, $caseInsensitive);
+    }
+
+    public static function elseIfBeginsWith(string $variable, string $search, bool $caseInsensitive=false) : Mailcode_Commands_Command_ElseIf_BeginsWith
+    {
+        return self::$commandSets->elseIf()->elseIfBeginsWith($variable, $search, $caseInsensitive);
+    }
+    
+    public static function elseIfEndsWith(string $variable, string $search, bool $caseInsensitive=false) : Mailcode_Commands_Command_ElseIf_EndsWith
+    {
+        return self::$commandSets->elseIf()->elseIfEndsWith($variable, $search, $caseInsensitive);
+    }
     
     public static function ifContains(string $variable, string $search, bool $caseInsensitive=false) : Mailcode_Commands_Command_If_Contains
     {

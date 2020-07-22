@@ -116,6 +116,30 @@ class Mailcode_Factory_CommandSets_Set_ElseIf extends Mailcode_Factory_CommandSe
         throw $this->instantiator->exceptionUnexpectedType('ElseIfContains', $command);
     }
     
+    public function elseIfBeginsWith(string $variable, string $search, bool $caseInsensitive=false) : Mailcode_Commands_Command_ElseIf_BeginsWith
+    {
+        $command = $this->instantiator->buildIfBeginsWith('ElseIf', $variable, $search, $caseInsensitive);
+        
+        if($command instanceof Mailcode_Commands_Command_ElseIf_BeginsWith)
+        {
+            return $command;
+        }
+        
+        throw $this->instantiator->exceptionUnexpectedType('ElseIfBeginsWith', $command);
+    }
+    
+    public function elseIfEndsWith(string $variable, string $search, bool $caseInsensitive=false) : Mailcode_Commands_Command_ElseIf_EndsWith
+    {
+        $command = $this->instantiator->buildIfEndsWith('ElseIf', $variable, $search, $caseInsensitive);
+        
+        if($command instanceof Mailcode_Commands_Command_ElseIf_EndsWith)
+        {
+            return $command;
+        }
+        
+        throw $this->instantiator->exceptionUnexpectedType('ElseIfEndsWith', $command);
+    }
+    
     public function elseIfEmpty(string $variable) : Mailcode_Commands_Command_ElseIf_Empty
     {
         $command = $this->instantiator->buildIfEmpty('ElseIf', $variable);

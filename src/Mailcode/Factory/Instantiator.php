@@ -80,6 +80,21 @@ class Mailcode_Factory_Instantiator
     
     public function buildIfContains(string $ifType, string $variable, string $search, bool $caseInsensitive=false) : Mailcode_Commands_IfBase
     {
+        return $this->buildIfSearch($ifType, 'contains', $variable, $search, $caseInsensitive);
+    }
+    
+    public function buildIfBeginsWith(string $ifType, string $variable, string $search, bool $caseInsensitive=false) : Mailcode_Commands_IfBase
+    {
+        return $this->buildIfSearch($ifType, 'begins-with', $variable, $search, $caseInsensitive);
+    }
+    
+    public function buildIfEndsWith(string $ifType, string $variable, string $search, bool $caseInsensitive=false) : Mailcode_Commands_IfBase
+    {
+        return $this->buildIfSearch($ifType, 'ends-with', $variable, $search, $caseInsensitive);
+    }
+    
+    private function buildIfSearch(string $ifType, string $subType, string $variable, string $search, bool $caseInsensitive=false) : Mailcode_Commands_IfBase
+    {
         $keyword = ' ';
         
         if($caseInsensitive)
@@ -94,7 +109,7 @@ class Mailcode_Factory_Instantiator
             $search
         );
         
-        return $this->buildIf($ifType, $condition, 'contains');
+        return $this->buildIf($ifType, $condition, $subType);
     }
     
     public function filterVariableName(string $name) : string

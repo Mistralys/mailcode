@@ -137,6 +137,30 @@ class Mailcode_Factory_CommandSets_Set_If extends Mailcode_Factory_CommandSets_I
             return $command;
         }
         
-        throw $this->instantiator->exceptionUnexpectedType('ElseIfContains', $command);
+        throw $this->instantiator->exceptionUnexpectedType('IfContains', $command);
+    }
+    
+    public function ifBeginsWith(string $variable, string $search, bool $caseInsensitive=false) : Mailcode_Commands_Command_If_BeginsWith
+    {
+        $command = $this->instantiator->buildIfBeginsWith('If', $variable, $search, $caseInsensitive);
+        
+        if($command instanceof Mailcode_Commands_Command_If_BeginsWith)
+        {
+            return $command;
+        }
+        
+        throw $this->instantiator->exceptionUnexpectedType('IfBeginsWith', $command);
+    }
+    
+    public function ifEndsWith(string $variable, string $search, bool $caseInsensitive=false) : Mailcode_Commands_Command_If_EndsWith
+    {
+        $command = $this->instantiator->buildIfEndsWith('If', $variable, $search, $caseInsensitive);
+        
+        if($command instanceof Mailcode_Commands_Command_If_EndsWith)
+        {
+            return $command;
+        }
+        
+        throw $this->instantiator->exceptionUnexpectedType('IfEndsWith', $command);
     }
 }

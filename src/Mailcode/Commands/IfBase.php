@@ -67,7 +67,9 @@ abstract class Mailcode_Commands_IfBase extends Mailcode_Commands_Command
             'command',
             'contains',
             'empty',
-            'not-empty'
+            'not-empty',
+            'begins-with',
+            'ends-with'
         );
     }
     
