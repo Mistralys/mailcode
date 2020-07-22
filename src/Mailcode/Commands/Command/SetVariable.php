@@ -20,15 +20,10 @@ namespace Mailcode;
  */
 class Mailcode_Commands_Command_SetVariable extends Mailcode_Commands_Command implements Mailcode_Commands_Command_Type_Standalone
 {
-    const ERROR_NO_VARIABLE_AVAILABLE = 49401;
-    const ERROR_NO_VARIABLE_IN_ASSIGNMENT = 49403;
-    
-    const VALIDATION_NOT_ASSIGNMENT_STATEMENT = 48501;
-    
    /**
-    * @var Mailcode_Parser_Statement_Tokenizer_Type_Value
+    * @var Mailcode_Parser_Statement_Tokenizer_Token_Variable|NULL
     */
-    protected $value;
+    private $variableToken;
     
     public function getName() : string
     {
@@ -60,86 +55,101 @@ class Mailcode_Commands_Command_SetVariable extends Mailcode_Commands_Command im
         return false;
     }
     
-    /**
-     * Retrieves the variable to show.
-     *
-     * NOTE: Only available once the command has been
-     * validated. Always use isValid() first.
-     *
-     * @throws Mailcode_Exception
-     * @return Mailcode_Variables_Variable
-     */
-    public function getVariable() : Mailcode_Variables_Variable
-    {
-        $variable = $this->params->getInfo()->getVariableByIndex(0);
-        
-        if($variable)
-        {
-            return $variable->getVariable();
-        }
-        
-        throw new Mailcode_Exception(
-            'No variable at position #0 in statement.',
-            'This signifies an error in the statement handling: a variable assignment should have a variable in the first token.',
-            self::ERROR_NO_VARIABLE_IN_ASSIGNMENT
-        );
-    }
-    
-    /**
-     * Retrieves the full name of the variable to show.
-     *
-     * NOTE: Only available once the command has been
-     * validated. Always use isValid() first.
-     *
-     * @throws Mailcode_Exception
-     * @return string
-     */
-    public function getVariableName() : string
-    {
-        return $this->getVariable()->getFullName();
-    }
-    
-    protected function validateSyntax_assignment() : void
-    {
-        if($this->params->getInfo()->isVariableAssignment())
-        {
-            return;
-        }
-        
-        $this->validationResult->makeError(
-            t('Not a variable assignment.').' '.t('Is the equality sign (=) present?'),
-            self::VALIDATION_NOT_ASSIGNMENT_STATEMENT
-        );
-    }
-    
-    protected function validateSyntax_value() : void
-    {
-        $info = $this->params->getInfo();
-        
-        $value = $info->getTokenByIndex(2);
-        
-        if($value instanceof Mailcode_Parser_Statement_Tokenizer_Type_Value)
-        {
-            $this->value = $value;
-            return;
-        }
-    }
-    
     protected function getValidations() : array
     {
         return array(
-            'assignment',
-            'value'
+            'variable',
+            'operand',
+            'assignment'
         );
-    }
-    
-    public function getValue() : Mailcode_Parser_Statement_Tokenizer_Type_Value
-    {
-        return $this->value;
     }
     
     public function generatesContent() : bool
     {
         return false;
+    }
+
+    protected function validateSyntax_variable() : void
+    {
+        $val = $this->validator->createVariable()->setIndex(0);
+        
+        if($val->isValid())
+        {
+            $this->variableToken = $val->getToken();
+        }
+        else
+        {
+            $this->validationResult->makeError(
+                'The first parameter must be a variable name.',
+                Mailcode_Commands_CommonConstants::VALIDATION_VARIABLE_MISSING
+            );
+        }
+    }
+    
+    protected function validateSyntax_operand() : void
+    {
+        $val = $this->validator->createOperand('=')->setIndex(1);
+        
+        if(!$val->isValid())
+        {
+            $this->validationResult->makeError(
+                t('The second parameter must be an equals sign (%1$s).', '<code>=</code>'),
+                Mailcode_Commands_CommonConstants::VALIDATION_INVALID_OPERAND
+            );
+        }
+    }
+    
+    protected function validateSyntax_assignment() : void
+    {
+        $tokens = $this->getAssignmentTokens();
+        
+        if(empty($tokens))
+        {
+            $this->validationResult->makeError(
+                t('No value assigned to the variable.'),
+                Mailcode_Commands_CommonConstants::VALIDATION_VALUE_MISSING
+            );
+        }
+    }
+    
+    public function getVariable() : Mailcode_Variables_Variable
+    {
+        if($this->variableToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable)
+        {
+            return $this->variableToken->getVariable();
+        }
+        
+        throw new Mailcode_Exception(
+            'No variable found.',
+            'Statement does not start with a variable: ['.$this->paramsString.']',
+            Mailcode_Commands_CommonConstants::ERROR_NO_VARIABLE_AVAILABLE
+        );
+    }
+    
+   /**
+    * @return Mailcode_Parser_Statement_Tokenizer_Token[]
+    */
+    public function getAssignmentTokens() : array
+    {
+        $params = $this->params->getInfo()->getTokens();
+        
+        array_shift($params); // variable
+        array_shift($params); // equals sign
+        
+        return $params;
+    }
+    
+    public function getAssignmentString() : string
+    {
+        $tokens = $this->getAssignmentTokens();
+        
+        $items = array();
+        
+        foreach($tokens as $token)
+        {
+            $items[] = $token->getNormalized();
+        }
+        
+        return implode(' ', $items);
     }
 }
