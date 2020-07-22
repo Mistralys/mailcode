@@ -64,4 +64,9 @@ trait Mailcode_Traits_Commands_Validation_Variable
             Mailcode_Commands_CommonConstants::ERROR_NO_VARIABLE_AVAILABLE
         );
     }
+    
+    public function getVariableName() : string
+    {
+        return $this->getVariable()->getFullName();
+    }
 }
