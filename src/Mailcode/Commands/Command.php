@@ -88,12 +88,23 @@ abstract class Mailcode_Commands_Command
     */
     protected $logicKeywords;
     
+   /**
+    * @var Mailcode_Parser_Statement_Validator
+    */
+    protected $validator;
+    
+   /**
+    * @var boolean
+    */
+    private $validated = false;
+    
     public function __construct(string $type='', string $paramsString='', string $matchedText='')
     {
         $this->type = $type;
         $this->paramsString = html_entity_decode($paramsString);
         $this->matchedText = $matchedText;
         $this->mailcode = Mailcode::create();
+        $this->validationResult = new \AppUtils\OperationResult($this);
         
         $this->init();
     }
@@ -189,16 +200,13 @@ abstract class Mailcode_Commands_Command
     
     protected function validate() : \AppUtils\OperationResult
     {
-        $this->requireNonDummy();
-        
-        if(isset($this->validationResult)) 
+        if(!$this->validated)
         {
-            return $this->validationResult;
+            $this->requireNonDummy();
+            $this->validateSyntax();
+            
+            $this->validated = true;
         }
-        
-        $this->validationResult = new \AppUtils\OperationResult($this);
-
-        $this->validateSyntax();
         
         return $this->validationResult;
     }
@@ -238,7 +246,7 @@ abstract class Mailcode_Commands_Command
         if(!method_exists($this, $method))
         {
             throw new Mailcode_Exception(
-                'Missing validation method',
+                'Missing validation method ['.$validation.']',
                 sprintf(
                     'The method [%s] is missing from class [%s].',
                     $method,
@@ -314,7 +322,11 @@ abstract class Mailcode_Commands_Command
                 t('Invalid parameters:').' '.$error->getErrorMessage(), 
                 self::VALIDATION_INVALID_PARAMS_STATEMENT
             );
+            
+            return;
         }
+        
+        $this->validator = new Mailcode_Parser_Statement_Validator($this->params);
     }
     
     protected function validateSyntax_type_supported() : void
