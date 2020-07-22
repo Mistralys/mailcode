@@ -3,6 +3,7 @@
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Translator;
 use Mailcode\Mailcode_Factory;
+use Mailcode\Mailcode_Exception;
 
 final class Translator_ApacheVelocityTests extends MailcodeTestCase
 {
@@ -125,7 +126,14 @@ final class Translator_ApacheVelocityTests extends MailcodeTestCase
         
         foreach($tests as $test)
         {
-            $result = $syntax->translateCommand($test['mailcode']);
+            try
+            {
+                $result = $syntax->translateCommand($test['mailcode']);
+            }
+            catch(Mailcode_Exception $e)
+            {
+                $this->fail('Exception triggered: '.$e->getMessage().' | '.$e->getDetails());
+            }
             
             $this->assertEquals($test['expected'], $result, $test['label']);
         }

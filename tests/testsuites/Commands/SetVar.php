@@ -2,7 +2,7 @@
 
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands_Command;
-use Mailcode\Mailcode_Commands_Command_SetVariable;
+use Mailcode\Mailcode_Commands_CommonConstants;
 
 final class Mailcode_SetVarTests extends MailcodeTestCase
 {
@@ -19,7 +19,7 @@ final class Mailcode_SetVarTests extends MailcodeTestCase
                 'label' => 'With double equals sign',
                 'string' => '{setvar: $FOO.BAR == "Text"}',
                 'valid' => false,
-                'code' => Mailcode_Commands_Command_SetVariable::VALIDATION_NOT_ASSIGNMENT_STATEMENT
+                'code' => Mailcode_Commands_CommonConstants::VALIDATION_INVALID_OPERAND
             ),
             array(
                 'label' => 'With invalid variable',
@@ -31,13 +31,13 @@ final class Mailcode_SetVarTests extends MailcodeTestCase
                 'label' => 'With missing value',
                 'string' => '{setvar: $FOO.BAR = }',
                 'valid' => false,
-                'code' => Mailcode_Commands_Command_SetVariable::VALIDATION_NOT_ASSIGNMENT_STATEMENT
+                'code' => Mailcode_Commands_CommonConstants::VALIDATION_VALUE_MISSING
             ),
             array(
                 'label' => 'With missing variable',
                 'string' => '{setvar: = "Text"}',
                 'valid' => false,
-                'code' => Mailcode_Commands_Command_SetVariable::VALIDATION_NOT_ASSIGNMENT_STATEMENT
+                'code' => Mailcode_Commands_CommonConstants::VALIDATION_VARIABLE_MISSING
             ),
             array(
                 'label' => 'With invalid string value',

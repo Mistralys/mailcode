@@ -2,7 +2,7 @@
 
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands_Command;
-use Mailcode\Mailcode_Commands_IfBase;
+use Mailcode\Mailcode_Commands_CommonConstants;
 
 final class Mailcode_ElseIfTests extends MailcodeTestCase
 {
@@ -19,19 +19,19 @@ final class Mailcode_ElseIfTests extends MailcodeTestCase
                 'label' => 'No operand after variable',
                 'string' => '{if: 1 = 1}{elseif variable: $FOO "Value"}{end}',
                 'valid' => false,
-                'code' => Mailcode_Commands_IfBase::VALIDATION_OPERAND_MISSING
+                'code' => Mailcode_Commands_CommonConstants::VALIDATION_OPERAND_MISSING
             ),
             array(
                 'label' => 'Using assignment, not comparison',
                 'string' => '{if: 1 = 1}{elseif variable: $FOO = "Some text"}{end}',
                 'valid' => false,
-                'code' => Mailcode_Commands_IfBase::VALIDATION_OPERAND_NOT_COMPARISON
+                'code' => Mailcode_Commands_CommonConstants::VALIDATION_INVALID_OPERAND
             ),
             array(
                 'label' => 'Without comparison value',
                 'string' => '{if: 1 = 1}{elseif variable: $FOO == }{end}',
                 'valid' => false,
-                'code' => Mailcode_Commands_IfBase::VALIDATION_NOTHING_AFTER_OPERAND
+                'code' => Mailcode_Commands_CommonConstants::VALIDATION_VALUE_MISSING
             ),
             array(
                 'label' => 'Valid statement',
@@ -68,25 +68,25 @@ final class Mailcode_ElseIfTests extends MailcodeTestCase
                 'label' => 'No variable specified',
                 'string' => '{if: 1 = 1}{elseif contains: "Value"}{end}',
                 'valid' => false,
-                'code' => Mailcode_Commands_IfBase::VALIDATION_VARIABLE_MISSING
+                'code' => Mailcode_Commands_CommonConstants::VALIDATION_VARIABLE_MISSING
             ),
             array(
                 'label' => 'Nothing after variable',
                 'string' => '{if: 1 = 1}{elseif contains: $FOO}{end}',
                 'valid' => false,
-                'code' => Mailcode_Commands_IfBase::VALIDATION_EXPECTED_KEYWORD
+                'code' => Mailcode_Commands_CommonConstants::VALIDATION_SEARCH_TERM_MISSING
             ),
             array(
                 'label' => 'Keyword, but no string',
                 'string' => '{if: 1 = 1}{elseif contains: $FOO insensitive:}{end}',
                 'valid' => false,
-                'code' => Mailcode_Commands_IfBase::VALIDATION_CONTAINS_MISSING_SEARCH_TERM
+                'code' => Mailcode_Commands_CommonConstants::VALIDATION_SEARCH_TERM_MISSING
             ),
             array(
-                'label' => 'Wrong keyword',
+                'label' => 'Wrong keyword (ignored)',
                 'string' => '{if: 1 = 1}{elseif contains: $FOO in: "Search"}{end}',
-                'valid' => false,
-                'code' => Mailcode_Commands_IfBase::VALIDATION_INVALID_KEYWORD
+                'valid' => true,
+                'code' => 0
             ),
             array(
                 'label' => 'Valid statement case sensitive',
@@ -97,6 +97,12 @@ final class Mailcode_ElseIfTests extends MailcodeTestCase
             array(
                 'label' => 'Valid statement case insensitive',
                 'string' => '{if: 1 = 1}{elseif contains: $FOO insensitive: "Search"}{end}',
+                'valid' => true,
+                'code' => 0
+            ),
+            array(
+                'label' => 'Valid despite different order',
+                'string' => '{if: 1 = 1}{elseif contains: "Search" insensitive: $FOO}{end}',
                 'valid' => true,
                 'code' => 0
             )
@@ -129,7 +135,7 @@ final class Mailcode_ElseIfTests extends MailcodeTestCase
                 'label' => 'Empty: No variable specified',
                 'string' => '{if: 1 = 1}{elseif empty: "Value"}{end}',
                 'valid' => false,
-                'code' => Mailcode_Commands_IfBase::VALIDATION_VARIABLE_MISSING
+                'code' => Mailcode_Commands_CommonConstants::VALIDATION_VARIABLE_MISSING
             ),
             array(
                 'label' => 'Empty: Valid statement',
@@ -141,7 +147,7 @@ final class Mailcode_ElseIfTests extends MailcodeTestCase
                 'label' => 'Not empty: No variable specified',
                 'string' => '{if: 1 = 1}{elseif not-empty: "Value"}{end}',
                 'valid' => false,
-                'code' => Mailcode_Commands_IfBase::VALIDATION_VARIABLE_MISSING
+                'code' => Mailcode_Commands_CommonConstants::VALIDATION_VARIABLE_MISSING
             ),
             array(
                 'label' => 'Not empty: Valid statement',
