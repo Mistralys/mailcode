@@ -18,7 +18,7 @@ namespace Mailcode;
  * @subpackage Parser
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Mailcode_Parser_Statement_Tokenizer_Token_Number extends Mailcode_Parser_Statement_Tokenizer_Token implements Mailcode_Parser_Statement_Tokenizer_Type_Value
+class Mailcode_Parser_Statement_Tokenizer_Token_Number extends Mailcode_Parser_Statement_Tokenizer_Token implements Mailcode_Parser_Statement_Tokenizer_ValueInterface
 {
     public function getNormalized() : string
     {
