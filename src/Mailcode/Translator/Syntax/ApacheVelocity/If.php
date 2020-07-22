@@ -70,6 +70,11 @@ class Mailcode_Translator_Syntax_ApacheVelocity_If extends Mailcode_Translator_S
         return '';
     }
 
+    protected function translateCommand(Mailcode_Commands_Command_If_Command $command) : string
+    {
+        return $this->_translateGeneric($command);
+    }
+    
     protected function translateBeginsWith(Mailcode_Commands_Command_If_BeginsWith $command) : string
     {
         return $this->_translateSearch(
