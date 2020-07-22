@@ -35,3 +35,8 @@
     * Test case base class for the factory tests.
     */
     require_once TESTS_ROOT.'/assets/classes/FactoryTestCase.php';
+
+    /**
+     * Test case base class for the apache velocity tests.
+     */
+    require_once TESTS_ROOT.'/assets/classes/VelocityTestCase.php';
