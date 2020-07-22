@@ -20,14 +20,30 @@ namespace Mailcode;
  */
 class Mailcode_Parser_Statement_Tokenizer_Token_Operand extends Mailcode_Parser_Statement_Tokenizer_Token
 {
-    public function getOperand() : string
+    public function getSign() : string
     {
         return $this->matchedText;
     }
     
     public function getNormalized() : string
     {
-        return $this->getOperand();
+        return $this->getSign();
+    }
+    
+   /**
+    * Retrieves all known comparison operator signs.
+    * @return string[]
+    */
+    public static function getComparisonSigns() : array
+    {
+        return array(
+            '==',
+            '>',
+            '<',
+            '>=',
+            '<=',
+            '!='
+        );
     }
     
    /**
@@ -62,56 +78,56 @@ class Mailcode_Parser_Statement_Tokenizer_Token_Operand extends Mailcode_Parser_
     
     public function isAssignment() : bool
     {
-        return $this->getOperand() === '=';
+        return $this->getSign() === '=';
     }
     
     public function isEquals() : bool
     {
-        return $this->getOperand() === '==';
+        return $this->getSign() === '==';
     }
     
     public function isGreaterThan() : bool
     {
-        return $this->getOperand() === '>';
+        return $this->getSign() === '>';
     }
     
     public function isSmallerThan() : bool
     {
-        return $this->getOperand() === '<';
+        return $this->getSign() === '<';
     }
     
     public function isGreaterOrEquals() : bool
     {
-        return $this->getOperand() === '>=';
+        return $this->getSign() === '>=';
     }
     
     public function isSmallerOrEquals() : bool
     {
-        return $this->getOperand() === '<=';
+        return $this->getSign() === '<=';
     }
     
     public function isNotEquals() : bool
     {
-        return $this->getOperand() === '!=';
+        return $this->getSign() === '!=';
     }
     
     public function isMinus() : bool
     {
-        return $this->getOperand() === '-';
+        return $this->getSign() === '-';
     }
     
     public function isMultiply() : bool
     {
-        return $this->getOperand() === '*';
+        return $this->getSign() === '*';
     }
     
     public function isDivide() : bool
     {
-        return $this->getOperand() === '/';
+        return $this->getSign() === '/';
     }
     
     public function isPlus() : bool
     {
-        return $this->getOperand() === '+';
+        return $this->getSign() === '+';
     }
 }
