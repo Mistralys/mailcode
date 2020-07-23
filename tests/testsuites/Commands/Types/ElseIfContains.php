@@ -1,6 +1,5 @@
 <?php
 
-use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands_CommonConstants;
 
 final class Mailcode_ElseIfContainsTests extends MailcodeTestCase
@@ -49,26 +48,15 @@ final class Mailcode_ElseIfContainsTests extends MailcodeTestCase
                 'string' => '{if: 1 = 1}{elseif contains: "Search" insensitive: $FOO}{end}',
                 'valid' => true,
                 'code' => 0
+            ),
+            array(
+                'label' => 'Several search terms',
+                'string' => '{if: 1 = 1}{elseif contains: "Foo" "Bar" insensitive: $FOO}{end}',
+                'valid' => true,
+                'code' => 0
             )
         );
         
-        foreach($tests as $test)
-        {
-            $collection = Mailcode::create()->parseString($test['string']);
-            
-            $message = '';
-            if(!$collection->isValid())
-            {
-                $message = $collection->getFirstError()->getMessage();
-            }
-            
-            $this->assertSame($test['valid'], $collection->isValid(), $test['label'].' '.$message);
-            
-            if(!$test['valid'])
-            {
-                $error = $collection->getFirstError();
-                $this->assertSame($test['code'], $error->getCode(), $test['label']);
-            }
-        }
+        $this->runCollectionTests($tests);
     }
 }
