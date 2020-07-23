@@ -209,12 +209,22 @@ class Mailcode_Factory
     
     public static function ifContains(string $variable, string $search, bool $caseInsensitive=false) : Mailcode_Commands_Command_If_Contains
     {
-        return self::$commandSets->if()->ifContains($variable, $search, $caseInsensitive);
+        return self::$commandSets->if()->ifContains($variable, array($search), $caseInsensitive);
+    }
+    
+    public static function ifContainsAny(string $variable, array $searchTerms, bool $caseInsensitive=false) : Mailcode_Commands_Command_If_Contains
+    {
+        return self::$commandSets->if()->ifContains($variable, $searchTerms, $caseInsensitive);
     }
     
     public static function elseIfContains(string $variable, string $search, bool $caseInsensitive=false) : Mailcode_Commands_Command_ElseIf_Contains
     {
-        return self::$commandSets->elseIf()->elseIfContains($variable, $search, $caseInsensitive);
+        return self::$commandSets->elseIf()->elseIfContains($variable, array($search), $caseInsensitive);
+    }
+    
+    public static function elseIfContainsAny(string $variable, array $searchTerms, bool $caseInsensitive=false) : Mailcode_Commands_Command_ElseIf_Contains
+    {
+        return self::$commandSets->elseIf()->elseIfContains($variable, $searchTerms, $caseInsensitive);
     }
     
     public static function ifEmpty(string $variable) : Mailcode_Commands_Command_If_Empty
