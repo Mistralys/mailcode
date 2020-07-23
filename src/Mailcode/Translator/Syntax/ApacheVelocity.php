@@ -21,6 +21,27 @@ namespace Mailcode;
 abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Translator_Command
 {
    /**
+    * @var string[]
+    */
+    private $regexSpecialChars = array(
+        '?',
+        '.',
+        '[',
+        ']',
+        '|',
+        '{',
+        '}',
+        '$',
+        '*',
+        '^',
+        '+',
+        '<',
+        '>',
+        '(',
+        ')'
+    );
+    
+   /**
     * Filters the string for use in an Apache Velocity (Java)
     * regex string: escapes all special characters.
     * 
@@ -29,29 +50,25 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
     */
     protected function filterRegexString(string $string) : string
     {
-        $escape = array(
-            '\\',
-            '?',
-            '.',
-            '[',
-            ']',
-            '|',
-            '{',
-            '}',
-            '$',
-            '*',
-            '^',
-            '+',
-            '<',
-            '>',
-            '(',
-            ')'
-        );
+        // Special case: previously escaped quotes. 
+        // To avoid modifying them, we strip them out.
+        $string = str_replace('\\"', 'ESCQUOTE', $string);
         
-        foreach($escape as $char)
+        // Any other existing backslashes in the string
+        // have to be double-escaped, giving four 
+        // backslashes in the java regex.
+        $string = str_replace('\\', '\\\\\\\\', $string);
+        
+        // All other special characters have to be escaped
+        // with two backslashes. 
+        foreach($this->regexSpecialChars as $char)
         {
-            $string = str_replace($char, '\\'.$char, $string);
+            $string = str_replace($char, '\\\\'.$char, $string);
         }
+        
+        // Restore the escaped quotes, which stay escaped 
+        // with a single backslash.
+        $string = str_replace('ESCQUOTE', '\\"', $string);
         
         return $string;
     }
