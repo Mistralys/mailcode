@@ -22,6 +22,9 @@ class Mailcode_Translator_Syntax_ApacheVelocity_Comment extends Mailcode_Transla
 {
     public function translate(Mailcode_Commands_Command_Comment $command): string
     {
-        return '## '.$command->getComment();
+        return PHP_EOL.
+        '#**'.PHP_EOL.
+        '  '.$command->getCommentString().PHP_EOL.
+        '*#'.PHP_EOL;
     }
 }
