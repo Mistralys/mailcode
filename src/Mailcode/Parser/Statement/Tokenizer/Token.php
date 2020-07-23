@@ -57,6 +57,10 @@ abstract class Mailcode_Parser_Statement_Tokenizer_Token implements Mailcode_Par
         return array_pop($parts);
     }
     
+   /**
+    * Retrieves a unique ID of the token.
+    * @return string  
+    */
     public function getID() : string
     {
         return $this->tokenID;
