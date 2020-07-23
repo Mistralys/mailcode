@@ -1,6 +1,5 @@
 <?php
 
-use Mailcode\Mailcode;
 use Mailcode\Mailcode_Factory;
 
 final class Mailcode_EndTests extends MailcodeTestCase
@@ -19,18 +18,7 @@ final class Mailcode_EndTests extends MailcodeTestCase
             ),
         );
         
-        foreach($tests as $test)
-        {
-            $collection = Mailcode::create()->parseString($test['string']);
-            
-            $this->assertSame($test['valid'], $collection->isValid(), $test['label']);
-            
-            if(!$test['valid'])
-            {
-                $error = $collection->getFirstError();
-                $this->assertSame($test['code'], $error->getCode(), $test['label']);
-            }
-        }
+        $this->runCollectionTests($tests);
     }
     
     public function test_highlight()

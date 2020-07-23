@@ -1,6 +1,5 @@
 <?php
 
-use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands_CommonConstants;
 
 final class Mailcode_ElseIfEmptyTests extends MailcodeTestCase
@@ -34,26 +33,6 @@ final class Mailcode_ElseIfEmptyTests extends MailcodeTestCase
             )
         );
         
-        foreach($tests as $test)
-        {
-            $collection = Mailcode::create()->parseString($test['string']);
-            
-            $message = '';
-            
-            if(!$collection->isValid())
-            {
-                $message = $collection->getFirstError()->getMessage();
-            }
-            
-            $label = $test['label'].' '.$message.PHP_EOL.$test['string'];
-            
-            $this->assertSame($test['valid'], $collection->isValid(), $label);
-            
-            if(!$test['valid'])
-            {
-                $error = $collection->getFirstError();
-                $this->assertSame($test['code'], $error->getCode(), $label);
-            }
-        }
+        $this->runCollectionTests($tests);
     }
 }
