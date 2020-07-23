@@ -299,7 +299,7 @@ class Mailcode_Parser_Statement_Tokenizer
     protected function tokenize_string_literals() : void
     {
         $matches = array();
-        preg_match_all('/"(.*)"/sx', $this->tokenized, $matches, PREG_PATTERN_ORDER);
+        preg_match_all('/"(.*)"/sxU', $this->tokenized, $matches, PREG_PATTERN_ORDER);
         
         foreach($matches[0] as $match)
         {
