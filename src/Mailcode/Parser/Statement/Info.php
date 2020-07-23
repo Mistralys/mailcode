@@ -225,4 +225,9 @@ class Mailcode_Parser_Statement_Info
         
         return $result;
     }
+    
+    public function createPruner() : Mailcode_Parser_Statement_Info_Pruner
+    {
+        return new Mailcode_Parser_Statement_Info_Pruner($this);
+    }
 }
