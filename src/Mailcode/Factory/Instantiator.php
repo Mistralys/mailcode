@@ -78,9 +78,23 @@ class Mailcode_Factory_Instantiator
         return $this->buildIf($ifType, $this->filterVariableName($variable), 'not-empty');
     }
     
-    public function buildIfContains(string $ifType, string $variable, string $search, bool $caseInsensitive=false) : Mailcode_Commands_IfBase
+    public function buildIfContains(string $ifType, string $variable, array $searchTerms, bool $caseInsensitive=false) : Mailcode_Commands_IfBase
     {
-        return $this->buildIfSearch($ifType, 'contains', $variable, $search, $caseInsensitive);
+        $keyword = ' ';
+        
+        if($caseInsensitive)
+        {
+            $keyword = ' insensitive: ';
+        }
+        
+        $condition = sprintf(
+            '%s%s"%s"',
+            $this->filterVariableName($variable),
+            $keyword,
+            implode('" "', array_map(array($this, 'filterLiteral'), $searchTerms))
+        );
+        
+        return $this->buildIf($ifType, $condition, 'contains');
     }
     
     public function buildIfBeginsWith(string $ifType, string $variable, string $search, bool $caseInsensitive=false) : Mailcode_Commands_IfBase
@@ -106,10 +120,15 @@ class Mailcode_Factory_Instantiator
             '%s%s"%s"',
             $this->filterVariableName($variable),
             $keyword,
-            $search
+            $this->filterLiteral($search)
         );
         
         return $this->buildIf($ifType, $condition, $subType);
+    }
+    
+    public function filterLiteral(string $term)
+    {
+        return str_replace('"', '\"', $term);
     }
     
     public function filterVariableName(string $name) : string
