@@ -31,7 +31,13 @@ abstract class VelocityTestCase extends MailcodeTestCase
                 $this->fail('Exception triggered: '.$e->getMessage().' | '.$e->getDetails());
             }
             
-            $this->assertEquals($test['expected'], $result, $test['label']);
+            $expected = str_replace(
+                array('[SLASH]', '[DBLSLASH]', '[FOURSLASH]', '[NL]'), 
+                array('\\', '\\\\', '\\\\\\\\', PHP_EOL), 
+                $test['expected']
+            );
+            
+            $this->assertEquals($expected, $result, $test['label']);
         }
     }
 }
