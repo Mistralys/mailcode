@@ -117,20 +117,35 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity_Base_AbstractIf extends
         );
     }
     
-    protected function _translateContains(Mailcode_Variables_Variable $variable, bool $caseSensitive, string $searchTerm) : string
+   /**
+    * 
+    * @param Mailcode_Variables_Variable $variable
+    * @param bool $caseSensitive
+    * @param Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral[] $searchTerms
+    * @return string
+    */
+    protected function _translateContains(Mailcode_Variables_Variable $variable, bool $caseSensitive, array $searchTerms) : string
     {
+        $parts = array();
+        $varName = $variable->getFullName();
+
         $opts = 's';
         if($caseSensitive)
         {
             $opts = 'is';
         }
         
-        return sprintf(
-            '%s.matches("(?%s)%s")',
-            $variable->getFullName(),
-            $opts,
-            $this->filterRegexString(trim($searchTerm, '"'))
-        );
+        foreach($searchTerms as $token)
+        {
+            $parts[] = sprintf(
+                '%s.matches("(?%s)%s")',
+                $varName,
+                $opts,
+                $this->filterRegexString(trim($token->getNormalized(), '"'))
+            );
+        }
+
+        return implode(' || ', $parts);
     }
     
     protected function _translateSearch(string $mode, Mailcode_Variables_Variable $variable, bool $caseSensitive, string $searchTerm) : string

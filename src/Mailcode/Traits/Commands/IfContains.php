@@ -26,14 +26,51 @@ trait Mailcode_Traits_Commands_IfContains
 {
     use Mailcode_Traits_Commands_Validation_Variable;
     use Mailcode_Traits_Commands_Validation_CaseSensitive;
-    use Mailcode_Traits_Commands_Validation_SearchTerm;
+    
+   /**
+    * @var Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral[]
+    */
+    protected $searchTerms = array();
     
     protected function getValidations() : array
     {
         return array(
             'variable',
-            'search_term',
-            'case_sensitive'
+            'case_sensitive',
+            'search_terms'
         );
+    }
+    
+    protected function validateSyntax_search_terms() : void
+    {
+        $tokens = $this->params->getInfo()->createPruner()
+        ->limitToStringLiterals()
+        ->getTokens();
+        
+        foreach($tokens as $token)
+        {
+            if($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral)
+            {
+                $this->searchTerms[] = $token;
+            }
+        }
+        
+        if(empty($this->searchTerms))
+        {
+            $this->validationResult->makeError(
+                t('No search terms found:').' '.
+                t('At least one search term has to be specified.'),
+                Mailcode_Commands_CommonConstants::VALIDATION_SEARCH_TERM_MISSING
+            );
+        }
+    }
+    
+   /**
+    * Retrieves all search terms.
+    * @return Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral[]
+    */
+    public function getSearchTerms() : array
+    {
+        return $this->searchTerms;
     }
 }

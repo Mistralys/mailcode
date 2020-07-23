@@ -128,9 +128,9 @@ class Mailcode_Factory_CommandSets_Set_If extends Mailcode_Factory_CommandSets_I
         throw $this->instantiator->exceptionUnexpectedType('IfNotEmpty', $command);
     }
     
-    public function ifContains(string $variable, string $search, bool $caseInsensitive=false) : Mailcode_Commands_Command_If_Contains
+    public function ifContains(string $variable, array $searchTerms, bool $caseInsensitive=false) : Mailcode_Commands_Command_If_Contains
     {
-        $command = $this->instantiator->buildIfContains('If', $variable, $search, $caseInsensitive);
+        $command = $this->instantiator->buildIfContains('If', $variable, $searchTerms, $caseInsensitive);
         
         if($command instanceof Mailcode_Commands_Command_If_Contains)
         {

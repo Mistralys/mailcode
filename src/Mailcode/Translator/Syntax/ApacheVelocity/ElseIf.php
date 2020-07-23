@@ -109,7 +109,7 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ElseIf extends Mailcode_Translat
         return $this->_translateContains(
             $command->getVariable(),
             $command->isCaseInsensitive(),
-            $command->getSearchTerm()
+            $command->getSearchTerms()
         );
     }
     
