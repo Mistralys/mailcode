@@ -20,15 +20,15 @@ namespace Mailcode;
  */
 class Mailcode_Commands_Command_Comment extends Mailcode_Commands_Command implements Mailcode_Commands_Command_Type_Standalone
 {
+   /**
+    * @var string
+    */
+    private $commentString = '';
+    
     protected function init() : void
     {
-        $this->paramsString = trim($this->paramsString);
-        
-        // automatically quote the parameters, since comments don't require any.
-        if(substr($this->paramsString, 0, 1) != '"')
-        {
-            $this->paramsString = '"'.$this->paramsString.'"';
-        }
+        $this->commentString = trim(trim($this->paramsString), '"');
+        $this->paramsString = '"Dummy"'; // so the command does not complain that it is empty
     }
     
     public function getName() : string
@@ -63,11 +63,29 @@ class Mailcode_Commands_Command_Comment extends Mailcode_Commands_Command implem
 
     protected function getValidations() : array
     {
-        return array();
+        return array(
+            'comment'
+        );
     }
     
     public function generatesContent() : bool
     {
         return false;
+    }
+    
+    public function getCommentString() : string
+    {
+        return $this->commentString;
+    }
+    
+    protected function validateSyntax_comment()
+    {
+        if(empty($this->commentString))
+        {
+            $this->validationResult->makeError(
+                t('The comment text ist empty.'),
+                Mailcode_Commands_CommonConstants::VALIDATION_COMMENT_MISSING
+            );
+        }
     }
 }
