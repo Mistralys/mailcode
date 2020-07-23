@@ -78,7 +78,7 @@ class Mailcode_Commands_Command_Comment extends Mailcode_Commands_Command implem
         return $this->commentString;
     }
     
-    protected function validateSyntax_comment()
+    protected function validateSyntax_comment() : void
     {
         if(empty($this->commentString))
         {
