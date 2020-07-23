@@ -21,6 +21,7 @@ namespace Mailcode;
  * @property Mailcode_Parser_Statement $params
  * @property \AppUtils\OperationResult $validationResult
  * @property Mailcode_Parser_Statement_Validator $validator
+ * @property Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral[] $searchTerms
  */
 trait Mailcode_Traits_Commands_IfContains
 {

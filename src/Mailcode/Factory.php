@@ -212,6 +212,14 @@ class Mailcode_Factory
         return self::$commandSets->if()->ifContains($variable, array($search), $caseInsensitive);
     }
     
+   /**
+    * Creates if contains command, with several search terms.
+    * 
+    * @param string $variable
+    * @param string[] $searchTerms List of search terms. Do not add surrounding quotes.
+    * @param bool $caseInsensitive
+    * @return Mailcode_Commands_Command_If_Contains
+    */
     public static function ifContainsAny(string $variable, array $searchTerms, bool $caseInsensitive=false) : Mailcode_Commands_Command_If_Contains
     {
         return self::$commandSets->if()->ifContains($variable, $searchTerms, $caseInsensitive);
@@ -222,6 +230,14 @@ class Mailcode_Factory
         return self::$commandSets->elseIf()->elseIfContains($variable, array($search), $caseInsensitive);
     }
     
+   /**
+    * Creates else if contains command, with several search terms.
+    * 
+    * @param string $variable
+    * @param string[] $searchTerms List of search terms. Do not add surrounding quotes.
+    * @param bool $caseInsensitive
+    * @return Mailcode_Commands_Command_ElseIf_Contains
+    */
     public static function elseIfContainsAny(string $variable, array $searchTerms, bool $caseInsensitive=false) : Mailcode_Commands_Command_ElseIf_Contains
     {
         return self::$commandSets->elseIf()->elseIfContains($variable, $searchTerms, $caseInsensitive);

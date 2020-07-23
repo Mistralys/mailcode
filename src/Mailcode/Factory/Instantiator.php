@@ -78,6 +78,13 @@ class Mailcode_Factory_Instantiator
         return $this->buildIf($ifType, $this->filterVariableName($variable), 'not-empty');
     }
     
+   /**
+    * @param string $ifType
+    * @param string $variable
+    * @param string[] $searchTerms
+    * @param bool $caseInsensitive
+    * @return Mailcode_Commands_IfBase
+    */
     public function buildIfContains(string $ifType, string $variable, array $searchTerms, bool $caseInsensitive=false) : Mailcode_Commands_IfBase
     {
         $keyword = ' ';
@@ -126,7 +133,7 @@ class Mailcode_Factory_Instantiator
         return $this->buildIf($ifType, $condition, $subType);
     }
     
-    public function filterLiteral(string $term)
+    public function filterLiteral(string $term) : string
     {
         return str_replace('"', '\"', $term);
     }

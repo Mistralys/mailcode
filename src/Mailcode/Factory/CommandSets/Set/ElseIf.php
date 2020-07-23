@@ -104,6 +104,12 @@ class Mailcode_Factory_CommandSets_Set_ElseIf extends Mailcode_Factory_CommandSe
         throw $this->instantiator->exceptionUnexpectedType('ElseIfVarNotEqualsString', $command);
     }
     
+   /**
+    * @param string $variable
+    * @param string[] $searchTerms
+    * @param bool $caseInsensitive
+    * @return Mailcode_Commands_Command_ElseIf_Contains
+    */
     public function elseIfContains(string $variable, array $searchTerms, bool $caseInsensitive=false) : Mailcode_Commands_Command_ElseIf_Contains
     {
         $command = $this->instantiator->buildIfContains('ElseIf', $variable, $searchTerms, $caseInsensitive);

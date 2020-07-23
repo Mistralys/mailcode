@@ -30,7 +30,7 @@ trait Mailcode_Traits_Commands_Validation_CaseSensitive
     protected $caseInsensitive = false;
 
    /**
-    * @var Mailcode_Parser_Statement_Tokenizer_Token_Keyword
+    * @var Mailcode_Parser_Statement_Tokenizer_Token_Keyword|NULL
     */
     protected $caseToken;
     
