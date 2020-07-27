@@ -10,7 +10,8 @@ color:#839496;
 color:#dc322f;
 }
 
-.mailcode-command-type{
+.mailcode-command-type,
+.mailcode-token-keyword{
 color:#b58900;
 }
 
