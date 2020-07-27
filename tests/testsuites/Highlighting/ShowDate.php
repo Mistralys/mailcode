@@ -34,11 +34,6 @@ final class Mailcode_Highlighting_ShowDateTests extends MailcodeTestCase
                         '<span class="mailcode-token-stringliteral">"Y-m-d"</span>'.
                     '</span>'.
                     '<span class="mailcode-bracket">}</span>'
-            ),
-            array(
-                'label' => 'Show date with date and time',
-                'string' => '{showdate: $FOOBAR "Y-m-d H:i:s"}',
-                'expected' => '{showdate: $FOOBAR "Y-m-d H:i:s"}'
             )
         );
         
