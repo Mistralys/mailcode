@@ -46,6 +46,16 @@ class Mailcode_Parser_Statement_Tokenizer_Token_Operand extends Mailcode_Parser_
         );
     }
     
+    public static function getArithmeticSigns() : array
+    {
+        return array(
+            '+',
+            '-',
+            '/',
+            '*'
+        );
+    }
+    
    /**
     * Whether the operator is comparison related (equals, not equals, smaller, greater...).
     *  
