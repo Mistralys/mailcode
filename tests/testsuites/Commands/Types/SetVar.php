@@ -67,6 +67,24 @@ final class Mailcode_SetVarTests extends MailcodeTestCase
                 'string' => '{setvar: $FOO.BAR = $OTHER.VAR * 2}',
                 'valid' => true,
                 'code' => 0
+            ),
+            array(
+                'label' => 'Omit the equals sign',
+                'string' => '{setvar: $FOO.BAR 4 + 6}',
+                'valid' => true,
+                'code' => 0
+            ),
+            array(
+                'label' => 'Omit the equals sign',
+                'string' => '{setvar: $FOO.BAR "My value"}',
+                'valid' => true,
+                'code' => 0
+            ),
+            array(
+                'label' => 'Invalid operand beyond the equals sign',
+                'string' => '{setvar: $FOO.BAR = 4 <= 6}',
+                'valid' => false,
+                'code' => Mailcode_Commands_CommonConstants::VALIDATION_INVALID_OPERAND
             )
         );
         
