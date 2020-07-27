@@ -10,6 +10,7 @@ echo Available suites:
 echo.
 echo - Commands
 echo - Factory
+echo - Highlighting
 echo - LogicKeywords
 echo - Mailcode
 echo - Parser
