@@ -26,6 +26,11 @@ final class Mailcode_Commands_NormalizeTests extends MailcodeTestCase
                 'label' => 'FOR command with spacing',
                 'string' => '{   for       :   $NAME in:           $FOO.BAR   }{end}',
                 'expected' => '{for: $NAME in: $FOO.BAR}'
+            ),
+            array(
+                'label' => 'Normalizing pretty quote style',
+                'string' => '{if: $NAME == “value”}{end}',
+                'expected' => '{if: $NAME == "value"}'
             )
         );
        

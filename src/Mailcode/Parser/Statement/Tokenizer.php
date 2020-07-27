@@ -58,6 +58,7 @@ class Mailcode_Parser_Statement_Tokenizer
      */
     protected $tokenCategories = array(
         'variables',
+        'normalize_quotes',
         'escaped_quotes',
         'string_literals',
         'keywords',
@@ -233,6 +234,16 @@ class Mailcode_Parser_Statement_Tokenizer
         }
         
         return null;
+    }
+    
+   /**
+    * Some WYSIWYG editors like using pretty quotes instead
+    * of the usual double quotes. This simply replaces all
+    * occurrences with the regular variant.
+    */
+    protected function tokenize_normalize_quotes() : void
+    {
+        $this->tokenized = str_replace(array('“', '”'), '"', $this->tokenized);
     }
     
     protected function tokenize_escaped_quotes() : void
