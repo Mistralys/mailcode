@@ -45,4 +45,36 @@ final class Mailcode_Commands_NormalizeTests extends MailcodeTestCase
             $this->assertEquals($test['expected'], $command->getNormalized(), $test['label']);
         }
     }
+    
+    public function test_normalizeShowDate()
+    {
+        $tests = array(
+            array(
+                'label' => 'Show date',
+                'string' => '{showdate: $FOOBAR}',
+                'expected' => '{showdate: $FOOBAR}'
+            ),
+            array(
+                'label' => 'Show date with date',
+                'string' => '{showdate: $FOOBAR "Y-m-d"}',
+                'expected' => '{showdate: $FOOBAR "Y-m-d"}'
+            ),
+            array(
+                'label' => 'Show date with date and time',
+                'string' => '{showdate: $FOOBAR "Y-m-d H:i:s"}',
+                'expected' => '{showdate: $FOOBAR "Y-m-d H:i:s"}'
+            )
+        );
+        
+        $parser = Mailcode::create()->getParser();
+        
+        foreach($tests as $test)
+        {
+            $result = $parser->parseString($test['string']);
+            
+            $command = $result->getFirstCommand();
+            
+            $this->assertEquals($test['expected'], $command->getNormalized(), $test['label']);
+        }
+    }
 }
