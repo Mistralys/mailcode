@@ -88,12 +88,30 @@ class Mailcode_Commands_Command_SetVariable extends Mailcode_Commands_Command im
     
     protected function validateSyntax_operand() : void
     {
-        $val = $this->validator->createOperand('=')->setIndex(1);
+        $tokens = $this->params->getInfo()->createPruner()->limitToOperands()->getTokens();
+
+        foreach($tokens as $token)
+        {
+            if($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_Operand)
+            {
+                $this->validateOperand($token);
+            }
+        }
+    }
+    
+    protected function validateOperand(Mailcode_Parser_Statement_Tokenizer_Token_Operand $token) : void 
+    {
+        $allowed = Mailcode_Parser_Statement_Tokenizer_Token_Operand::getArithmeticSigns();
+        $allowed[] = '=';
         
-        if(!$val->isValid())
+        $sign = $token->getSign();
+        
+        // ensure that the operand we have in the command is one of the
+        // allowed ones.
+        if(!in_array($sign, $allowed))
         {
             $this->validationResult->makeError(
-                t('The second parameter must be an equals sign (%1$s).', '<code>=</code>'),
+                t('The %1$s sign is not allowed in this command.', '<code>'.$sign.'</code>'),
                 Mailcode_Commands_CommonConstants::VALIDATION_INVALID_OPERAND
             );
         }
@@ -134,7 +152,14 @@ class Mailcode_Commands_Command_SetVariable extends Mailcode_Commands_Command im
         $params = $this->params->getInfo()->getTokens();
         
         array_shift($params); // variable
-        array_shift($params); // equals sign
+        
+        $eq = array_shift($params); // equals sign
+        
+        // in case the equals sign was omitted.
+        if(!$eq instanceof Mailcode_Parser_Statement_Tokenizer_Token_Operand)
+        {
+            array_unshift($params, $eq);
+        }
         
         return $params;
     }
