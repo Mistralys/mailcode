@@ -58,6 +58,11 @@ class Mailcode_Parser_Statement_Info_Pruner
     {
         return $this->limitByClassName(Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral::class);
     }
+    
+    public function limitToOperands() : Mailcode_Parser_Statement_Info_Pruner
+    {
+        return $this->limitByClassName(Mailcode_Parser_Statement_Tokenizer_Token_Operand::class);
+    }
 
     public function limitToNumbers() : Mailcode_Parser_Statement_Info_Pruner
     {
