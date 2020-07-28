@@ -1,11 +1,10 @@
 [![Build Status](https://travis-ci.com/Mistralys/mailcode.svg?branch=master)](https://travis-ci.com/Mistralys/mailcode)
 
-# Mailcode Syntax parser
+# PHP Mailcode Syntax parser
 
-The mailcode syntax was created for preprocessor commands in emailings.
+Mailcode is a preprocessor command syntax created for use in emailings.
 
-Mailcode is verbose by design, without shorthand notations, for both better readability and performance. It has been developed to unify interchangeable backend preprocessor syntaxes
-into one language that's easy to use. 
+Mailcode is verbose by design, without shorthand notations, for both better readability and performance. It has been developed to unify interchangeable backend preprocessor syntaxes into one language that's easy to use. 
 
 ## The syntax
 
@@ -20,27 +19,74 @@ Parameterless:
 With parameters:
 
 ```
-{command [subtype]: parameters,keywords}
+{command subtype: parameters}
 ```
 
 The subtype can switch between modes of the same command.
 
+### Escaping quotes
+
+String literals are expected to be quoted using double quotes ("). To use doube quotes within a string literal, it can be escaped using a backslash (\):
+
+```
+{if contains: $PRODUCT.NAME "Search term with \"quotes\""}
+```
+
+Note: When using the Factory to create commands, this is done automatically.
+
 ## Supported commands
 
 ### Display variable values
+
 ```
 {showvar: $CUSTOMER.NAME}
 ```
 
+### Display a date and/or time
+
+Using the default date and time settings for the current locale:
+
+```
+{showdate: $ORDER.DATE}
+```
+
+With a custom date/time format:
+
+```
+{showdate: $ORDER.DATE "d/m/Y"}
+```
+
+Also see the section on date formats for details on how to specify date and time.
+
+### Display a text snippet
+
+```
+{showsnippet: $snippet_name}
+```
+
 ### Set a variable
+
+With a string value:
 
 ```
 {setvar: $CUSTOMER.NAME = "value"}
 ```
 
+With an arithmetic operation:
+
+```
+{setvar: $AMOUNT = 45 * 2}
+```
+
+The equals sign is implied, so it can be omitted:
+
+```
+{setvar: $AMOUNT 45 * 2}
+```
+
 ### IF conditionals
 
-Variable-based conditions:
+#### Variable-based conditions
 
 ```
 {if variable: $CUSTOMER.NAME == "John"}
@@ -50,15 +96,9 @@ Variable-based conditions:
 {end}
 ```
 
-Non-variable based conditions:
+#### Checking for empty or non-empty variables
 
-```
-{if: 6 + 2 == 8}
-    It means 8.
-{end}
-```
-
-Checking if a variable is empty or does not exist:
+Checking if a variable does not exist, or is empty:
 
 ```
 {if empty: $CUSTOMER.NAME}
@@ -72,6 +112,74 @@ Checking if a variable exists and is not empty:
 {if not-empty: $CUSTOMER.NAME}
     {showvar: $CUSTOMER.NAME}
 {end}
+```
+
+#### Searching for substrings
+
+Checking if a variable value contains a string:
+
+```
+{if contains: $PRODUCT.NAME "Search term"}
+```
+
+Making the search case insensitive:
+
+```
+{if contains: $PRODUCT.NAME "Search term" insensitive:}
+```
+
+Searching for multiple terms (applied if any of the terms is found):
+
+```
+{if contains: $PRODUCT.NAME "Term 1" "Term 2" "Term 3"}
+```
+
+#### Searching by position
+
+Checking if a variable value starts with a specific string:
+
+```
+{if begins-with: $PRODUCT.NAME "Search"}
+```
+
+Or checking if it ends with a specific string:
+
+```
+{if ends-with: $PRODUCT.NAME "term"}
+```
+
+Both can be made case insensitive:
+
+```
+{if begins-with: $PRODUCT.NAME "Search" insensitive:}
+```
+
+#### Freeform conditions:
+
+Without subtype, the IF condition is not validated, and will be passed through as-is to the translation backend.
+
+```
+{if: 6 + 2 == 8}
+    It means 8.
+{end}
+```
+
+#### AND/OR combinations
+
+Several conditions can be combined within the same command using the `and:` and `or:` keywords. Either can be used, but not both within the same command. Subtypes can be mixed at will.
+
+Using AND:
+
+```
+{if variable: $ORDER.MONTH == 8 and contains: $ORDER.TYPE "new_customer"}
+    New customer order in August.
+{end}
+```
+
+Using OR:
+
+```
+{if not-empty: $CUSTOMER.POSTCODE or variable: $CUSTOMER.USE_INVOICE == "true"}
 ```
 
 ### Loops
