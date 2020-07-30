@@ -26,26 +26,17 @@ class Mailcode_Parser_Safeguard_Formatter_SingleLines extends Mailcode_Parser_Sa
    /**
     * @var string
     */
-    protected $eol;
+    private $eol;
     
    /**
     * @var int
     */
-    protected $eolLength;
+    private $eolLength;
     
-    public function format(string $subject) : string
+    protected function initFormatting(string $subject) : string
     {
-        $placeholders = $this->resolvePlaceholderStrings();
-        
         $this->eol = $this->resolveNewlineChar($subject);
         $this->eolLength = strlen($this->eol);
-        
-        $total = count($placeholders);
-        
-        for($i=0; $i < $total; $i++)
-        {
-            $subject = $this->process($placeholders[$i], $subject);
-        }
         
         return $subject;
     }
@@ -60,65 +51,6 @@ class Mailcode_Parser_Safeguard_Formatter_SingleLines extends Mailcode_Parser_Sa
         return $this->eolLength;
     }
 
-    protected function process(string $placeholder, string $subject) : string
-    {
-        $positions = $this->resolvePositions($placeholder, $subject);
-        $phLength = mb_strlen($placeholder);
-        $offset = 0;
-        
-        foreach($positions as $position)
-        {
-            // adjust the position if previous changes made the subject longer
-            $position += $offset;
-            
-            $info = new Mailcode_Parser_Safeguard_Formatter_SingleLines_Placeholder(
-                $this, 
-                $subject, 
-                $phLength, 
-                $position
-            );
-            
-            if(!$info->requiresAdjustment())
-            {
-                continue;
-            }
-            
-            $adjusted = $this->resolveAdjustedPlaceholder($info, $placeholder);
-            
-            // cut the subject string so we can insert the adjusted placeholder
-            $start = mb_substr($subject, 0, $position);
-            $end = mb_substr($subject, $position + $phLength);
-            
-            // rebuild the subject string from the parts
-            $subject = $start.$adjusted.$end;
-            
-            // the placeholder length has changed, which means subsequent
-            // positions have to be increased by the added length, which
-            // we do using the offset.
-            $offset += mb_strlen($adjusted) - $phLength; 
-        }
-        
-        return $subject;
-    }
-    
-    protected function resolveAdjustedPlaceholder(Mailcode_Parser_Safeguard_Formatter_SingleLines_Placeholder $info, string $placeholder) : string
-    {
-        $prepend = '';
-        $append = '';
-        
-        if($info->requiresPrepend())
-        {
-            $prepend = $this->eol;
-        }
-        
-        if($info->requiresAppend())
-        {
-            $append = $this->eol;
-        }
-        
-        return $prepend.$placeholder.$append;
-    }
-    
    /**
     * We only use placeholders that contain commands that do
     * not generate contents, since these are the only ones
@@ -141,6 +73,11 @@ class Mailcode_Parser_Safeguard_Formatter_SingleLines extends Mailcode_Parser_Sa
         }
         
         return $result;
+    }
+    
+    public function getReplaceNeedle(Mailcode_Parser_Safeguard_Placeholder $placeholder) : string
+    {
+        return $placeholder->getReplacementText();
     }
 }
 
