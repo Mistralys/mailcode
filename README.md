@@ -345,9 +345,9 @@ foreach($placeholders as $placeholder)
 }
 ```
 
-### HTML Highlighting commands
+## HTML Highlighting for commands
 
-With a valid safeguard instance in hand, the commands can be easily highlighted:
+With a valid safeguard instance in hand, commands can be easily highlighted:
 
 ```
 $safeguard = Mailcode::create()->createSafeguard($text);
@@ -399,6 +399,60 @@ NOTE: The excluded tag check goes up the whole tag nesting chain, which means th
 ```
 
 WARNING: The mailcode parser assumes that the HTML is valid. The tag nesting check does not handle nesting errors.
+
+### Loading the required styles
+
+For the highlighting to work, the according CSS styles need to be loaded in the target page. 
+
+There are two way to do this:
+
+#### Including the stylesheet
+
+Simply ensure that the stylesheet file `css/highlight.css` of the package is loaded. This requires knowing the exact URL to the package's vendor folder.
+
+```
+<link rel="stylesheet" media="all" src="/vendor/mistralys/mailcode/css/highlight.css">
+```
+
+#### Using the Styler utility
+
+The Styler utility class has a number of methods all around the CSS.
+
+Creating/getting the styler instance: 
+
+```
+$styler = $mailcode->createStyler();
+```
+
+Getting the raw CSS code without the `<style>` tag, for example to use in a compiled stylesheet file:
+
+```
+$css = $styler->getCSS();
+```
+
+Retrieving the CSS including the `<style>` tag, for example to add it inline in a page:
+
+```
+$styleTag = $styler->getStyleTag();
+```
+
+Retrieving the absolute path on disk to the stylesheet file:
+
+```
+$path = $styler->getStylesheetPath();
+```
+
+Retrieving the `<link>` tag programmatically, using the URL to access the `vendor` folder:
+
+```
+$linkTag = $styler->getStylesheetTag('/url/to/vendor/folder');
+```
+
+Retrieving the URL to the stylesheet file, using the URL to access the `vendor` folder:
+
+``` 
+$stylesheetURL = $styler->getStylesheetURL('/url/to/vendor/folder');
+```
 
 ## Translation to other syntaxes
 
