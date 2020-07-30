@@ -216,6 +216,18 @@ class Mailcode_Parser_Safeguard
         );
     }
     
+    public function selectHTMLHighlightingFormatter() : Mailcode_Parser_Safeguard_Formatter_HTMLHighlighting
+    {
+        $formatter = $this->selectFormatter('HTMLHighlighting');
+        
+        if($formatter instanceof Mailcode_Parser_Safeguard_Formatter_HTMLHighlighting)
+        {
+            return $formatter;
+        }
+        
+        throw $this->exceptionWrongFormatter(Mailcode_Parser_Safeguard_Formatter_HTMLHighlighting::class);
+    }
+    
    /**
     * Enables the formatter that ensures that all commands that
     * @return Mailcode_Parser_Safeguard_Formatter_SingleLines
@@ -229,11 +241,16 @@ class Mailcode_Parser_Safeguard
             return $formatter;
         }
         
-        throw new Mailcode_Exception(
+        throw $this->exceptionWrongFormatter(Mailcode_Parser_Safeguard_Formatter_SingleLines::class);
+    }
+    
+    private function exceptionWrongFormatter(string $expectedClass) : Mailcode_Exception
+    {
+        return new Mailcode_Exception(
             'Not the expected formatter',
             sprintf(
                 'The formatter is not an instance of [%s].',
-                Mailcode_Parser_Safeguard_Formatter_SingleLines::class
+                $expectedClass
             ),
             self::ERROR_NOT_A_SINGLE_LINES_FORMATTER
         );
@@ -255,10 +272,21 @@ class Mailcode_Parser_Safeguard
         foreach($placeholders as $placeholder)
         {
             $replace = '';
+            $needle = $placeholder->getReplacementText();
             
             if($highlighted)
             {
-                $replace = $placeholder->getHighlightedText();
+                $formattedNeedle = $this->formatter->getReplaceNeedle($placeholder);
+                
+                if($formattedNeedle !== $needle)
+                {
+                    $replaces[$formattedNeedle] = $placeholder->getHighlightedText();
+                    $replace = $placeholder->getNormalizedText();
+                }
+                else
+                {
+                    $replace = $placeholder->getHighlightedText();
+                }
             }
             else if($normalize)
             {
@@ -269,12 +297,21 @@ class Mailcode_Parser_Safeguard
                 $replace = $placeholder->getOriginalText();
             }
             
-            $replaces[$placeholder->getReplacementText()] = $replace;
+            $replaces[$needle] = $replace;
         }
         
         return $replaces;
     }
     
+    protected function getReplaceNeedle(Mailcode_Parser_Safeguard_Placeholder $placeholder) : string
+    {
+        if(isset($this->formatter))
+        {
+            return $this->formatter->getReplaceNeedle($placeholder);
+        }
+        
+        return $placeholder->getReplacementText();
+    }
     
    /**
     * Retrieves all placeholders that have to be added to
@@ -320,7 +357,7 @@ class Mailcode_Parser_Safeguard
         
         foreach($placeholderStrings as $search)
         {
-            if(!$partial && !strstr($string, $search))
+            if(!$partial && !$highlighted && !strstr($string, $search))
             {
                 throw new Mailcode_Exception(
                     'Command placeholder not found',
