@@ -34,27 +34,58 @@ abstract class Mailcode_Parser_Safeguard_Formatter
         $this->safeguard = $safeguard;
     }
     
-    abstract public function format(string $subject) : string;
-    
-   /**
-    * Resolves a list of positions of needle in the haystack.
-    * 
-    * @param string $needle
-    * @param string $haystack
-    * @return int[]
-    */
-    protected function resolvePositions(string $needle, string $haystack) : array
+    public function getID() : string
     {
-        $lastPos = 0;
-        $positions = array();
+        $tokens = explode('_', get_class($this));
         
-        while (($lastPos = mb_strpos($haystack, $needle, $lastPos))!== false)
+        return array_pop($tokens);
+    }
+    
+    abstract protected function initFormatting(string $subject) : string;
+    
+    abstract public function getReplaceNeedle(Mailcode_Parser_Safeguard_Placeholder $placeholder) : string; 
+    
+    protected function resolveReplacementText(Mailcode_Parser_Safeguard_Placeholder_Locator_Location $location) : string
+    {
+        $class = sprintf('Mailcode\Mailcode_Parser_Safeguard_Formatter_%s_Location', $this->getID());
+        
+        $info = new $class($this, $location);
+        
+        return $info->getPlaceholderText();
+    }
+    
+    public function format(string $subject) : string
+    {
+        $subject = $this->initFormatting($subject);
+        
+        $placeholders = $this->filterPlaceholders();
+        
+        $total = count($placeholders);
+        
+        for($i=0; $i < $total; $i++)
         {
-            $positions[] = $lastPos;
-            $lastPos = $lastPos + mb_strlen($needle);
+            $subject = $this->process($placeholders[$i], $subject);
         }
         
-        return $positions;
+        return $subject;
+    }
+    
+    protected function process(Mailcode_Parser_Safeguard_Placeholder $placeholder, string $subject) : string
+    {
+        $locator = $placeholder->createLocator($subject);
+        $positions = $locator->getLocations();
+        
+        foreach($positions as $position)
+        {
+            $replace = $this->resolveReplacementText($position);
+            
+            if($replace !== $position->getPlaceholderString())
+            {
+                $locator->replaceWith($position, $replace);
+            }
+        }
+        
+        return $locator->getSubjectString();
     }
     
    /**
@@ -73,27 +104,6 @@ abstract class Mailcode_Parser_Safeguard_Formatter
         }
         
         return PHP_EOL;
-    }
-    
-   /**
-    * Resolves the list of placeholder strings that need
-    * to be formatted. This includes only commands that
-    * do not generate content.
-    *  
-    * @return string[]
-    */
-    protected function resolvePlaceholderStrings() : array
-    {
-        $placeholders = $this->filterPlaceholders();
-        
-        $result = array();
-        
-        foreach($placeholders as $placeholder)
-        {
-            $result[] = $placeholder->getReplacementText();
-        }
-        
-        return $result;
     }
     
    /**
