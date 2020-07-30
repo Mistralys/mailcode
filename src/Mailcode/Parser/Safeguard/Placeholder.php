@@ -137,4 +137,9 @@ class Mailcode_Parser_Safeguard_Placeholder
             'id' => $this->getID()
         );
     }
+    
+    public function createLocator(string $subject) : Mailcode_Parser_Safeguard_Placeholder_Locator
+    {
+        return new Mailcode_Parser_Safeguard_Placeholder_Locator($this, $subject);
+    }
 }
