@@ -345,6 +345,61 @@ foreach($placeholders as $placeholder)
 }
 ```
 
+### HTML Highlighting commands
+
+With a valid safeguard instance in hand, the commands can be easily highlighted:
+
+```
+$safeguard = Mailcode::create()->createSafeguard($text);
+$safe = $safeguard->makeSafe();
+$highlighted = $safeguard->makeHighlighted($safe);
+```
+
+However, this will highlight commands regardless of where they are used. If any commands are inserted in tag attributes or in `<script>` tags, this will break the HTML code.
+
+To make the highlighting entirely HTML compatible, enable the HTML formatter:
+
+```
+$safeguard = Mailcode::create()->createSafeguard($text);
+$safeguard->selectHTMLHighlightingFormatter();
+
+$safe = $safeguard->makeSafe();
+$highlighted = $safeguard->makeHighlighted($safe);
+```
+
+The formatter will ensure that commands are only highlighted in a valid context. 
+
+NOTE: The formatter needs to be enabled manually, as these checks have a performance cost.
+
+### Excluding tags from the highlighting
+
+By default, commands will not be highlighted within the `<style>` and `<script>` tags. Additional tags can easily be added to this list to customize it for your needs:
+
+```
+$safeguard = Mailcode::create()->createSafeguard($text);
+$formatter = $safeguard->selectHTMLHighlightingFormatter();
+
+// add a single tag to the exclusion list
+$formatter->excludeTag('footer');
+
+// add several tags at once
+$formatter->excludeTags(array('footer', 'main', 'div'));
+```
+
+In this example, commands nested in `<footer>` tags will not be highlighted. 
+
+NOTE: The excluded tag check goes up the whole tag nesting chain, which means that the following command would not be highlighted either, since it is contained in a tag that is nested within the `<footer>` tag:
+
+```
+<footer>
+	<p>
+		<b>{showvar: $FOO}</b>
+	</p>
+</footer>
+```
+
+WARNING: The mailcode parser assumes that the HTML is valid. The tag nesting check does not handle nesting errors.
+
 ## Translation to other syntaxes
 
 The translator class makes it easy to convert documents with mailcode to other syntaxes, like the bundled Apache Velocity converter.
