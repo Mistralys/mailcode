@@ -46,6 +46,10 @@ class Mailcode_Parser_Statement_Tokenizer_Token_Operand extends Mailcode_Parser_
         );
     }
     
+   /**
+    * Retrieves all known arithmetic operator signs.
+    * @return string[]
+    */
     public static function getArithmeticSigns() : array
     {
         return array(
