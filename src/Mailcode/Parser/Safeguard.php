@@ -194,6 +194,11 @@ class Mailcode_Parser_Safeguard
         return $safe;
     }
     
+    public function getFormatter() : ?Mailcode_Parser_Safeguard_Formatter
+    {
+        return $this->formatter;
+    }
+    
     public function selectFormatter(string $formatterID) : Mailcode_Parser_Safeguard_Formatter
     {
         $class = 'Mailcode\Mailcode_Parser_Safeguard_Formatter_'.$formatterID;
@@ -265,52 +270,8 @@ class Mailcode_Parser_Safeguard
     */
     protected function getReplaces(bool $highlighted=false, bool $normalize=false) : array
     {
-        $placeholders = $this->getPlaceholders();
-        
-        $replaces = array();
-        
-        foreach($placeholders as $placeholder)
-        {
-            $replace = '';
-            $needle = $placeholder->getReplacementText();
-            
-            if($highlighted)
-            {
-                $formattedNeedle = $this->formatter->getReplaceNeedle($placeholder);
-                
-                if($formattedNeedle !== $needle)
-                {
-                    $replaces[$formattedNeedle] = $placeholder->getHighlightedText();
-                    $replace = $placeholder->getNormalizedText();
-                }
-                else
-                {
-                    $replace = $placeholder->getHighlightedText();
-                }
-            }
-            else if($normalize)
-            {
-                $replace = $placeholder->getNormalizedText();
-            }
-            else
-            {
-                $replace = $placeholder->getOriginalText();
-            }
-            
-            $replaces[$needle] = $replace;
-        }
-        
-        return $replaces;
-    }
-    
-    protected function getReplaceNeedle(Mailcode_Parser_Safeguard_Placeholder $placeholder) : string
-    {
-        if(isset($this->formatter))
-        {
-            return $this->formatter->getReplaceNeedle($placeholder);
-        }
-        
-        return $placeholder->getReplacementText();
+        $restorer = new Mailcode_Parser_Safeguard_Restorer($this, $highlighted, $normalize);
+        return $restorer->getReplaces();
     }
     
    /**
