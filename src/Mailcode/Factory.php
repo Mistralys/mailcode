@@ -253,6 +253,11 @@ class Mailcode_Factory
         return self::$commandSets->if()->ifNotEmpty($variable);
     }
     
+    public static function for(string $sourceVariable, string $loopVariable) : Mailcode_Commands_Command_For
+    {
+        return self::$commandSets->misc()->for($sourceVariable, $loopVariable);
+    }
+    
    /**
     * Creates a renderer instance, which can be used to easily
     * create and convert commands to strings.

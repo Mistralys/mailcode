@@ -41,4 +41,34 @@ class Mailcode_Factory_CommandSets_Set_Misc extends Mailcode_Factory_CommandSets
         
         throw $this->instantiator->exceptionUnexpectedType('Comment', $cmd);
     }
+    
+    public function for(string $sourceVariable, string $loopVariable) : Mailcode_Commands_Command_For
+    {
+        $sourceVariable = '$'.ltrim($sourceVariable, '$');
+        $loopVariable = '$'.ltrim($loopVariable, '$');
+        
+        $cmd = Mailcode::create()->getCommands()->createCommand(
+            'For', 
+            '', 
+            sprintf(
+                '%s in: %s',
+                $loopVariable,
+                $sourceVariable
+            ), 
+            sprintf(
+                '{for: %s in: %s}',
+                $loopVariable,
+                $sourceVariable
+            )
+        );
+        
+        $this->instantiator->checkCommand($cmd);
+        
+        if($cmd instanceof Mailcode_Commands_Command_For)
+        {
+            return $cmd;
+        }
+        
+        throw $this->instantiator->exceptionUnexpectedType('For', $cmd);
+    }
 }
