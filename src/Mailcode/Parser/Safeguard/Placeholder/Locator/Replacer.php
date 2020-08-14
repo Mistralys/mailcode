@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use AppUtils\ConvertHelper;
+
 /**
  * Used to replace a placeholder at a specific location
  * with another text. The replacement handles inseting the
@@ -28,6 +30,7 @@ class Mailcode_Parser_Safeguard_Placeholder_Locator_Replacer
 {
     const ERROR_PLACEHOLDER_STRING_MISSING = 63501;
     const ERROR_COULD_NOT_FIND_PLACEHOLDER_TEXT = 63502;
+    const ERROR_PLACEHOLDER_POSITION_ERRONEOUS = 63503;
     
    /**
     * @var string
@@ -62,7 +65,7 @@ class Mailcode_Parser_Safeguard_Placeholder_Locator_Replacer
    /**
     * @var integer
     */
-    private $prefixLength = 0;
+    private $placeholderOffset = 0;
 
    /**
     * @var integer
@@ -74,21 +77,20 @@ class Mailcode_Parser_Safeguard_Placeholder_Locator_Replacer
     */
     private $lengthDifference = 0;
     
-    public function __construct(Mailcode_Parser_Safeguard_Placeholder_Locator_Location $origin, string $replacementText, string $subject)
+    public function __construct(Mailcode_Parser_Safeguard_Placeholder_Locator $locator, Mailcode_Parser_Safeguard_Placeholder_Locator_Location $origin, string $replacementText, string $subject)
     {
+        $this->locator = $locator;
         $this->replacementText = $replacementText;
         $this->origin = $origin;
         $this->placeholderText = $this->origin->getPlaceholder()->getReplacementText();
         $this->subject = $subject;
     }
     
-    public function replace() : string
+    public function replace() : void
     {
         $this->prepareCalculations();
         $this->replaceLocation();
         $this->adjustPositions();
-        
-        return $this->subject;
     }
     
    /**
@@ -100,12 +102,10 @@ class Mailcode_Parser_Safeguard_Placeholder_Locator_Replacer
     {
         $locations = $this->origin->getNextAll();
         $offset = $this->lengthDifference;
-        
+
         foreach($locations as $location)
         {
             $location->updatePositionByOffset($offset);
-            
-            $offset += $this->lengthDifference;
         }
     }
     
@@ -127,7 +127,7 @@ class Mailcode_Parser_Safeguard_Placeholder_Locator_Replacer
         }
         
         // Find the beginning position of the placeholder in the replacement text
-        $this->prefixLength = $length;
+        $this->placeholderOffset = $length;
         
         $this->placeholderLength = mb_strlen($this->placeholderText);
         
@@ -138,18 +138,38 @@ class Mailcode_Parser_Safeguard_Placeholder_Locator_Replacer
     private function replaceLocation() : void
     {
         // Get the starting position, with cumulated total offset
-        $position = $this->origin->getStartPosition();
+        $startPosition = $this->origin->getStartPosition();
+        $endPosition = $startPosition + $this->placeholderLength;
         
         // Cut the subject string so we can insert the adjusted placeholder
-        $start = mb_substr($this->subject, 0, $position);
-        $end = mb_substr($this->subject, $position + $this->placeholderLength);
+        $start = mb_substr($this->subject, 0, $startPosition);
+        $end = mb_substr($this->subject, $endPosition);
+        $placeholder = mb_substr($this->subject, $startPosition, $this->placeholderLength);
+
+        // Failsafe check: the calculated new position
+        // in the subject string should still equal the
+        // placeholder string.
+        if($placeholder != $this->placeholderText)
+        {
+            throw new Mailcode_Exception(
+                'Localizing a safeguard placeholder failed.',
+                sprintf(
+                    'The placeholder [%s] was not found at the position [%s] in the subject string. Instead, found [%s].',
+                    ConvertHelper::hidden2visible($this->placeholderText),
+                    $startPosition,
+                    ConvertHelper::hidden2visible($placeholder)
+                ),
+                self::ERROR_PLACEHOLDER_POSITION_ERRONEOUS
+            );
+        }
         
         // Rebuild the subject string from the parts
         $this->subject = $start.$this->replacementText.$end;
         
-        // Add the prefix length as offset to the location, now that 
-        // we have added it. This way the position of the placeholder 
-        // itself stays correct.
-        $this->origin->updatePositionByOffset($this->prefixLength);
+        $this->locator->handle_subjectModified($this->subject, $this);
+        
+        // Add the amount of characters that the placeholder
+        // has been moved to the left to this location.
+        $this->origin->updatePositionByOffset($this->placeholderOffset);
     }
 }
