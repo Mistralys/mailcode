@@ -4,3 +4,4 @@ docs/phpstan/output.txt
 composer.lock
 .phpunit.result.cache
 localization/storage.json
+tests/assets/files/test-highlight-output.html

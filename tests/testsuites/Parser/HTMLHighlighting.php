@@ -3,6 +3,8 @@
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Exception;
 use Mailcode\Mailcode_Factory;
+use Mailcode\Mailcode_Parser_Safeguard_Placeholder_Locator_Replacer;
+use AppUtils\FileHelper;
 
 final class Parser_HTMLHighlightingFormatterTests extends MailcodeTestCase
 {
@@ -89,10 +91,45 @@ final class Parser_HTMLHighlightingFormatterTests extends MailcodeTestCase
                     $safe
                 ));
             }
+
+            $this->assertEquals($test['expected'], $result, $test['label']);
+            $this->assertEquals($test['highlighted'], $high, $test['label']);
         }
+    }
+    
+   /**
+    * Tests for a bug where hzighlighting commands in an HTML file failed.
+    * 
+    * @see Mailcode_Parser_Safeguard_Placeholder_Locator_Replacer::replaceLocation()
+    */
+    public function test_exampleHTML() : void
+    {
+        $content = FileHelper::readContents(__DIR__.'/../../assets/files/test-highlight.html');
         
-        $this->assertEquals($test['expected'], $result, $test['label']);
-        $this->assertEquals($test['highlighted'], $high, $test['label']);
+        $parser = Mailcode::create()->getParser();
+        
+        $safeguard = $parser->createSafeguard($content);
+        $safeguard->selectHTMLHighlightingFormatter();
+        
+        $this->assertTrue($safeguard->isValid());
+        
+        try
+        {
+            $safe = $safeguard->makeSafe();
+            $whole = $safeguard->makeWhole($safe);
+            
+            FileHelper::saveFile(__DIR__.'/../../assets/files/test-highlight-output.html', $whole);
+        }
+        catch(Mailcode_Exception $e)
+        {
+            $this->fail(sprintf(
+                'Exception: #%2$s %3$s %1$s Details: %4$s %1$s',
+                PHP_EOL,
+                $e->getCode(),
+                $e->getMessage(),
+                $e->getDetails()
+            ));
+        }
     }
     
    /**
