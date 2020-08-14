@@ -57,9 +57,14 @@ class Mailcode_Parser_Safeguard_Placeholder_Locator_Location
         $this->locator = $locator;
     }
     
+    public function getMatchedText() : string
+    {
+        return trim(mb_substr($this->getSubjectString(), $this->startPos, $this->length));
+    }
+    
     public function getID() : string
     {
-        return 'PH'.$this->placeholder->getID().'-IDX'.$this->index.'@'.$this->startPos;
+        return 'PH'.$this->placeholder->getID().'-IDX'.$this->index;
     }
     
     public function getIndex() : int
@@ -144,6 +149,10 @@ class Mailcode_Parser_Safeguard_Placeholder_Locator_Location
         return array_slice($locations, $this->index+1);
     }
     
+   /**
+    * Called when the location has been moved in the subject string.
+    * @param int $offset
+    */
     public function updatePositionByOffset(int $offset) : void
     {
         $this->startPos += $offset;
