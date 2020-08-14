@@ -58,6 +58,7 @@ abstract class Mailcode_Parser_Safeguard_Formatter
     {
         $subject = $this->initFormatting($subject);
         
+        // fetch all placeholders we wish to process.
         $placeholders = $this->filterPlaceholders();
         
         $total = count($placeholders);
