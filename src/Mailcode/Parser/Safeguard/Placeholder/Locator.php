@@ -122,12 +122,18 @@ class Mailcode_Parser_Safeguard_Placeholder_Locator
     public function replaceWith(Mailcode_Parser_Safeguard_Placeholder_Locator_Location $location, string $replacementText) : void
     {
         $replacer = new Mailcode_Parser_Safeguard_Placeholder_Locator_Replacer(
+            $this,
             $location, 
             $replacementText,
             $this->subject
         );
         
-        $this->subject = $replacer->replace();
+        $replacer->replace();
+    }
+    
+    public function handle_subjectModified(string $subject, Mailcode_Parser_Safeguard_Placeholder_Locator_Replacer $replacer)
+    {
+        $this->subject = $subject;
     }
     
    /**
