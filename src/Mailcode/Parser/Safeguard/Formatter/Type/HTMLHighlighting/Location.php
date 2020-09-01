@@ -1,10 +1,10 @@
 <?php
 /**
- * File containing the {@see Mailcode_Parser_Safeguard_Formatter_SingleLines_Placeholder} class.
+ * File containing the {@see Mailcode_Parser_Safeguard_Formatter_Type_SingleLines_Placeholder} class.
  *
  * @package Mailcode
  * @subpackage Parser
- * @see Mailcode_Parser_Safeguard_Formatter_SingleLines_Placeholder
+ * @see Mailcode_Parser_Safeguard_Formatter_Type_SingleLines_Placeholder
  */
 
 declare(strict_types=1);
@@ -18,41 +18,29 @@ namespace Mailcode;
  * @subpackage Parser
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * 
- * @property Mailcode_Parser_Safeguard_Formatter_HTMLHighlighting $formatter
+ * @property Mailcode_Parser_Safeguard_Formatter_Type_HTMLHighlighting $formatter
  */
-class Mailcode_Parser_Safeguard_Formatter_HTMLHighlighting_Location extends Mailcode_Parser_Safeguard_FormatterLocation
+class Mailcode_Parser_Safeguard_Formatter_Type_HTMLHighlighting_Location extends Mailcode_Parser_Safeguard_Formatter_Location
 {
     const COMMAND_MARKER = '__MAILCODE_COMMAND__';
     
    /**
+    * @var boolean
+    */
+    private $ancestryChecked = false;
+    
+   /**
     * @var array<int,array<int,string>>
     */
-    private $tagAncestry;
+    private $tagAncestry = array();
     
     protected function init() : void
     {
-        $haystack = $this->getHaystackBefore();
-        
-        // Get a list of all HTML tags before the command, opening and closing.
-        $matches = array();
-        preg_match_all('%<\s*(/?)\s*([a-z][a-z0-9]*)\s*([^<>]*)>%ix', $haystack, $matches, PREG_PATTERN_ORDER);
-        
-        $this->tagAncestry = $matches;
     }
     
-    protected function getAdjustedText(): string
-    {
-        return '<mailcode:highlight>'.$this->location->getPlaceholderString().'</mailcode:highlight>';
-    }
-
     public function requiresAdjustment(): bool
     {
-        if($this->isInTagAttributes() || $this->isInExcludedTag()) 
-        {
-           return false; 
-        }
-        
-        return true;
+        return !$this->isInTagAttributes() && !$this->isInExcludedTag();
     }
     
    /**
@@ -63,21 +51,18 @@ class Mailcode_Parser_Safeguard_Formatter_HTMLHighlighting_Location extends Mail
     */
     private function getHaystackBefore() : string
     {
-        $pos = $this->location->getStartPosition();
+        $pos = $this->getStartPosition();
         
-        // at the beginning of the document? Sure, we can highlight this.
-        if($pos === 0)
+        if(is_bool($pos))
         {
             return '';
         }
         
-        $subject = $this->location->getSubjectString();
-        
         // We add a command marker and a closing tag bracket,
-        // so that is the command is in a tag's attributes,
+        // so that if the command is in a tag's attributes,
         // the tags ancestry can detect the tag as a parent 
         // tag, including the marker in the attributes string.
-        return mb_substr($subject, 0, $pos).self::COMMAND_MARKER.'>';
+        return $this->subject->getSubstr(0, $pos).self::COMMAND_MARKER.'>';
     }
     
    /**
@@ -86,7 +71,7 @@ class Mailcode_Parser_Safeguard_Formatter_HTMLHighlighting_Location extends Mail
     * 
     * @return bool
     */
-    private function isInExcludedTag() : bool
+    protected function isInExcludedTag() : bool
     {
         $tagNames = $this->getParentTags();
         
@@ -109,12 +94,14 @@ class Mailcode_Parser_Safeguard_Formatter_HTMLHighlighting_Location extends Mail
     */
     private function getParentTags() : array
     {
+        $tags = $this->getTagAncestry();
+        
         // Create a stack of all direct parent tags of the command.
         // Handles closing tags as well.
         $stack = array();
-        foreach($this->tagAncestry[2] as $idx => $tagName)
+        foreach($tags[2] as $idx => $tagName)
         {
-            $closing = $this->tagAncestry[1][$idx] === '/';
+            $closing = $tags[1][$idx] === '/';
             
             if($closing)
             {
@@ -135,11 +122,13 @@ class Mailcode_Parser_Safeguard_Formatter_HTMLHighlighting_Location extends Mail
     * 
     * @return bool
     */
-    private function isInTagAttributes() : bool
+    protected function isInTagAttributes() : bool
     {
+        $tags = $this->getTagAncestry();
+        
         // This check is easy: if the command is in the attribute
         // of any of the tags, we will find the command marker in there.
-        foreach($this->tagAncestry[3] as $attributes)
+        foreach($tags[3] as $attributes)
         {
             if(strstr($attributes, self::COMMAND_MARKER))
             {
@@ -148,5 +137,25 @@ class Mailcode_Parser_Safeguard_Formatter_HTMLHighlighting_Location extends Mail
         }
         
         return false;
+    }
+    
+    private function getTagAncestry() : array
+    {
+        if($this->ancestryChecked)
+        {
+            return $this->tagAncestry;
+        }
+        
+        $this->ancestryChecked = true;
+        
+        $haystack = $this->getHaystackBefore();
+        
+        // Get a list of all HTML tags before the command, opening and closing.
+        $matches = array();
+        preg_match_all('%<\s*(/?)\s*([a-z][a-z0-9]*)\s*([^<>]*)>%ix', $haystack, $matches, PREG_PATTERN_ORDER);
+        
+        $this->tagAncestry = $matches;
+        
+        return $matches;
     }
 }
