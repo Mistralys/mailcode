@@ -15,8 +15,14 @@
         <testsuite name="Factory">
             <directory suffix=".php">./tests/testsuites/Factory</directory>
         </testsuite>
+        <testsuite name="Formatting">
+            <directory suffix=".php">./tests/testsuites/Formatting</directory>
+        </testsuite>
         <testsuite name="Highlighting">
             <directory suffix=".php">./tests/testsuites/Highlighting</directory>
+        </testsuite>
+        <testsuite name="Isolated">
+            <directory suffix=".php">./tests/testsuites/Isolation</directory>
         </testsuite>
         <testsuite name="LogicKeywords">
             <directory suffix=".php">./tests/testsuites/LogicKeywords</directory>
@@ -26,6 +32,9 @@
         </testsuite>
         <testsuite name="Parser">
             <directory suffix=".php">./tests/testsuites/Parser</directory>
+        </testsuite>
+        <testsuite name="StringContainer">
+            <directory suffix=".php">./tests/testsuites/StringContainer</directory>
         </testsuite>
         <testsuite name="Translator">
             <directory suffix=".php">./tests/testsuites/Translator</directory>
