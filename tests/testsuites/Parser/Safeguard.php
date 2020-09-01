@@ -190,7 +190,17 @@ final class Parser_SafeguardTests extends MailcodeTestCase
         
         $text = $safeguard->makeSafe();
         
-        $result = $safeguard->makeWhole($text);
+        try
+        {
+            $result = $safeguard->makeWhole($text);
+        }
+        catch(Mailcode_Exception $e)
+        {
+            $this->fail(
+                'Exception #'.$e->getCode().': '.$e->getMessage().PHP_EOL.$e->getDetails().PHP_EOL.
+                $e->getTraceAsString()
+            );
+        }
         
         $this->assertEquals('Text with a {showvar: $VAR.NAME} VARIABLE.', $result);
     }
