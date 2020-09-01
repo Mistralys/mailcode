@@ -50,16 +50,8 @@ namespace Mailcode;
 class Mailcode_Parser_Safeguard
 {
     const ERROR_INVALID_COMMANDS = 47801;
-    
-    const ERROR_COMMAND_PLACEHOLDER_MISSING = 47802;
-    
     const ERROR_EMPTY_DELIMITER = 47803;
-    
     const ERROR_PLACEHOLDER_NOT_FOUND = 47804;
-    
-    const ERROR_UNKNOWN_FORMATTER = 47805;
-    
-    const ERROR_NOT_A_SINGLE_LINES_FORMATTER = 47806;
     
    /**
     * @var Mailcode_Parser
@@ -103,9 +95,9 @@ class Mailcode_Parser_Safeguard
     protected $placeholderStrings;
     
    /**
-    * @var Mailcode_Parser_Safeguard_Formatter
+    * @var Mailcode_Parser_Safeguard_Formatting|NULL
     */
-    protected $formatter;
+    private $formatting = null;
     
     public function __construct(Mailcode_Parser $parser, string $subject)
     {
@@ -181,97 +173,48 @@ class Mailcode_Parser_Safeguard
     */
     public function makeSafePartial() : string
     {
-        $replaces = $this->getReplaces();
+        $placeholders = $this->getPlaceholders();
+        $string = $this->originalString;
         
-        $safe = str_replace(array_values($replaces), array_keys($replaces), $this->originalString);
-
-        // If a formatter has been selected, let it modify the string.
-        if(isset($this->formatter))
+        foreach($placeholders as $placeholder)
         {
-            $safe = $this->formatter->format($safe);
-        }
-        
-        return $safe;
-    }
-    
-    public function getFormatter() : ?Mailcode_Parser_Safeguard_Formatter
-    {
-        return $this->formatter;
-    }
-    
-    public function selectFormatter(string $formatterID) : Mailcode_Parser_Safeguard_Formatter
-    {
-        $class = 'Mailcode\Mailcode_Parser_Safeguard_Formatter_'.$formatterID;
-        
-        if(class_exists($class))
-        {
-            $this->formatter = new $class($this);
+            $pos = mb_strpos($string, $placeholder->getOriginalText());
             
-            return $this->formatter;
+            if($pos === false)
+            {
+                throw new Mailcode_Exception(
+                    'Placeholder original text not found',
+                    sprintf(
+                        'Tried finding the command string [%s], but it has disappeared.',
+                        $placeholder->getOriginalText()
+                    ),
+                    self::ERROR_PLACEHOLDER_NOT_FOUND
+                );
+            }
+            
+            $before = mb_substr($string, 0, $pos);
+            $after = mb_substr($string, $pos + mb_strlen($placeholder->getOriginalText()));
+            $string = $before.$placeholder->getReplacementText().$after;
         }
         
-        throw new Mailcode_Exception(
-            'Unknown safeguard formatter.',
-            sprintf(
-                'The formatter [%s] does not exist, could not find class [%s].',
-                $formatterID,
-                $class
-            ),
-            self::ERROR_UNKNOWN_FORMATTER
-        );
-    }
-    
-    public function selectHTMLHighlightingFormatter() : Mailcode_Parser_Safeguard_Formatter_HTMLHighlighting
-    {
-        $formatter = $this->selectFormatter('HTMLHighlighting');
-        
-        if($formatter instanceof Mailcode_Parser_Safeguard_Formatter_HTMLHighlighting)
-        {
-            return $formatter;
-        }
-        
-        throw $this->exceptionWrongFormatter(Mailcode_Parser_Safeguard_Formatter_HTMLHighlighting::class);
+        return $string;
     }
     
    /**
-    * Enables the formatter that ensures that all commands that
-    * @return Mailcode_Parser_Safeguard_Formatter_SingleLines
-    */
-    public function selectSingleLinesFormatter() : Mailcode_Parser_Safeguard_Formatter_SingleLines
-    {
-        $formatter = $this->selectFormatter('SingleLines');
-        
-        if($formatter instanceof Mailcode_Parser_Safeguard_Formatter_SingleLines)
-        {
-            return $formatter;
-        }
-        
-        throw $this->exceptionWrongFormatter(Mailcode_Parser_Safeguard_Formatter_SingleLines::class);
-    }
-    
-    private function exceptionWrongFormatter(string $expectedClass) : Mailcode_Exception
-    {
-        return new Mailcode_Exception(
-            'Not the expected formatter',
-            sprintf(
-                'The formatter is not an instance of [%s].',
-                $expectedClass
-            ),
-            self::ERROR_NOT_A_SINGLE_LINES_FORMATTER
-        );
-    }
-    
-   /**
-    * Retrieves an associative array with pairs of
-    * [placeholder string => replacement text]. 
+    * Creates a formatting handler, which can be used to specify
+    * which formattings to use for the commands in the subject string.
     * 
-    * @param bool $highlighted
-    * @return string[]string
+    * @param Mailcode_StringContainer|string $subject
+    * @return Mailcode_Parser_Safeguard_Formatting
     */
-    protected function getReplaces(bool $highlighted=false, bool $normalize=false) : array
+    public function createFormatting($subject) : Mailcode_Parser_Safeguard_Formatting
     {
-        $restorer = new Mailcode_Parser_Safeguard_Restorer($this, $highlighted, $normalize);
-        return $restorer->getReplaces();
+        if(is_string($subject))
+        {
+            $subject = Mailcode::create()->createString($subject);
+        }
+        
+        return new Mailcode_Parser_Safeguard_Formatting($this, $subject);
     }
     
    /**
@@ -289,7 +232,7 @@ class Mailcode_Parser_Safeguard
         
         $this->placeholders = array();
         
-        $cmds = $this->getCollection()->getGroupedByHash();
+        $cmds = $this->getCollection()->getCommands();
         
         foreach($cmds as $command)
         {
@@ -312,26 +255,18 @@ class Mailcode_Parser_Safeguard
             $this->requireValidCollection();
         }
         
-        $replaces = $this->getReplaces($highlighted, true);
+        $formatting = $this->createFormatting($string);
         
-        $placeholderStrings = array_keys($replaces);
-        
-        foreach($placeholderStrings as $search)
+        if($highlighted)
         {
-            if(!$partial && !$highlighted && !strstr($string, $search))
-            {
-                throw new Mailcode_Exception(
-                    'Command placeholder not found',
-                    sprintf(
-                        'A placeholder for a command could not be found in the string to restore: [%s].',
-                        $search
-                    ),
-                    self::ERROR_COMMAND_PLACEHOLDER_MISSING
-                );
-            }
+            $formatting->replaceWithHTMLHighlighting();
+        }
+        else 
+        {
+            $formatting->replaceWithNormalized();
         }
         
-        return str_replace($placeholderStrings, array_values($replaces), $string);
+        return $formatting->toString();
     }
     
    /**
@@ -343,7 +278,6 @@ class Mailcode_Parser_Safeguard
     * @throws Mailcode_Exception
     *
     * @see Mailcode_Parser_Safeguard::ERROR_INVALID_COMMANDS
-    * @see Mailcode_Parser_Safeguard::ERROR_COMMAND_PLACEHOLDER_MISSING
     */
     public function makeWhole(string $string) : string
     {
@@ -384,7 +318,6 @@ class Mailcode_Parser_Safeguard
     * @throws Mailcode_Exception
     *
     * @see Mailcode_Parser_Safeguard::ERROR_INVALID_COMMANDS
-    * @see Mailcode_Parser_Safeguard::ERROR_COMMAND_PLACEHOLDER_MISSING
     */
     public function makeHighlighted(string $string) : string
     {
