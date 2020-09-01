@@ -102,6 +102,11 @@ class Mailcode
         return $this->getParser()->createSafeguard($subject);
     }
     
+    public function createString(string $subject) : Mailcode_StringContainer
+    {
+        return new Mailcode_StringContainer($subject);
+    }
+    
    /**
     * Attempts to find all variables in the target string.
     * 
