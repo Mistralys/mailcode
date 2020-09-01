@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Mailcode;
 
 use AppUtils\ConvertHelper;
+use function AppUtils\parseVariable;
 
 /**
  * Abstract base class for safeguard formatters: these 
@@ -24,14 +25,24 @@ use AppUtils\ConvertHelper;
  */
 abstract class Mailcode_Parser_Safeguard_Formatter
 {
-   /**
-    * @var Mailcode_Parser_Safeguard
-    */
-    protected $safeguard;
+    const ERROR_INVALID_LOCATION_INSTANCE = 65601;
     
-    public function __construct(Mailcode_Parser_Safeguard $safeguard)
+   /**
+    * @var Mailcode_Parser_Safeguard_Formatting
+    */
+    protected $formatting;
+    
+   /**
+    * @var Mailcode_StringContainer
+    */
+    protected $subject;
+    
+    public function __construct(Mailcode_Parser_Safeguard_Formatting $formatting)
     {
-        $this->safeguard = $safeguard;
+        $this->formatting = $formatting;
+        $this->subject = $formatting->getSubject();
+        
+        $this->initFormatting();
     }
     
     public function getID() : string
@@ -41,52 +52,60 @@ abstract class Mailcode_Parser_Safeguard_Formatter
         return array_pop($tokens);
     }
     
-    abstract protected function initFormatting(string $subject) : string;
-    
-    abstract public function getReplaceNeedle(Mailcode_Parser_Safeguard_Placeholder $placeholder) : string; 
-    
-    protected function resolveReplacementText(Mailcode_Parser_Safeguard_Placeholder_Locator_Location $location) : string
+    public function getSubject() : Mailcode_StringContainer
     {
-        $class = sprintf('Mailcode\Mailcode_Parser_Safeguard_Formatter_%s_Location', $this->getID());
-        
-        $info = new $class($this, $location);
-        
-        return $info->getPlaceholderText();
+        return $this->subject;
     }
     
-    public function format(string $subject) : string
+    public function getSafeguard() : Mailcode_Parser_Safeguard
     {
-        $subject = $this->initFormatting($subject);
-        
-        // fetch all placeholders we wish to process.
-        $placeholders = $this->filterPlaceholders();
-        
-        $total = count($placeholders);
-        
-        for($i=0; $i < $total; $i++)
-        {
-            $subject = $this->process($placeholders[$i], $subject);
-        }
-        
-        return $subject;
+        return $this->formatting->getSafeguard();
     }
     
-    protected function process(Mailcode_Parser_Safeguard_Placeholder $placeholder, string $subject) : string
+    abstract public function getPriority() : int;
+    
+    abstract protected function initFormatting() : void;
+    
+    protected function createLocation(Mailcode_Parser_Safeguard_Placeholder $placeholder) : Mailcode_Parser_Safeguard_Formatter_Location
     {
-        $locator = $placeholder->createLocator($subject);
-        $positions = $locator->getLocations();
+        $class = sprintf('Mailcode\Mailcode_Parser_Safeguard_Formatter_Type_%s_Location', $this->getID());
         
-        foreach($positions as $position)
+        $instance = new $class($this, $placeholder);
+        
+        if($instance instanceof Mailcode_Parser_Safeguard_Formatter_Location)
         {
-            $replace = $this->resolveReplacementText($position);
-            
-            if($replace !== $position->getPlaceholderString())
-            {
-                $locator->replaceWith($position, $replace);
-            }
+            return $instance;
         }
         
-        return $locator->getSubjectString();
+        throw new Mailcode_Exception(
+            'Invalid location instance created.',
+            sprintf(
+                'Expected a class of type [%s], got [%s].',
+                Mailcode_Parser_Safeguard_Formatter_Location::class,
+                parseVariable($instance)->enableType()->toString()
+            ),
+            self::ERROR_INVALID_LOCATION_INSTANCE
+        );
+    }
+    
+   /**
+    * Retrieves all formatter-specific placeholder locations 
+    * in the subject string.
+    * 
+    * @return Mailcode_Parser_Safeguard_Formatter_Location[]
+    */
+    protected function resolveLocations() : array
+    {
+        $placeholders = $this->formatting->getSafeguard()->getPlaceholders();
+        
+        $result = array();
+        
+        foreach($placeholders as $placeholder)
+        {
+            $result[] = $this->createLocation($placeholder);
+        }
+        
+        return $result;
     }
     
    /**
@@ -105,13 +124,5 @@ abstract class Mailcode_Parser_Safeguard_Formatter
         }
         
         return PHP_EOL;
-    }
-    
-   /**
-    * @return \Mailcode\Mailcode_Parser_Safeguard_Placeholder[]
-    */
-    protected function filterPlaceholders()
-    {
-        return $this->safeguard->getPlaceholders();
     }
 }
