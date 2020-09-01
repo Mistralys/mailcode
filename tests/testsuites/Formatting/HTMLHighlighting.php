@@ -3,25 +3,31 @@
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Exception;
 use Mailcode\Mailcode_Factory;
-use Mailcode\Mailcode_Parser_Safeguard_Placeholder_Locator_Replacer;
 use AppUtils\FileHelper;
+use Mailcode\Mailcode_Parser_Safeguard;
 
 final class Parser_HTMLHighlightingFormatterTests extends MailcodeTestCase
 {
+    private function createExampleSafeguard() : Mailcode_Parser_Safeguard
+    {
+        $content = FileHelper::readContents(__DIR__.'/../../assets/files/test-highlight.html');
+        
+        $parser = Mailcode::create()->getParser();
+        
+        return $parser->createSafeguard($content);
+    }
+    
     public function test_parsing()
     {
         $tests = array(
             array(
                 'label' => 'Commands in attribute',
                 'html' => '<strong class="{setvar: $FOOBAR "Foo"}">Text here</strong>',
-                'expected' => '<strong class="{setvar: $FOOBAR "Foo"}">Text here</strong>',
                 'highlighted' => '<strong class="{setvar: $FOOBAR "Foo"}">Text here</strong>'
             ),
             array(
                 'label' => 'Command at beginning of the document',
                 'html' => '{setvar: $FOOBAR = "Foo"} <strong>Text here</strong>',
-                'expected' => 
-                    '<mailcode:highlight>{setvar: $FOOBAR = "Foo"}</mailcode:highlight> <strong>Text here</strong>',
                 'highlighted' => 
                     Mailcode_Factory::setVar('FOOBAR', 'Foo')->getHighlighted().
                     ' <strong>Text here</strong>'
@@ -29,30 +35,21 @@ final class Parser_HTMLHighlightingFormatterTests extends MailcodeTestCase
             array(
                 'label' => 'Commands in style tag',
                 'html' => '<style>{setvar: $FOOBAR "Foo"}</style>',
-                'expected' => '<style>{setvar: $FOOBAR "Foo"}</style>',
                 'highlighted' => '<style>{setvar: $FOOBAR "Foo"}</style>'
             ),
             array(
                 'label' => 'Commands in script tag 1',
                 'html' => '<script>{setvar: $FOOBAR "Foo"}</script>',
-                'expected' => '<script>{setvar: $FOOBAR "Foo"}</script>',
                 'highlighted' => '<script>{setvar: $FOOBAR "Foo"}</script>'
             ),
             array(
                 'label' => 'Commands in script tag with confusing brackets in JS syntax',
                 'html' => '<script>var test = 1 + 4; if(test <> 45) { test = {showvar: $AMOUNT}; }</script>',
-                'expected' => '<script>var test = 1 + 4; if(test <> 45) { test = {showvar: $AMOUNT}; }</script>',
                 'highlighted' => '<script>var test = 1 + 4; if(test <> 45) { test = {showvar: $AMOUNT}; }</script>'
             ),
             array(
                 'label' => 'Commands in script tag, ignoring whitespace styles',
                 'html' => 
-'<script>
-
-    {setvar: $FOOBAR "Foo"}
-
-</script>',
-                'expected' => 
 '<script>
 
     {setvar: $FOOBAR "Foo"}
@@ -72,13 +69,15 @@ final class Parser_HTMLHighlightingFormatterTests extends MailcodeTestCase
         foreach($tests as $test)
         {
             $safeguard = $parser->createSafeguard($test['html']);
-            $safeguard->selectHTMLHighlightingFormatter();
                 
             try
             {
                 $safe = $safeguard->makeSafe();
-                $result = $safeguard->makeWhole($safe);
-                $high = $safeguard->makeHighlighted($safe);
+                
+                $formatting = $safeguard->createFormatting($safe);
+                $formatting->replaceWithHTMLHighlighting();
+                
+                $highlighted = $formatting->toString();
             }
             catch(Mailcode_Exception $e)
             {
@@ -92,33 +91,61 @@ final class Parser_HTMLHighlightingFormatterTests extends MailcodeTestCase
                 ));
             }
 
-            $this->assertEquals($test['expected'], $result, $test['label']);
-            $this->assertEquals($test['highlighted'], $high, $test['label']);
+            $this->assertEquals($test['highlighted'], $highlighted, $test['label']);
         }
     }
     
    /**
-    * Tests for a bug where hzighlighting commands in an HTML file failed.
-    * 
-    * @see Mailcode_Parser_Safeguard_Placeholder_Locator_Replacer::replaceLocation()
+    * Tests for a bug where highlighting commands in an HTML file failed.
     */
     public function test_exampleHTML() : void
     {
-        $content = FileHelper::readContents(__DIR__.'/../../assets/files/test-highlight.html');
-        
-        $parser = Mailcode::create()->getParser();
-        
-        $safeguard = $parser->createSafeguard($content);
-        $safeguard->selectHTMLHighlightingFormatter();
+        $safeguard = $this->createExampleSafeguard();
         
         $this->assertTrue($safeguard->isValid());
         
         try
         {
             $safe = $safeguard->makeSafe();
-            $whole = $safeguard->makeWhole($safe);
+
+            $formatting = $safeguard->createFormatting($safe);
+            $formatting->replaceWithHTMLHighlighting();
             
-            FileHelper::saveFile(__DIR__.'/../../assets/files/test-highlight-output.html', $whole);
+            FileHelper::saveFile(
+                __DIR__.'/../../assets/files/test-highlight-output-raw.html', 
+                $formatting->toString()
+            );
+        }
+        catch(Mailcode_Exception $e)
+        {
+            $this->fail(sprintf(
+                'Exception: #%2$s %3$s %1$s Details: %4$s %1$s',
+                PHP_EOL,
+                $e->getCode(),
+                $e->getMessage(),
+                $e->getDetails()
+            ));
+        }
+    }
+    
+    public function test_exampleHTML_highlight() : void
+    {
+        $safeguard = $this->createExampleSafeguard();
+        
+        $this->assertTrue($safeguard->isValid());
+        
+        try
+        {
+            $safe = $safeguard->makeSafe();
+            
+            $formatting = $safeguard->createFormatting($safe);
+            $formatting->replaceWithHTMLHighlighting();
+            
+            $styler = Mailcode::create()->createStyler();
+            
+            $html = str_replace('</body>', $styler->getStyleTag().'</body>', $formatting->toString());
+            
+            FileHelper::saveFile(__DIR__.'/../../assets/files/test-highlight-output.html', $html);
         }
         catch(Mailcode_Exception $e)
         {
@@ -139,16 +166,15 @@ final class Parser_HTMLHighlightingFormatterTests extends MailcodeTestCase
     {
         $html = '<customtag class="{showvar: $FOO}">Text here</customtag>';
         
-        $safeguard = Mailcode::create()->getParser()->createSafeguard($html);
+        $mailcode = Mailcode::create();
+        $safeguard = $mailcode->getParser()->createSafeguard($html);
         
-        $formatter = $safeguard->selectHTMLHighlightingFormatter();
-        $formatter->excludeTag('customtag');
-
-        $safe = $safeguard->makeSafe();
+        $formatting = $safeguard->createFormatting($safeguard->makeSafe());
+        $formatting->replaceWithHTMLHighlighting()->excludeTag('customtag');
         
         $this->assertEquals(
             $html,
-            $safeguard->makeWhole($safe)
+            $formatting->toString()
         );
     }
     
@@ -166,17 +192,16 @@ final class Parser_HTMLHighlightingFormatterTests extends MailcodeTestCase
         <b>{showvar: $FOO}</b>
     </p>
 </customtag>';
+     
+        $mailcode = Mailcode::create();
+        $safeguard = $mailcode->getParser()->createSafeguard($html);
         
-        $safeguard = Mailcode::create()->getParser()->createSafeguard($html);
-        
-        $formatter = $safeguard->selectHTMLHighlightingFormatter();
-        $formatter->excludeTag('customtag');
-        
-        $safe = $safeguard->makeSafe();
+        $formatting = $safeguard->createFormatting($safeguard->makeSafe());
+        $formatting->replaceWithHTMLHighlighting()->excludeTag('customtag');
         
         $this->assertEquals(
             $html,
-            $safeguard->makeWhole($safe)
+            $formatting->toString()
         );
     }
 }
