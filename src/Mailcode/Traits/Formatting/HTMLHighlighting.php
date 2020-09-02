@@ -23,9 +23,9 @@ namespace Mailcode;
  */
 trait Mailcode_Traits_Formatting_HTMLHighlighting
 {
-    /**
-     * @var string[]
-     */
+   /**
+    * @var string[]
+    */
     private $excludeTags = array(
         'style', // NOTE: style tags are excluded natively on the parser level.
         'script'
@@ -36,7 +36,7 @@ trait Mailcode_Traits_Formatting_HTMLHighlighting
     * commands may not be highlighted.
     *
     * @param string $tagName Case insensitive.
-    * @return Mailcode_Parser_Safeguard_Formatter_Type_HTMLHighlighting
+    * @return $this
     */
     public function excludeTag(string $tagName) : Mailcode_Parser_Safeguard_Formatter_Type_HTMLHighlighting
     {
@@ -54,7 +54,7 @@ trait Mailcode_Traits_Formatting_HTMLHighlighting
     * Adds several exluded tag names at once.
     *
     * @param string[] $tagNames
-    * @return Mailcode_Parser_Safeguard_Formatter_Type_HTMLHighlighting
+    * @return $this
     */
     public function excludeTags(array $tagNames) : Mailcode_Parser_Safeguard_Formatter_Type_HTMLHighlighting
     {
