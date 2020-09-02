@@ -2,6 +2,7 @@
 
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Exception;
+use AppUtils\ConvertHelper;
 
 final class Parser_SingleLinesFormatterTests extends MailcodeTestCase
 {
@@ -63,6 +64,7 @@ final class Parser_SingleLinesFormatterTests extends MailcodeTestCase
             $noEOL = str_replace('[EOL]', '', $test['text']);
             
             $safeguard = $parser->createSafeguard($noEOL);
+            $label = $test['label']; 
             
             try
             {
@@ -74,6 +76,10 @@ final class Parser_SingleLinesFormatterTests extends MailcodeTestCase
                 $withEOL = str_replace('[EOL]', $formatter->getEOLChar(), $test['text']);
                 
                 $result = $formatting->toString();
+
+                // test fail details
+                $label .= PHP_EOL.'Formatter log:'.PHP_EOL.
+                implode(PHP_EOL, $formatter->getLog());
             }
             catch(Mailcode_Exception $e)
             {
@@ -87,7 +93,7 @@ final class Parser_SingleLinesFormatterTests extends MailcodeTestCase
                 ));
             }
             
-            $this->assertEquals($withEOL, $result, $test['label']);
+            $this->assertEquals($withEOL, $result, $label);
         }
     }
 }
