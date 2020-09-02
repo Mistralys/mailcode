@@ -5,40 +5,32 @@ use Mailcode\Mailcode_Exception;
 
 final class Parser_SingleLinesFormatterTests extends MailcodeTestCase
 {
+   /**
+    * NOTE: To be newline-style-agnostic, the test uses the placeholder
+    * [EOL] to mark where a newline should be inserted. The same 
+    * string is used as the starting text, but with the placeholders
+    * stripped out.
+    */
     public function test_makeSafe_separateLines()
     {
         $tests = array(
             array(
                 'label' => 'Within a sentence, without newlines',
-                'text' => 'Text with a {setvar: $FOOBAR = "Value"} variable.',
-                'expected' =>  
-'Text with a 
-{setvar: $FOOBAR = "Value"}
- variable.'
+                'text' => 'Text with a [EOL]{setvar: $FOOBAR = "Value"}[EOL] variable.',
             ),
             array(
                 'label' => 'At the start of the string, with text appended',
-                'text' => '{setvar: $FOOBAR = "Value"} and some text.',
-                'expected' => 
-'{setvar: $FOOBAR = "Value"}
- and some text.'
+                'text' => '{setvar: $FOOBAR = "Value"}[EOL] and some text.',
             ),
             array(
                 'label' => 'At the end of the string.',
-                'text' => 'Some text and {setvar: $FOOBAR = "Value"}',
-                'expected' => 
-'Some text and 
-{setvar: $FOOBAR = "Value"}'
+                'text' => 'Some text and [EOL]{setvar: $FOOBAR = "Value"}',
             ),
             array(
                 'label' => 'On its own line, but with text appended',
                 'text' => 
 'Some text here.
-{setvar: $FOOBAR = "Value"} also here.',
-                'expected' => 
-'Some text here.
-{setvar: $FOOBAR = "Value"}
- also here.'            
+{setvar: $FOOBAR = "Value"}[EOL] also here.',
             ),
             array(
                 'label' => 'No newlines needed',
@@ -47,20 +39,11 @@ final class Parser_SingleLinesFormatterTests extends MailcodeTestCase
             ),
             array(
                 'label' => 'Single char before and after (shorter than the EOL character)',
-                'text' => '-{setvar: $FOOBAR = "Value"}-',
-                'expected' => 
-'-
-{setvar: $FOOBAR = "Value"}
--'
+                'text' => '-[EOL]{setvar: $FOOBAR = "Value"}[EOL]-',
             ),
             array(
                 'label' => 'Unicode chars in the command (potential string length issues)',
-                'text' => '{if variable: $FOOBAR == "öäü"}Text here{end}',
-                'expected' =>
-                '{if variable: $FOOBAR == "öäü"}
-Text here
-{end}
-'
+                'text' => '{if variable: $FOOBAR == "öäü"}[EOL]Text here[EOL]{end}[EOL]',
             ),
             array(
                 'label' => 'Show variable commands should not be modified (they generate content)',
@@ -69,13 +52,7 @@ Text here
             ),
             array(
                 'label' => 'Several commands following each other',
-                'text' => '{if: 0 == 1}{if: 0 == 2}{end}{end}',
-                'expected' => 
-'{if: 0 == 1}
-{if: 0 == 2}
-{end}
-{end}
-'
+                'text' => '{if: 0 == 1}[EOL]{if: 0 == 2}[EOL]{end}[EOL]{end}[EOL]',
             )
         );
         
@@ -83,14 +60,18 @@ Text here
 
         foreach($tests as $test)
         {
-            $safeguard = $parser->createSafeguard($test['text']);
+            $noEOL = str_replace('[EOL]', '', $test['text']);
+            
+            $safeguard = $parser->createSafeguard($noEOL);
             
             try
             {
                 $safe = $safeguard->makeSafe();
                 
                 $formatting = $safeguard->createFormatting($safeguard->makeSafe());
-                $formatting->formatWithSingleLines();
+                $formatter = $formatting->formatWithSingleLines();
+                
+                $withEOL = str_replace('[EOL]', $formatter->getEOLChar(), $test['text']);
                 
                 $result = $formatting->toString();
             }
@@ -106,7 +87,7 @@ Text here
                 ));
             }
             
-            $this->assertEquals($test['expected'], $result, $test['label']);
+            $this->assertEquals($withEOL, $result, $test['label']);
         }
     }
 }
