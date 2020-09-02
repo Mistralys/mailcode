@@ -256,6 +256,11 @@ class Mailcode_Parser_Safeguard
         }
         
         $formatting = $this->createFormatting($string);
+
+        if($partial)
+        {
+            $formatting->makePartial();
+        }
         
         if($highlighted)
         {
