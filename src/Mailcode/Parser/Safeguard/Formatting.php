@@ -52,6 +52,11 @@ class Mailcode_Parser_Safeguard_Formatting
     */
     private $applied = false;
     
+   /**
+    * @var boolean
+    */
+    private $partial = false;
+    
     public function __construct(Mailcode_Parser_Safeguard $safeguard, Mailcode_StringContainer $subject)
     {
         $this->safeguard = $safeguard;
@@ -266,5 +271,32 @@ class Mailcode_Parser_Safeguard_Formatting
         $this->applyFormatting();
         
         return $this->subject->getString();
+    }
+
+   /**
+    * Whether the formatting is done partially: missing placeholders
+    * will simply be ignored.
+    * 
+    * @return bool
+    */
+    public function isPartial() : bool
+    {
+        return $this->partial;
+    }
+    
+   /**
+    * The formatting will ignore missing placeholders. Use this if the
+    * formatting will be done on a text that may not contain all of the
+    * initial placeholders anymore.
+    * 
+    * This is like the safeguard's makeWholePartial() method.
+    * 
+    * @return Mailcode_Parser_Safeguard_Formatting
+    */
+    public function makePartial() : Mailcode_Parser_Safeguard_Formatting
+    {
+        $this->partial = true;
+        
+        return $this;
     }
 }
