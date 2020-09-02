@@ -156,14 +156,19 @@ abstract class Mailcode_Parser_Safeguard_Formatter_Location
             return;
         }
         
-        throw new Mailcode_Exception(
-            'Could not find the placeholder to replace',
-            sprintf(
-                'The placeholder [%s] was not found in the string.',
-                $needle
-            ),
-            self::ERROR_PLACEHOLDER_NOT_FOUND
-        );
+        // Complain about missing placeholders only if we
+        // are not in partial mode.
+        if(!$this->formatter->getFormatting()->isPartial())
+        {
+            throw new Mailcode_Exception(
+                'Could not find the placeholder to replace',
+                sprintf(
+                    'The placeholder [%s] was not found in the string.',
+                    $needle
+                ),
+                self::ERROR_PLACEHOLDER_NOT_FOUND
+            );
+        }
     }
     
     public function format() : void
