@@ -345,39 +345,56 @@ foreach($placeholders as $placeholder)
 }
 ```
 
-## HTML Highlighting for commands
+## Applying formatting
 
-With a valid safeguard instance in hand, commands can be easily highlighted:
+By default, when using the safeguard's `makeWhole` method, all command placeholders are replaced with the normalized syntax of the commands. A number of additional formatting options are available via the safeguard's formatting class. In this case, the formatted string is retrieved via the formatting class instead of the safeguard itself. 
 
-```
-$safeguard = Mailcode::create()->createSafeguard($text);
-$safe = $safeguard->makeSafe();
-$highlighted = $safeguard->makeHighlighted($safe);
-```
-
-However, this will highlight commands regardless of where they are used. If any commands are inserted in tag attributes or in `<script>` tags, this will break the HTML code.
-
-To make the highlighting entirely HTML compatible, enable the HTML formatter:
+Creating a formatting instance, using a safeguard:
 
 ```
 $safeguard = Mailcode::create()->createSafeguard($text);
-$safeguard->selectHTMLHighlightingFormatter();
 
-$safe = $safeguard->makeSafe();
-$highlighted = $safeguard->makeHighlighted($safe);
+$formatting = $safeguard->createFormatting($safeguard->makeSafe());
 ```
 
-The formatter will ensure that commands are only highlighted in a valid context. 
+**Note:** Formatting is entirely separate from the safeguard. The safeguard instance retains the original text.
 
-NOTE: The formatter needs to be enabled manually, as these checks have a performance cost.
+### Replacers and Formatters
 
-### Excluding tags from the highlighting
+There are two types of formatters: 
+
+  - **Replacers**: These will replace the command placeholders themselves (example: HTML syntax highlighting of commands). Only one replacer may be selected.
+  - **Formatters**: These will only modify the text around the placeholder, leaving the placeholder intact. Formatters can be combined at will.
+
+While it is not possible to select several replacers, they can be freely combined with formatters.
+
+The methods to add formatters reflect their type:
+
+```
+$formatting->replaceWithHTMLHighlighting();
+$formatting->formatWithMarkedVariables();
+```
+
+### HTML Highlighting
+
+The HTML syntax highlighter will add highlighting to all commands in an intelligent way. Commands will not be highlighted if they are used in HTML tag attributes or nested in tags where adding the highlighting markup would break the HTML structure.
+
+```
+// choose to replace commands with syntax highlighted commands
+$formatting->replaceWithHTMLHighlighting();
+
+$highlighted = $formatting->toString();
+```
+
+This will add the highlighting markup, but the necessary CSS styles must also be available in the document where the Mailcode will be displayed. More on this in the "Loading the required styles" section.
+
+#### Excluding tags from the highlighting
 
 By default, commands will not be highlighted within the `<style>` and `<script>` tags. Additional tags can easily be added to this list to customize it for your needs:
 
 ```
-$safeguard = Mailcode::create()->createSafeguard($text);
-$formatter = $safeguard->selectHTMLHighlightingFormatter();
+// Get the formatter instance
+$formatter = $formatting->replaceWithHTMLHighlighting();
 
 // add a single tag to the exclusion list
 $formatter->excludeTag('footer');
@@ -398,15 +415,15 @@ NOTE: The excluded tag check goes up the whole tag nesting chain, which means th
 </footer>
 ```
 
-WARNING: The mailcode parser assumes that the HTML is valid. The tag nesting check does not handle nesting errors.
+**WARNING:** The parser assumes that the HTML is valid. The tag nesting check does not handle nesting errors.
 
-### Loading the required styles
+#### Loading the required styles
 
 For the highlighting to work, the according CSS styles need to be loaded in the target page. 
 
 There are two way to do this:
 
-#### Including the stylesheet
+##### Including the stylesheet
 
 Simply ensure that the stylesheet file `css/highlight.css` of the package is loaded. This requires knowing the exact URL to the package's vendor folder.
 
@@ -414,7 +431,7 @@ Simply ensure that the stylesheet file `css/highlight.css` of the package is loa
 <link rel="stylesheet" media="all" src="/vendor/mistralys/mailcode/css/highlight.css">
 ```
 
-#### Using the Styler utility
+##### Using the Styler utility
 
 The Styler utility class has a number of methods all around the CSS.
 
