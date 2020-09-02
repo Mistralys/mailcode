@@ -139,6 +139,12 @@ class Mailcode_Parser_Safeguard_Formatter_Type_HTMLHighlighting_Location extends
         return false;
     }
     
+   /**
+    * Retrieves a list of tag names that come as parents 
+    * above the command.
+    * 
+    * @return array<int,array<int,string>>
+    */
     private function getTagAncestry() : array
     {
         if($this->ancestryChecked)
