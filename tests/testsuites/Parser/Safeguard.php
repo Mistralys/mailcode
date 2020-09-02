@@ -33,7 +33,7 @@ final class Parser_SafeguardTests extends MailcodeTestCase
    /**
     * Checks that the safeguarding is indeed case neutral.
     */
-    public function test_safeguard_caseNeutral()
+    public function test_caseNeutral()
     {
         $parser = Mailcode::create()->getParser();
         
@@ -55,7 +55,7 @@ final class Parser_SafeguardTests extends MailcodeTestCase
     * broken commands triggers an exception, and shows
     * that it is not valid.
     */
-    public function test_safeguard_brokenCommand()
+    public function test_brokenCommand()
     {
         $parser = Mailcode::create()->getParser();
        
@@ -74,7 +74,7 @@ final class Parser_SafeguardTests extends MailcodeTestCase
     * Ensures that calling makeWhole() with broken or missing
     * placeholders will trigger an exception.
     */
-    public function safeguard_brokenPlaceholders()
+    public function test_brokenPlaceholders()
     {
         $parser = Mailcode::create()->getParser();
         
@@ -96,7 +96,7 @@ final class Parser_SafeguardTests extends MailcodeTestCase
     * Ensures that calling makeWholePartial() will ignore
     * missing placeholders.
     */
-    public function safeguard_partial()
+    public function test_makeWholePartial()
     {
         $parser = Mailcode::create()->getParser();
         
@@ -174,13 +174,13 @@ final class Parser_SafeguardTests extends MailcodeTestCase
         // no exception = success
         $this->addToAssertionCount(1);
     }
-
+    
    /**
     * Ensure that the safeguarded string correctly uses the 
     * normalized variants of the commands, not the original
     * matched strings.
     */
-    public function test_safeguard_normalize()
+    public function test_normalize()
     {
         $parser = Mailcode::create()->getParser();
         
