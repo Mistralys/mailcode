@@ -103,7 +103,7 @@ abstract class Mailcode_Parser_Safeguard_Formatter_Location
                 continue;
             }
             
-            $end = $start + $placeholder->getLength();
+            $end = $start + $placeholder->getReplacementLength();
             
             if($position >= $start && $position <= $end)
             {
@@ -123,7 +123,7 @@ abstract class Mailcode_Parser_Safeguard_Formatter_Location
         
         if($start !== false)
         {
-            return $start + $this->placeholder->getLength();
+            return $start + $this->placeholder->getReplacementLength();
         }
         
         return false;
