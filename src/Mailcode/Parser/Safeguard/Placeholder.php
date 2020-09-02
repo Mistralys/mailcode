@@ -62,6 +62,11 @@ class Mailcode_Parser_Safeguard_Placeholder
         return mb_strlen($this->getOriginalText());
     }
     
+    public function getReplacementLength() : int
+    {
+        return strlen($this->getReplacementText());
+    }
+    
     public function getReplacementText() : string
     {
         if(!empty($this->replacement))
