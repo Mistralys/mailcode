@@ -57,6 +57,11 @@ abstract class Mailcode_Parser_Safeguard_Formatter
         return array_pop($tokens);
     }
     
+    public function getFormatting() : Mailcode_Parser_Safeguard_Formatting
+    {
+        return $this->formatting;
+    }
+    
     public function getSubject() : Mailcode_StringContainer
     {
         return $this->subject;
