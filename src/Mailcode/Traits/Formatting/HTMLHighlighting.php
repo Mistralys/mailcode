@@ -38,7 +38,7 @@ trait Mailcode_Traits_Formatting_HTMLHighlighting
     * @param string $tagName Case insensitive.
     * @return $this
     */
-    public function excludeTag(string $tagName) : Mailcode_Parser_Safeguard_Formatter_Type_HTMLHighlighting
+    public function excludeTag(string $tagName)
     {
         $tagName = strtolower($tagName);
         
@@ -56,7 +56,7 @@ trait Mailcode_Traits_Formatting_HTMLHighlighting
     * @param string[] $tagNames
     * @return $this
     */
-    public function excludeTags(array $tagNames) : Mailcode_Parser_Safeguard_Formatter_Type_HTMLHighlighting
+    public function excludeTags(array $tagNames)
     {
         foreach($tagNames as $tagName)
         {
