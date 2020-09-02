@@ -72,6 +72,11 @@ class Mailcode_Parser_Safeguard_Formatter_Type_SingleLines_Location extends Mail
             $prevPos = 0;
         }
         
+        $this->checkPreviousPosition($prevPos);
+    }
+    
+    protected function checkPreviousPosition(int $prevPos) : void
+    {
         if($this->isWithinCommand($prevPos))
         {
             $this->log(sprintf(
@@ -82,14 +87,14 @@ class Mailcode_Parser_Safeguard_Formatter_Type_SingleLines_Location extends Mail
             return;
         }
         
-        $prev = $this->subject->getSubstr($prevPos, $this->eolLength);
+        $match = $this->subject->getSubstr($prevPos, $this->eolLength);
         
-        if($prev !== $this->formatter->getEOLChar())
+        if($match !== $this->formatter->getEOLChar())
         {
             $this->log(sprintf(
                 'Prepend: YES | Position: [%s] | Characters: [%s] | Do not match the EOL character.',
                 $prevPos,
-                ConvertHelper::hidden2visible($prev)
+                ConvertHelper::hidden2visible($match)
             ));
             
             $this->prepend = $this->eol;
@@ -121,6 +126,11 @@ class Mailcode_Parser_Safeguard_Formatter_Type_SingleLines_Location extends Mail
             $nextPos = $subjectLength - $this->eolLength;
         }
         
+        $this->checkNextPosition($nextPos);
+    }
+    
+    protected function checkNextPosition(int $nextPos) : void
+    {
         if($this->isWithinCommand($nextPos))
         {
             $this->log(sprintf(
