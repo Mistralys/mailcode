@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Mailcode;
 
 use function AppUtils\parseVariable;
+use AppUtils\ConvertHelper;
 
 /**
  * Detects whether the placeholder needs newlines characters
@@ -56,6 +57,11 @@ class Mailcode_Parser_Safeguard_Formatter_Type_SingleLines_Location extends Mail
         // we're at the beginning of the string
         if($position === false || $position === 0)
         {
+            $this->log(sprintf(
+                'Prepend: NO | Position: [%s] | Not found, or at beginning of string.', 
+                parseVariable($position)->enableType()->toString()
+            ));
+            
             return;
         }
         
@@ -68,6 +74,11 @@ class Mailcode_Parser_Safeguard_Formatter_Type_SingleLines_Location extends Mail
         
         if($this->isWithinCommand($prevPos))
         {
+            $this->log(sprintf(
+                'Prepend: NO | Position: [%s] | Is within a mailcode command.', 
+                $prevPos
+            ));
+            
             return;
         }
         
@@ -75,6 +86,12 @@ class Mailcode_Parser_Safeguard_Formatter_Type_SingleLines_Location extends Mail
         
         if($prev !== $this->formatter->getEOLChar())
         {
+            $this->log(sprintf(
+                'Prepend: YES | Position: [%s] | Characters: [%s] | Do not match the EOL character.',
+                $prevPos,
+                ConvertHelper::hidden2visible($prev)
+            ));
+            
             $this->prepend = $this->eol;
         }
     }
@@ -88,6 +105,12 @@ class Mailcode_Parser_Safeguard_Formatter_Type_SingleLines_Location extends Mail
         // we're at the end of the string
         if($position === false || $position >= $subjectLength)
         {
+            $this->log(sprintf(
+                'Append: NO | Position: [%s] | End of string, or too long | Subject length: [%s]',
+                parseVariable($position)->enableType()->toString(),
+                $subjectLength
+            ));
+            
             return;
         }
         
@@ -98,10 +121,28 @@ class Mailcode_Parser_Safeguard_Formatter_Type_SingleLines_Location extends Mail
             $nextPos = $subjectLength - $this->eolLength;
         }
         
+        if($this->isWithinCommand($nextPos))
+        {
+            $this->log(sprintf(
+                'Append: YES | Position: [%s] | Is within a mailcode command.',
+                $nextPos
+            ));
+            
+            $this->append = $this->eol;
+            
+            return;
+        }
+        
         $next = $this->subject->getSubstr($nextPos, $this->eolLength);
         
         if($next !== $this->formatter->getEOLChar())
         {
+            $this->log(sprintf(
+                'Append: YES | Position: [%s] | Next characters: [%s] | Do not match the EOL character.',
+                $nextPos,
+                ConvertHelper::hidden2visible($next)
+            ));
+            
             $this->append = $this->eol;
         }
     }

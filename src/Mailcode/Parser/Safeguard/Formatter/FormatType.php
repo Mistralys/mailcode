@@ -37,6 +37,8 @@ abstract class Mailcode_Parser_Safeguard_Formatter_FormatType extends Mailcode_P
         foreach($locations as $location)
         {
             $location->format();
+            
+            $this->log = array_merge($this->log, $location->getLog());
         }
     }
 }

@@ -37,6 +37,11 @@ abstract class Mailcode_Parser_Safeguard_Formatter
     */
     protected $subject;
     
+   /**
+    * @var string[]
+    */
+    protected $log = array();
+    
     public function __construct(Mailcode_Parser_Safeguard_Formatting $formatting)
     {
         $this->formatting = $formatting;
@@ -120,9 +125,36 @@ abstract class Mailcode_Parser_Safeguard_Formatter
         
         if($eol)
         {
+            $this->log(sprintf(
+                'Detected EOL character: %s.', 
+                ConvertHelper::hidden2visible($eol->getCharacter())
+            ));
+            
             return $eol->getCharacter();
         }
         
+        $this->log(sprintf(
+            'Could not detect EOL character, using default: %s.', 
+            ConvertHelper::hidden2visible(PHP_EOL)
+        ));
+        
         return PHP_EOL;
+    }
+    
+    protected function log(string $message) : void
+    {
+        $this->log[] = sprintf(
+            '%s Formatter | %s',
+            $this->getID(),
+            $message
+        );
+    }
+ 
+   /**
+    * @return string[]
+    */
+    public function getLog() : array
+    {
+        return $this->log;
     }
 }

@@ -32,6 +32,8 @@ abstract class Mailcode_Parser_Safeguard_Formatter_ReplacerType extends Mailcode
         foreach($locations as $location)
         {
             $location->replaceWith($this->resolveReplacement($location));
+            
+            $this->log = array_merge($this->log, $location->getLog());
         }
     }
     

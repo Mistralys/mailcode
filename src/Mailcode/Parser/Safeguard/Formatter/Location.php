@@ -49,6 +49,11 @@ abstract class Mailcode_Parser_Safeguard_Formatter_Location
     */
     protected $subject;
     
+   /**
+    * @var string[]
+    */
+    protected $log = array();
+    
     public function __construct(Mailcode_Parser_Safeguard_Formatter $formatter, Mailcode_Parser_Safeguard_Placeholder $placeholder)
     {
         $this->formatter = $formatter;
@@ -172,5 +177,24 @@ abstract class Mailcode_Parser_Safeguard_Formatter_Location
                 $this->append
             ));
         }
+    }
+    
+    protected function log(string $message) : void
+    {
+        $this->log[] = sprintf(
+            '%s Formatter | Command [%s] | %s',
+            $this->formatter->getID(),
+            $this->placeholder->getCommand()->getNormalized(),
+            $message
+        );
+    }
+    
+   /**
+    * Retrieves the location's log messages, if any.
+    * @return string[]
+    */
+    public function getLog() : array
+    {
+        return $this->log;
     }
 }
