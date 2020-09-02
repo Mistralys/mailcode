@@ -2,7 +2,6 @@
 
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Exception;
-use AppUtils\ConvertHelper;
 
 final class Parser_SingleLinesFormatterTests extends MailcodeTestCase
 {
@@ -44,7 +43,7 @@ final class Parser_SingleLinesFormatterTests extends MailcodeTestCase
             ),
             array(
                 'label' => 'Unicode chars in the command (potential string length issues)',
-                'text' => '{if variable: $FOOBAR == "öäü"}[EOL]Text here[EOL]{end}[EOL]',
+                'text' => '{if variable: $FOOBAR == "öäü"}[EOL]Text here[EOL]{end}',
             ),
             array(
                 'label' => 'Show variable commands should not be modified (they generate content)',
@@ -53,7 +52,7 @@ final class Parser_SingleLinesFormatterTests extends MailcodeTestCase
             ),
             array(
                 'label' => 'Several commands following each other',
-                'text' => '{if: 0 == 1}[EOL]{if: 0 == 2}[EOL]{end}[EOL]{end}[EOL]',
+                'text' => '{if: 0 == 1}[EOL]{if: 0 == 2}[EOL]{end}[EOL]{end}',
             )
         );
         
