@@ -21,7 +21,9 @@ namespace Mailcode;
 class Mailcode_Commands_Command_ShowVariable extends Mailcode_Commands_Command implements Mailcode_Commands_Command_Type_Standalone
 {
     use Mailcode_Traits_Commands_Validation_Variable;
-    
+
+    const VALIDATION_TOO_MANY_PARAMETERS = 69701;
+
     public function getName() : string
     {
         return 'showvar';
@@ -54,11 +56,28 @@ class Mailcode_Commands_Command_ShowVariable extends Mailcode_Commands_Command i
     
     protected function getValidations() : array
     {
-        return array('variable');
+        return array(
+            'variable',
+            'no_other_tokens'
+        );
     }
     
     public function generatesContent() : bool
     {
         return true;
+    }
+
+    protected function validateSyntax_no_other_tokens() : void
+    {
+        $tokens = $this->params->getInfo()->getTokens();
+
+        if(count($tokens) > 1)
+        {
+            $this->validationResult->makeError(
+                t('Unknown parameters found:').' '.
+                t('Only the variable name should be specified.'),
+                self::VALIDATION_TOO_MANY_PARAMETERS
+            );
+        }
     }
 }
