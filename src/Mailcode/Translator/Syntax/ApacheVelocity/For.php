@@ -22,8 +22,12 @@ class Mailcode_Translator_Syntax_ApacheVelocity_For extends Mailcode_Translator_
 {
     public function translate(Mailcode_Commands_Command_For $command): string
     {
+        // Using $souce.list() here to ensure that Velocity always treats
+        // the variable as a list, even if there is only a single entry
+        // in the list (it would otherwise iterate over the keys in the
+        // single entry).
         return sprintf(
-            '#{foreach}(%s in %s)',
+            '#{foreach}(%s in %s.list())',
             $command->getLoopVariable()->getFullName(),
             $command->getSourceVariable()->getFullName()
         );
