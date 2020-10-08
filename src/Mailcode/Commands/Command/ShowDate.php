@@ -18,8 +18,10 @@ namespace Mailcode;
  * @subpackage Commands
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Mailcode_Commands_Command_ShowDate extends Mailcode_Commands_Command_ShowVariable
+class Mailcode_Commands_Command_ShowDate extends Mailcode_Commands_Command implements Mailcode_Commands_Command_Type_Standalone
 {
+    use Mailcode_Traits_Commands_Validation_Variable;
+
     const VALIDATION_NOT_A_FORMAT_STRING = 55401;
     
    /**
@@ -32,17 +34,50 @@ class Mailcode_Commands_Command_ShowDate extends Mailcode_Commands_Command_ShowV
     * @var Mailcode_Date_FormatInfo
     */
     private $formatInfo;
-    
+
     public function getName() : string
     {
         return 'showdate';
     }
-    
+
     public function getLabel() : string
     {
         return t('Show date variable');
     }
-    
+
+    public function supportsType(): bool
+    {
+        return false;
+    }
+
+    public function getDefaultType() : string
+    {
+        return '';
+    }
+
+    public function requiresParameters(): bool
+    {
+        return true;
+    }
+
+    public function supportsLogicKeywords() : bool
+    {
+        return false;
+    }
+
+    public function generatesContent() : bool
+    {
+        return true;
+    }
+
+    protected function getValidations() : array
+    {
+        return array(
+            'variable',
+            'check_format'
+        );
+    }
+
     protected function init() : void
     {
         $this->formatInfo = Mailcode_Factory::createDateInfo();
@@ -97,12 +132,5 @@ class Mailcode_Commands_Command_ShowDate extends Mailcode_Commands_Command_ShowV
     {
         return $this->formatString;
     }
-    
-    protected function getValidations() : array
-    {
-        $validations = parent::getValidations();
-        $validations[] = 'check_format';
-        
-        return $validations;
-    }
 }
+
