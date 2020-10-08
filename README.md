@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/Mistralys/mailcode.svg?branch=master)](https://travis-ci.com/Mistralys/mailcode)
+[![Build Status](https://travis-ci.com/Mistralys/mailcode.svg?branch=master)](https://travis-ci.com/Mistralys/mailcode) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Mistralys/mailcode/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Mistralys/mailcode/?branch=master)
 
 # PHP Mailcode Syntax parser
 
