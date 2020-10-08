@@ -10,7 +10,7 @@ final class Translator_Velocity_ForTests extends VelocityTestCase
             array(
                 'label' => 'Simple foreach',
                 'mailcode' => Mailcode_Factory::for('SOURCE', 'LOOP'),
-                'expected' => '#{foreach($LOOP in $SOURCE)}'
+                'expected' => '#{foreach}($LOOP in $SOURCE)'
             )
         );
         
