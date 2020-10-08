@@ -23,7 +23,7 @@ class Mailcode_Translator_Syntax_ApacheVelocity_For extends Mailcode_Translator_
     public function translate(Mailcode_Commands_Command_For $command): string
     {
         return sprintf(
-            '#{foreach(%s in %s)}',
+            '#{foreach}(%s in %s)',
             $command->getLoopVariable()->getFullName(),
             $command->getSourceVariable()->getFullName()
         );
