@@ -1,6 +1,8 @@
 <?php
 
+use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands_Command;
+use Mailcode\Mailcode_Commands_Command_ShowDate;
 use Mailcode\Mailcode_Factory;
 use Mailcode\Mailcode_Date_FormatInfo;
 use Mailcode\Mailcode_Commands_CommonConstants;
@@ -63,5 +65,30 @@ final class Mailcode_ShowDateTests extends MailcodeTestCase
         
         $this->assertEquals('$foobar', $cmd->getVariable()->getFullName());
         $this->assertEquals('$foobar', $cmd->getVariableName());
+    }
+
+    /**
+     * The showdate and showvar commands can verify if they are nested
+     * in a loop (FOR command), which enables finding the source variable.
+     */
+    public function test_isInLoop() : void
+    {
+        $string =
+        '{for: $RECORD in: $FOO.BAR}
+            {if not-empty: $RECORD.NAME}
+                {showdate: $RECORD.NAME}
+            {end}
+        {end}';
+
+        $collection = Mailcode::create()->getParser()->parseString($string);
+        $showCommands = $collection->getShowDateCommands();
+        $forCommands = $collection->getForCommands();
+
+        $show = array_pop($showCommands);
+        $for = array_pop($forCommands);
+
+        $this->assertInstanceOf(Mailcode_Commands_Command_ShowDate::class, $show);
+        $this->assertTrue($show->isInLoop());
+        $this->assertEquals($for, $show->getLoopCommand());
     }
 }
