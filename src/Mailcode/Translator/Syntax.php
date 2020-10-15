@@ -56,7 +56,7 @@ class Mailcode_Translator_Syntax
         return $translator->translate($command);
     }
     
-    protected function createTranslator(Mailcode_Commands_Command $command) : Mailcode_Translator_Command
+    public function createTranslator(Mailcode_Commands_Command $command) : Mailcode_Translator_Command
     {
         $class = sprintf(
             'Mailcode\Mailcode_Translator_Syntax_%s_%s',
