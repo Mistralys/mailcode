@@ -237,20 +237,39 @@ class Mailcode_Collection
    /**
     * Retrieves only show variable commands in the collection, if any.
     * 
-    * @return \Mailcode\Mailcode_Commands_Command_ShowVariable[]
+    * @return Mailcode_Commands_Command_ShowVariable[]
     */
     public function getShowVariableCommands()
     {
+        return $this->getCommandsByClass(Mailcode_Commands_Command_ShowVariable::class);
+    }
+
+   /**
+    * Retrieves only show date commands in the collection, if any.
+    *
+    * @return Mailcode_Commands_Command_ShowDate[]
+    */
+    public function getShowDateCommands() : array
+    {
+        return $this->getCommandsByClass(Mailcode_Commands_Command_ShowDate::class);
+    }
+
+    /**
+     * @param string $className
+     * @return Mailcode_Commands_Command[]
+     */
+    public function getCommandsByClass(string $className) : array
+    {
         $result = array();
-        
+
         foreach($this->commands as $command)
         {
-            if($command instanceof Mailcode_Commands_Command_ShowVariable)
+            if($command instanceof $className)
             {
                 $result[] = $command;
             }
         }
-        
+
         return $result;
     }
     
