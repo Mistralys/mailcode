@@ -57,4 +57,29 @@ ${CUSTOMER.CUSTOMER_ID}
       
         $this->assertEquals($expected, $result);
     }
+
+    /**
+     * Configuring the translation of showdate commands to use a
+     * specific internal date format when they are translated,
+     * while not translating them manually.
+     */
+    public function test_translateSafeguard_dates() : void
+    {
+        $subject = '{showdate: $FOO.BAR "d.m.Y"}';
+        $internalFormat = 'yyyy-MM-dd';
+        $expected = '${date.format("d.M.yyyy", $date.toDate("'.$internalFormat.'", $FOO.BAR))}';
+
+        $syntax = $this->translator->createSyntax('ApacheVelocity');
+        $safeguard = Mailcode::create()->createSafeguard($subject);
+        $dateCommands = $safeguard->getCollection()->getShowDateCommands();
+
+        foreach($dateCommands as $dateCommand)
+        {
+            $dateCommand->setTranslationParam('internal_format', $internalFormat);
+        }
+
+        $result = $syntax->translateSafeguard($safeguard);
+
+        $this->assertEquals($expected, $result);
+    }
 }
