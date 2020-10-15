@@ -69,4 +69,48 @@ trait Mailcode_Traits_Commands_Validation_Variable
     {
         return $this->getVariable()->getFullName();
     }
+
+    /**
+     * Checks whether the command is nested in a loop (FOR) command.
+     *
+     * @return bool
+     */
+    public function isInLoop() : bool
+    {
+        return $this->getLoopCommand() !== null;
+    }
+
+    /**
+     * Retrieves the command's parent loop command, if any.
+     *
+     * @return Mailcode_Commands_Command_For|NULL
+     */
+    public function getLoopCommand() : ?Mailcode_Commands_Command_For
+    {
+        return $this->findLoopRecursive($this);
+    }
+
+    /**
+     * Recursively tries to find a loop command in the command's
+     * parent commands. Goes up the whole ancestry if need be.
+     *
+     * @param Mailcode_Commands_Command $subject
+     * @return Mailcode_Commands_Command_For|null
+     */
+    protected function findLoopRecursive(Mailcode_Commands_Command $subject) : ?Mailcode_Commands_Command_For
+    {
+        $parent = $subject->getParent();
+
+        if($parent === null)
+        {
+            return null;
+        }
+
+        if($parent instanceof Mailcode_Commands_Command_For)
+        {
+            return $parent;
+        }
+
+        return $this->findLoopRecursive($parent);
+    }
 }
