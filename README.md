@@ -26,7 +26,7 @@ The subtype can switch between modes of the same command.
 
 ### Escaping quotes
 
-String literals are expected to be quoted using double quotes ("). To use doube quotes within a string literal, it can be escaped using a backslash (\):
+String literals are expected to be quoted using double quotes ("). To use double quotes within a string literal, it can be escaped using a backslash (\):
 
 ```
 {if contains: $PRODUCT.NAME "Search term with \"quotes\""}
