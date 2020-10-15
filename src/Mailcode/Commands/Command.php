@@ -97,7 +97,13 @@ abstract class Mailcode_Commands_Command
     * @var boolean
     */
     private $validated = false;
-    
+
+    /**
+     * Collection of parameters for the translation backend.
+     * @var array<string,mixed>
+     */
+    protected $translationParams = array();
+
     public function __construct(string $type='', string $paramsString='', string $matchedText='')
     {
         $this->type = $type;
@@ -511,5 +517,35 @@ abstract class Mailcode_Commands_Command
             'Cannot retrieve the logic keywords instance: it is only available for commands supporting logic commands.',
             self::ERROR_LOGIC_COMMANDS_NOT_SUPPORTED
         );
+    }
+
+   /**
+    * Sets a parameter for the translation backend. The backend can use
+    * these to allow command-specific configurations.
+    *
+    * @param string $name
+    * @param mixed $value
+    * @return $this
+    */
+    public function setTranslationParam(string $name, $value)
+    {
+        $this->translationParams[$name] = $value;
+        return $this;
+    }
+
+   /**
+    * Retrieves a previously set translation parameter.
+    *
+    * @param string $name
+    * @return mixed
+    */
+    public function getTranslationParam(string $name)
+    {
+        if(isset($this->translationParams[$name]))
+        {
+            return $this->translationParams[$name];
+        }
+
+        return null;
     }
 }
