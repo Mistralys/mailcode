@@ -17,6 +17,16 @@ function t()
 }
 
 /**
+ * @param array<mixed,mixed> $array
+ * @return int|string|null
+ */
+function array_key_last(array $array)
+{
+    $keys = array_keys($array);
+    return array_pop($keys);
+}
+
+/**
  * Initializes the utilities: this is called automatically
  * because this file is included in the files list in the
  * composer.json, guaranteeing it is always loaded.
