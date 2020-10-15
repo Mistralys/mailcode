@@ -37,7 +37,12 @@ class Mailcode_Parser
     * @var Mailcode_Commands
     */
     protected $commands;
-    
+
+    /**
+     * @var Mailcode_Commands_Command_Type_Opening[]
+     */
+    protected $stack = array();
+
     public function __construct(Mailcode $mailcode)
     {
         $this->mailcode = $mailcode;
@@ -123,13 +128,29 @@ class Mailcode_Parser
             $match->getMatchedString()
         );
         
-        if($cmd->isValid())
+        if(!$cmd->isValid())
         {
-            $collection->addCommand($cmd);
+            $collection->addInvalidCommand($cmd);
             return;
         }
-        
-        $collection->addInvalidCommand($cmd);
+
+        $collection->addCommand($cmd);
+
+        // Set the command's parent from the stack, if any is present.
+        if(!empty($this->stack))
+        {
+            $cmd->setParent($this->stack[array_key_last($this->stack)]);
+        }
+
+        // Handle opening and closing commands, adding and removing from the stack.
+        if($cmd instanceof Mailcode_Commands_Command_Type_Opening)
+        {
+            $this->stack[] = $cmd;
+        }
+        else if($cmd instanceof Mailcode_Commands_Command_Type_Closing)
+        {
+            array_pop($this->stack);
+        }
     }
     
    /**

@@ -104,6 +104,11 @@ abstract class Mailcode_Commands_Command
      */
     protected $translationParams = array();
 
+    /**
+     * @var Mailcode_Commands_Command|NULL
+     */
+    protected $parent = null;
+
     public function __construct(string $type='', string $paramsString='', string $matchedText='')
     {
         $this->type = $type;
@@ -118,6 +123,28 @@ abstract class Mailcode_Commands_Command
     protected function init() : void
     {
         
+    }
+
+   /**
+    * Sets the command's parent opening command, if any.
+    * NOTE: This is set automatically by the parser, and
+    * should not be called manually.
+    *
+    * @param Mailcode_Commands_Command $command
+    */
+    public function setParent(Mailcode_Commands_Command $command) : void
+    {
+        $this->parent = $command;
+    }
+
+    public function hasParent() : bool
+    {
+        return isset($this->parent);
+    }
+
+    public function getParent() : ?Mailcode_Commands_Command
+    {
+        return $this->parent;
     }
     
    /**
