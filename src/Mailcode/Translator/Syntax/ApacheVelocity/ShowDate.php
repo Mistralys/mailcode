@@ -23,7 +23,13 @@ use AppUtils\ConvertHelper;
 class Mailcode_Translator_Syntax_ApacheVelocity_ShowDate extends Mailcode_Translator_Syntax_ApacheVelocity implements Mailcode_Translator_Command_ShowDate
 {
     const ERROR_UNKNOWN_DATE_FORMAT_CHARACTER = 55501;
-    
+
+   /**
+    * The date format used in the date variable. This is used to convert
+    * the native date to the format specified in the variable command.
+    */
+    const DEFAULT_INTERNAL_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
+
    /**
     * @var string[]string
     */
@@ -41,16 +47,24 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ShowDate extends Mailcode_Transl
         '/' => '/',
         ' ' => ' '
     );
-    
+
     public function translate(Mailcode_Commands_Command_ShowDate $command): string
     {
+        $internalFormat = $command->getTranslationParam('internal_format');
+
+        if(empty($internalFormat))
+        {
+            $internalFormat = self::DEFAULT_INTERNAL_FORMAT;
+        }
+
         return sprintf(
-            '${date.format("%s", $date.toDate("yyyy-MM-dd HH:mm:ss.SSS", $%s))}',
+            '${date.format("%s", $date.toDate("%s", $%s))}',
             $this->translateFormat($command->getFormatString()),
+            $internalFormat,
             ltrim($command->getVariableName(), '$')
         );
     }
-    
+
     private function translateFormat(string $formatString) : string
     {
         $chars = ConvertHelper::string2array($formatString);
