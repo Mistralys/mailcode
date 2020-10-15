@@ -531,3 +531,43 @@ Commands that require these tools:
   - ElseIf Empty / ElseIf Not Empty (StringUtils)
 
 If these tools are not available, these commands will throw errors if they are used in a template.
+
+#### Configuring date formats
+
+When working with dates, the generated velocity statement will assume the date to be provided in the default internal format:
+
+```
+yyyy-MM-dd'T'HH:mm:ss.SSSXXX
+```  
+
+If the variable source data does not match this format, the date commands will fail. 
+
+To change this, the internal format can be specified on a per-command basis, using translation parameters:
+
+```php
+$var = Mailcode_Factory::showDate('ORDER.DATE');
+$var->setTranslationParam('internal_format', 'yyyy-MM-dd');
+```
+
+The translator will automatically use the specified format instead.
+
+#### Configuring date formats via Safeguard
+
+To adjust the format of dates in a safeguarded string, the shortest way is to set the translation parameter for relevant date variables.
+
+```php
+// Create the translator and the safeguard
+$mailcode = Mailcode::create();
+$syntax = $mailcode->createTranslator()->createSyntax('ApacheVelocity');
+$safeguard = Mailcode::create()->createSafeguard($sourceString);
+
+// Configure all date commands, as needed
+$dateCommands = $safeguard->getCollection()->getShowDateCommands();
+foreach($dateCommands as $dateCommand)
+{
+    $dateCommand->setTranslationParam('internal_format', $internalFormat);
+}
+
+// Translate the string
+$result = $syntax->translateSafeguard($safeguard);
+```
