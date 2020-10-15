@@ -244,6 +244,14 @@ class Mailcode_Collection
         return $this->getCommandsByClass(Mailcode_Commands_Command_ShowVariable::class);
     }
 
+    /**
+     * @return Mailcode_Commands_Command_For[]
+     */
+    public function getForCommands()
+    {
+        return $this->getCommandsByClass(Mailcode_Commands_Command_For::class);
+    }
+
    /**
     * Retrieves only show date commands in the collection, if any.
     *
