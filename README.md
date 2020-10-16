@@ -12,13 +12,13 @@ All commands follow the same structure.
 
 Parameterless:
 
-```
+```json
 {command}
 ```
 
 With parameters:
 
-```
+```json
 {command subtype: parameters}
 ```
 
@@ -38,7 +38,7 @@ Note: When using the Factory to create commands, this is done automatically.
 
 ### Display variable values
 
-```
+```json
 {showvar: $CUSTOMER.NAME}
 ```
 
@@ -46,13 +46,13 @@ Note: When using the Factory to create commands, this is done automatically.
 
 Using the default date and time settings for the current locale:
 
-```
+```json
 {showdate: $ORDER.DATE}
 ```
 
 With a custom date/time format:
 
-```
+```json
 {showdate: $ORDER.DATE "d/m/Y"}
 ```
 
@@ -60,7 +60,7 @@ Also see the section on date formats for details on how to specify date and time
 
 ### Display a text snippet
 
-```
+```json
 {showsnippet: $snippet_name}
 ```
 
@@ -68,19 +68,19 @@ Also see the section on date formats for details on how to specify date and time
 
 With a string value:
 
-```
+```json
 {setvar: $CUSTOMER.NAME = "value"}
 ```
 
 With an arithmetic operation:
 
-```
+```json
 {setvar: $AMOUNT = 45 * 2}
 ```
 
 The equals sign is implied, so it can be omitted:
 
-```
+```json
 {setvar: $AMOUNT 45 * 2}
 ```
 
@@ -88,7 +88,7 @@ The equals sign is implied, so it can be omitted:
 
 #### Variable-based conditions
 
-```
+```json
 {if variable: $CUSTOMER.NAME == "John"}
     Hi, John.
 {elseif variable: $CUSTOMER.NAME == "Jack"}
@@ -100,7 +100,7 @@ The equals sign is implied, so it can be omitted:
 
 Checking if a variable does not exist, or is empty:
 
-```
+```json
 {if empty: $CUSTOMER.NAME}
     Customer name is empty.
 {end}
@@ -108,7 +108,7 @@ Checking if a variable does not exist, or is empty:
 
 Checking if a variable exists and is not empty:
 
-```
+```json
 {if not-empty: $CUSTOMER.NAME}
     {showvar: $CUSTOMER.NAME}
 {end}
@@ -118,19 +118,19 @@ Checking if a variable exists and is not empty:
 
 Checking if a variable value contains a string:
 
-```
+```json
 {if contains: $PRODUCT.NAME "Search term"}
 ```
 
 Making the search case insensitive:
 
-```
+```json
 {if contains: $PRODUCT.NAME "Search term" insensitive:}
 ```
 
 Searching for multiple terms (applied if any of the terms is found):
 
-```
+```json
 {if contains: $PRODUCT.NAME "Term 1" "Term 2" "Term 3"}
 ```
 
@@ -138,19 +138,19 @@ Searching for multiple terms (applied if any of the terms is found):
 
 Checking if a variable value starts with a specific string:
 
-```
+```json
 {if begins-with: $PRODUCT.NAME "Search"}
 ```
 
 Or checking if it ends with a specific string:
 
-```
+```json
 {if ends-with: $PRODUCT.NAME "term"}
 ```
 
 Both can be made case insensitive:
 
-```
+```json
 {if begins-with: $PRODUCT.NAME "Search" insensitive:}
 ```
 
@@ -158,7 +158,7 @@ Both can be made case insensitive:
 
 Without subtype, the IF condition is not validated, and will be passed through as-is to the translation backend.
 
-```
+```json
 {if: 6 + 2 == 8}
     It means 8.
 {end}
@@ -170,7 +170,7 @@ Several conditions can be combined within the same command using the `and:` and 
 
 Using AND:
 
-```
+```json
 {if variable: $ORDER.MONTH == 8 and contains: $ORDER.TYPE "new_customer"}
     New customer order in August.
 {end}
@@ -178,13 +178,13 @@ Using AND:
 
 Using OR:
 
-```
+```json
 {if not-empty: $CUSTOMER.POSTCODE or variable: $CUSTOMER.USE_INVOICE == "true"}
 ```
 
 ### Loops
 
-```
+```json
 {for: $NAME in $CUSTOMER.NAMES}
     {showvar: $NAME}
 {end}
@@ -194,7 +194,7 @@ Using OR:
 
 Comments do not have to be quoted, but can be.
 
-```
+```json
 {comment: This is a comment.}
 {comment: "This is a quoted comment."}
 ```
@@ -318,7 +318,7 @@ $result = $safeguard->makeWhole($filterText);
 
 By default, the placeholders use `__` (double undserscore) as delimiters, for example: `__0001__`. If your text processing can affect underscores, the delimiter characters can be adjusted:
 
-```php 
+```php
 $safeguard = Mailcode::create()->createSafeguard($text);
 
 $safeguard->setDelimiter('%%');
@@ -351,7 +351,7 @@ By default, when using the safeguard's `makeWhole` method, all command placehold
 
 Creating a formatting instance, using a safeguard:
 
-```
+```php
 $safeguard = Mailcode::create()->createSafeguard($text);
 
 $formatting = $safeguard->createFormatting($safeguard->makeSafe());
@@ -370,7 +370,7 @@ While it is not possible to select several replacers, they can be freely combine
 
 The methods to add formatters reflect their type:
 
-```
+```php
 $formatting->replaceWithHTMLHighlighting();
 $formatting->formatWithMarkedVariables();
 ```
@@ -379,7 +379,7 @@ $formatting->formatWithMarkedVariables();
 
 The HTML syntax highlighter will add highlighting to all commands in an intelligent way. Commands will not be highlighted if they are used in HTML tag attributes or nested in tags where adding the highlighting markup would break the HTML structure.
 
-```
+```php
 // choose to replace commands with syntax highlighted commands
 $formatting->replaceWithHTMLHighlighting();
 
@@ -392,7 +392,7 @@ This will add the highlighting markup, but the necessary CSS styles must also be
 
 By default, commands will not be highlighted within the `<style>` and `<script>` tags. Additional tags can easily be added to this list to customize it for your needs:
 
-```
+```php
 // Get the formatter instance
 $formatter = $formatting->replaceWithHTMLHighlighting();
 
@@ -407,7 +407,7 @@ In this example, commands nested in `<footer>` tags will not be highlighted.
 
 NOTE: The excluded tag check goes up the whole tag nesting chain, which means that the following command would not be highlighted either, since it is contained in a tag that is nested within the `<footer>` tag:
 
-```
+```html
 <footer>
 	<p>
 		<b>{showvar: $FOO}</b>
@@ -427,7 +427,7 @@ There are two way to do this:
 
 Simply ensure that the stylesheet file `css/highlight.css` of the package is loaded. This requires knowing the exact URL to the package's vendor folder.
 
-```
+```php
 <link rel="stylesheet" media="all" src="/vendor/mistralys/mailcode/css/highlight.css">
 ```
 
@@ -437,39 +437,76 @@ The Styler utility class has a number of methods all around the CSS.
 
 Creating/getting the styler instance: 
 
-```
+```php
 $styler = $mailcode->createStyler();
 ```
 
 Getting the raw CSS code without the `<style>` tag, for example to use in a compiled stylesheet file:
 
-```
+```php
 $css = $styler->getCSS();
 ```
 
 Retrieving the CSS including the `<style>` tag, for example to add it inline in a page:
 
-```
+```php
 $styleTag = $styler->getStyleTag();
 ```
 
 Retrieving the absolute path on disk to the stylesheet file:
 
-```
+```php
 $path = $styler->getStylesheetPath();
 ```
 
 Retrieving the `<link>` tag programmatically, using the URL to access the `vendor` folder:
 
-```
+```php
 $linkTag = $styler->getStylesheetTag('/url/to/vendor/folder');
 ```
 
 Retrieving the URL to the stylesheet file, using the URL to access the `vendor` folder:
 
-``` 
+```php
 $stylesheetURL = $styler->getStylesheetURL('/url/to/vendor/folder');
 ```
+
+### Highlighting variables in the final document
+
+The "MarkVariables" highlighter allows highlighting (not syntax highlighting) all variable type commands, even once they have been processed by the mail preprocessor. This is handy when testing, to quickly identify all places in an HTML document where variables are used.
+
+```php
+$safeguard = Mailcode::create()->createSafeguard($htmlString);
+$formatting = $safeguard->createFormatting($safeguard->makeSafe());
+
+// Get the formatter instance
+$formatter = $formatting->formatWithMarkedVariables();
+```
+
+Like the syntax highlighter, this will only highlight variables in valid contexts.
+
+NOTE: This can be combined with any of the other formatters, like the syntax highlighter.
+
+#### Load styles via style tag
+
+The necessary style tag can be retrieved using the `getStyleTag` method:
+
+```php
+$styles = $formatter->getStyleTag();
+```
+
+This then only has to be added to the target document.
+
+#### Integrate styles inline
+
+For HTML mailings, or cases where the styles cannot be easily injected, the inline mode will automatically add the necessary styles to every command instance.
+
+Simply enable the inline mode:
+
+```php
+$formatter->makeInline();
+```
+
 
 ## Translation to other syntaxes
 
@@ -515,7 +552,7 @@ The following tools have to be enabled in the Velocity templates:
 
 These tools can be added to the context of templates like this:
 
-```
+```javascript
 context.add("date", new DateTool());
 context.add("esc", new EscapeTool());
 context.put("StringUtils", new StringUtils());
