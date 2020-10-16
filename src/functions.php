@@ -38,7 +38,9 @@ function init() : void
     }
     
     $installFolder = realpath(__DIR__.'/../');
-    
+
+    define('MAILCODE_INSTALL_FOLDER', $installFolder);
+
     // Register the classes as a localization source,
     // so they can be found, and use the bundled localization
     // files.
