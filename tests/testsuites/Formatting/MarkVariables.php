@@ -185,4 +185,53 @@ final class Formatting_MarkVariablesTests extends MailcodeTestCase
         
         $this->addToAssertionCount(1);
     }
+
+    /**
+     * Ensure that the switch to inline styles works as intended.
+     */
+    public function test_inline() : void
+    {
+        $html = '<p>{showvar: $FOO.BAR}</p>';
+
+        $parser = Mailcode::create()->getParser();
+        $safeguard = $parser->createSafeguard($html);
+        $safe = $safeguard->makeSafe();
+
+        $formatting = $safeguard->createFormatting($safe);
+        $formatter = $formatting->formatWithMarkedVariables();
+
+        $formatter->makeInline();
+
+        $highlighted = $formatting->toString();
+
+        $expected = sprintf('<p><span style="background:#fffd71;border-radius:4px;padding:0px 2px;">{showvar: $FOO.BAR}</span></p>');
+
+        $this->assertEquals($expected, $highlighted);
+    }
+
+    public function test_getCSS() : void
+    {
+        $parser = Mailcode::create()->getParser();
+        $safeguard = $parser->createSafeguard("");
+        $formatting = $safeguard->createFormatting("");
+        $formatter = $formatting->formatWithMarkedVariables();
+
+        $this->assertEquals(
+            FileHelper::readContents(MAILCODE_INSTALL_FOLDER.'/css/marked-variables.css'),
+            $formatter->getCSS()
+        );
+    }
+
+    public function test_getStyleTag() : void
+    {
+        $parser = Mailcode::create()->getParser();
+        $safeguard = $parser->createSafeguard("");
+        $formatting = $safeguard->createFormatting("");
+        $formatter = $formatting->formatWithMarkedVariables();
+
+        $this->assertEquals(
+            '<style>'.FileHelper::readContents(MAILCODE_INSTALL_FOLDER.'/css/marked-variables.css').'</style>',
+            $formatter->getStyleTag()
+        );
+    }
 }
