@@ -1,0 +1,9 @@
+.mailcode-marked-variable{
+    background:#fffd71;
+    border-radius:4px;
+    padding:0px 2px;
+}
+
+.mailcode-marked-variable:hover{
+    background:#ffdf00;
+}
