@@ -25,7 +25,27 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity_Base_AbstractIf extends
     
     abstract protected function getCommandTemplate() : string;
 
-    abstract protected function translateBody(Mailcode_Commands_IfBase $command) : string;
+    protected function getIfType(Mailcode_Commands_IfBase $command) : string
+    {
+        $parts = explode('_', get_class($command));
+
+        return array_pop($parts);
+    }
+
+    protected function translateBody(Mailcode_Commands_IfBase $command) : string
+    {
+        // The command's getID() method will return "If" for all flavors
+        // of the command. We use a custom method to determine the actual
+        // IF type.
+        $method = 'translate'.$this->getIfType($command);
+
+        if(method_exists($this, $method))
+        {
+            return strval($this->$method($command));
+        }
+
+        return '';
+    }
     
     protected function _translate(Mailcode_Commands_IfBase $command): string
     {

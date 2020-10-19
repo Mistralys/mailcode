@@ -30,46 +30,6 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ElseIf extends Mailcode_Translat
         return $this->_translate($command);
     }
     
-    protected function translateBody(Mailcode_Commands_IfBase $command) : string
-    {
-        if($command instanceof Mailcode_Commands_Command_ElseIf_Command)
-        {
-            return $this->translateCommand($command);
-        }
-        
-        if($command instanceof Mailcode_Commands_Command_ElseIf_Variable)
-        {
-            return $this->translateVariable($command);
-        }
-        
-        if($command instanceof Mailcode_Commands_Command_ElseIf_Contains)
-        {
-            return $this->translateContains($command);
-        }
-        
-        if($command instanceof Mailcode_Commands_Command_ElseIf_Empty)
-        {
-            return $this->translateEmpty($command);
-        }
-        
-        if($command instanceof Mailcode_Commands_Command_ElseIf_NotEmpty)
-        {
-            return $this->translateNotEmpty($command);
-        }
-        
-        if($command instanceof Mailcode_Commands_Command_ElseIf_BeginsWith)
-        {
-            return $this->translateBeginsWith($command);
-        }
-        
-        if($command instanceof Mailcode_Commands_Command_ElseIf_EndsWith)
-        {
-            return $this->translateEndsWith($command);
-        }
-        
-        return '';
-    }
-    
     protected function translateBeginsWith(Mailcode_Commands_Command_ElseIf_BeginsWith $command) : string
     {
         return $this->_translateSearch(
