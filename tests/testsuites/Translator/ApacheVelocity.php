@@ -67,7 +67,7 @@ ${CUSTOMER.CUSTOMER_ID}
     {
         $subject = '{showdate: $FOO.BAR "d.m.Y"}';
         $internalFormat = 'yyyy-MM-dd';
-        $expected = '${date.format("d.M.yyyy", $date.toDate("'.$internalFormat.'", $FOO.BAR))}';
+        $expected = '${date.format("dd.MM.yyyy", $date.toDate("'.$internalFormat.'", $FOO.BAR))}';
 
         $syntax = $this->translator->createSyntax('ApacheVelocity');
         $safeguard = Mailcode::create()->createSafeguard($subject);
