@@ -12,13 +12,13 @@ All commands follow the same structure.
 
 Parameterless:
 
-```json
+```
 {command}
 ```
 
 With parameters:
 
-```json
+```
 {command subtype: parameters}
 ```
 
@@ -38,7 +38,7 @@ Note: When using the Factory to create commands, this is done automatically.
 
 ### Display variable values
 
-```json
+```
 {showvar: $CUSTOMER.NAME}
 ```
 
@@ -46,13 +46,13 @@ Note: When using the Factory to create commands, this is done automatically.
 
 Using the default date and time settings for the current locale:
 
-```json
+```
 {showdate: $ORDER.DATE}
 ```
 
 With a custom date/time format:
 
-```json
+```
 {showdate: $ORDER.DATE "d/m/Y"}
 ```
 
@@ -60,7 +60,7 @@ Also see the section on date formats for details on how to specify date and time
 
 ### Display a text snippet
 
-```json
+```
 {showsnippet: $snippet_name}
 ```
 
@@ -68,19 +68,19 @@ Also see the section on date formats for details on how to specify date and time
 
 With a string value:
 
-```json
+```
 {setvar: $CUSTOMER.NAME = "value"}
 ```
 
 With an arithmetic operation:
 
-```json
+```
 {setvar: $AMOUNT = 45 * 2}
 ```
 
 The equals sign is implied, so it can be omitted:
 
-```json
+```
 {setvar: $AMOUNT 45 * 2}
 ```
 
@@ -88,7 +88,7 @@ The equals sign is implied, so it can be omitted:
 
 #### Variable-based conditions
 
-```json
+```
 {if variable: $CUSTOMER.NAME == "John"}
     Hi, John.
 {elseif variable: $CUSTOMER.NAME == "Jack"}
@@ -100,7 +100,7 @@ The equals sign is implied, so it can be omitted:
 
 Checking if a variable does not exist, or is empty:
 
-```json
+```
 {if empty: $CUSTOMER.NAME}
     Customer name is empty.
 {end}
@@ -108,7 +108,7 @@ Checking if a variable does not exist, or is empty:
 
 Checking if a variable exists and is not empty:
 
-```json
+```
 {if not-empty: $CUSTOMER.NAME}
     {showvar: $CUSTOMER.NAME}
 {end}
@@ -118,19 +118,19 @@ Checking if a variable exists and is not empty:
 
 Checking if a variable value contains a string:
 
-```json
+```
 {if contains: $PRODUCT.NAME "Search term"}
 ```
 
 Making the search case insensitive:
 
-```json
+```
 {if contains: $PRODUCT.NAME "Search term" insensitive:}
 ```
 
 Searching for multiple terms (applied if any of the terms is found):
 
-```json
+```
 {if contains: $PRODUCT.NAME "Term 1" "Term 2" "Term 3"}
 ```
 
@@ -138,19 +138,19 @@ Searching for multiple terms (applied if any of the terms is found):
 
 Checking if a variable value starts with a specific string:
 
-```json
+```
 {if begins-with: $PRODUCT.NAME "Search"}
 ```
 
 Or checking if it ends with a specific string:
 
-```json
+```
 {if ends-with: $PRODUCT.NAME "term"}
 ```
 
 Both can be made case insensitive:
 
-```json
+```
 {if begins-with: $PRODUCT.NAME "Search" insensitive:}
 ```
 
@@ -158,7 +158,7 @@ Both can be made case insensitive:
 
 Without subtype, the IF condition is not validated, and will be passed through as-is to the translation backend.
 
-```json
+```
 {if: 6 + 2 == 8}
     It means 8.
 {end}
@@ -170,7 +170,7 @@ Several conditions can be combined within the same command using the `and:` and 
 
 Using AND:
 
-```json
+```
 {if variable: $ORDER.MONTH == 8 and contains: $ORDER.TYPE "new_customer"}
     New customer order in August.
 {end}
@@ -178,13 +178,13 @@ Using AND:
 
 Using OR:
 
-```json
+```
 {if not-empty: $CUSTOMER.POSTCODE or variable: $CUSTOMER.USE_INVOICE == "true"}
 ```
 
 ### Loops
 
-```json
+```
 {for: $NAME in $CUSTOMER.NAMES}
     {showvar: $NAME}
 {end}
@@ -194,7 +194,7 @@ Using OR:
 
 Comments do not have to be quoted, but can be.
 
-```json
+```
 {comment: This is a comment.}
 {comment: "This is a quoted comment."}
 ```
