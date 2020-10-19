@@ -110,9 +110,8 @@ class Mailcode_Parser
     protected function processMatch(Mailcode_Parser_Match $match, Mailcode_Collection $collection) : void
     {
         $name = $match->getName();
-        
-        if(!$this->commands->nameExists($name))
-        {
+
+        if (!$this->commands->nameExists($name)) {
             $collection->addErrorMessage(
                 $match->getMatchedString(),
                 t('No command found with the name %1$s.', $name),
@@ -120,22 +119,26 @@ class Mailcode_Parser
             );
             return;
         }
-        
+
         $cmd = $this->commands->createCommand(
             $this->commands->getIDByName($name),
             $match->getType(),
             $match->getParams(),
             $match->getMatchedString()
         );
-        
-        if(!$cmd->isValid())
-        {
+
+        if (!$cmd->isValid()) {
             $collection->addInvalidCommand($cmd);
             return;
         }
 
         $collection->addCommand($cmd);
 
+        $this->handleNesting($cmd);
+    }
+
+    private function handleNesting(Mailcode_Commands_Command $cmd) : void
+    {
         // Set the command's parent from the stack, if any is present.
         if(!empty($this->stack))
         {
