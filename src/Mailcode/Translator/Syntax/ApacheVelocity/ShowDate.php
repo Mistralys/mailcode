@@ -34,8 +34,10 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ShowDate extends Mailcode_Transl
     * @var string[]string
     */
     private $charTable = array(
-        'd' => 'd',
-        'm' => 'M',
+        'd' => 'dd',
+        'j' => 'd',
+        'm' => 'MM',
+        'n' => 'M',
         'Y' => 'yyyy',
         'y' => 'yy',
         'H' => 'H',

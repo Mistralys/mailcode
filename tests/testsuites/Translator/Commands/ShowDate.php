@@ -13,17 +13,17 @@ final class Translator_Velocity_ShowDateTests extends VelocityTestCase
             array(
                 'label' => 'Show date, default format',
                 'mailcode' => Mailcode_Factory::showDate('FOO.BAR'),
-                'expected' => '${date.format("yyyy/M/d", $date.toDate("'.$defaultFormat.'", $FOO.BAR))}'
+                'expected' => '${date.format("yyyy/MM/dd", $date.toDate("'.$defaultFormat.'", $FOO.BAR))}'
             ),
             array(
                 'label' => 'Show date, german format',
                 'mailcode' => Mailcode_Factory::showDate('FOO.BAR', 'd.m.Y H:i:s'),
-                'expected' => '${date.format("d.M.yyyy H:m:s", $date.toDate("'.$defaultFormat.'", $FOO.BAR))}'
+                'expected' => '${date.format("dd.MM.yyyy H:m:s", $date.toDate("'.$defaultFormat.'", $FOO.BAR))}'
             ),
             array(
                 'label' => 'Show date, short year format',
                 'mailcode' => Mailcode_Factory::showDate('FOO.BAR', 'd.m.y'),
-                'expected' => '${date.format("d.M.yy", $date.toDate("'.$defaultFormat.'", $FOO.BAR))}'
+                'expected' => '${date.format("dd.MM.yy", $date.toDate("'.$defaultFormat.'", $FOO.BAR))}'
             )
         );
         
@@ -40,6 +40,6 @@ final class Translator_Velocity_ShowDateTests extends VelocityTestCase
 
         $result = $syntax->translateCommand($var);
 
-        $this->assertEquals('${date.format("d.M.yyyy", $date.toDate("yyyy-MM-dd", $FOO.BAR))}', $result);
+        $this->assertEquals('${date.format("dd.MM.yyyy", $date.toDate("yyyy-MM-dd", $FOO.BAR))}', $result);
     }
 }
