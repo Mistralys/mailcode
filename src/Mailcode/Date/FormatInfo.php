@@ -74,8 +74,10 @@ class Mailcode_Date_FormatInfo
     private function initCharacters() : void
     {
         $chars = array(
-            array(self::CHARTYPE_DATE, 'd', t('Day of the month, 2 digits with leading zeros')),
+            array(self::CHARTYPE_DATE, 'd', t('Day of the month, with leading zeros')),
+            array(self::CHARTYPE_DATE, 'j', t('Day of the month, without leading zeros')),
             array(self::CHARTYPE_DATE, 'm', t('Month number, with leading zeros')),
+            array(self::CHARTYPE_DATE, 'n', t('Month number, without leading zeros')),
             array(self::CHARTYPE_DATE, 'Y', t('Year, 4 digits')),
             array(self::CHARTYPE_DATE, 'y', t('Year, 2 digits')),
             
