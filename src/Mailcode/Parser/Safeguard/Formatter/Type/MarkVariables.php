@@ -50,7 +50,7 @@ class Mailcode_Parser_Safeguard_Formatter_Type_MarkVariables extends Mailcode_Pa
     );
 
     /**
-     * @var bool
+     * @var string
      */
     private $templateMode = self::TEMPLATE_MODE_CLASS;
 
