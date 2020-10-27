@@ -123,15 +123,24 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity_Base_AbstractIf extends
         {
             return '';
         }
-        
+
         return $params->getNormalized();
     }
     
     protected function _translateVariable(Mailcode_Variables_Variable $variable, string $comparator, string $value) : string
     {
+        $test = strtolower(trim($value, '"'));
+        $fullName = $variable->getFullName();
+
+        if(in_array($test, array('true', 'false')))
+        {
+            $fullName .= '.toLowerCase()';
+            $value = '"'.$test.'"';
+        }
+
         return sprintf(
             '%s %s %s',
-            $variable->getFullName(),
+            $fullName,
             $comparator,
             $value
         );
