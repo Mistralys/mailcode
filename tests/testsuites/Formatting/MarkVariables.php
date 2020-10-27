@@ -204,7 +204,7 @@ final class Formatting_MarkVariablesTests extends MailcodeTestCase
 
         $highlighted = $formatting->toString();
 
-        $expected = sprintf('<p><span style="background:#fffd71;border-radius:4px;padding:0px 2px;">{showvar: $FOO.BAR}</span></p>');
+        $expected = sprintf('<p><span style="background:#fffd71;border-radius:4px;padding:0px 2px;display:inline-block;">{showvar: $FOO.BAR}</span></p>');
 
         $this->assertEquals($expected, $highlighted);
     }
