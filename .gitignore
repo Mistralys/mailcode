@@ -2,6 +2,7 @@ docs/cache
 vendor
 docs/phpstan/output.txt
 composer.lock
+.idea/
 .phpunit.result.cache
 localization/storage.json
 tests/assets/files/test-highlight-output.html
