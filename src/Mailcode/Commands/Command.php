@@ -25,12 +25,15 @@ abstract class Mailcode_Commands_Command
     const ERROR_MISSING_VALIDATION_METHOD = 46003;
     const ERROR_MISSING_TYPE_INTERFACE = 46004;
     const ERROR_LOGIC_COMMANDS_NOT_SUPPORTED = 46005;
+    const ERROR_URL_ENCODING_NOT_SUPPORTED = 46006;
     
     const VALIDATION_MISSING_PARAMETERS = 48301;
     const VALIDATION_ADDONS_NOT_SUPPORTED = 48302;
     const VALIDATION_ADDON_NOT_SUPPORTED = 48303;
     const VALIDATION_UNKNOWN_COMMAND_NAME = 48304;
     const VALIDATION_INVALID_PARAMS_STATEMENT = 48305;
+
+    const META_URL_ENCODING = 'url_encoding';
 
    /**
     * @var string
@@ -108,6 +111,11 @@ abstract class Mailcode_Commands_Command
      * @var Mailcode_Commands_Command|NULL
      */
     protected $parent = null;
+
+    /**
+     * @var array<string,mixed>
+     */
+    protected $meta;
 
     public function __construct(string $type='', string $paramsString='', string $matchedText='')
     {
@@ -454,6 +462,8 @@ abstract class Mailcode_Commands_Command
     abstract public function requiresParameters() : bool;
     
     abstract public function supportsType() : bool;
+
+    abstract public function supportsURLEncoding() : bool;
     
    /**
     * Whether the command allows using logic keywords like "and:" or "or:"
@@ -574,5 +584,56 @@ abstract class Mailcode_Commands_Command
         }
 
         return null;
+    }
+
+    /**
+     * @param string $name
+     * @param $value
+     * @return $this
+     */
+    public function setMeta(string $name, $value)
+    {
+        $this->meta[$name] = $value;
+        return $this;
+    }
+
+    /**
+     * @param string $name
+     * @return mixed|null
+     */
+    public function getMeta(string $name)
+    {
+        if(isset($this->meta[$name]))
+        {
+            return $this->meta[$name];
+        }
+
+        return null;
+    }
+
+    /**
+     * @param bool $encoding
+     * @return $this
+     */
+    public function setURLEncoding(bool $encoding=true)
+    {
+        if(!$this->supportsURLEncoding())
+        {
+            throw new Mailcode_Exception(
+                'Command does not support URL encoding.',
+                sprintf(
+                    'The command [%s] cannot use URL encoding.',
+                    get_class($this)
+                ),
+                self::ERROR_URL_ENCODING_NOT_SUPPORTED
+            );
+        }
+
+        return $this->setMeta(self::META_URL_ENCODING, $encoding);
+    }
+
+    public function isURLEncoded() : bool
+    {
+        return $this->getMeta(self::META_URL_ENCODING) === true;
     }
 }
