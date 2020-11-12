@@ -58,6 +58,28 @@ With a custom date/time format:
 
 Also see the section on date formats for details on how to specify date and time.
 
+### Display a formatted number
+
+To specify the format for the number, simply write the number `1000` the way you would like to have it formatted. This will be applied to the values accordingly.
+
+```
+{shownumber: $ORDER.PRICE "1,000.00"}
+```
+
+This will use commas as thousands separator, a dot for the decimals, and two decimal positions.
+
+For example, `10` will be displayed as `10.00`, and `5120.4` as `5,120.40`.
+
+#### Zero-Padding
+
+Zero-padding is specified by appending the required number length like this:
+
+```
+{shownumber: $MONTH "1000:##"}
+```
+
+The amount of hashes determines the target length of the number. This example will add a zero-padding of `2`, meaning a `5` will be shown as `05`.
+
 ### Display a text snippet
 
 ```
