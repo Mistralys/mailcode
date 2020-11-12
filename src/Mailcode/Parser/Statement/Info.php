@@ -230,4 +230,22 @@ class Mailcode_Parser_Statement_Info
     {
         return new Mailcode_Parser_Statement_Info_Pruner($this);
     }
+
+    /**
+     * @return Mailcode_Parser_Statement_Tokenizer_Token_Keyword[]
+     */
+    public function getKeywords() : array
+    {
+        $result = array();
+
+        foreach($this->tokens as $token)
+        {
+            if($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_Keyword)
+            {
+                $result[] = $token;
+            }
+        }
+
+        return $result;
+    }
 }
