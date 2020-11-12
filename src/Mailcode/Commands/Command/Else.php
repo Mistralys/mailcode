@@ -34,6 +34,11 @@ class Mailcode_Commands_Command_Else extends Mailcode_Commands_Command implement
     {
         return false;
     }
+
+    public function supportsURLEncoding(): bool
+    {
+        return false;
+    }
     
     public function getDefaultType() : string
     {

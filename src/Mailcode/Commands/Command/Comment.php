@@ -45,7 +45,12 @@ class Mailcode_Commands_Command_Comment extends Mailcode_Commands_Command implem
     {
         return false;
     }
-    
+
+    public function supportsURLEncoding(): bool
+    {
+        return false;
+    }
+
     public function getDefaultType() : string
     {
         return '';
