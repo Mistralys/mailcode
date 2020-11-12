@@ -40,7 +40,7 @@ trait Mailcode_Traits_Commands_Validation_Value
         else
         {
             $this->validationResult->makeError(
-                t('No variable has been specified.'),
+                t('No value has been specified.'),
                 Mailcode_Commands_CommonConstants::VALIDATION_VALUE_MISSING
             );
         }
