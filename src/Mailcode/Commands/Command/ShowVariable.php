@@ -21,6 +21,7 @@ namespace Mailcode;
 class Mailcode_Commands_Command_ShowVariable extends Mailcode_Commands_Command implements Mailcode_Commands_Command_Type_Standalone
 {
     use Mailcode_Traits_Commands_Validation_Variable;
+    use Mailcode_Traits_Commands_Validation_URLEncode;
 
     const VALIDATION_TOO_MANY_PARAMETERS = 69701;
 
@@ -37,6 +38,11 @@ class Mailcode_Commands_Command_ShowVariable extends Mailcode_Commands_Command i
     public function supportsType(): bool
     {
         return false;
+    }
+
+    public function supportsURLEncoding() : bool
+    {
+        return true;
     }
     
     public function getDefaultType() : string
@@ -58,6 +64,7 @@ class Mailcode_Commands_Command_ShowVariable extends Mailcode_Commands_Command i
     {
         return array(
             'variable',
+            'urlencode',
             'no_other_tokens'
         );
     }
@@ -71,7 +78,14 @@ class Mailcode_Commands_Command_ShowVariable extends Mailcode_Commands_Command i
     {
         $tokens = $this->params->getInfo()->getTokens();
 
-        if(count($tokens) > 1)
+        $count = 1;
+
+        if(isset($this->urlencodeToken))
+        {
+            $count = 2;
+        }
+
+        if(count($tokens) > $count)
         {
             $this->validationResult->makeError(
                 t('Unknown parameters found:').' '.

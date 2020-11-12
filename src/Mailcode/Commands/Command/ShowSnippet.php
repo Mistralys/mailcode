@@ -21,6 +21,7 @@ namespace Mailcode;
 class Mailcode_Commands_Command_ShowSnippet extends Mailcode_Commands_Command implements Mailcode_Commands_Command_Type_Standalone
 {
     use Mailcode_Traits_Commands_Validation_Variable;
+    use Mailcode_Traits_Commands_Validation_URLEncode;
     
     public function getName() : string
     {
@@ -36,7 +37,12 @@ class Mailcode_Commands_Command_ShowSnippet extends Mailcode_Commands_Command im
     {
         return false;
     }
-    
+
+    public function supportsURLEncoding() : bool
+    {
+        return true;
+    }
+
     public function getDefaultType() : string
     {
         return '';
@@ -54,7 +60,10 @@ class Mailcode_Commands_Command_ShowSnippet extends Mailcode_Commands_Command im
     
     protected function getValidations() : array
     {
-        return array('variable');
+        return array(
+            'variable',
+            'urlencode'
+        );
     }
     
     public function generatesContent() : bool

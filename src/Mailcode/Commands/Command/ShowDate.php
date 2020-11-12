@@ -21,6 +21,7 @@ namespace Mailcode;
 class Mailcode_Commands_Command_ShowDate extends Mailcode_Commands_Command implements Mailcode_Commands_Command_Type_Standalone
 {
     use Mailcode_Traits_Commands_Validation_Variable;
+    use Mailcode_Traits_Commands_Validation_URLEncode;
 
     const VALIDATION_NOT_A_FORMAT_STRING = 55401;
     
@@ -28,7 +29,7 @@ class Mailcode_Commands_Command_ShowDate extends Mailcode_Commands_Command imple
     * The date format string.
     * @var string
     */
-    private $formatString = "Y/m/d";
+    private $formatString;
     
    /**
     * @var Mailcode_Date_FormatInfo
@@ -65,6 +66,11 @@ class Mailcode_Commands_Command_ShowDate extends Mailcode_Commands_Command imple
         return false;
     }
 
+    public function supportsURLEncoding() : bool
+    {
+        return true;
+    }
+
     public function generatesContent() : bool
     {
         return true;
@@ -74,7 +80,8 @@ class Mailcode_Commands_Command_ShowDate extends Mailcode_Commands_Command imple
     {
         return array(
             'variable',
-            'check_format'
+            'check_format',
+            'urlencode'
         );
     }
 
@@ -88,39 +95,32 @@ class Mailcode_Commands_Command_ShowDate extends Mailcode_Commands_Command imple
     
     protected function validateSyntax_check_format() : void
     {
-         $token = $this->params->getInfo()->getTokenByIndex(1);
-         
-         // no format specified? Use the default one.
-         if($token === null)
-         {
-             return;
-         }
-         
-         if($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral)
-         {
-             $format = $token->getText();
-             
-             $result = $this->formatInfo->validateFormat($format);
-             
-             if($result->isValid())
-             {
-                $this->formatString = $format;
-             }
-             else
-             {
-                 $this->validationResult->makeError(
-                     $result->getErrorMessage(), 
-                     $result->getCode()
-                 );
-             }
-             
-             return;
-         }
-         
-         $this->validationResult->makeError(
-            t('The second parameter must be a date format string.'),
-            self::VALIDATION_NOT_A_FORMAT_STRING
-         );
+        $tokens = $this->params->getInfo()->getStringLiterals();
+
+        // no format specified? Use the default one.
+        if(empty($tokens))
+        {
+            return;
+        }
+
+        $token = array_pop($tokens);
+        $this->parseFormatString($token->getText());
+    }
+
+    private function parseFormatString(string $format) : void
+    {
+        $result = $this->formatInfo->validateFormat($format);
+
+        if($result->isValid())
+        {
+            $this->formatString = $format;
+            return;
+        }
+
+        $this->validationResult->makeError(
+            $result->getErrorMessage(),
+            $result->getCode()
+        );
     }
     
    /**
