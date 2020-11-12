@@ -24,6 +24,11 @@ abstract class Mailcode_Commands_IfBase extends Mailcode_Commands_Command
     {
         return true;
     }
+
+    public function supportsURLEncoding() : bool
+    {
+        return false;
+    }
     
     public function requiresParameters(): bool
     {
@@ -69,7 +74,10 @@ abstract class Mailcode_Commands_IfBase extends Mailcode_Commands_Command
             'empty',
             'not-empty',
             'begins-with',
-            'ends-with'
+            'ends-with',
+            'bigger-than',
+            'smaller-than',
+            'equals-number'
         );
     }
     
