@@ -24,6 +24,11 @@ final class Translator_Velocity_ShowDateTests extends VelocityTestCase
                 'label' => 'Show date, short year format',
                 'mailcode' => Mailcode_Factory::showDate('FOO.BAR', 'd.m.y'),
                 'expected' => '${date.format("dd.MM.yy", $date.toDate("'.$defaultFormat.'", $FOO.BAR))}'
+            ),
+            array(
+                'label' => 'With URL encoding',
+                'mailcode' => Mailcode_Factory::showDate('FOO.BAR', 'd.m.y')->setURLEncoding(true),
+                'expected' => '${esc.url($date.format("dd.MM.yy", $date.toDate("'.$defaultFormat.'", $FOO.BAR)))}'
             )
         );
         

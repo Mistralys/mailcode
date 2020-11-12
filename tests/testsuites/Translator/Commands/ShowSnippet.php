@@ -11,6 +11,11 @@ final class Translator_Velocity_ShowSnippetTests extends VelocityTestCase
                 'label' => 'Show snippet',
                 'mailcode' => Mailcode_Factory::showSnippet('$snippetname'),
                 'expected' => '${snippetname.replaceAll($esc.newline, "<br/>")}'
+            ),
+            array(
+                'label' => 'Show snippet, with URL encoding',
+                'mailcode' => Mailcode_Factory::showSnippet('$snippetname')->setURLEncoding(true),
+                'expected' => '${esc.url($snippetname.replaceAll($esc.newline, "<br/>"))}'
             )
         );
         
