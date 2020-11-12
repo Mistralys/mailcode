@@ -7,7 +7,7 @@ final class Mailcode_ElseIfTests extends MailcodeTestCase
         $tests = array(
             array(
                 'label' => 'No validation.',
-                'string' => '{if: 1 = 1}{elseif: $FOOBAR * "String" == 6 / 14}{end}',
+                'string' => '{if: 1 == 1}{elseif: $FOOBAR * "String" == 6 / 14}{end}',
                 'valid' => true,
                 'code' => 0
             )

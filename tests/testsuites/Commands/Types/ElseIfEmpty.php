@@ -9,25 +9,25 @@ final class Mailcode_ElseIfEmptyTests extends MailcodeTestCase
         $tests = array(
             array(
                 'label' => 'Empty: No variable specified',
-                'string' => '{if: 1 = 1}{elseif empty: "Value"}{end}',
+                'string' => '{if: 1 == 1}{elseif empty: "Value"}{end}',
                 'valid' => false,
                 'code' => Mailcode_Commands_CommonConstants::VALIDATION_VARIABLE_MISSING
             ),
             array(
                 'label' => 'Empty: Valid statement',
-                'string' => '{if: 1 = 1}{elseif empty: $FOOBAR}{end}',
+                'string' => '{if: 1 == 1}{elseif empty: $FOOBAR}{end}',
                 'valid' => true,
                 'code' => 0
             ),
             array(
                 'label' => 'Not empty: No variable specified',
-                'string' => '{if: 1 = 1}{elseif not-empty: "Value"}{end}',
+                'string' => '{if: 1 == 1}{elseif not-empty: "Value"}{end}',
                 'valid' => false,
                 'code' => Mailcode_Commands_CommonConstants::VALIDATION_VARIABLE_MISSING
             ),
             array(
                 'label' => 'Not empty: Valid statement',
-                'string' => '{if: 1 = 1}{elseif not-empty: $FOOBAR}{end}',
+                'string' => '{if: 1 == 1}{elseif not-empty: $FOOBAR}{end}',
                 'valid' => true,
                 'code' => 0
             )
