@@ -52,6 +52,19 @@ class Mailcode_Factory
         return self::$commandSets->show()->showDate($variableName, $formatString);
     }
 
+    /**
+     * Creates a ShowNumber command, used to display numeric variables
+     * and format the numbers to a specific format.
+     *
+     * @param string $variableName A variable name, with or without the $ sign prepended.
+     * @param string $formatString A number format string, or empty string for default.
+     * @return Mailcode_Commands_Command_ShowNumber
+     */
+    public static function showNumber(string $variableName, string $formatString="") : Mailcode_Commands_Command_ShowNumber
+    {
+        return self::$commandSets->show()->showNumber($variableName, $formatString);
+    }
+
    /**
     * Creates a ShowSnippet command.
     *
@@ -192,6 +205,21 @@ class Mailcode_Factory
         return self::$commandSets->if()->ifBeginsWith($variable, $search, $caseInsensitive);
     }
 
+    public static function ifBiggerThan(string $variable, string $number) : Mailcode_Commands_Command_If_BiggerThan
+    {
+        return self::$commandSets->if()->ifBiggerThan($variable, $number);
+    }
+
+    public static function ifSmallerThan(string $variable, string $number) : Mailcode_Commands_Command_If_SmallerThan
+    {
+        return self::$commandSets->if()->ifSmallerThan($variable, $number);
+    }
+
+    public static function ifVarEqualsNumber(string $variable, string $number) : Mailcode_Commands_Command_If_EqualsNumber
+    {
+        return self::$commandSets->if()->ifVarEqualsNumber($variable, $number);
+    }
+
     public static function ifEndsWith(string $variable, string $search, bool $caseInsensitive=false) : Mailcode_Commands_Command_If_EndsWith
     {
         return self::$commandSets->if()->ifEndsWith($variable, $search, $caseInsensitive);
@@ -211,8 +239,23 @@ class Mailcode_Factory
     {
         return self::$commandSets->if()->ifContains($variable, array($search), $caseInsensitive);
     }
-    
-   /**
+
+    public static function elseIfBiggerThan(string $variable, string $number) : Mailcode_Commands_Command_ElseIf_BiggerThan
+    {
+        return self::$commandSets->elseIf()->elseIfBiggerThan($variable, $number);
+    }
+
+    public static function elseIfSmallerThan(string $variable, string $number) : Mailcode_Commands_Command_ElseIf_SmallerThan
+    {
+        return self::$commandSets->elseIf()->elseIfSmallerThan($variable, $number);
+    }
+
+    public static function elseIfVarEqualsNumber(string $variable, string $number) : Mailcode_Commands_Command_ElseIf_EqualsNumber
+    {
+        return self::$commandSets->elseIf()->elseIfVarEqualsNumber($variable, $number);
+    }
+
+    /**
     * Creates if contains command, with several search terms.
     * 
     * @param string $variable
@@ -290,7 +333,7 @@ class Mailcode_Factory
     {
         return Mailcode_Date_FormatInfo::getInstance();
     }
-    
+
     public static function init() : void
     {
         if(!isset(self::$commandSets))
