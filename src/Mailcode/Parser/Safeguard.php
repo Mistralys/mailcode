@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use AppUtils\ConvertHelper;
+
 /**
  * Command safeguarder: used to replace the mailcode commands
  * in a string with placeholders, to allow safe text transformation
@@ -178,26 +180,64 @@ class Mailcode_Parser_Safeguard
         
         foreach($placeholders as $placeholder)
         {
-            $pos = mb_strpos($string, $placeholder->getOriginalText());
-            
-            if($pos === false)
-            {
-                throw new Mailcode_Exception(
-                    'Placeholder original text not found',
-                    sprintf(
-                        'Tried finding the command string [%s], but it has disappeared.',
-                        $placeholder->getOriginalText()
-                    ),
-                    self::ERROR_PLACEHOLDER_NOT_FOUND
-                );
-            }
-            
-            $before = mb_substr($string, 0, $pos);
-            $after = mb_substr($string, $pos + mb_strlen($placeholder->getOriginalText()));
-            $string = $before.$placeholder->getReplacementText().$after;
+            $string = $this->makePlaceholderSafe($string, $placeholder);
         }
-        
+
+        $this->analyzeURLs($string);
+
         return $string;
+    }
+
+    private function makePlaceholderSafe(string $string, Mailcode_Parser_Safeguard_Placeholder $placeholder) : string
+    {
+        $pos = mb_strpos($string, $placeholder->getOriginalText());
+
+        if($pos === false)
+        {
+            throw new Mailcode_Exception(
+                'Placeholder original text not found',
+                sprintf(
+                    'Tried finding the command string [%s], but it has disappeared.',
+                    $placeholder->getOriginalText()
+                ),
+                self::ERROR_PLACEHOLDER_NOT_FOUND
+            );
+        }
+
+        $before = mb_substr($string, 0, $pos);
+        $after = mb_substr($string, $pos + mb_strlen($placeholder->getOriginalText()));
+
+        return $before.$placeholder->getReplacementText().$after;
+    }
+
+    /**
+     * Detects all URLs in the subject string, and tells all placeholders
+     * that are contained in URLs, that they are in an URL.
+     *
+     * @param string $string
+     */
+    private function analyzeURLs(string $string) : void
+    {
+        $urls = ConvertHelper::createURLFinder($string)->getURLs();
+        $placeholders = $this->getPlaceholders();
+
+        foreach($urls as $url)
+        {
+            foreach($placeholders as $placeholder)
+            {
+                $command = $placeholder->getCommand();
+
+                if(!$command->supportsURLEncoding())
+                {
+                    continue;
+                }
+
+                if(strstr($url, $placeholder->getReplacementText()))
+                {
+                    $command->setURLEncoding(true);
+                }
+            }
+        }
     }
     
    /**
