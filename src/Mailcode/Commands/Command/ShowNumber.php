@@ -18,11 +18,8 @@ namespace Mailcode;
  * @subpackage Commands
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Mailcode_Commands_Command_ShowNumber extends Mailcode_Commands_Command implements Mailcode_Commands_Command_Type_Standalone
+class Mailcode_Commands_Command_ShowNumber extends Mailcode_Commands_ShowBase
 {
-    use Mailcode_Traits_Commands_Validation_Variable;
-    use Mailcode_Traits_Commands_Validation_URLEncode;
-
     const VALIDATION_NOT_A_FORMAT_STRING = 72201;
     const VALIDATION_PADDING_SEPARATOR_OVERFLOW = 72202;
     const VALIDATION_INVALID_FORMAT_NUMBER = 72203;
@@ -53,36 +50,6 @@ class Mailcode_Commands_Command_ShowNumber extends Mailcode_Commands_Command imp
     public function getLabel() : string
     {
         return t('Show number variable');
-    }
-
-    public function supportsType(): bool
-    {
-        return false;
-    }
-
-    public function supportsURLEncoding() : bool
-    {
-        return true;
-    }
-
-    public function getDefaultType() : string
-    {
-        return '';
-    }
-
-    public function requiresParameters(): bool
-    {
-        return true;
-    }
-
-    public function supportsLogicKeywords() : bool
-    {
-        return false;
-    }
-
-    public function generatesContent() : bool
-    {
-        return true;
     }
 
     protected function getValidations() : array

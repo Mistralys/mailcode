@@ -20,7 +20,9 @@ namespace Mailcode;
  * @subpackage Commands
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Mailcode_Commands_Command_ElseIf_Contains extends Mailcode_Commands_Command_ElseIf
+class Mailcode_Commands_Command_ElseIf_Contains
+    extends Mailcode_Commands_Command_ElseIf
+    implements Mailcode_Interfaces_Commands_IfContains
 {
     use Mailcode_Traits_Commands_IfContains;
 }

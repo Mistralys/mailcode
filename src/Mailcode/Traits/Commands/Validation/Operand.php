@@ -20,6 +20,8 @@ namespace Mailcode;
  * @subpackage Validation
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  *
+ * @see Mailcode_Interfaces_Commands_Operand
+ *
  * @property \AppUtils\OperationResult $validationResult
  * @property Mailcode_Parser_Statement_Validator $validator
  */

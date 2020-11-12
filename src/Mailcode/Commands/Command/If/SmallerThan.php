@@ -18,7 +18,9 @@ namespace Mailcode;
  * @subpackage Commands
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Mailcode_Commands_Command_If_SmallerThan extends Mailcode_Commands_Command_If
+class Mailcode_Commands_Command_If_SmallerThan
+    extends Mailcode_Commands_Command_If
+    implements Mailcode_Interfaces_Commands_IfNumber
 {
     use Mailcode_Traits_Commands_IfNumber;
 }

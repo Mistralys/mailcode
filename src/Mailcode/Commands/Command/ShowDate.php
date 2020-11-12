@@ -18,11 +18,8 @@ namespace Mailcode;
  * @subpackage Commands
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Mailcode_Commands_Command_ShowDate extends Mailcode_Commands_Command implements Mailcode_Commands_Command_Type_Standalone
+class Mailcode_Commands_Command_ShowDate extends Mailcode_Commands_ShowBase
 {
-    use Mailcode_Traits_Commands_Validation_Variable;
-    use Mailcode_Traits_Commands_Validation_URLEncode;
-
     const VALIDATION_NOT_A_FORMAT_STRING = 55401;
     
    /**
@@ -44,36 +41,6 @@ class Mailcode_Commands_Command_ShowDate extends Mailcode_Commands_Command imple
     public function getLabel() : string
     {
         return t('Show date variable');
-    }
-
-    public function supportsType(): bool
-    {
-        return false;
-    }
-
-    public function getDefaultType() : string
-    {
-        return '';
-    }
-
-    public function requiresParameters(): bool
-    {
-        return true;
-    }
-
-    public function supportsLogicKeywords() : bool
-    {
-        return false;
-    }
-
-    public function supportsURLEncoding() : bool
-    {
-        return true;
-    }
-
-    public function generatesContent() : bool
-    {
-        return true;
     }
 
     protected function getValidations() : array

@@ -234,7 +234,7 @@ class Mailcode_Parser_Statement_Tokenizer
     {
         $name = rtrim($name, ':').':';
 
-        $token = $this->appendToken('keyword', $name);
+        $token = $this->appendToken('Keyword', $name);
 
         if($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_Keyword)
         {

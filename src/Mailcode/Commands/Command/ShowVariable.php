@@ -18,11 +18,8 @@ namespace Mailcode;
  * @subpackage Commands
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Mailcode_Commands_Command_ShowVariable extends Mailcode_Commands_Command implements Mailcode_Commands_Command_Type_Standalone
+class Mailcode_Commands_Command_ShowVariable extends Mailcode_Commands_ShowBase
 {
-    use Mailcode_Traits_Commands_Validation_Variable;
-    use Mailcode_Traits_Commands_Validation_URLEncode;
-
     const VALIDATION_TOO_MANY_PARAMETERS = 69701;
 
     public function getName() : string
@@ -35,31 +32,6 @@ class Mailcode_Commands_Command_ShowVariable extends Mailcode_Commands_Command i
         return t('Show variable');
     }
     
-    public function supportsType(): bool
-    {
-        return false;
-    }
-
-    public function supportsURLEncoding() : bool
-    {
-        return true;
-    }
-    
-    public function getDefaultType() : string
-    {
-        return '';
-    }
-
-    public function requiresParameters(): bool
-    {
-        return true;
-    }
-    
-    public function supportsLogicKeywords() : bool
-    {
-        return false;
-    }
-    
     protected function getValidations() : array
     {
         return array(
@@ -69,11 +41,6 @@ class Mailcode_Commands_Command_ShowVariable extends Mailcode_Commands_Command i
         );
     }
     
-    public function generatesContent() : bool
-    {
-        return true;
-    }
-
     protected function validateSyntax_no_other_tokens() : void
     {
         $tokens = $this->params->getInfo()->getTokens();

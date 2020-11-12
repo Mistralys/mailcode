@@ -46,4 +46,9 @@ trait Mailcode_Traits_Commands_Validation_URLEncode
             }
         }
     }
+
+    public function getURLEncodeToken() : ?Mailcode_Parser_Statement_Tokenizer_Token_Keyword
+    {
+        return $this->urlencodeToken;
+    }
 }

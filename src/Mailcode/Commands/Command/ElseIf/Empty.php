@@ -18,7 +18,9 @@ namespace Mailcode;
  * @subpackage Commands
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Mailcode_Commands_Command_ElseIf_Empty extends Mailcode_Commands_Command_ElseIf
+class Mailcode_Commands_Command_ElseIf_Empty
+    extends Mailcode_Commands_Command_ElseIf
+    implements Mailcode_Interfaces_Commands_IfEmpty
 {
     use Mailcode_Traits_Commands_IfEmpty;
 }
