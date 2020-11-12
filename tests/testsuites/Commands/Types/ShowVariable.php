@@ -54,10 +54,23 @@ final class Mailcode_ShowVarTests extends MailcodeTestCase
         $this->assertEquals('$foobar', $cmd->getVariableName());
     }
 
+    /**
+     * URL encoding, when set, must automatically add the keyword
+     * to the command. This way it is present when the command is normalized.
+     */
     public function test_urlencode()
     {
         $cmd = Mailcode::create()->parseString('{showvar: $FOO urlencode:}')->getFirstCommand();
 
         $this->assertTrue($cmd->isURLEncoded());
+
+        $cmd = Mailcode::create()->parseString('{showvar: $FOO}')->getFirstCommand();
+        $cmd->setURLEncoding(true);
+
+        $this->assertEquals('{showvar: $FOO urlencode:}', $cmd->getNormalized());
+
+        $cmd->setURLEncoding(false);
+
+        $this->assertEquals('{showvar: $FOO}', $cmd->getNormalized());
     }
 }
