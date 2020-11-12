@@ -39,4 +39,9 @@ class Mailcode_Parser_Statement_Tokenizer_Token_Keyword extends Mailcode_Parser_
     {
         return $this->getKeyword() === 'insensitive:';
     }
+
+    public function isURLEncoded() : bool
+    {
+        return $this->getKeyword() === 'urlencode:';
+    }
 }
