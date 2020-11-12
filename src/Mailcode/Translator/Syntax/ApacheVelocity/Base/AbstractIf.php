@@ -98,6 +98,15 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity_Base_AbstractIf extends
             self::ERROR_CANNOT_GET_KEYWORD_SIGN
         );
     }
+
+    protected function _translateBiggerThan(Mailcode_Variables_Variable $variable, string $value) : string
+    {
+        return sprintf(
+            '!$StringUtils.isEmpty(%1$s) && $number.toNumber($1$s) != null && $number.toNumber(%1$s) > %2$s',
+            $variable->getFullName(),
+            $value
+        );
+    }
     
     protected function _translateEmpty(Mailcode_Variables_Variable $variable, bool $notEmpty) : string
     {

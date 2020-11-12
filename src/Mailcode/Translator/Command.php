@@ -18,7 +18,7 @@ namespace Mailcode;
  * @subpackage Translator
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * 
- * @method string translate($command)
+ * @method string translate(Mailcode_Commands_Command $command)
  */
 abstract class Mailcode_Translator_Command
 {

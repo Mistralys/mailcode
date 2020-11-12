@@ -169,4 +169,40 @@ class Mailcode_Factory_CommandSets_Set_ElseIf extends Mailcode_Factory_CommandSe
         
         throw $this->instantiator->exceptionUnexpectedType('ElseIfNotEmpty', $command);
     }
+
+    public function elseIfBiggerThan(string $variable, string $value) : Mailcode_Commands_Command_ElseIf_BiggerThan
+    {
+        $command = $this->instantiator->buildIfBiggerThan('ElseIf', $variable, $value);
+
+        if($command instanceof Mailcode_Commands_Command_If_BiggerThan)
+        {
+            return $command;
+        }
+
+        throw $this->instantiator->exceptionUnexpectedType('ElseIfBiggerThan', $command);
+    }
+
+    public function elseIfSmallerThan(string $variable, string $value) : Mailcode_Commands_Command_ElseIf_SmallerThan
+    {
+        $command = $this->instantiator->buildIfSmallerThan('ElseIf', $variable, $value);
+
+        if($command instanceof Mailcode_Commands_Command_If_SmallerThan)
+        {
+            return $command;
+        }
+
+        throw $this->instantiator->exceptionUnexpectedType('ElseIfSmallerThan', $command);
+    }
+
+    public function elseIfVarEqualsNumber(string $variable, string $value) : Mailcode_Commands_Command_ElseIf_EqualsNumber
+    {
+        $command = $this->instantiator->buildIfEquals('ElseIf', $variable, $value);
+
+        if($command instanceof Mailcode_Commands_Command_If_Equals)
+        {
+            return $command;
+        }
+
+        throw $this->instantiator->exceptionUnexpectedType('ElseIfEqualsNumber', $command);
+    }
 }

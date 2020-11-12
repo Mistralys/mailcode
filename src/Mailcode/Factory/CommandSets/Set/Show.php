@@ -74,6 +74,40 @@ class Mailcode_Factory_CommandSets_Set_Show extends Mailcode_Factory_CommandSets
         
         throw $this->instantiator->exceptionUnexpectedType('ShowDate', $cmd);
     }
+
+    public function showNumber(string $variableName, string $formatString="") : Mailcode_Commands_Command_ShowNumber
+    {
+        $variableName = $this->instantiator->filterVariableName($variableName);
+
+        $format = '';
+        if(!empty($formatString))
+        {
+            $format = sprintf(
+                ' "%s"',
+                $formatString
+            );
+        }
+
+        $cmd = Mailcode::create()->getCommands()->createCommand(
+            'ShowNumber',
+            '',
+            $variableName.$format,
+            sprintf(
+                '{shownumber: %s%s}',
+                $variableName,
+                $format
+            )
+        );
+
+        $this->instantiator->checkCommand($cmd);
+
+        if($cmd instanceof Mailcode_Commands_Command_ShowNumber)
+        {
+            return $cmd;
+        }
+
+        throw $this->instantiator->exceptionUnexpectedType('ShowNumber', $cmd);
+    }
     
     public function showSnippet(string $snippetName) : Mailcode_Commands_Command_ShowSnippet
     {

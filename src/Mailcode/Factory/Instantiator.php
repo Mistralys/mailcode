@@ -113,7 +113,52 @@ class Mailcode_Factory_Instantiator
     {
         return $this->buildIfSearch($ifType, 'ends-with', $variable, $search, $caseInsensitive);
     }
-    
+
+    private function buildIfNumeric(string $ifType, string $variable, string $value, string $type) : Mailcode_Commands_IfBase
+    {
+        $params = sprintf(
+            '%1$s "%2$s"',
+            '$'.ltrim($variable, '$'),
+            $value
+        );
+
+        return $this->buildIf(
+            $ifType,
+            $params,
+            $type
+        );
+    }
+
+    public function buildIfBiggerThan(string $ifType, string $variable, string $value) : Mailcode_Commands_IfBase
+    {
+        return $this->buildIfNumeric(
+            $ifType,
+            $variable,
+            $value,
+            'bigger-than'
+        );
+    }
+
+    public function buildIfSmallerThan(string $ifType, string $variable, string $value) : Mailcode_Commands_IfBase
+    {
+        return $this->buildIfNumeric(
+            $ifType,
+            $variable,
+            $value,
+            'smaller-than'
+        );
+    }
+
+    public function buildIfEquals(string $ifType, string $variable, string $value) : Mailcode_Commands_IfBase
+    {
+        return $this->buildIfNumeric(
+            $ifType,
+            $variable,
+            $value,
+            'equals-number'
+        );
+    }
+
     private function buildIfSearch(string $ifType, string $subType, string $variable, string $search, bool $caseInsensitive=false) : Mailcode_Commands_IfBase
     {
         $keyword = ' ';
