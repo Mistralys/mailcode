@@ -629,11 +629,20 @@ abstract class Mailcode_Commands_Command
             );
         }
 
-        return $this->setMeta(self::META_URL_ENCODING, $encoding);
+        if($encoding)
+        {
+            $this->params->getInfo()->addURLEncoding();
+        }
+        else
+        {
+            $this->params->getInfo()->removeURLEncoding();
+        }
+
+        return $this;
     }
 
     public function isURLEncoded() : bool
     {
-        return $this->getMeta(self::META_URL_ENCODING) === true;
+        return $this->params->getInfo()->hasURLEncoding();
     }
 }
