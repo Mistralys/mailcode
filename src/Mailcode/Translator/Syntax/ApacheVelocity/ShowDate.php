@@ -53,17 +53,29 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ShowDate extends Mailcode_Transl
     public function translate(Mailcode_Commands_Command_ShowDate $command): string
     {
         $internalFormat = $command->getTranslationParam('internal_format');
+        $varName = ltrim($command->getVariableName(), '$');
+        $javaFormat = $this->translateFormat($command->getFormatString());
 
         if(empty($internalFormat))
         {
             $internalFormat = self::DEFAULT_INTERNAL_FORMAT;
         }
 
+        if($command->isURLEncoded())
+        {
+            return sprintf(
+                '${esc.url($date.format("%s", $date.toDate("%s", $%s)))}',
+                $javaFormat,
+                $internalFormat,
+                $varName
+            );
+        }
+
         return sprintf(
             '${date.format("%s", $date.toDate("%s", $%s))}',
-            $this->translateFormat($command->getFormatString()),
+            $javaFormat,
             $internalFormat,
-            ltrim($command->getVariableName(), '$')
+            $varName
         );
     }
 

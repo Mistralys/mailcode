@@ -22,9 +22,20 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ShowVariable extends Mailcode_Tr
 {
     public function translate(Mailcode_Commands_Command_ShowVariable $command): string
     {
+        $varName = ltrim($command->getVariableName(), '$');
+
+        // Automatically URL escape the variable if it's in an URL.
+        if($command->isURLEncoded())
+        {
+            return sprintf(
+                '${esc.url($%s)}',
+                $varName
+            );
+        }
+
         return sprintf(
             '${%s}',
-            ltrim($command->getVariableName(), '$')
+            $varName
         );
     }
 }
