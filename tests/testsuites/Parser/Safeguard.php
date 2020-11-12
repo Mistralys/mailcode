@@ -1,7 +1,9 @@
 <?php
 
 use Mailcode\Mailcode;
+use Mailcode\Mailcode_Commands_Command;
 use Mailcode\Mailcode_Exception;
+use Mailcode\Mailcode_Factory;
 
 final class Parser_SafeguardTests extends MailcodeTestCase
 {
@@ -203,5 +205,73 @@ final class Parser_SafeguardTests extends MailcodeTestCase
         }
         
         $this->assertEquals('Text with a {showvar: $VAR.NAME} VARIABLE.', $result);
+    }
+
+    /**
+     * Trying to enable URL encoding on a command that does
+     * not support it must trigger an exception.
+     */
+    public function test_url_encoding_unsupported() : void
+    {
+        $command = Mailcode_Factory::ifVarEqualsString('FOO', '==', 'Test');
+
+        try{
+            $command->setURLEncoding(true);
+        }
+        catch(Mailcode_Exception $e)
+        {
+            $this->assertEquals(
+                Mailcode_Commands_Command::ERROR_URL_ENCODING_NOT_SUPPORTED,
+                $e->getCode()
+            );
+
+            return;
+        }
+
+        $this->fail('Should have triggered the expected exception.');
+    }
+
+    /**
+     * When the safeguard detects commands in URLs, the URL encoding
+     * must be automatically turned on.
+     */
+    public function test_auto_url_encoding() : void
+    {
+        $parser = Mailcode::create()->getParser();
+        $original = 'Lorem ipsum dolor http://google.com?var={showvar: $FOO} sit amet.';
+        $safeguard = $parser->createSafeguard($original);
+
+        $text = $safeguard->makeSafe();
+
+        $placeholders = $safeguard->getPlaceholders();
+
+        $this->assertCount(1, $placeholders);
+
+        $placeholder = array_pop($placeholders);
+
+        $this->assertTrue($placeholder->getCommand()->isURLEncoded());
+    }
+
+    /**
+     * When using commands in an URL that do not support URL
+     * encoding, they must be ignored to avoid triggering an
+     * exception.
+     *
+     * @see Mailcode_Parser_Safeguard::analyzeURLs()
+     */
+    public function test_auto_url_encoding_notSupported() : void
+    {
+        $parser = Mailcode::create()->getParser();
+
+        $original = 'Lorem ipsum dolor https://google.com/{setvar: $BAR "Value"}/path sit amet.';
+
+        $safeguard = $parser->createSafeguard($original);
+
+        // This would trigger an exception if the safeguard
+        // tried to enable URL encoding on a non url encode-able
+        // command.
+        $safeguard->makeSafe();
+
+        $this->addToAssertionCount(1);
     }
 }
