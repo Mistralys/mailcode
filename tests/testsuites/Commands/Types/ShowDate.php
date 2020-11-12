@@ -91,4 +91,11 @@ final class Mailcode_ShowDateTests extends MailcodeTestCase
         $this->assertTrue($show->isInLoop());
         $this->assertEquals($for, $show->getLoopCommand());
     }
+
+    public function test_urlencode() : void
+    {
+        $cmd = Mailcode::create()->parseString('{showdate: $FOO urlencode:}')->getFirstCommand();
+
+        $this->assertTrue($cmd->isURLEncoded());
+    }
 }

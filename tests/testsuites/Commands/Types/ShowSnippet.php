@@ -1,5 +1,6 @@
 <?php
 
+use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands_Command;
 use Mailcode\Mailcode_Factory;
 use Mailcode\Mailcode_Commands_CommonConstants;
@@ -44,5 +45,12 @@ final class Mailcode_ShowSnippetTests extends MailcodeTestCase
         
         $this->assertEquals('$foobar', $snippet->getVariable()->getFullName());
         $this->assertEquals('$foobar', $snippet->getVariableName());
+    }
+
+    public function test_urlencode() : void
+    {
+        $cmd = Mailcode::create()->parseString('{showsnippet: $FOO urlencode:}')->getFirstCommand();
+
+        $this->assertTrue($cmd->isURLEncoded());
     }
 }

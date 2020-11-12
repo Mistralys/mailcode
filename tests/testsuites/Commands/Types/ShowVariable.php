@@ -1,5 +1,6 @@
 <?php
 
+use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands_Command;
 use Mailcode\Mailcode_Commands_Command_ShowVariable;
 use Mailcode\Mailcode_Factory;
@@ -51,5 +52,12 @@ final class Mailcode_ShowVarTests extends MailcodeTestCase
         
         $this->assertEquals('$foobar', $cmd->getVariable()->getFullName());
         $this->assertEquals('$foobar', $cmd->getVariableName());
+    }
+
+    public function test_urlencode()
+    {
+        $cmd = Mailcode::create()->parseString('{showvar: $FOO urlencode:}')->getFirstCommand();
+
+        $this->assertTrue($cmd->isURLEncoded());
     }
 }
