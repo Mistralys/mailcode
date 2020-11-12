@@ -22,6 +22,7 @@ namespace Mailcode;
 class Mailcode_Parser_Statement_Tokenizer
 {
     const ERROR_TOKENIZE_METHOD_MISSING = 49801;
+    const ERROR_INVALID_TOKEN_CREATED = 49802;
     
    /**
     * @var string[]
@@ -201,7 +202,7 @@ class Mailcode_Parser_Statement_Tokenizer
             $this->$method();
         }
     }
-   
+
    /**
     * Registers a token to add in the statement string.
     * 
@@ -211,17 +212,67 @@ class Mailcode_Parser_Statement_Tokenizer
     */
     protected function registerToken(string $type, string $matchedText, $subject=null) : void
     {
+        $this->tokensTemporary[] = $this->createToken($type, $matchedText, $subject);
+    }
+
+    protected function createToken(string $type, string $matchedText, $subject=null) : Mailcode_Parser_Statement_Tokenizer_Token
+    {
         $tokenID = $this->generateID();
-        
+
         $this->tokenized = str_replace(
             $matchedText,
             $this->delimiter.$tokenID.$this->delimiter,
             $this->tokenized
         );
-        
+
         $class = '\Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_'.$type;
-        
-        $this->tokensTemporary[] = new $class($tokenID, $matchedText, $subject);
+
+        return new $class($tokenID, $matchedText, $subject);
+    }
+
+    public function appendKeyword(string $name) : Mailcode_Parser_Statement_Tokenizer_Token_Keyword
+    {
+        $name = rtrim($name, ':').':';
+
+        $token = $this->appendToken('keyword', $name);
+
+        if($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_Keyword)
+        {
+            return $token;
+        }
+
+        throw new Mailcode_Exception(
+            'Invalid token created',
+            '',
+            self::ERROR_INVALID_TOKEN_CREATED
+        );
+    }
+
+    public function removeToken(Mailcode_Parser_Statement_Tokenizer_Token $token) : Mailcode_Parser_Statement_Tokenizer
+    {
+        $keep = array();
+        $tokenID = $token->getID();
+
+        foreach ($this->tokensOrdered as $checkToken)
+        {
+            if($checkToken->getID() !== $tokenID)
+            {
+                $keep[] = $checkToken;
+            }
+        }
+
+        $this->tokensOrdered = $keep;
+
+        return $this;
+    }
+
+    protected function appendToken(string $type, string $matchedText, $subject=null) : Mailcode_Parser_Statement_Tokenizer_Token
+    {
+        $token = $this->createToken($type, $matchedText, $subject);
+
+        $this->tokensOrdered[] = $token;
+
+        return $token;
     }
     
     protected function getTokenByID(string $tokenID) : ?Mailcode_Parser_Statement_Tokenizer_Token
