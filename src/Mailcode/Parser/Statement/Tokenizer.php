@@ -45,7 +45,8 @@ class Mailcode_Parser_Statement_Tokenizer
     */
     protected $keywords = array(
         'in:',
-        'insensitive:'
+        'insensitive:',
+        'urlencode:'
     );
     
    /**
