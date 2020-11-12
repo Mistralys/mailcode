@@ -248,4 +248,47 @@ class Mailcode_Parser_Statement_Info
 
         return $result;
     }
+
+    public function hasURLEncoding() : bool
+    {
+        $keywords = $this->getKeywords();
+
+        foreach ($keywords as $keyword)
+        {
+            if($keyword->isURLEncoded())
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function removeURLEncoding() : Mailcode_Parser_Statement_Info
+    {
+        $keywords = $this->getKeywords();
+
+        foreach ($keywords as $keyword)
+        {
+            if (!$keyword->isURLEncoded()) {
+                continue;
+            }
+
+            $this->tokenizer->removeToken($keyword);
+            $this->tokens = $this->tokenizer->getTokens();
+        }
+
+        return $this;
+    }
+
+    public function addURLEncoding() : Mailcode_Parser_Statement_Info
+    {
+        if(!$this->hasURLEncoding())
+        {
+            $this->tokenizer->appendKeyword('urlencode');
+            $this->tokens = $this->tokenizer->getTokens();
+        }
+
+        return $this;
+    }
 }
