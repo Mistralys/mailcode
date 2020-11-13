@@ -37,11 +37,6 @@ class Mailcode_Commands_Command_ShowNumber extends Mailcode_Commands_ShowBase
     */
     private $formatString = Mailcode_Number_Info::DEFAULT_FORMAT;
     
-   /**
-    * @var Mailcode_Date_FormatInfo
-    */
-    private $formatInfo;
-
     public function getName() : string
     {
         return 'shownumber';
