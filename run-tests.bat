@@ -8,18 +8,20 @@ echo ------------------------------------------------------------------
 echo.
 echo Available suites:
 echo.
-echo - Commands
-echo - Factory
-echo - Formatting
-echo - Highlighting
-echo - Isolated
-echo - LogicKeywords
-echo - Mailcode
-echo - Parser
-echo - StringContainer
-echo - Translator
-echo - Validator
-echo - Variables
+echo - Collection (Commands collection)
+echo - Commands (Validation of all commands)
+echo - Factory (Instantiating all commands)
+echo - Formatting (Safeguard formatting options)
+echo - Highlighting (Highlighting commands)
+echo - Isolation (Temporary tests)
+echo - LogicKeywords (Logic connections via and: and or:)
+echo - Mailcode (Global Mailcode class methods)
+echo - Numbers (Number formatting information)
+echo - Parser (Parsing strings and HTML)
+echo - StringContainer (The StringContainer utility class)
+echo - Translator (Translating to other languages)
+echo - Validator (Parameters statement validator)
+echo - Variables (Parsing variable names)
 echo.
 echo Run a specific suite with the command line parameter:
 echo.
