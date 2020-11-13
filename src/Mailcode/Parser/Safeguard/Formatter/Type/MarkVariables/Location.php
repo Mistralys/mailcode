@@ -39,8 +39,6 @@ class Mailcode_Parser_Safeguard_Formatter_Type_MarkVariables_Location extends Ma
         
         $command = $this->placeholder->getCommand();
         
-        return
-        $command instanceof Mailcode_Commands_Command_ShowVariable ||
-        $command instanceof Mailcode_Commands_Command_ShowDate;
+        return $command instanceof Mailcode_Commands_ShowBase;
     }
 }
