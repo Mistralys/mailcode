@@ -174,7 +174,7 @@ class Mailcode_Factory_CommandSets_Set_ElseIf extends Mailcode_Factory_CommandSe
     {
         $command = $this->instantiator->buildIfBiggerThan('ElseIf', $variable, $value);
 
-        if($command instanceof Mailcode_Commands_Command_If_BiggerThan)
+        if($command instanceof Mailcode_Commands_Command_ElseIf_BiggerThan)
         {
             return $command;
         }
@@ -186,7 +186,7 @@ class Mailcode_Factory_CommandSets_Set_ElseIf extends Mailcode_Factory_CommandSe
     {
         $command = $this->instantiator->buildIfSmallerThan('ElseIf', $variable, $value);
 
-        if($command instanceof Mailcode_Commands_Command_If_SmallerThan)
+        if($command instanceof Mailcode_Commands_Command_ElseIf_SmallerThan)
         {
             return $command;
         }
@@ -198,7 +198,7 @@ class Mailcode_Factory_CommandSets_Set_ElseIf extends Mailcode_Factory_CommandSe
     {
         $command = $this->instantiator->buildIfEquals('ElseIf', $variable, $value);
 
-        if($command instanceof Mailcode_Commands_Command_If_Equals)
+        if($command instanceof Mailcode_Commands_Command_ElseIf_EqualsNumber)
         {
             return $command;
         }
