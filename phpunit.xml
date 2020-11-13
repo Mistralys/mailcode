@@ -9,6 +9,9 @@
          stopOnFailure="false"
          bootstrap="tests/bootstrap.php">
     <testsuites>
+        <testsuite name="Collection">
+            <directory suffix=".php">./tests/testsuites/Collection</directory>
+        </testsuite>
         <testsuite name="Commands">
             <directory suffix=".php">./tests/testsuites/Commands</directory>
         </testsuite>
