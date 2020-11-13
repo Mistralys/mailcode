@@ -54,7 +54,34 @@ class Mailcode_Translator_Syntax_ApacheVelocity_If extends Mailcode_Translator_S
             $command->getSearchTerm()
         );
     }
-    
+
+    protected function translateBiggerThan(Mailcode_Commands_Command_If_BiggerThan $command) : string
+    {
+        return $this->_translateNumberComparison(
+            $command->getVariable(),
+            $command->getNumber(),
+            '>'
+        );
+    }
+
+    protected function translateSmallerThan(Mailcode_Commands_Command_If_SmallerThan $command) : string
+    {
+        return $this->_translateNumberComparison(
+            $command->getVariable(),
+            $command->getNumber(),
+            '<'
+        );
+    }
+
+    protected function translateEqualsNumber(Mailcode_Commands_Command_If_EqualsNumber $command) : string
+    {
+        return $this->_translateNumberComparison(
+            $command->getVariable(),
+            $command->getNumber(),
+            '=='
+        );
+    }
+
     protected function translateVariable(Mailcode_Commands_Command_If_Variable $command) : string
     {
         return $this->_translateVariable(
