@@ -233,8 +233,19 @@ class Mailcode_Collection
         
         return false;
     }
-    
-   /**
+
+    /**
+     * Retrieves only ShowXXX commands in the collection, if any.
+     * Includes ShowVariable, ShowDate, ShowNumber, ShowSnippet.
+     *
+     * @return Mailcode_Commands_ShowBase[]
+     */
+    public function getShowCommands()
+    {
+        return $this->getCommandsByClass(Mailcode_Commands_ShowBase::class);
+    }
+
+    /**
     * Retrieves only show variable commands in the collection, if any.
     * 
     * @return Mailcode_Commands_Command_ShowVariable[]
