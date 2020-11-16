@@ -176,6 +176,26 @@ Both can be made case insensitive:
 {if begins-with: $PRODUCT.NAME "Search" insensitive:}
 ```
 
+#### Numeric comparisons
+
+Checking if a variable value is bigger than a specific number:
+
+```
+{if bigger-than: $PRODUCT.PRICE "220"}
+```
+
+Or checking if it is smaller:
+
+```
+{if smaller-than: $PRODUCT.PRICE "220"}
+```
+
+Or checking for an exact match:
+
+```
+{if equals-number: $PRODUCT.PRICE "220"}
+``` 
+
 #### Freeform conditions:
 
 Without subtype, the IF condition is not validated, and will be passed through as-is to the translation backend.
