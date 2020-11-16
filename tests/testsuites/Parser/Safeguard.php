@@ -233,23 +233,27 @@ final class Parser_SafeguardTests extends MailcodeTestCase
 
     /**
      * When the safeguard detects commands in URLs, the URL encoding
-     * must be automatically turned on.
+     * must be automatically turned on, except in Email addresses, which
+     * should be ignored.
      */
     public function test_auto_url_encoding() : void
     {
+        $original =
+            'Lorem ipsum dolor http://google.com?var={showvar: $FOO} sit amet. '.
+            'Ipsum lorem mailto:{showvar: $BAR} dolor amet.';
+
         $parser = Mailcode::create()->getParser();
-        $original = 'Lorem ipsum dolor http://google.com?var={showvar: $FOO} sit amet.';
         $safeguard = $parser->createSafeguard($original);
 
-        $text = $safeguard->makeSafe();
+        // Need to call this to trigger the automatic URL search
+        $safeguard->makeSafe();
 
         $placeholders = $safeguard->getPlaceholders();
 
-        $this->assertCount(1, $placeholders);
+        $this->assertCount(2, $placeholders);
 
-        $placeholder = array_pop($placeholders);
-
-        $this->assertTrue($placeholder->getCommand()->isURLEncoded());
+        $this->assertTrue($placeholders[0]->getCommand()->isURLEncoded());
+        $this->assertFalse($placeholders[1]->getCommand()->isURLEncoded());
     }
 
     /**

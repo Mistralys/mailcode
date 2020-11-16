@@ -218,7 +218,10 @@ class Mailcode_Parser_Safeguard
      */
     private function analyzeURLs(string $string) : void
     {
-        $urls = ConvertHelper::createURLFinder($string)->getURLs();
+        $urls = ConvertHelper::createURLFinder($string)
+            ->includeEmails(false)
+            ->getURLs();
+
         $placeholders = $this->getPlaceholders();
 
         foreach($urls as $url)
