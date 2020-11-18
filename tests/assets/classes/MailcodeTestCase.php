@@ -32,6 +32,22 @@ abstract class MailcodeTestCase extends TestCase
                 $error = $collection->getFirstError();
                 $this->assertSame($test['code'], $error->getCode(), $label);
             }
+
+            if($test['valid'] && $collection->isValid() && isset($test['normalized']))
+            {
+                try
+                {
+                    $safeguard = Mailcode::create()->createSafeguard($test['string']);
+                    $safe = $safeguard->makeSafe();
+                    $whole = $safeguard->makeWhole($safe);
+
+                    $this->assertEquals($test['normalized'], $whole);
+                }
+                catch (\Mailcode\Mailcode_Exception $e)
+                {
+                    $this->fail($e->getMessage(). ' ' . $e->getDetails());
+                }
+            }
         }
     }
 }
