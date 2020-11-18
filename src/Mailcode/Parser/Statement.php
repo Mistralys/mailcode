@@ -23,10 +23,7 @@ use AppUtils\OperationResult;
  */
 class Mailcode_Parser_Statement
 {
-    const ERROR_TOKENIZE_METHOD_MISSING = 48901;
-    
     const VALIDATION_EMPTY = 48801;
-    
     const VALIDATION_UNQUOTED_STRING_LITERALS = 48802;
     
    /**
@@ -48,16 +45,22 @@ class Mailcode_Parser_Statement
     * @var Mailcode_Parser_Statement_Info|NULL
     */
     protected $info;
-    
-    public function __construct(string $statement)
+
+    /**
+     * @var bool
+     */
+    protected $freeform = false;
+
+    public function __construct(string $statement, bool $freeform=false)
     {
         $this->statement = $statement;
         $this->result = new OperationResult($this);
         $this->tokenizer = new Mailcode_Parser_Statement_Tokenizer($this);
-        
+        $this->freeform = $freeform;
+
         $this->validate();
     }
-    
+
     public function getStatementString() : string
     {
         return $this->statement;
@@ -65,6 +68,8 @@ class Mailcode_Parser_Statement
     
     public function isValid() : bool
     {
+        $this->validate();
+
         return $this->result->isValid();
     }
     
@@ -87,6 +92,11 @@ class Mailcode_Parser_Statement
     
     protected function validate() : void
     {
+        if($this->freeform)
+        {
+            return;
+        }
+
         if(!$this->tokenizer->hasTokens())
         {
             $this->result->makeError(
