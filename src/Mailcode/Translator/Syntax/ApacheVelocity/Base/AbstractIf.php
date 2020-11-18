@@ -132,10 +132,15 @@ EOD;
     protected function _translateGeneric(Mailcode_Commands_IfBase $command) : string
     {
         $params = $command->getParams();
-        
+
         if(!$params)
         {
             return '';
+        }
+
+        if($command->hasFreeformParameters())
+        {
+            return $params->getStatementString();
         }
 
         return $params->getNormalized();
