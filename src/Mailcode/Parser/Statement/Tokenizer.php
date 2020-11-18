@@ -44,11 +44,7 @@ class Mailcode_Parser_Statement_Tokenizer
    /**
     * @var string[]
     */
-    protected $keywords = array(
-        'in:',
-        'insensitive:',
-        'urlencode:'
-    );
+    protected $keywords = array();
     
    /**
     * @var string
@@ -97,6 +93,7 @@ class Mailcode_Parser_Statement_Tokenizer
     public function __construct(Mailcode_Parser_Statement $statement)
     {
         $this->statement = $statement;
+        $this->keywords = Mailcode_Commands_Keywords::getAll();
         
         $this->tokenize($statement->getStatementString());
     }
