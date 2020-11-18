@@ -40,8 +40,13 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
         '(',
         ')'
     );
-    
-   /**
+
+    public function getLabel(): string
+    {
+        return 'Apache Velocity';
+    }
+
+    /**
     * Filters the string for use in an Apache Velocity (Java)
     * regex string: escapes all special characters.
     * 
