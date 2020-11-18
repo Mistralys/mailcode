@@ -24,7 +24,7 @@
         <testsuite name="Highlighting">
             <directory suffix=".php">./tests/testsuites/Highlighting</directory>
         </testsuite>
-        <testsuite name="Isolated">
+        <testsuite name="Isolation">
             <directory suffix=".php">./tests/testsuites/Isolation</directory>
         </testsuite>
         <testsuite name="LogicKeywords">
