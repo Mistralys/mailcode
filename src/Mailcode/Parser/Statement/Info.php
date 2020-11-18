@@ -249,46 +249,88 @@ class Mailcode_Parser_Statement_Info
         return $result;
     }
 
-    public function hasURLEncoding() : bool
+    /**
+     * Adds or removes a keyword dependin on whether it should be enabled.
+     *
+     * @param string $keyword The keyword name, with or without :
+     * @param bool $enabled
+     * @return Mailcode_Parser_Statement_Info
+     * @throws Mailcode_Exception
+     */
+    public function setKeywordEnabled(string $keyword, bool $enabled) : Mailcode_Parser_Statement_Info
     {
+        if($enabled)
+        {
+            return $this->addKeyword($keyword);
+        }
+
+        return $this->removeKeyword($keyword);
+    }
+
+    /**
+     * Adds a keyword to the command.
+     *
+     * @param string $keyword Keyword name, with or without :
+     * @return $this
+     * @throws Mailcode_Exception
+     */
+    protected function addKeyword(string $keyword) : Mailcode_Parser_Statement_Info
+    {
+        $keyword = rtrim($keyword, ':').':';
+
+        if(!$this->hasKeyword($keyword))
+        {
+            $this->tokenizer->appendKeyword($keyword);
+            $this->tokens = $this->tokenizer->getTokens();
+        }
+
+        return $this;
+    }
+
+    /**
+     * Removes a keyword from the command, if it has one.
+     * Has no effect otherwise.
+     *
+     * @param string $keyword Keyword name, with or without :
+     * @return $this
+     */
+    public function removeKeyword(string $keyword) : Mailcode_Parser_Statement_Info
+    {
+        $keyword = rtrim($keyword, ':').':';
         $keywords = $this->getKeywords();
 
-        foreach ($keywords as $keyword)
+        foreach ($keywords as $kw)
         {
-            if($keyword->isURLEncoded())
+            if ($kw->getKeyword() !== $keyword) {
+                continue;
+            }
+
+            $this->tokenizer->removeToken($kw);
+            $this->tokens = $this->tokenizer->getTokens();
+        }
+
+        return $this;
+    }
+
+    /**
+     * Whether the command has the specified keyword.
+     *
+     * @param string $keyword Keyword name, with or without :
+     * @return bool
+     */
+    public function hasKeyword(string $keyword) : bool
+    {
+        $keyword = rtrim($keyword, ':').':';
+        $keywords = $this->getKeywords();
+
+        foreach ($keywords as $kw)
+        {
+            if($kw->getKeyword() === $keyword)
             {
                 return true;
             }
         }
 
         return false;
-    }
-
-    public function removeURLEncoding() : Mailcode_Parser_Statement_Info
-    {
-        $keywords = $this->getKeywords();
-
-        foreach ($keywords as $keyword)
-        {
-            if (!$keyword->isURLEncoded()) {
-                continue;
-            }
-
-            $this->tokenizer->removeToken($keyword);
-            $this->tokens = $this->tokenizer->getTokens();
-        }
-
-        return $this;
-    }
-
-    public function addURLEncoding() : Mailcode_Parser_Statement_Info
-    {
-        if(!$this->hasURLEncoding())
-        {
-            $this->tokenizer->appendKeyword('urlencode');
-            $this->tokens = $this->tokenizer->getTokens();
-        }
-
-        return $this;
     }
 }
