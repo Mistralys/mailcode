@@ -47,6 +47,10 @@ trait Mailcode_Traits_Commands_Validation_URLEncode
         }
     }
 
+    /**
+     * @param bool $encoding
+     * @return $this
+     */
     abstract public function setURLEncoding(bool $encoding=true);
 
     public function getURLEncodeToken() : ?Mailcode_Parser_Statement_Tokenizer_Token_Keyword
