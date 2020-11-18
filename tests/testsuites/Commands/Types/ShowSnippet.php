@@ -52,5 +52,16 @@ final class Mailcode_ShowSnippetTests extends MailcodeTestCase
         $cmd = Mailcode::create()->parseString('{showsnippet: $FOO urlencode:}')->getFirstCommand();
 
         $this->assertTrue($cmd->isURLEncoded());
+
+        $this->assertEquals('{showsnippet: $FOO urlencode:}', Mailcode_Factory::showSnippet('$FOO')->setURLEncoding(true)->getNormalized());
+    }
+
+    public function test_urldecode() : void
+    {
+        $cmd = Mailcode::create()->parseString('{showsnippet: $FOO urldecode:}')->getFirstCommand();
+
+        $this->assertTrue($cmd->isURLDecoded());
+
+        $this->assertEquals('{showsnippet: $FOO urldecode:}', Mailcode_Factory::showSnippet('$FOO')->setURLDecoding(true)->getNormalized());
     }
 }

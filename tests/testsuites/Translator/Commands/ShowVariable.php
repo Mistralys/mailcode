@@ -19,8 +19,8 @@ final class Translator_Velocity_ShowVariableTests extends VelocityTestCase
             ),
             array(
                 'label' => 'Show variable, URL decoded',
-                'mailcode' => Mailcode_Factory::showVar('FOO.BAR'),
-                'expected' => '${esc.url($FOO.BAR)}'
+                'mailcode' => Mailcode_Factory::showVar('FOO.BAR')->setURLDecoding(true),
+                'expected' => '${esc.unurl($FOO.BAR)}'
             )
         );
         

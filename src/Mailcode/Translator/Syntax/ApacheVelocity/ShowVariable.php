@@ -33,6 +33,14 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ShowVariable extends Mailcode_Tr
             );
         }
 
+        if($command->isURLDecoded())
+        {
+            return sprintf(
+                '${esc.unurl($%s)}',
+                $varName
+            );
+        }
+
         return sprintf(
             '${%s}',
             $varName
