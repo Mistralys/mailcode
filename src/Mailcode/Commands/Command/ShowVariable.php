@@ -37,6 +37,7 @@ class Mailcode_Commands_Command_ShowVariable extends Mailcode_Commands_ShowBase
         return array(
             'variable',
             'urlencode',
+            'urldecode',
             'no_other_tokens'
         );
     }
@@ -44,21 +45,41 @@ class Mailcode_Commands_Command_ShowVariable extends Mailcode_Commands_ShowBase
     protected function validateSyntax_no_other_tokens() : void
     {
         $tokens = $this->params->getInfo()->getTokens();
+        $allowed = $this->resolveActiveTokens();
 
-        $count = 1;
-
-        if(isset($this->urlencodeToken))
-        {
-            $count = 2;
-        }
-
-        if(count($tokens) > $count)
+        if(count($tokens) > count($allowed))
         {
             $this->validationResult->makeError(
                 t('Unknown parameters found:').' '.
-                t('Only the variable name should be specified.'),
+                t('Only the variable name and keywords should be specified.'),
                 self::VALIDATION_TOO_MANY_PARAMETERS
             );
         }
+    }
+
+    /**
+     * Gets all validated tokens that the command supports
+     * (namely the variable, and keywords).
+     *
+     * @return Mailcode_Parser_Statement_Tokenizer_Token[]
+     * @throws Mailcode_Exception
+     */
+    protected function resolveActiveTokens() : array
+    {
+        $allowed = array($this->getVariableToken());
+
+        $token = $this->getURLEncodeToken();
+        if($token)
+        {
+            $allowed[] = $token;
+        }
+
+        $token = $this->getURLDecodeToken();
+        if($token)
+        {
+            $allowed[] = $token;
+        }
+
+        return $allowed;
     }
 }
