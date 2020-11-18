@@ -20,5 +20,8 @@ namespace Mailcode;
  */
 class Mailcode_Commands_Command_ElseIf_Command extends Mailcode_Commands_Command_ElseIf
 {
-    
+    public function hasFreeformParameters() : bool
+    {
+        return true;
+    }
 }

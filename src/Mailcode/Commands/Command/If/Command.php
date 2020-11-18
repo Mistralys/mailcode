@@ -20,5 +20,8 @@ namespace Mailcode;
  */
 class Mailcode_Commands_Command_If_Command extends Mailcode_Commands_Command_If
 {
-    
+    public function hasFreeformParameters() : bool
+    {
+        return true;
+    }
 }
