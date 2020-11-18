@@ -103,7 +103,14 @@ class Mailcode_Translator_Syntax
         
         foreach($placeholders as $placeholder)
         {
-            $replaces[$placeholder->getReplacementText()] = $this->translateCommand($placeholder->getCommand());
+            $command = $placeholder->getCommand();
+
+            $replaces[$placeholder->getReplacementText()] = $this->translateCommand($command);
+
+            if($command instanceof Mailcode_Interfaces_Commands_ProtectedContent)
+            {
+                $replaces[$command->getContentPlaceholder()] = $command->getContent();
+            }
         }
             
         return str_replace(array_keys($replaces), array_values($replaces), $subject);
