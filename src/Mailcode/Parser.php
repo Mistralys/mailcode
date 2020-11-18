@@ -219,10 +219,11 @@ class Mailcode_Parser
     * command statements.
     * 
     * @param string $statement
+    * @param bool $freeform
     * @return Mailcode_Parser_Statement
     */
-    public function createStatement(string $statement) : Mailcode_Parser_Statement
+    public function createStatement(string $statement, bool $freeform=false) : Mailcode_Parser_Statement
     {
-        return new Mailcode_Parser_Statement($statement);
+        return new Mailcode_Parser_Statement($statement, $freeform);
     }
 }
