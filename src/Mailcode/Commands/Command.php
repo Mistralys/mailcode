@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use AppUtils\OperationResult;
+
 /**
  * Base command class with the common functionality for all commands.
  *
@@ -56,7 +58,7 @@ abstract class Mailcode_Commands_Command
     protected $hash = '';
     
    /**
-    * @var \AppUtils\OperationResult
+    * @var OperationResult
     */
     protected $validationResult = null;
     
@@ -112,18 +114,13 @@ abstract class Mailcode_Commands_Command
      */
     protected $parent = null;
 
-    /**
-     * @var array<string,mixed>
-     */
-    protected $meta;
-
     public function __construct(string $type='', string $paramsString='', string $matchedText='')
     {
         $this->type = $type;
         $this->paramsString = html_entity_decode($paramsString);
         $this->matchedText = $matchedText;
         $this->mailcode = Mailcode::create();
-        $this->validationResult = new \AppUtils\OperationResult($this);
+        $this->validationResult = new OperationResult($this);
         
         $this->init();
     }
@@ -239,7 +236,7 @@ abstract class Mailcode_Commands_Command
         return $this->validate()->isValid();
     }
     
-    protected function validate() : \AppUtils\OperationResult
+    protected function validate() : OperationResult
     {
         if(!$this->validated)
         {
@@ -252,7 +249,7 @@ abstract class Mailcode_Commands_Command
         return $this->validationResult;
     }
     
-    public function getValidationResult() :  \AppUtils\OperationResult
+    public function getValidationResult() :  OperationResult
     {
         if(isset($this->validationResult)) 
         {
@@ -268,8 +265,8 @@ abstract class Mailcode_Commands_Command
     
     protected function validateSyntax() : void
     {
-        $validations = array_merge($this->validations, $this->getValidations());
-        
+        $validations = $this->resolveValidations();
+
         foreach($validations as $validation)
         {
             // break off at the first validation issue
@@ -278,6 +275,14 @@ abstract class Mailcode_Commands_Command
                 return;
             }
         }
+    }
+
+    /**
+     * @return string[]
+     */
+    protected function resolveValidations() : array
+    {
+        return array_merge($this->validations, $this->getValidations());
     }
     
     protected function validateSyntaxMethod(string $validation) : bool
@@ -353,8 +358,11 @@ abstract class Mailcode_Commands_Command
             return;
         }
         
-        $this->params = $this->mailcode->getParser()->createStatement($this->paramsString);
-        
+        $this->params = $this->mailcode->getParser()->createStatement(
+            $this->paramsString,
+            $this->hasFreeformParameters()
+        );
+
         if(!$this->params->isValid())
         {
             $error = $this->params->getValidationResult();
@@ -369,7 +377,12 @@ abstract class Mailcode_Commands_Command
         
         $this->validator = new Mailcode_Parser_Statement_Validator($this->params);
     }
-    
+
+    public function hasFreeformParameters() : bool
+    {
+        return false;
+    }
+
     protected function validateSyntax_type_supported() : void
     {
         if(!$this->supportsType() || empty($this->type))
@@ -587,62 +600,57 @@ abstract class Mailcode_Commands_Command
     }
 
     /**
-     * @param string $name
-     * @param $value
-     * @return $this
-     */
-    public function setMeta(string $name, $value)
-    {
-        $this->meta[$name] = $value;
-        return $this;
-    }
-
-    /**
-     * @param string $name
-     * @return mixed|null
-     */
-    public function getMeta(string $name)
-    {
-        if(isset($this->meta[$name]))
-        {
-            return $this->meta[$name];
-        }
-
-        return null;
-    }
-
-    /**
      * @param bool $encoding
      * @return $this
      */
     public function setURLEncoding(bool $encoding=true)
     {
-        if(!$this->supportsURLEncoding())
-        {
-            throw new Mailcode_Exception(
-                'Command does not support URL encoding.',
-                sprintf(
-                    'The command [%s] cannot use URL encoding.',
-                    get_class($this)
-                ),
-                self::ERROR_URL_ENCODING_NOT_SUPPORTED
-            );
-        }
+        $this->requireURLEncoding();
 
-        if($encoding)
-        {
-            $this->params->getInfo()->addURLEncoding();
-        }
-        else
-        {
-            $this->params->getInfo()->removeURLEncoding();
-        }
+        $this->params->getInfo()->setKeywordEnabled(Mailcode_Commands_Keywords::TYPE_URLENCODE, $encoding);
 
         return $this;
     }
 
+    /**
+     * Enables URL decoding for the command.
+     *
+     * @param bool $decode
+     * @return $this
+     * @throws Mailcode_Exception
+     */
+    public function setURLDecoding(bool $decode=true)
+    {
+        $this->requireURLEncoding();
+
+        $this->params->getInfo()->setKeywordEnabled(Mailcode_Commands_Keywords::TYPE_URLDECODE, $decode);
+
+        return $this;
+    }
+
+    protected function requireURLEncoding() : void
+    {
+        if($this->supportsURLEncoding()) {
+            return;
+        }
+
+        throw new Mailcode_Exception(
+            'Command does not support URL encoding.',
+            sprintf(
+                'The command [%s] cannot use URL encoding.',
+                get_class($this)
+            ),
+            self::ERROR_URL_ENCODING_NOT_SUPPORTED
+        );
+    }
+
     public function isURLEncoded() : bool
     {
-        return $this->params->getInfo()->hasURLEncoding();
+        return $this->params->getInfo()->hasKeyword(Mailcode_Commands_Keywords::TYPE_URLENCODE);
+    }
+
+    public function isURLDecoded() : bool
+    {
+        return $this->params->getInfo()->hasKeyword(Mailcode_Commands_Keywords::TYPE_URLDECODE);
     }
 }
