@@ -24,7 +24,12 @@ class Mailcode_Parser_Statement_Tokenizer_Token_Keyword extends Mailcode_Parser_
     {
         return $this->getMatchedText();
     }
-    
+
+    /**
+     * Retrieves the keyword, with : appended.
+     *
+     * @return string
+     */
     public function getKeyword() : string
     {
         return $this->getMatchedText();
@@ -32,16 +37,21 @@ class Mailcode_Parser_Statement_Tokenizer_Token_Keyword extends Mailcode_Parser_
     
     public function isForIn() : bool
     {
-        return $this->getKeyword() === 'in:';
+        return $this->getKeyword() === Mailcode_Commands_Keywords::TYPE_IN;
     }
     
     public function isInsensitive() : bool
     {
-        return $this->getKeyword() === 'insensitive:';
+        return $this->getKeyword() === Mailcode_Commands_Keywords::TYPE_INSENSITIVE;
     }
 
     public function isURLEncoded() : bool
     {
-        return $this->getKeyword() === 'urlencode:';
+        return $this->getKeyword() === Mailcode_Commands_Keywords::TYPE_URLENCODE;
+    }
+
+    public function isURLDecode() : bool
+    {
+        return $this->getKeyword() === Mailcode_Commands_Keywords::TYPE_URLDECODE;
     }
 }
