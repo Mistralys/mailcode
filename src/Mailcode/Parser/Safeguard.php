@@ -183,7 +183,41 @@ class Mailcode_Parser_Safeguard
             $string = $this->makePlaceholderSafe($string, $placeholder);
         }
 
+        $string = $this->protectContents($string);
+
         $this->analyzeURLs($string);
+
+        return $string;
+    }
+
+    /**
+     * Goes through all placeholders in the specified string, and
+     * checks if there are any commands whose content must be protected,
+     * like the `code` command.
+     *
+     * It automatically calls the protectContent method of the command,
+     * which replaces the command with a separate placeholder text.
+     *
+     * @param string $string
+     * @return string
+     * @see Mailcode_Interfaces_Commands_ProtectedContent
+     * @see Mailcode_Traits_Commands_ProtectedContent
+     */
+    private function protectContents(string $string) : string
+    {
+        $placeholders = $this->getPlaceholders();
+        $total = count($placeholders);
+
+        for($i=0; $i < $total; $i++)
+        {
+            $placeholder = $placeholders[$i];
+            $command = $placeholder->getCommand();
+
+            if($command instanceof Mailcode_Interfaces_Commands_ProtectedContent)
+            {
+                $string = $command->protectContent($string, $placeholder, $placeholders[$i+1]);
+            }
+        }
 
         return $string;
     }
@@ -314,7 +348,24 @@ class Mailcode_Parser_Safeguard
             $formatting->replaceWithNormalized();
         }
         
-        return $formatting->toString();
+        return $this->restoreContents($formatting->toString());
+    }
+
+    private function restoreContents(string $string) : string
+    {
+        $placeholders = $this->getPlaceholders();
+
+        foreach ($placeholders as $placeholder)
+        {
+            $command = $placeholder->getCommand();
+
+            if($command instanceof Mailcode_Interfaces_Commands_ProtectedContent)
+            {
+                $string = $command->restoreContent($string);
+            }
+        }
+
+        return $string;
     }
     
    /**
