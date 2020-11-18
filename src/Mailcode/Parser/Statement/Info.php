@@ -30,11 +30,26 @@ class Mailcode_Parser_Statement_Info
     * @var Mailcode_Parser_Statement_Tokenizer_Token[]
     */
     protected $tokens = array();
-    
+
+    /**
+     * @var Mailcode_Parser_Statement_Info_Keywords
+     */
+    protected $keywords;
+
+    /**
+     * @var Mailcode_Parser_Statement_Info_Variables
+     */
+    protected $variables;
+
     public function __construct(Mailcode_Parser_Statement_Tokenizer $tokenizer)
     {
         $this->tokenizer = $tokenizer;
-        $this->tokens = $this->tokenizer->getTokens(); 
+        $this->tokens = $this->tokenizer->getTokens();
+        $this->keywords = new Mailcode_Parser_Statement_Info_Keywords($this, $this->tokenizer);
+        $this->variables = new Mailcode_Parser_Statement_Info_Variables($this, $this->tokenizer);
+
+        // Add a listener to be informed when tokens are added or removed
+        $this->tokenizer->onTokensChanged(array($this, 'handleTokensChanged'));
     }
     
    /**
@@ -44,16 +59,7 @@ class Mailcode_Parser_Statement_Info
     */
     public function isVariableAssignment() : bool
     {
-        $variable = $this->getVariableByIndex(0);
-        $operand = $this->getOperandByIndex(1);
-        $value = $this->getTokenByIndex(2);
-        
-        if($variable && $operand && $value && $operand->isAssignment())
-        {
-            return true;
-        }
-        
-        return false;
+        return $this->variables->isAssignment();
     }
     
    /**
@@ -63,36 +69,18 @@ class Mailcode_Parser_Statement_Info
     */
     public function isVariableComparison() : bool
     {
-        $variable = $this->getVariableByIndex(0);
-        $operand = $this->getOperandByIndex(1);
-        $value = $this->getTokenByIndex(2);
-        
-        if($variable && $operand && $value && $operand->isComparator())
-        {
-            return true;
-        }
-        
-        return false;
+        return $this->variables->isComparison();
     }
-    
-   /**
-    * Retrieves all variables used in the statement.
-    * 
-    * @return \Mailcode\Mailcode_Variables_Variable[]
-    */
-    public function getVariables()
+
+    /**
+     * Retrieves all variables used in the statement.
+     *
+     * @return Mailcode_Variables_Variable[]
+     * @throws Mailcode_Exception
+     */
+    public function getVariables() : array
     {
-        $result = array();
-        
-        foreach($this->tokens as $token)
-        {
-            if($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable)
-            {
-                $result[] = $token->getVariable();
-            }
-        }
-        
-        return $result;
+        return $this->variables->getAll();
     }
     
    /**
@@ -105,14 +93,7 @@ class Mailcode_Parser_Statement_Info
     */
     public function getVariableByIndex(int $index) : ?Mailcode_Parser_Statement_Tokenizer_Token_Variable
     {
-        $token = $this->getTokenByIndex($index);
-        
-        if($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable)
-        {
-            return $token;
-        }
-        
-        return null;
+        return $this->variables->getByIndex($index);
     }
     
    /**
@@ -145,14 +126,7 @@ class Mailcode_Parser_Statement_Info
     */
     public function getKeywordByIndex(int $index) : ?Mailcode_Parser_Statement_Tokenizer_Token_Keyword
     {
-        $token = $this->getTokenByIndex($index);
-        
-        if($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_Keyword)
-        {
-            return $token;
-        }
-        
-        return null;
+        return $this->keywords->getByIndex($index);
     }
     
    /**
@@ -209,9 +183,9 @@ class Mailcode_Parser_Statement_Info
     
    /**
     * Retrieves all string literals that were found in the command.
-    * @return \Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral[]
+    * @return Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral[]
     */
-    public function getStringLiterals()
+    public function getStringLiterals() : array
     {
         $result = array();
         
@@ -236,17 +210,7 @@ class Mailcode_Parser_Statement_Info
      */
     public function getKeywords() : array
     {
-        $result = array();
-
-        foreach($this->tokens as $token)
-        {
-            if($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_Keyword)
-            {
-                $result[] = $token;
-            }
-        }
-
-        return $result;
+        return $this->keywords->getAll();
     }
 
     /**
@@ -259,12 +223,9 @@ class Mailcode_Parser_Statement_Info
      */
     public function setKeywordEnabled(string $keyword, bool $enabled) : Mailcode_Parser_Statement_Info
     {
-        if($enabled)
-        {
-            return $this->addKeyword($keyword);
-        }
+        $this->keywords->setEnabled($keyword, $enabled);
 
-        return $this->removeKeyword($keyword);
+        return $this;
     }
 
     /**
@@ -274,15 +235,9 @@ class Mailcode_Parser_Statement_Info
      * @return $this
      * @throws Mailcode_Exception
      */
-    protected function addKeyword(string $keyword) : Mailcode_Parser_Statement_Info
+    public function addKeyword(string $keyword) : Mailcode_Parser_Statement_Info
     {
-        $keyword = rtrim($keyword, ':').':';
-
-        if(!$this->hasKeyword($keyword))
-        {
-            $this->tokenizer->appendKeyword($keyword);
-            $this->tokens = $this->tokenizer->getTokens();
-        }
+        $this->keywords->add($keyword);
 
         return $this;
     }
@@ -296,18 +251,7 @@ class Mailcode_Parser_Statement_Info
      */
     public function removeKeyword(string $keyword) : Mailcode_Parser_Statement_Info
     {
-        $keyword = rtrim($keyword, ':').':';
-        $keywords = $this->getKeywords();
-
-        foreach ($keywords as $kw)
-        {
-            if ($kw->getKeyword() !== $keyword) {
-                continue;
-            }
-
-            $this->tokenizer->removeToken($kw);
-            $this->tokens = $this->tokenizer->getTokens();
-        }
+        $this->keywords->remove($keyword);
 
         return $this;
     }
@@ -320,17 +264,14 @@ class Mailcode_Parser_Statement_Info
      */
     public function hasKeyword(string $keyword) : bool
     {
-        $keyword = rtrim($keyword, ':').':';
-        $keywords = $this->getKeywords();
+        return $this->keywords->hasKeyword($keyword);
+    }
 
-        foreach ($keywords as $kw)
-        {
-            if($kw->getKeyword() === $keyword)
-            {
-                return true;
-            }
-        }
-
-        return false;
+    /**
+     * Called whenever the tokens collection in the tokenizer has changed.
+     */
+    public function handleTokensChanged() : void
+    {
+        $this->tokens = $this->tokenizer->getTokens();
     }
 }
