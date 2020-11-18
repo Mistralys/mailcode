@@ -23,10 +23,12 @@ abstract class Mailcode_Commands_ShowBase
     implements
     Mailcode_Commands_Command_Type_Standalone,
     Mailcode_Interfaces_Commands_Variable,
-    Mailcode_Interfaces_Commands_URLEncode
+    Mailcode_Interfaces_Commands_URLEncode,
+    Mailcode_Interfaces_Commands_URLDecode
 {
     use Mailcode_Traits_Commands_Validation_Variable;
     use Mailcode_Traits_Commands_Validation_URLEncode;
+    use Mailcode_Traits_Commands_Validation_URLDecode;
 
     public function supportsURLEncoding() : bool
     {
@@ -56,5 +58,24 @@ abstract class Mailcode_Commands_ShowBase
     public function getDefaultType() : string
     {
         return '';
+    }
+
+    protected function resolveValidations(): array
+    {
+        $validations = parent::resolveValidations();
+        $validations[] = 'urldeencode';
+
+        return $validations;
+    }
+
+    protected function validateSyntax_urldeencode() : void
+    {
+        if($this->isURLEncoded() && $this->getURLDecodeToken() !== null)
+        {
+            $this->validationResult->makeError(
+                t('Cannot enable URL decoding and encoding at the same time.'),
+                Mailcode_Commands_CommonConstants::VALIDATION_URL_DE_AND_ENCODE_ENABLED
+            );
+        }
     }
 }
