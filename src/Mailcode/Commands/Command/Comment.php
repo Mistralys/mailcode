@@ -28,9 +28,13 @@ class Mailcode_Commands_Command_Comment extends Mailcode_Commands_Command implem
     protected function init() : void
     {
         $this->commentString = trim(trim($this->paramsString), '"');
-        $this->paramsString = '"Dummy"'; // so the command does not complain that it is empty
     }
-    
+
+    public function hasFreeformParameters() : bool
+    {
+        return true;
+    }
+
     public function getName() : string
     {
         return 'comment';
