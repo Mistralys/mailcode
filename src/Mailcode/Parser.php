@@ -22,6 +22,8 @@ use AppUtils\ConvertHelper;
  */
 class Mailcode_Parser
 {
+    const ERROR_NOT_A_COMMAND = 73301;
+
     const COMMAND_REGEX_PARTS = array( 
         '{\s*([a-z]+)\s*}',
         '{\s*([a-z]+)\s*:([^}]*)}',
@@ -142,7 +144,7 @@ class Mailcode_Parser
         // Set the command's parent from the stack, if any is present.
         if(!empty($this->stack))
         {
-            $cmd->setParent($this->stack[array_key_last($this->stack)]);
+            $cmd->setParent($this->getStackLast());
         }
 
         // Handle opening and closing commands, adding and removing from the stack.
@@ -154,6 +156,18 @@ class Mailcode_Parser
         {
             array_pop($this->stack);
         }
+    }
+
+    private function getStackLast() : Mailcode_Commands_Command
+    {
+        $cmd = $this->stack[array_key_last($this->stack)];
+
+        if($cmd instanceof Mailcode_Commands_Command)
+        {
+            return $cmd;
+        }
+
+        throw new Mailcode_Exception('Not a command', '', self::ERROR_NOT_A_COMMAND);
     }
     
    /**
