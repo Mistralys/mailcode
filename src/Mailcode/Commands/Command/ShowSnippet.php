@@ -34,7 +34,8 @@ class Mailcode_Commands_Command_ShowSnippet extends Mailcode_Commands_ShowBase
     {
         return array(
             'variable',
-            'urlencode'
+            'urlencode',
+            'urldecode'
         );
     }
     
