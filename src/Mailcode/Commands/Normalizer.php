@@ -71,16 +71,23 @@ class Mailcode_Commands_Normalizer
         {
             return;
         }
+
+        if($command->hasFreeformParameters())
+        {
+            $params = $command->getParams()->getStatementString();
+        }
+        else
+        {
+            $params = $command->getParams()->getNormalized();
+        }
         
-        $params = $command->getParams();
-        
-        if($params === null)
+        if(empty($params))
         {
             return;
         }
         
         $this->parts[] = ': ';
-        $this->parts[] = $params->getNormalized();
+        $this->parts[] = $params;
     }
     
     private function addLogicKeywords() : void
