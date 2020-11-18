@@ -45,6 +45,20 @@ trait Mailcode_Traits_Commands_Validation_Variable
             );
         }
     }
+
+    public function getVariableToken() : Mailcode_Parser_Statement_Tokenizer_Token_Variable
+    {
+        if(isset($this->variableToken))
+        {
+            return $this->variableToken;
+        }
+
+        throw new Mailcode_Exception(
+            'No variable token available',
+            null,
+            Mailcode_Commands_CommonConstants::ERROR_NO_VARIABLE_AVAILABLE
+        );
+    }
     
    /**
     * Retrieves the variable being compared.
@@ -53,7 +67,7 @@ trait Mailcode_Traits_Commands_Validation_Variable
     */
     public function getVariable() : Mailcode_Variables_Variable
     {
-        if($this->variableToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable)
+        if(isset($this->variableToken))
         {
             return $this->variableToken->getVariable();
         }
