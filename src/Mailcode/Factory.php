@@ -341,6 +341,11 @@ class Mailcode_Factory
             self::$commandSets = new Mailcode_Factory_CommandSets();
         }
     }
+
+    public static function code(string $language) : Mailcode_Commands_Command_Code
+    {
+        return self::$commandSets->misc()->code($language);
+    }
 }
 
 Mailcode_Factory::init();

@@ -71,4 +71,29 @@ class Mailcode_Factory_CommandSets_Set_Misc extends Mailcode_Factory_CommandSets
         
         throw $this->instantiator->exceptionUnexpectedType('For', $cmd);
     }
+
+    public function code(string $language) : Mailcode_Commands_Command_Code
+    {
+        $cmd = Mailcode::create()->getCommands()->createCommand(
+            'Code',
+            '',
+            sprintf(
+                '"%s"',
+                $language
+            ),
+            sprintf(
+                '{code: "%s"}',
+                $language
+            )
+        );
+
+        $this->instantiator->checkCommand($cmd);
+
+        if($cmd instanceof Mailcode_Commands_Command_Code)
+        {
+            return $cmd;
+        }
+
+        throw $this->instantiator->exceptionUnexpectedType('Code', $cmd);
+    }
 }
