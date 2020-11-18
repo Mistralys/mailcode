@@ -96,11 +96,6 @@ class Mailcode_Parser_Safeguard
     */
     protected $placeholderStrings;
     
-   /**
-    * @var Mailcode_Parser_Safeguard_Formatting|NULL
-    */
-    private $formatting = null;
-    
     public function __construct(Mailcode_Parser $parser, string $subject)
     {
         $this->parser = $parser;
@@ -324,7 +319,14 @@ class Mailcode_Parser_Safeguard
 
         return $this->placeholders;
     }
-    
+
+    /**
+     * @param string $string
+     * @param bool $partial
+     * @param bool $highlighted
+     * @return string
+     * @throws Mailcode_Exception
+     */
     protected function restore(string $string, bool $partial=false, bool $highlighted=false) : string
     {
         if(!$partial)
