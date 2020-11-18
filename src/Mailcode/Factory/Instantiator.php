@@ -91,7 +91,7 @@ class Mailcode_Factory_Instantiator
         
         if($caseInsensitive)
         {
-            $keyword = ' insensitive: ';
+            $keyword = ' '.Mailcode_Commands_Keywords::TYPE_INSENSITIVE;
         }
         
         $condition = sprintf(
@@ -165,7 +165,7 @@ class Mailcode_Factory_Instantiator
         
         if($caseInsensitive)
         {
-            $keyword = ' insensitive: ';
+            $keyword = ' '.Mailcode_Commands_Keywords::TYPE_INSENSITIVE;
         }
         
         $condition = sprintf(

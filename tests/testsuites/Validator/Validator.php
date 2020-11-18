@@ -1,6 +1,7 @@
 <?php
 
 use Mailcode\Mailcode;
+use Mailcode\Mailcode_Commands_Keywords;
 use Mailcode\Mailcode_Exception;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Variable;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_ValueInterface;
@@ -106,9 +107,9 @@ final class Validator_ValidatorTests extends MailcodeTestCase
     
     public function test_keyword()
     {
-        $validator = $this->createValidator('insensitive:');
+        $validator = $this->createValidator(Mailcode_Commands_Keywords::TYPE_INSENSITIVE);
         
-        $val = $validator->createKeyword('insensitive');
+        $val = $validator->createKeyword(Mailcode_Commands_Keywords::TYPE_INSENSITIVE);
         
         $this->assertTrue($val->isValid(), 'Keyword should be present');
         $this->assertInstanceOf(Mailcode_Parser_Statement_Tokenizer_Token_Keyword::class, $val->getToken(), 'Token should be present');
@@ -116,9 +117,9 @@ final class Validator_ValidatorTests extends MailcodeTestCase
 
     public function test_keyword_hyphen()
     {
-        $validator = $this->createValidator('insensitive:');
+        $validator = $this->createValidator(Mailcode_Commands_Keywords::TYPE_INSENSITIVE);
         
-        $val = $validator->createKeyword('insensitive:');
+        $val = $validator->createKeyword(Mailcode_Commands_Keywords::TYPE_INSENSITIVE);
         
         $this->assertTrue($val->isValid(), 'Keyword should be present');
         $this->assertInstanceOf(Mailcode_Parser_Statement_Tokenizer_Token_Keyword::class, $val->getToken(), 'Token should be present');
@@ -128,7 +129,7 @@ final class Validator_ValidatorTests extends MailcodeTestCase
     {
         $validator = $this->createValidator('$VAR');
         
-        $val = $validator->createKeyword('insensitive');
+        $val = $validator->createKeyword(Mailcode_Commands_Keywords::TYPE_INSENSITIVE);
         
         $this->assertFalse($val->isValid());
         
@@ -156,7 +157,7 @@ final class Validator_ValidatorTests extends MailcodeTestCase
         
         $var = $validator->createVariable();
         $str = $validator->createStringLiteral();
-        $key = $validator->createKeyword('insensitive');
+        $key = $validator->createKeyword(Mailcode_Commands_Keywords::TYPE_INSENSITIVE);
         
         $this->assertTrue($var->isValid(), 'Variable should be present');
         $this->assertTrue($str->isValid(), 'String literal should be present');
@@ -200,7 +201,7 @@ final class Validator_ValidatorTests extends MailcodeTestCase
     
     public function test_value_missing()
     {
-        $validator = $this->createValidator('insensitive:');
+        $validator = $this->createValidator(Mailcode_Commands_Keywords::TYPE_INSENSITIVE);
         
         $val = $validator->createValue();
         
@@ -248,7 +249,7 @@ final class Validator_ValidatorTests extends MailcodeTestCase
     
     public function test_operand_missing()
     {
-        $validator = $this->createValidator('insensitive:');
+        $validator = $this->createValidator(Mailcode_Commands_Keywords::TYPE_INSENSITIVE);
         
         $val = $validator->createOperand();
         
