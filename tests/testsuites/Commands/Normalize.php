@@ -29,8 +29,8 @@ final class Mailcode_Commands_NormalizeTests extends MailcodeTestCase
             ),
             array(
                 'label' => 'Normalizing pretty quote style',
-                'string' => '{if: $NAME == “value”}{end}',
-                'expected' => '{if: $NAME == "value"}'
+                'string' => '{if variable: $NAME == “value”}{end}',
+                'expected' => '{if variable: $NAME == "value"}'
             )
         );
        

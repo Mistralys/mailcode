@@ -55,7 +55,7 @@ final class LogicKeywords_KeywordsTests extends MailcodeTestCase
 
         try
         {
-            $logic->appendAND('nothing');
+            $logic->appendAND('nothing', 'variable');
         }
         catch(Mailcode_Exception $e)
         {
@@ -114,7 +114,7 @@ final class LogicKeywords_KeywordsTests extends MailcodeTestCase
             ),
             array(
                 'label' => 'Invalid subcommand',
-                'string' => '{if empty: $BARFOO and: invalid}{end}',
+                'string' => '{if empty: $BARFOO and variable: invalid}{end}',
                 'valid' => false,
                 'code' => Mailcode_Commands_LogicKeywords::VALIDATION_INVALID_SUB_COMMAND
             ),

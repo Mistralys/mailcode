@@ -73,4 +73,12 @@ final class Mailcode_ShowVarTests extends MailcodeTestCase
 
         $this->assertEquals('{showvar: $FOO}', $cmd->getNormalized());
     }
+
+    public function test_bothEncodings() : void
+    {
+        $cmd = Mailcode::create()->parseString('{showvar: $FOO urlencode: urldecode:}');
+
+        $this->assertFalse($cmd->isValid());
+        $this->assertEquals(Mailcode_Commands_CommonConstants::VALIDATION_URL_DE_AND_ENCODE_ENABLED, $cmd->getFirstError()->getCode());
+    }
 }

@@ -10,7 +10,7 @@ final class Mailcode_ElseIfVariableTests extends MailcodeTestCase
         $tests = array(
             array(
                 'label' => 'With invalid variable',
-                'string' => '{if: 1 == 1}{elseif: foobar}{end}',
+                'string' => '{if: 1 == 1}{elseif variable: foobar}{end}',
                 'valid' => false,
                 'code' => Mailcode_Commands_Command::VALIDATION_INVALID_PARAMS_STATEMENT
             ),

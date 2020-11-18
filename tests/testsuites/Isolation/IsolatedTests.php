@@ -2,7 +2,7 @@
 
 final class Isolation_IsolatedTests extends MailcodeTestCase
 {
-    public function test_isolated()
+    public function test_isolated() : void
     {
         $this->addToAssertionCount(1);
     }

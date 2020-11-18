@@ -16,6 +16,11 @@ final class Translator_Velocity_IfTests extends VelocityTestCase
                 'label' => 'If',
                 'mailcode' => Mailcode_Factory::if('$FOO.BAR != "TRUE"'),
                 'expected' => '#if($FOO.BAR != "TRUE")'
+            ),
+            array(
+                'label' => 'If with Velocity syntax',
+                'mailcode' => Mailcode_Factory::if('$FOO.BAR.urldecode().match(".*[?].*")'),
+                'expected' => '#if($FOO.BAR.urldecode().match(".*[?].*"))'
             )
         );
         

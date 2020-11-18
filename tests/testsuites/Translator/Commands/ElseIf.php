@@ -11,6 +11,11 @@ final class Translator_Velocity_ElseIfTests extends VelocityTestCase
                 'label' => 'Else if',
                 'mailcode' => Mailcode_Factory::elseIf('$FOO.BAR + 2 == 45'),
                 'expected' => '#elseif($FOO.BAR + 2 == 45)'
+            ),
+            array(
+                'label' => 'If with Velocity syntax',
+                'mailcode' => Mailcode_Factory::elseIf('$FOO.BAR.urldecode().match(".*[?].*")'),
+                'expected' => '#elseif($FOO.BAR.urldecode().match(".*[?].*"))'
             )
         );
         
