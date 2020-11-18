@@ -81,7 +81,7 @@ class Mailcode_Commands_Command_Code
     
     public function generatesContent() : bool
     {
-        return false;
+        return true;
     }
 
     /**
