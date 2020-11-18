@@ -11,5 +11,5 @@ interface Mailcode_Interfaces_Commands_ProtectedContent extends Mailcode_Command
     public function getContent() : string;
     public function getContentPlaceholder() : string;
     public function protectContent(string $string, Mailcode_Parser_Safeguard_Placeholder $open, Mailcode_Parser_Safeguard_Placeholder $end) : string;
-    public function restoreContent($string) : string;
+    public function restoreContent(string $string) : string;
 }

@@ -4,12 +4,21 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
-use AppUtils\ConvertHelper;
-
 trait Mailcode_Traits_Commands_ProtectedContent
 {
+    /**
+     * @var int
+     */
     protected static $protectedCounter = 0;
+
+    /**
+     * @var string
+     */
     protected $protectedContent = '';
+
+    /**
+     * @var string
+     */
     protected $protectedPlaceholder = '';
 
     public function getContent() : string
@@ -38,17 +47,6 @@ trait Mailcode_Traits_Commands_ProtectedContent
 
         $content = substr($string, $start, ($end-$start));
 
-        /**
-        echo PHP_EOL;
-        print_r(array(
-            'string' => $string,
-            'start' => $start,
-            'end' => $end,
-            'content' => $content
-        ));
-        echo PHP_EOL;
-         */
-
         return $this->replaceContent($string, $content);
     }
 
@@ -57,12 +55,12 @@ trait Mailcode_Traits_Commands_ProtectedContent
         self::$protectedCounter++;
 
         $this->protectedContent = trim($content);
-        $this->protectedPlaceholder = '__CT'.self::$protectedCounter.'__';
+        $this->protectedPlaceholder = '__|CT'.self::$protectedCounter.'TC|__';
 
         return str_replace($content, $this->protectedPlaceholder, $string);
     }
 
-    public function restoreContent($string) : string
+    public function restoreContent(string $string) : string
     {
         return str_replace($this->protectedPlaceholder, $this->protectedContent, $string);
     }
