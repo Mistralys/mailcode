@@ -264,7 +264,7 @@ class Mailcode_Parser_Safeguard
                     continue;
                 }
 
-                if(strstr($url, $placeholder->getReplacementText()))
+                if(strstr($url, $placeholder->getReplacementText()) && !$command->isURLDecoded())
                 {
                     $command->setURLEncoding(true);
                 }

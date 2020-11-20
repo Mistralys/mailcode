@@ -278,4 +278,21 @@ final class Parser_SafeguardTests extends MailcodeTestCase
 
         $this->addToAssertionCount(1);
     }
+
+    public function test_auto_url_encoding_ignoreIfDecoded() : void
+    {
+        $original = 'Lorem ipsum dolor http://google.com?var={showvar: $FOO urldecode:} sit amet.';
+
+        $parser = Mailcode::create()->getParser();
+        $safeguard = $parser->createSafeguard($original);
+
+        // Need to call this to trigger the automatic URL search
+        $safeguard->makeSafe();
+
+        $placeholders = $safeguard->getPlaceholders();
+
+        $this->assertCount(1, $placeholders);
+
+        $this->assertFalse($placeholders[0]->getCommand()->isURLEncoded());
+    }
 }
