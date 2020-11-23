@@ -255,6 +255,11 @@ class Mailcode_Parser_Safeguard
 
         foreach($urls as $url)
         {
+            if(stristr($url, 'tel:'))
+            {
+                continue;
+            }
+
             foreach($placeholders as $placeholder)
             {
                 $command = $placeholder->getCommand();
