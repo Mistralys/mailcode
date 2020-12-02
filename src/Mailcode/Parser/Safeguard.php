@@ -254,34 +254,8 @@ class Mailcode_Parser_Safeguard
      */
     private function analyzeURLs(string $string) : void
     {
-        $urls = ConvertHelper::createURLFinder($string)
-            ->includeEmails(false)
-            ->getURLs();
-
-        $placeholders = $this->getPlaceholders();
-
-        foreach($urls as $url)
-        {
-            if(stristr($url, 'tel:'))
-            {
-                continue;
-            }
-
-            foreach($placeholders as $placeholder)
-            {
-                $command = $placeholder->getCommand();
-
-                if(!$command->supportsURLEncoding())
-                {
-                    continue;
-                }
-
-                if(strstr($url, $placeholder->getReplacementText()) && !$command->isURLDecoded())
-                {
-                    $command->setURLEncoding(true);
-                }
-            }
-        }
+        $analyzer = new Mailcode_Parser_Safeguard_URLAnalyzer($string, $this);
+        $analyzer->analyze();
     }
     
    /**
