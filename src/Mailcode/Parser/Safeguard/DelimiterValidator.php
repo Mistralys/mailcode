@@ -1,10 +1,10 @@
 <?php
 /**
- * File containing the {@see Mailcode_Parser_Safeguard} class.
+ * File containing the {@see Mailcode_Parser_Safeguard_DelimiterValidator} class.
  *
  * @package Mailcode
  * @subpackage Parser
- * @see Mailcode_Parser_Safeguard
+ * @see Mailcode_Parser_Safeguard_DelimiterValidator
  */
 
 declare(strict_types=1);
@@ -14,6 +14,14 @@ namespace Mailcode;
 use AppUtils\OperationResult;
 use stdClass;
 
+/**
+ * Utility class used to validate a safeguard placeholder delimiter
+ * string, to ensure it conforms to the placeholder requirements.
+ *
+ * @package Mailcode
+ * @subpackage Parser
+ * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
+ */
 class Mailcode_Parser_Safeguard_DelimiterValidator extends OperationResult
 {
     const ERROR_EMPTY_DELIMITER = 73601;
