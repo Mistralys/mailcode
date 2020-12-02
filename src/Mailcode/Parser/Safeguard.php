@@ -52,10 +52,8 @@ use AppUtils\ConvertHelper;
 class Mailcode_Parser_Safeguard
 {
     const ERROR_INVALID_COMMANDS = 47801;
-    const ERROR_EMPTY_DELIMITER = 47803;
     const ERROR_PLACEHOLDER_NOT_FOUND = 47804;
-    const ERROR_INVALID_DELIMITER = 47805;
-    
+
    /**
     * @var Mailcode_Parser
     */
@@ -138,33 +136,9 @@ class Mailcode_Parser_Safeguard
     */
     public function setDelimiter(string $delimiter) : Mailcode_Parser_Safeguard
     {
-        if(empty($delimiter))
-        {
-            throw new Mailcode_Exception(
-                'Empty delimiter',
-                'Delimiters may not be empty.',
-                self::ERROR_EMPTY_DELIMITER
-            );
-        }
+        $validator = new Mailcode_Parser_Safeguard_DelimiterValidator($delimiter);
+        $validator->throwExceptionIfInvalid();
 
-        if(!preg_match('/\A[^0-9*].*[^0-9*]\z/x', $delimiter))
-        {
-            throw new Mailcode_Exception(
-                'The delimiter may not begin or end with a number.',
-                '',
-                self::ERROR_INVALID_DELIMITER
-            );
-        }
-
-        if(strstr($delimiter, '*') !== false)
-        {
-            throw new Mailcode_Exception(
-                'The delimiter may not contain the * character.',
-                'The * character is used in placeholders as ID separator character.',
-                self::ERROR_INVALID_DELIMITER
-            );
-        }
-        
         $this->delimiter = $delimiter;
         
         return $this;
