@@ -54,6 +54,7 @@ class Mailcode_Parser_Safeguard
     const ERROR_INVALID_COMMANDS = 47801;
     const ERROR_EMPTY_DELIMITER = 47803;
     const ERROR_PLACEHOLDER_NOT_FOUND = 47804;
+    const ERROR_INVALID_DELIMITER = 47805;
     
    /**
     * @var Mailcode_Parser
@@ -95,11 +96,21 @@ class Mailcode_Parser_Safeguard
     * @var string[]|NULL
     */
     protected $placeholderStrings;
-    
+
     public function __construct(Mailcode_Parser $parser, string $subject)
     {
         $this->parser = $parser;
         $this->originalString = $subject;
+    }
+
+    /**
+     * Resets the internal placeholders counter, which is
+     * used to number the placeholder strings. Mainly used
+     * in the tests suite.
+     */
+    public static function resetCounter() : void
+    {
+        self::$counter = 0;
     }
     
    /**
@@ -129,6 +140,15 @@ class Mailcode_Parser_Safeguard
                 'Empty delimiter',
                 'Delimiters may not be empty.',
                 self::ERROR_EMPTY_DELIMITER
+            );
+        }
+
+        if(strstr($delimiter, '*') !== false)
+        {
+            throw new Mailcode_Exception(
+                'The delimiter may not contain the * character.',
+                'The * character is used in placeholders as ID separator character.',
+                self::ERROR_INVALID_DELIMITER
             );
         }
         

@@ -4,6 +4,7 @@ use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands_Command;
 use Mailcode\Mailcode_Exception;
 use Mailcode\Mailcode_Factory;
+use Mailcode\Mailcode_Parser_Safeguard;
 
 final class Parser_SafeguardTests extends MailcodeTestCase
 {
@@ -311,5 +312,46 @@ final class Parser_SafeguardTests extends MailcodeTestCase
         $this->assertCount(1, $placeholders);
 
         $this->assertFalse($placeholders[0]->getCommand()->isURLEncoded());
+    }
+
+    /**
+     * Test for a very specific bug. Placeholders used to be
+     * zero-padded, which caused issues in the case where the
+     * first and tenth commands would get the same placeholder
+     * string if they had the same length, because both placeholders
+     * would look like this: "___1000000000000___".
+     *
+     * This is why placeholders were modified to use an ID
+     * separator character, like this: "___10*000000000___".
+     */
+    public function test_placeholder_duplicates() : void
+    {
+        $markup = <<<'EOD'
+01. {showvar: $VAR.ABC}
+02. {showvar: $VAR.ABCD}
+03. {showvar: $VAR.ABCDE}
+04. {showvar: $VAR.ABCDEF}
+05. {showvar: $VAR.ABCDEFG}
+06. {showvar: $VAR.ABCDEFGH}
+07. {showvar: $VAR.ABCDEFGHI}
+08. {showvar: $VAR.ABCDEFGHIJ}
+09. {showvar: $VAR.ABCDEFGHIJK}
+10. {showvar: $VAR.CBA} (same length as command Nr 1)
+EOD;
+
+        Mailcode_Parser_Safeguard::resetCounter();
+
+        $safeguard = Mailcode::create()->createSafeguard($markup);
+        $placeholders = $safeguard->getPlaceholders();
+        $stack = array();
+
+        foreach($placeholders as $placeholder)
+        {
+            $replacement = $placeholder->getReplacementText();
+
+            $this->assertNotContains($replacement, $stack, 'Found a duplicate placeholder!');
+
+            $stack[] = $replacement;
+        }
     }
 }

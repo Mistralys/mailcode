@@ -73,7 +73,7 @@ class Mailcode_Parser_Safeguard_Placeholder
         {
             return $this->replacement;
         }
-        
+
         // prepend and append the delimiter characters
         $format = sprintf(
             '%1$s%2$s%1$s',
@@ -82,24 +82,35 @@ class Mailcode_Parser_Safeguard_Placeholder
         );
         
         // the length of the placeholder, without the ID
-        $length = strlen($format) - 2; // - 2 for the %s
+        $length = strlen($format) - 2; // -2 for the %s
         
         // to total amount of zeroes to pad with to obtain the total length
-        $padLength = $this->getLength() - $length;
+        $padLength = $this->getLength() - $length - 1; // -1 for the ID separator char
         
         if($padLength < 0) 
         {
             $padLength = 0;
         }
         
-        // create the zero-padded ID to fill the format string with 
-        $paddedID  = str_pad((string)$this->id, $padLength, '0');
+        // Create the padded ID to fill the format string with.
+        //
+        // Why add the *? To avoid ambiguity with the placeholder's
+        // ID with 1-based numbers (1, 10, 100...). Since we pad to the
+        // command's length, we would break the ID when using zeroes.
+        //
+        // For example: Imagine two commands with a length of 12 characters.
+        // The first command has the ID "1", the other the ID "10". They
+        // would both get this placeholder: "100000000000". Using the * as
+        // separator, there is no ambiguity. It becomes "1*000000000" and
+        // "10*00000000", keeping the ID intact.
+
+        $paddedID  = str_pad((string)$this->id.'*', $padLength, '0');
         
         $this->replacement = sprintf($format, $paddedID);
-        
+
         return $this->replacement;
     }
-    
+
     public function getOriginalText() : string
     {
         return $this->command->getMatchedText();
