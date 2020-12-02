@@ -125,7 +125,7 @@ final class Parser_SafeguardTests extends MailcodeTestCase
         $original = 'Text with a {showvar: $VAR.NAME} variable.';
         
         $safeguard = $parser->createSafeguard($original);
-        $safeguard->setDelimiter('$');
+        $safeguard->setDelimiter('$$');
         
         $text = $safeguard->makeSafe();
         
@@ -352,6 +352,50 @@ EOD;
             $this->assertNotContains($replacement, $stack, 'Found a duplicate placeholder!');
 
             $stack[] = $replacement;
+        }
+    }
+
+    public function test_invalidDelimiter() : void
+    {
+        $delimiters = array(
+            '_' => false, // min length = 2
+            '_*_' => false, // contains *
+            '__1' => false, // number at the end
+            '1__' => false, // number at the beginning
+            '_1_' => true,
+            'AAA' => true,
+            'abc' => true,
+        );
+
+        foreach($delimiters as $delimiter => $valid)
+        {
+            $safeguard = Mailcode::create()->createSafeguard('');
+
+            try
+            {
+                $safeguard->setDelimiter($delimiter);
+            }
+            catch(Mailcode_Exception $e)
+            {
+                if($valid)
+                {
+                    $this->fail('Delimiter ['.$delimiter.'] should be valid.');
+                }
+                else
+                {
+                    $this->addToAssertionCount(1);
+                }
+                continue;
+            }
+
+            if(!$valid)
+            {
+                $this->fail('Delimiter ['.$delimiter.'] should be invalid.');
+            }
+            else
+            {
+                $this->addToAssertionCount(1);
+            }
         }
     }
 }

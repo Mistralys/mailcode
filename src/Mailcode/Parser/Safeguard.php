@@ -128,6 +128,10 @@ class Mailcode_Parser_Safeguard
     * and append to the placeholders.
     * 
     * The delimiter's default is "__" (two underscores).
+    *
+    * Minimum characters: 2
+    * Invalid characters: *
+    * Rules: May not end or begin with a number
     * 
     * @param string $delimiter
     * @return Mailcode_Parser_Safeguard
@@ -140,6 +144,15 @@ class Mailcode_Parser_Safeguard
                 'Empty delimiter',
                 'Delimiters may not be empty.',
                 self::ERROR_EMPTY_DELIMITER
+            );
+        }
+
+        if(!preg_match('/\A[^0-9*].*[^0-9*]\z/x', $delimiter))
+        {
+            throw new Mailcode_Exception(
+                'The delimiter may not begin or end with a number.',
+                '',
+                self::ERROR_INVALID_DELIMITER
             );
         }
 
