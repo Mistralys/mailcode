@@ -434,4 +434,25 @@ EOD;
 
         $this->fail('No exception has been triggered.');
     }
+
+    /**
+     * URL encoding the subject string once safeguarded must not break
+     * the placeholders.
+     *
+     * @throws Mailcode_Exception
+     */
+    public function test_makeSafe_URLEncodingPlaceholders() : void
+    {
+        $subject = 'Here is some {showvar: $FOO} text.';
+
+        $safeguard = Mailcode::create()->createSafeguard($subject);
+
+        $safe = $safeguard->makeSafe();
+
+        $safe = urlencode($safe);
+
+        $whole = urldecode($safeguard->makeWhole($safe));
+
+        $this->assertEquals($subject, $whole);
+    }
 }

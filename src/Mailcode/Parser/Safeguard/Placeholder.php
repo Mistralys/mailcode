@@ -85,7 +85,7 @@ class Mailcode_Parser_Safeguard_Placeholder
         $length = strlen($format) - 2; // -2 for the %s
         
         // to total amount of zeroes to pad with to obtain the total length
-        $padLength = $this->getLength() - $length - 1; // -1 for the ID separator char
+        $padLength = $this->getLength() - $length;
         
         if($padLength < 0) 
         {
@@ -100,11 +100,11 @@ class Mailcode_Parser_Safeguard_Placeholder
         //
         // For example: Imagine two commands with a length of 12 characters.
         // The first command has the ID "1", the other the ID "10". They
-        // would both get this placeholder: "100000000000". Using the * as
-        // separator, there is no ambiguity. It becomes "1*000000000" and
-        // "10*00000000", keeping the ID intact.
+        // would both get this placeholder: "100000000000". Using hyphens
+        // as padding character, there is no ambiguity. It becomes
+        // "1------------" and "10-----------", keeping the ID intact.
 
-        $paddedID  = str_pad((string)$this->id.'*', $padLength, '0');
+        $paddedID  = str_pad((string)$this->id, $padLength, '-');
         
         $this->replacement = sprintf($format, $paddedID);
 
