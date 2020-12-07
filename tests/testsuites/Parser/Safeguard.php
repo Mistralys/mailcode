@@ -5,6 +5,7 @@ use Mailcode\Mailcode_Commands_Command;
 use Mailcode\Mailcode_Exception;
 use Mailcode\Mailcode_Factory;
 use Mailcode\Mailcode_Parser_Safeguard;
+use Mailcode\Mailcode_Parser_Safeguard_Formatter_Location;
 
 final class Parser_SafeguardTests extends MailcodeTestCase
 {
@@ -397,5 +398,40 @@ EOD;
                 $this->addToAssertionCount(1);
             }
         }
+    }
+
+    /**
+     * Ensure that an exception is thrown when trying to
+     * restore a string using the strict, non-partial
+     * replacement method.
+     */
+    public function test_placeholderNotFound() : void
+    {
+        $subject = 'Here is some {showvar: $FOO} text.';
+
+        $safeguard = Mailcode::create()->createSafeguard($subject);
+
+        $safe = $safeguard->makeSafe();
+
+        // Replace with a text in which the placeholder is missing
+        $safe = 'Here is some text.';
+
+        try
+        {
+            $safeguard->makeWhole($safe);
+        }
+        catch (Mailcode_Exception $e)
+        {
+            $this->assertEquals(
+                Mailcode_Parser_Safeguard_Formatter_Location::ERROR_PLACEHOLDER_NOT_FOUND,
+                $e->getCode()
+            );
+
+            $this->assertStringContainsString('{showvar: $FOO}', $e->getDetails());
+
+            return;
+        }
+
+        $this->fail('No exception has been triggered.');
     }
 }

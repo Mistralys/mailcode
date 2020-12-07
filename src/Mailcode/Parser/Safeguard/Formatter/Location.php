@@ -163,8 +163,10 @@ abstract class Mailcode_Parser_Safeguard_Formatter_Location
             throw new Mailcode_Exception(
                 'Could not find the placeholder to replace',
                 sprintf(
-                    'The placeholder [%s] was not found in the string.',
-                    $needle
+                    'The placeholder [%s] was not found in the string, for command [%s]. Subject string: %s',
+                    $needle,
+                    $this->placeholder->getCommand()->getNormalized(),
+                    PHP_EOL.'<br><pre>'.htmlspecialchars($this->subject->getString()).'</pre>'
                 ),
                 self::ERROR_PLACEHOLDER_NOT_FOUND
             );
