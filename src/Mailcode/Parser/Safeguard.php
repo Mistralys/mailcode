@@ -88,7 +88,7 @@ class Mailcode_Parser_Safeguard
    /**
     * @var string
     */
-    protected $delimiter = '__';
+    protected $delimiter = '999';
     
    /**
     * @var string[]|NULL
@@ -125,12 +125,11 @@ class Mailcode_Parser_Safeguard
     * Sets the delimiter character sequence used to prepend
     * and append to the placeholders.
     * 
-    * The delimiter's default is "__" (two underscores).
+    * The delimiter's default is "999".
     *
     * Minimum characters: 2
-    * Invalid characters: *
-    * Rules: May not end or begin with a number
-    * 
+    * Invalid characters: Any characters that get URL encoded
+    *
     * @param string $delimiter
     * @return Mailcode_Parser_Safeguard
     */

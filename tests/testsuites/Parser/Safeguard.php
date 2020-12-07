@@ -6,6 +6,7 @@ use Mailcode\Mailcode_Exception;
 use Mailcode\Mailcode_Factory;
 use Mailcode\Mailcode_Parser_Safeguard;
 use Mailcode\Mailcode_Parser_Safeguard_Formatter_Location;
+use function AppUtils\parseURL;
 
 final class Parser_SafeguardTests extends MailcodeTestCase
 {
@@ -126,7 +127,7 @@ final class Parser_SafeguardTests extends MailcodeTestCase
         $original = 'Text with a {showvar: $VAR.NAME} variable.';
         
         $safeguard = $parser->createSafeguard($original);
-        $safeguard->setDelimiter('$$');
+        $safeguard->setDelimiter('222');
         
         $text = $safeguard->makeSafe();
         
@@ -360,9 +361,10 @@ EOD;
     {
         $delimiters = array(
             '_' => false, // min length = 2
-            '_*_' => false, // contains *
-            '__1' => false, // number at the end
-            '1__' => false, // number at the beginning
+            '_*_' => false, // not urlencode independent
+            '__1' => true, // number at the end
+            '1__' => true, // number at the beginning
+            '999' => true,
             '_1_' => true,
             'AAA' => true,
             'abc' => true,
@@ -454,5 +456,28 @@ EOD;
         $whole = urldecode($safeguard->makeWhole($safe));
 
         $this->assertEquals($subject, $whole);
+    }
+
+    /**
+     * The safeguard placeholders were using hyphens at some point,
+     * to separate the placeholder ID from the zero-padding. This
+     * caused issues when highlighting URLs with commands, because
+     * the highlighter replaces hyphens with "-<wbr>" to improve
+     * word wrapping.
+     */
+    public function test_highlightURL() : void
+    {
+        $url = 'https://domain.com/path/?param={showvar: $FOO}&bar=lopos';
+
+        $safeguard = Mailcode::create()->createSafeguard($url);
+
+        $safe = $safeguard->makeSafe();
+
+        $safe = parseURL($safe)->getHighlighted();
+
+        $safeguard->makeWhole($safe);
+
+        // No exception = safeguarding works.
+        $this->addToAssertionCount(1);
     }
 }

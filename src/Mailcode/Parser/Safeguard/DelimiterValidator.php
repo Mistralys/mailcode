@@ -25,9 +25,8 @@ use stdClass;
 class Mailcode_Parser_Safeguard_DelimiterValidator extends OperationResult
 {
     const ERROR_EMPTY_DELIMITER = 73601;
-    const ERROR_INVALID_DELIMITER = 73602;
-    const ERROR_DELIMITER_TOO_SHORT = 73603;
-    const ERROR_NUMBERS_IN_DELIMITER = 73604;
+    const ERROR_DELIMITER_TOO_SHORT = 73602;
+    const ERROR_DELIMITER_URLENCODE_INCOMPATIBLE = 73603;
 
     /**
      * @var string
@@ -61,19 +60,13 @@ class Mailcode_Parser_Safeguard_DelimiterValidator extends OperationResult
             );
         }
 
-        if(!preg_match('/\A[^0-9*].*[^0-9*]\z/x', $this->delimiter))
-        {
-            return $this->makeError(
-                'The delimiter may not begin or end with a number.',
-                self::ERROR_NUMBERS_IN_DELIMITER
-            );
-        }
+        $encoded = urlencode($this->delimiter);
 
-        if(strstr($this->delimiter, '*') !== false)
+        if($encoded !== $this->delimiter)
         {
             return $this->makeError(
-                'The delimiter may not contain the * character.',
-                self::ERROR_INVALID_DELIMITER
+                'The delimiter is not URL encoding neutral: it must not be modified by a urlencode() call.',
+                self::ERROR_DELIMITER_URLENCODE_INCOMPATIBLE
             );
         }
 
