@@ -358,15 +358,22 @@ $result = $safeguard->makeWhole($filterText);
 
 ### Avoiding delimiter conflicts
 
-By default, the placeholders use `__` (double undserscore) as delimiters, for example: `__0001__`. If your text processing can affect underscores, the delimiter characters can be adjusted:
+By default, the placeholders use `999` as delimiters, for example: `9990000000001999`. 
+Each delimiter gets a unique number within the same request, which is zero-padded right,
+making each placeholder unique in all subject strings.
+
+Having number-based placeholders means that they are impervious to usual text transformations,
+like changing the case or applying url encoding.
+
+Still, the delimiter string can be adjusted as needed:
 
 ```php
 $safeguard = Mailcode::create()->createSafeguard($text);
 
-$safeguard->setDelimiter('%%');
+$safeguard->setDelimiter('__');
 ```
 
-This would for example make the delimiters look like `%%0001%%`.
+This would for example make the delimiters look like `__0000000001__`.
 
 ### Placeholder consistency check
 
