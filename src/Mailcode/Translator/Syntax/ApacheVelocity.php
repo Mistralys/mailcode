@@ -49,6 +49,9 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
     /**
     * Filters the string for use in an Apache Velocity (Java)
     * regex string: escapes all special characters.
+    *
+    * Velocity does its own escaping, so no need to escape special
+    * characters as if they were a javascript string.
     * 
     * @param string $string
     * @return string
@@ -62,19 +65,19 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
         // Any other existing backslashes in the string
         // have to be double-escaped, giving four 
         // backslashes in the java regex.
-        $string = str_replace('\\', '\\\\\\\\', $string);
+        $string = str_replace('\\', '\\\\', $string);
         
         // All other special characters have to be escaped
         // with two backslashes. 
         foreach($this->regexSpecialChars as $char)
         {
-            $string = str_replace($char, '\\\\'.$char, $string);
+            $string = str_replace($char, '\\'.$char, $string);
         }
         
         // Restore the escaped quotes, which stay escaped 
         // with a single backslash.
         $string = str_replace('ESCQUOTE', '\\"', $string);
-        
+
         return $string;
     }
 }

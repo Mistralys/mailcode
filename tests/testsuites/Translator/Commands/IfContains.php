@@ -25,7 +25,7 @@ final class Translator_Velocity_IfContainsTests extends VelocityTestCase
                 'mailcode' => Mailcode_Factory::ifContains('FOO.BAR', 'Va\lue'),
                 'expected' => sprintf(
                     '#if($FOO.BAR.matches("(?s)%s"))',
-                    'Va[FOURSLASH]lue'
+                    'Va[DBLSLASH]lue'
                 )
             ),
             array(
@@ -33,7 +33,7 @@ final class Translator_Velocity_IfContainsTests extends VelocityTestCase
                 'mailcode' => Mailcode_Factory::ifContains('FOO.BAR', '6 + 4 * 3'),
                 'expected' => sprintf(
                     '#if($FOO.BAR.matches("(?s)%s"))',
-                    addslashes('6 [DBLSLASH]+ 4 [DBLSLASH]* 3')
+                    addslashes('6 [SLASH]+ 4 [SLASH]* 3')
                 )
             ),
             array(
@@ -46,7 +46,15 @@ final class Translator_Velocity_IfContainsTests extends VelocityTestCase
                 'mailcode' => Mailcode_Factory::ifContains('FOO.BAR', 'Value, "quoted" yeah?'),
                 'expected' => sprintf(
                     '#if($FOO.BAR.matches("(?s)%s"))',
-                    'Value, [SLASH]"quoted[SLASH]" yeah[DBLSLASH]?'
+                    'Value, [SLASH]"quoted[SLASH]" yeah[SLASH]?'
+                )
+            ),
+            array(
+                'label' => 'If contains with slash',
+                'mailcode' => Mailcode_Factory::ifContains('FOO.BAR', '(Value)'),
+                'expected' => sprintf(
+                    '#if($FOO.BAR.matches("(?s)%s"))',
+                    '[SLASH](Value[SLASH])'
                 )
             )
         );

@@ -25,7 +25,7 @@ final class Translator_Velocity_ElseIfContainsTests extends VelocityTestCase
                 'mailcode' => Mailcode_Factory::elseIfContains('FOO.BAR', 'Va\lue'),
                 'expected' => sprintf(
                     '#elseif($FOO.BAR.matches("(?s)%s"))',
-                    'Va[FOURSLASH]lue'
+                    'Va[DBLSLASH]lue'
                 )
             ),
             array(
@@ -33,7 +33,7 @@ final class Translator_Velocity_ElseIfContainsTests extends VelocityTestCase
                 'mailcode' => Mailcode_Factory::elseIfContains('FOO.BAR', '6 + 4 * 3'),
                 'expected' => sprintf(
                     '#elseif($FOO.BAR.matches("(?s)%s"))',
-                    '6 [DBLSLASH]+ 4 [DBLSLASH]* 3'
+                    '6 [SLASH]+ 4 [SLASH]* 3'
                 )
             ),
             array(
@@ -46,7 +46,7 @@ final class Translator_Velocity_ElseIfContainsTests extends VelocityTestCase
                 'mailcode' => Mailcode_Factory::elseIfContains('FOO.BAR', 'Value, "weird" huh?'),
                 'expected' => sprintf(
                     '#elseif($FOO.BAR.matches("(?s)%s"))',
-                    'Value, [SLASH]"weird[SLASH]" huh[DBLSLASH]?'
+                    'Value, [SLASH]"weird[SLASH]" huh[SLASH]?'
                 )
             )
         );
