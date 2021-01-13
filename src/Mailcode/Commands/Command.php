@@ -126,7 +126,7 @@ abstract class Mailcode_Commands_Command
     private $inCollection = false;
 
     /**
-     * @var false
+     * @var bool
      */
     private $nestingValidated = false;
 
