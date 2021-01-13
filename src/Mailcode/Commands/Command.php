@@ -22,6 +22,12 @@ use AppUtils\OperationResult;
  */
 abstract class Mailcode_Commands_Command
 {
+    use Mailcode_Traits_Commands_Validation_EmptyParams;
+    use Mailcode_Traits_Commands_Validation_ParamKeywords;
+    use Mailcode_Traits_Commands_Validation_ParseParams;
+    use Mailcode_Traits_Commands_Validation_TypeSupported;
+    use Mailcode_Traits_Commands_Validation_TypeUnsupported;
+
     const ERROR_NON_DUMMY_OPERATION = 46001;
     const ERROR_NO_VALIDATION_RESULT_AVAILABLE = 46002;
     const ERROR_MISSING_VALIDATION_METHOD = 46003;
@@ -113,6 +119,16 @@ abstract class Mailcode_Commands_Command
      * @var Mailcode_Commands_Command|NULL
      */
     protected $parent = null;
+
+    /**
+     * @var bool
+     */
+    private $inCollection = false;
+
+    /**
+     * @var false
+     */
+    private $nestingValidated = false;
 
     public function __construct(string $type='', string $paramsString='', string $matchedText='')
     {
@@ -242,7 +258,7 @@ abstract class Mailcode_Commands_Command
         {
             $this->requireNonDummy();
             $this->validateSyntax();
-            
+
             $this->validated = true;
         }
         
@@ -311,112 +327,31 @@ abstract class Mailcode_Commands_Command
     * @return string[]
     */
     abstract protected function getValidations() : array;
-    
-    protected function validateSyntax_params_empty() : void
-    {
-        if(!$this->requiresParameters())
-        {
-            return;
-        }
-        
-        if(empty($this->paramsString))
-        {
-            $this->validationResult->makeError(
-                t('Parameters have to be specified.'),
-                self::VALIDATION_MISSING_PARAMETERS
-            );
-            return;
-        }
-    }
-    
-    protected function validateSyntax_params_keywords() : void
-    {
-        if(!$this->supportsLogicKeywords())
-        {
-            return;
-        }
-        
-        $this->logicKeywords = new Mailcode_Commands_LogicKeywords($this, $this->paramsString);
-        
-        if(!$this->logicKeywords->isValid())
-        {
-            $this->validationResult->makeError(
-                t('Invalid parameters:').' '.$this->logicKeywords->getErrorMessage(),
-                $this->logicKeywords->getCode()
-            );
-            
-            return;
-        }
-        
-        $this->paramsString = $this->logicKeywords->getMainParamsString();
-    }
-    
-    protected function validateSyntax_params_parse() : void
-    {
-        if(!$this->requiresParameters())
-        {
-            return;
-        }
-        
-        $this->params = $this->mailcode->getParser()->createStatement(
-            $this->paramsString,
-            $this->hasFreeformParameters()
-        );
 
-        if(!$this->params->isValid())
-        {
-            $error = $this->params->getValidationResult();
-            
-            $this->validationResult->makeError(
-                t('Invalid parameters:').' '.$error->getErrorMessage(), 
-                self::VALIDATION_INVALID_PARAMS_STATEMENT
-            );
-            
-            return;
-        }
-        
-        $this->validator = new Mailcode_Parser_Statement_Validator($this->params);
+    protected function _validateNesting() : void
+    {
+
     }
 
+    public function validateNesting() : OperationResult
+    {
+        if($this->nestingValidated)
+        {
+            return $this->validationResult;
+        }
+
+        $this->nestingValidated = true;
+
+        $this->_validateNesting();
+
+        return $this->validationResult;
+    }
+    
     public function hasFreeformParameters() : bool
     {
         return false;
     }
 
-    protected function validateSyntax_type_supported() : void
-    {
-        if(!$this->supportsType() || empty($this->type))
-        {
-            return;
-        }
-        
-        $types = $this->getSupportedTypes();
-
-        if(!in_array($this->type, $types))
-        {
-            $this->validationResult->makeError(
-                t('The command addon %1$s is not supported.', $this->type).' '.
-                t('Valid addons are %1$s.', implode(', ', $types)),
-                self::VALIDATION_ADDON_NOT_SUPPORTED
-            );
-            
-            return;
-        }
-    }
-    
-    protected function validateSyntax_type_unsupported() : void
-    {
-        if($this->supportsType() || empty($this->type))
-        {
-            return;
-        }
-        
-        $this->validationResult->makeError(
-            t('Command addons are not supported (the %1$s part).', $this->type),
-            self::VALIDATION_ADDONS_NOT_SUPPORTED
-        );
-    }
-    
     public function hasType() : bool
     {
         return $this->supportsType() && !empty($this->type);
