@@ -23,6 +23,7 @@ use AppUtils\OperationResult;
 class Mailcode_Collection
 {
     const ERROR_CANNOT_RETRIEVE_FIRST_ERROR = 52301;
+    const ERROR_CANNOT_MODIFY_FINALIZED = 52302;
     
    /**
     * @var Mailcode_Commands_Command[]
@@ -38,8 +39,13 @@ class Mailcode_Collection
     * @var OperationResult|NULL
     */
     protected $validationResult;
-    
-   /**
+
+    /**
+     * @var bool
+     */
+    private $finalized = false;
+
+    /**
     * Adds a command to the collection.
     * 
     * @param Mailcode_Commands_Command $command
@@ -47,9 +53,18 @@ class Mailcode_Collection
     */
     public function addCommand(Mailcode_Commands_Command $command) : Mailcode_Collection
     {
+        if($this->finalized)
+        {
+            throw new Mailcode_Exception(
+                'Cannot add commands to a finalized collection',
+                'When a collection has been finalized, it may not be modified anymore.',
+                self::ERROR_CANNOT_MODIFY_FINALIZED
+            );
+        }
+
         $this->commands[] = $command;
-        
-        // reset the collection's validation result, since it 
+
+        // reset the collection's validation result, since it
         // depends on the commands.
         $this->validationResult = null;
         
@@ -87,7 +102,25 @@ class Mailcode_Collection
     
     public function addInvalidCommand(Mailcode_Commands_Command $command) : void
     {
+        // Remove the command in case it was already added
+        $this->removeCommand($command);
+
         $this->errors[] = new Mailcode_Collection_Error_Command($command);
+    }
+
+    public function removeCommand(Mailcode_Commands_Command $command) : void
+    {
+        $keep = array();
+
+        foreach($this->commands as $existing)
+        {
+            if($existing !== $command)
+            {
+                $keep[] = $existing;
+            }
+        }
+
+        $this->commands = $keep;
     }
     
    /**
@@ -188,9 +221,11 @@ class Mailcode_Collection
     
     public function mergeWith(Mailcode_Collection $collection) : Mailcode_Collection
     {
-        $this->addCommands($collection->getCommands());
-        
-        return $this;
+        $merged = new Mailcode_Collection();
+        $merged->addCommands($this->getCommands());
+        $merged->addCommands($collection->getCommands());
+
+        return $merged;
     }
     
     public function getVariables() : Mailcode_Variables_Collection
@@ -302,5 +337,29 @@ class Mailcode_Collection
         }
         
         return null;
+    }
+
+    public function finalize() : void
+    {
+        $this->finalized = true;
+
+        $this->validateNesting();
+    }
+
+    public function isFinalized() : bool
+    {
+        return $this->finalized;
+    }
+
+    private function validateNesting() : void
+    {
+        foreach($this->commands as $command)
+        {
+            $command->validateNesting();
+
+            if(!$command->isValid()) {
+                $this->addInvalidCommand($command);
+            }
+        }
     }
 }
