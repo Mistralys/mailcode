@@ -31,6 +31,8 @@ trait Mailcode_Traits_Commands_Validation_ParseParams
 {
     abstract public function requiresParameters() : bool;
 
+    abstract public function hasFreeformParameters() : bool;
+
     protected function validateSyntax_params_parse() : void
     {
         if(!$this->requiresParameters())
