@@ -123,11 +123,6 @@ abstract class Mailcode_Commands_Command
     /**
      * @var bool
      */
-    private $inCollection = false;
-
-    /**
-     * @var bool
-     */
     private $nestingValidated = false;
 
     public function __construct(string $type='', string $paramsString='', string $matchedText='')
