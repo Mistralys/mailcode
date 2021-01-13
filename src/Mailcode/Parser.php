@@ -86,10 +86,12 @@ class Mailcode_Parser
             
             $this->processMatch($match, $collection);
         }
-        
+
+        $collection->finalize();
+
         return $collection;
     }
-    
+
     protected function prepareString(string $subject) : string
     {
         if(!ConvertHelper::isStringHTML($subject))
@@ -129,14 +131,15 @@ class Mailcode_Parser
             $match->getMatchedString()
         );
 
-        if (!$cmd->isValid()) {
+        $this->handleNesting($cmd);
+
+        if (!$cmd->isValid())
+        {
             $collection->addInvalidCommand($cmd);
             return;
         }
 
         $collection->addCommand($cmd);
-
-        $this->handleNesting($cmd);
     }
 
     private function handleNesting(Mailcode_Commands_Command $cmd) : void
