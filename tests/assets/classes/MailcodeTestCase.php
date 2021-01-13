@@ -1,6 +1,7 @@
 <?php
 
 use Mailcode\Mailcode;
+use Mailcode\Mailcode_Exception;
 use PHPUnit\Framework\TestCase;
 
 abstract class MailcodeTestCase extends TestCase
@@ -41,9 +42,9 @@ abstract class MailcodeTestCase extends TestCase
                     $safe = $safeguard->makeSafe();
                     $whole = $safeguard->makeWhole($safe);
 
-                    $this->assertEquals($test['normalized'], $whole);
+                    $this->assertEquals($test['normalized'], $whole, $label);
                 }
-                catch (\Mailcode\Mailcode_Exception $e)
+                catch (Mailcode_Exception $e)
                 {
                     $this->fail($e->getMessage(). ' ' . $e->getDetails());
                 }
