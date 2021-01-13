@@ -300,6 +300,11 @@ class Mailcode_Factory
     {
         return self::$commandSets->misc()->for($sourceVariable, $loopVariable);
     }
+
+    public static function break() : Mailcode_Commands_Command_Break
+    {
+        return self::$commandSets->misc()->break();
+    }
     
    /**
     * Creates a renderer instance, which can be used to easily

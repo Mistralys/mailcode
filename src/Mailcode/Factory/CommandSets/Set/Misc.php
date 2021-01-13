@@ -72,6 +72,25 @@ class Mailcode_Factory_CommandSets_Set_Misc extends Mailcode_Factory_CommandSets
         throw $this->instantiator->exceptionUnexpectedType('For', $cmd);
     }
 
+    public function break() : Mailcode_Commands_Command_Break
+    {
+        $cmd = Mailcode::create()->getCommands()->createCommand(
+            'Break',
+            '',
+            '',
+            '{break}'
+        );
+
+        $this->instantiator->checkCommand($cmd);
+
+        if($cmd instanceof Mailcode_Commands_Command_Break)
+        {
+            return $cmd;
+        }
+
+        throw $this->instantiator->exceptionUnexpectedType('Break', $cmd);
+    }
+
     public function code(string $language) : Mailcode_Commands_Command_Code
     {
         $cmd = Mailcode::create()->getCommands()->createCommand(
