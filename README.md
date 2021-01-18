@@ -156,6 +156,12 @@ Searching for multiple terms (applied if any of the terms is found):
 {if contains: $PRODUCT.NAME "Term 1" "Term 2" "Term 3"}
 ```
 
+Matching a variable value if it does NOT contain any of the search terms:
+
+```
+{if not-contains: $PRODUCT.NAME "Term 1" "Term 2" "Term 3"}
+```
+
 #### Searching by position
 
 Checking if a variable value starts with a specific string:
@@ -228,6 +234,17 @@ Using OR:
 
 ```
 {for: $NAME in $CUSTOMER.NAMES}
+    {showvar: $NAME}
+{end}
+```
+
+#### Breaking out of loops
+
+```
+{for: $NAME in $CUSTOMER.NAMES}
+    {if variable: $NAME == "John Doe"}
+        {break}
+    {end}
     {showvar: $NAME}
 {end}
 ```

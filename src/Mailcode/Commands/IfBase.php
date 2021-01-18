@@ -54,6 +54,11 @@ abstract class Mailcode_Commands_IfBase extends Mailcode_Commands_Command
     {
         return $this->type === 'contains';
     }
+
+    public function isNotContains() : bool
+    {
+        return $this->type === 'not-contains';
+    }
     
     protected function getValidations() : array
     {
@@ -71,6 +76,7 @@ abstract class Mailcode_Commands_IfBase extends Mailcode_Commands_Command
             'variable',
             'command',
             'contains',
+            'not-contains',
             'empty',
             'not-empty',
             'begins-with',

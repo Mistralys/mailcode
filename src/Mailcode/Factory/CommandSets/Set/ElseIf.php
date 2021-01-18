@@ -103,13 +103,14 @@ class Mailcode_Factory_CommandSets_Set_ElseIf extends Mailcode_Factory_CommandSe
         
         throw $this->instantiator->exceptionUnexpectedType('ElseIfVarNotEqualsString', $command);
     }
-    
-   /**
-    * @param string $variable
-    * @param string[] $searchTerms
-    * @param bool $caseInsensitive
-    * @return Mailcode_Commands_Command_ElseIf_Contains
-    */
+
+    /**
+     * @param string $variable
+     * @param string[] $searchTerms
+     * @param bool $caseInsensitive
+     * @return Mailcode_Commands_Command_ElseIf_Contains
+     * @throws Mailcode_Factory_Exception
+     */
     public function elseIfContains(string $variable, array $searchTerms, bool $caseInsensitive=false) : Mailcode_Commands_Command_ElseIf_Contains
     {
         $command = $this->instantiator->buildIfContains('ElseIf', $variable, $searchTerms, $caseInsensitive);
@@ -121,7 +122,26 @@ class Mailcode_Factory_CommandSets_Set_ElseIf extends Mailcode_Factory_CommandSe
         
         throw $this->instantiator->exceptionUnexpectedType('ElseIfContains', $command);
     }
-    
+
+    /**
+     * @param string $variable
+     * @param string[] $searchTerms
+     * @param bool $caseInsensitive
+     * @return Mailcode_Commands_Command_ElseIf_NotContains
+     * @throws Mailcode_Factory_Exception
+     */
+    public function elseIfNotContains(string $variable, array $searchTerms, bool $caseInsensitive=false) : Mailcode_Commands_Command_ElseIf_NotContains
+    {
+        $command = $this->instantiator->buildIfNotContains('ElseIf', $variable, $searchTerms, $caseInsensitive);
+
+        if($command instanceof Mailcode_Commands_Command_ElseIf_NotContains)
+        {
+            return $command;
+        }
+
+        throw $this->instantiator->exceptionUnexpectedType('ElseIfNotContains', $command);
+    }
+
     public function elseIfBeginsWith(string $variable, string $search, bool $caseInsensitive=false) : Mailcode_Commands_Command_ElseIf_BeginsWith
     {
         $command = $this->instantiator->buildIfBeginsWith('ElseIf', $variable, $search, $caseInsensitive);

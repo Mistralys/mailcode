@@ -27,25 +27,29 @@ class Mailcode_Factory
     * @var Mailcode_Factory_CommandSets
     */
     private static $commandSets;
-    
-   /**
-    * Creates a ShowVariable command.
-    * 
-    * @param string $variableName A variable name, with or without the $ sign prepended.
-    * @return Mailcode_Commands_Command_ShowVariable
-    */
+
+    // region Show commands
+
+    /**
+     * Creates a ShowVariable command.
+     *
+     * @param string $variableName A variable name, with or without the $ sign prepended.
+     * @return Mailcode_Commands_Command_ShowVariable
+     * @throws Mailcode_Factory_Exception
+     */
     public static function showVar(string $variableName) : Mailcode_Commands_Command_ShowVariable
     {
         return self::$commandSets->show()->showVar($variableName);
     }
-    
+
     /**
-     * Creates a ShowDate command, used to display date variables and 
+     * Creates a ShowDate command, used to display date variables and
      * format the date using date format strings.
      *
      * @param string $variableName A variable name, with or without the $ sign prepended.
      * @param string $formatString A date format string, or empty string for default.
      * @return Mailcode_Commands_Command_ShowDate
+     * @throws Mailcode_Factory_Exception
      */
     public static function showDate(string $variableName, string $formatString="") : Mailcode_Commands_Command_ShowDate
     {
@@ -59,65 +63,124 @@ class Mailcode_Factory
      * @param string $variableName A variable name, with or without the $ sign prepended.
      * @param string $formatString A number format string, or empty string for default.
      * @return Mailcode_Commands_Command_ShowNumber
+     * @throws Mailcode_Factory_Exception
      */
     public static function showNumber(string $variableName, string $formatString="") : Mailcode_Commands_Command_ShowNumber
     {
         return self::$commandSets->show()->showNumber($variableName, $formatString);
     }
 
-   /**
-    * Creates a ShowSnippet command.
-    *
-    * @param string $snippetName A snippet name, with or without the $ sign prepended.
-    * @return Mailcode_Commands_Command_ShowSnippet
-    */
+    /**
+     * Creates a ShowSnippet command.
+     *
+     * @param string $snippetName A snippet name, with or without the $ sign prepended.
+     * @return Mailcode_Commands_Command_ShowSnippet
+     * @throws Mailcode_Factory_Exception
+     */
     public static function showSnippet(string $snippetName) : Mailcode_Commands_Command_ShowSnippet
     {
         return self::$commandSets->show()->showSnippet($snippetName);
     }
-    
-   /**
-    * Creates a SetVariable command.
-    * 
-    * @param string $variableName A variable name, with or without the $ sign prepended.
-    * @param string $value
-    * @param bool $quoteValue Whether to treat the value as a string literal, and add quotes to it.
-    * @return Mailcode_Commands_Command_SetVariable
-    * @throws Mailcode_Factory_Exception
-    * 
-    * @see Mailcode_Factory::ERROR_INVALID_COMMAND_CREATED
-    */
+
+    // endregion
+
+    // region Miscellaneous
+
+    /**
+     * Creates a SetVariable command.
+     *
+     * @param string $variableName A variable name, with or without the $ sign prepended.
+     * @param string $value
+     * @param bool $quoteValue Whether to treat the value as a string literal, and add quotes to it.
+     * @return Mailcode_Commands_Command_SetVariable
+     * @throws Mailcode_Factory_Exception
+     *
+     * @see Mailcode_Factory::ERROR_INVALID_COMMAND_CREATED
+     */
     public static function setVar(string $variableName, string $value, bool $quoteValue=true) : Mailcode_Commands_Command_SetVariable
     {
         return self::$commandSets->set()->setVar($variableName, $value, $quoteValue);
     }
-    
-   /**
-    * Like setVar(), but treats the value as a string literal
-    * and automatically adds quotes to it.
-    * 
-    * @param string $variableName
-    * @param string $value
-    * @return Mailcode_Commands_Command_SetVariable
-    */
+
+    /**
+     * Like setVar(), but treats the value as a string literal
+     * and automatically adds quotes to it.
+     *
+     * @param string $variableName
+     * @param string $value
+     * @return Mailcode_Commands_Command_SetVariable
+     * @throws Mailcode_Factory_Exception
+     */
     public static function setVarString(string $variableName, string $value) : Mailcode_Commands_Command_SetVariable
     {
         return self::$commandSets->set()->setVar($variableName, $value, true);
     }
-    
+
+    /**
+     * Creates a comment command for documenting things.
+     *
+     * @param string $comments
+     * @return Mailcode_Commands_Command_Comment
+     * @throws Mailcode_Factory_Exception
+     */
     public static function comment(string $comments) : Mailcode_Commands_Command_Comment
     {
         return self::$commandSets->misc()->comment($comments);
     }
+
+    /**
+     * Creates a code command for inserting code blocks meant for
+     * the backend system that will parse the templates.
+     *
+     * @param string $language
+     * @return Mailcode_Commands_Command_Code
+     * @throws Mailcode_Factory_Exception
+     */
+    public static function code(string $language) : Mailcode_Commands_Command_Code
+    {
+        return self::$commandSets->misc()->code($language);
+    }
+
+    /**
+     * Ends commands like IF and FOR.
+     *
+     * @return Mailcode_Commands_Command_End
+     * @throws Mailcode_Factory_Exception
+     */
+    public static function end() : Mailcode_Commands_Command_End
+    {
+        return self::$commandSets->if()->end();
+    }
+
+    /**
+     * Creates a FOR loop command to iterate over collections.
+     *
+     * @param string $sourceVariable
+     * @param string $loopVariable
+     * @return Mailcode_Commands_Command_For
+     * @throws Mailcode_Factory_Exception
+     */
+    public static function for(string $sourceVariable, string $loopVariable) : Mailcode_Commands_Command_For
+    {
+        return self::$commandSets->misc()->for($sourceVariable, $loopVariable);
+    }
+
+    /**
+     * Used to break out of a FOR loop command.
+     *
+     * @return Mailcode_Commands_Command_Break
+     * @throws Mailcode_Factory_Exception
+     */
+    public static function break() : Mailcode_Commands_Command_Break
+    {
+        return self::$commandSets->misc()->break();
+    }
+
+    // endregion
     
     public static function else() : Mailcode_Commands_Command_Else
     {
         return self::$commandSets->if()->else();
-    }
-    
-    public static function end() : Mailcode_Commands_Command_End
-    {
-        return self::$commandSets->if()->end();
     }
     
     public static function if(string $condition, string $type='') : Mailcode_Commands_Command_If
@@ -125,36 +188,7 @@ class Mailcode_Factory
         return self::$commandSets->if()->if($condition, $type);
     }
     
-    public static function ifVar(string $variable, string $operand, string $value, bool $quoteValue=false) : Mailcode_Commands_Command_If_Variable
-    {
-        return self::$commandSets->if()->ifVar($variable, $operand, $value, $quoteValue);
-    }
 
-    public static function ifVarString(string $variable, string $operand, string $value) : Mailcode_Commands_Command_If_Variable
-    {
-        return self::$commandSets->if()->ifVarString($variable, $operand, $value);
-    }
-    
-    public static function ifVarEquals(string $variable, string $value, bool $quoteValue=false) : Mailcode_Commands_Command_If_Variable
-    {
-        return self::$commandSets->if()->ifVarEquals($variable, $value, $quoteValue);
-    }
-
-    public static function ifVarEqualsString(string $variable, string $value) : Mailcode_Commands_Command_If
-    {
-        return self::$commandSets->if()->ifVarEqualsString($variable, $value);
-    }
-    
-    public static function ifVarNotEquals(string $variable, string $value, bool $quoteValue=false) : Mailcode_Commands_Command_If_Variable
-    {
-        return self::$commandSets->if()->ifVarNotEquals($variable, $value, $quoteValue);
-    }
-
-    public static function ifVarNotEqualsString(string $variable, string $value) : Mailcode_Commands_Command_If_Variable
-    {
-        return self::$commandSets->if()->ifVarNotEqualsString($variable, $value);
-    }
-    
     public static function elseIf(string $condition, string $type='') : Mailcode_Commands_Command_ElseIf
     {
         return self::$commandSets->elseIf()->elseIf($condition, $type);
@@ -169,7 +203,39 @@ class Mailcode_Factory
     {
         return self::$commandSets->elseIf()->elseIfNotEmpty($variable);
     }
-    
+
+    // region IF variable
+
+    public static function ifVar(string $variable, string $operand, string $value, bool $quoteValue=false) : Mailcode_Commands_Command_If_Variable
+    {
+        return self::$commandSets->if()->ifVar($variable, $operand, $value, $quoteValue);
+    }
+
+    public static function ifVarString(string $variable, string $operand, string $value) : Mailcode_Commands_Command_If_Variable
+    {
+        return self::$commandSets->if()->ifVarString($variable, $operand, $value);
+    }
+
+    public static function ifVarEquals(string $variable, string $value, bool $quoteValue=false) : Mailcode_Commands_Command_If_Variable
+    {
+        return self::$commandSets->if()->ifVarEquals($variable, $value, $quoteValue);
+    }
+
+    public static function ifVarEqualsString(string $variable, string $value) : Mailcode_Commands_Command_If
+    {
+        return self::$commandSets->if()->ifVarEqualsString($variable, $value);
+    }
+
+    public static function ifVarNotEquals(string $variable, string $value, bool $quoteValue=false) : Mailcode_Commands_Command_If_Variable
+    {
+        return self::$commandSets->if()->ifVarNotEquals($variable, $value, $quoteValue);
+    }
+
+    public static function ifVarNotEqualsString(string $variable, string $value) : Mailcode_Commands_Command_If_Variable
+    {
+        return self::$commandSets->if()->ifVarNotEqualsString($variable, $value);
+    }
+
     public static function elseIfVar(string $variable, string $operand, string $value, bool $quoteValue=false) : Mailcode_Commands_Command_ElseIf_Variable
     {
         return self::$commandSets->elseIf()->elseIfVar($variable, $operand, $value, $quoteValue);
@@ -200,6 +266,18 @@ class Mailcode_Factory
         return self::$commandSets->elseIf()->elseIfVarNotEqualsString($variable, $value);
     }
 
+    public static function ifVarEqualsNumber(string $variable, string $number) : Mailcode_Commands_Command_If_EqualsNumber
+    {
+        return self::$commandSets->if()->ifVarEqualsNumber($variable, $number);
+    }
+
+    public static function elseIfVarEqualsNumber(string $variable, string $number) : Mailcode_Commands_Command_ElseIf_EqualsNumber
+    {
+        return self::$commandSets->elseIf()->elseIfVarEqualsNumber($variable, $number);
+    }
+
+    // endregion
+
     public static function ifBeginsWith(string $variable, string $search, bool $caseInsensitive=false) : Mailcode_Commands_Command_If_BeginsWith
     {
         return self::$commandSets->if()->ifBeginsWith($variable, $search, $caseInsensitive);
@@ -213,11 +291,6 @@ class Mailcode_Factory
     public static function ifSmallerThan(string $variable, string $number) : Mailcode_Commands_Command_If_SmallerThan
     {
         return self::$commandSets->if()->ifSmallerThan($variable, $number);
-    }
-
-    public static function ifVarEqualsNumber(string $variable, string $number) : Mailcode_Commands_Command_If_EqualsNumber
-    {
-        return self::$commandSets->if()->ifVarEqualsNumber($variable, $number);
     }
 
     public static function ifEndsWith(string $variable, string $search, bool $caseInsensitive=false) : Mailcode_Commands_Command_If_EndsWith
@@ -235,11 +308,6 @@ class Mailcode_Factory
         return self::$commandSets->elseIf()->elseIfEndsWith($variable, $search, $caseInsensitive);
     }
     
-    public static function ifContains(string $variable, string $search, bool $caseInsensitive=false) : Mailcode_Commands_Command_If_Contains
-    {
-        return self::$commandSets->if()->ifContains($variable, array($search), $caseInsensitive);
-    }
-
     public static function elseIfBiggerThan(string $variable, string $number) : Mailcode_Commands_Command_ElseIf_BiggerThan
     {
         return self::$commandSets->elseIf()->elseIfBiggerThan($variable, $number);
@@ -250,19 +318,22 @@ class Mailcode_Factory
         return self::$commandSets->elseIf()->elseIfSmallerThan($variable, $number);
     }
 
-    public static function elseIfVarEqualsNumber(string $variable, string $number) : Mailcode_Commands_Command_ElseIf_EqualsNumber
+    // region Contains
+
+    public static function ifContains(string $variable, string $search, bool $caseInsensitive=false) : Mailcode_Commands_Command_If_Contains
     {
-        return self::$commandSets->elseIf()->elseIfVarEqualsNumber($variable, $number);
+        return self::$commandSets->if()->ifContains($variable, array($search), $caseInsensitive);
     }
 
     /**
-    * Creates if contains command, with several search terms.
-    * 
-    * @param string $variable
-    * @param string[] $searchTerms List of search terms. Do not add surrounding quotes.
-    * @param bool $caseInsensitive
-    * @return Mailcode_Commands_Command_If_Contains
-    */
+     * Creates if contains command, with several search terms.
+     *
+     * @param string $variable
+     * @param string[] $searchTerms List of search terms. Do not add surrounding quotes.
+     * @param bool $caseInsensitive
+     * @return Mailcode_Commands_Command_If_Contains
+     * @throws Mailcode_Factory_Exception
+     */
     public static function ifContainsAny(string $variable, array $searchTerms, bool $caseInsensitive=false) : Mailcode_Commands_Command_If_Contains
     {
         return self::$commandSets->if()->ifContains($variable, $searchTerms, $caseInsensitive);
@@ -272,20 +343,62 @@ class Mailcode_Factory
     {
         return self::$commandSets->elseIf()->elseIfContains($variable, array($search), $caseInsensitive);
     }
-    
-   /**
-    * Creates else if contains command, with several search terms.
-    * 
-    * @param string $variable
-    * @param string[] $searchTerms List of search terms. Do not add surrounding quotes.
-    * @param bool $caseInsensitive
-    * @return Mailcode_Commands_Command_ElseIf_Contains
-    */
+
+    /**
+     * Creates else if contains command, with several search terms.
+     *
+     * @param string $variable
+     * @param string[] $searchTerms List of search terms. Do not add surrounding quotes.
+     * @param bool $caseInsensitive
+     * @return Mailcode_Commands_Command_ElseIf_Contains
+     * @throws Mailcode_Factory_Exception
+     */
     public static function elseIfContainsAny(string $variable, array $searchTerms, bool $caseInsensitive=false) : Mailcode_Commands_Command_ElseIf_Contains
     {
         return self::$commandSets->elseIf()->elseIfContains($variable, $searchTerms, $caseInsensitive);
     }
-    
+
+    public static function ifNotContains(string $variable, string $search, bool $caseInsensitive=false) : Mailcode_Commands_Command_If_NotContains
+    {
+        return self::$commandSets->if()->ifNotContains($variable, array($search), $caseInsensitive);
+    }
+
+    /**
+     * Creates if not contains command, with several search terms.
+     *
+     * @param string $variable
+     * @param string[] $searchTerms List of search terms. Do not add surrounding quotes.
+     * @param bool $caseInsensitive
+     * @return Mailcode_Commands_Command_If_NotContains
+     * @throws Mailcode_Factory_Exception
+     */
+    public static function ifNotContainsAny(string $variable, array $searchTerms, bool $caseInsensitive=false) : Mailcode_Commands_Command_If_NotContains
+    {
+        return self::$commandSets->if()->ifNotContains($variable, $searchTerms, $caseInsensitive);
+    }
+
+    public static function elseIfNotContains(string $variable, string $search, bool $caseInsensitive=false) : Mailcode_Commands_Command_ElseIf_NotContains
+    {
+        return self::$commandSets->elseIf()->elseIfNotContains($variable, array($search), $caseInsensitive);
+    }
+
+    /**
+     * Creates else if not contains command, with several search terms.
+     *
+     * @param string $variable
+     * @param string[] $searchTerms List of search terms. Do not add surrounding quotes.
+     * @param bool $caseInsensitive
+     * @return Mailcode_Commands_Command_ElseIf_NotContains
+     * @throws Mailcode_Factory_Exception
+     */
+    public static function elseIfNotContainsAny(string $variable, array $searchTerms, bool $caseInsensitive=false) : Mailcode_Commands_Command_ElseIf_NotContains
+    {
+        return self::$commandSets->elseIf()->elseIfNotContains($variable, $searchTerms, $caseInsensitive);
+    }
+
+    //endregion
+
+
     public static function ifEmpty(string $variable) : Mailcode_Commands_Command_If_Empty
     {
         return self::$commandSets->if()->ifEmpty($variable);
@@ -294,16 +407,6 @@ class Mailcode_Factory
     public static function ifNotEmpty(string $variable) : Mailcode_Commands_Command_If_NotEmpty
     {
         return self::$commandSets->if()->ifNotEmpty($variable);
-    }
-    
-    public static function for(string $sourceVariable, string $loopVariable) : Mailcode_Commands_Command_For
-    {
-        return self::$commandSets->misc()->for($sourceVariable, $loopVariable);
-    }
-
-    public static function break() : Mailcode_Commands_Command_Break
-    {
-        return self::$commandSets->misc()->break();
     }
     
    /**
@@ -345,11 +448,6 @@ class Mailcode_Factory
         {
             self::$commandSets = new Mailcode_Factory_CommandSets();
         }
-    }
-
-    public static function code(string $language) : Mailcode_Commands_Command_Code
-    {
-        return self::$commandSets->misc()->code($language);
     }
 }
 

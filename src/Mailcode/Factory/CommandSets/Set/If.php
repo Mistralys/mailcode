@@ -127,13 +127,14 @@ class Mailcode_Factory_CommandSets_Set_If extends Mailcode_Factory_CommandSets_I
         
         throw $this->instantiator->exceptionUnexpectedType('IfNotEmpty', $command);
     }
-    
-   /**
-    * @param string $variable
-    * @param string[] $searchTerms
-    * @param bool $caseInsensitive
-    * @return Mailcode_Commands_Command_If_Contains
-    */
+
+    /**
+     * @param string $variable
+     * @param string[] $searchTerms
+     * @param bool $caseInsensitive
+     * @return Mailcode_Commands_Command_If_Contains
+     * @throws Mailcode_Factory_Exception
+     */
     public function ifContains(string $variable, array $searchTerms, bool $caseInsensitive=false) : Mailcode_Commands_Command_If_Contains
     {
         $command = $this->instantiator->buildIfContains('If', $variable, $searchTerms, $caseInsensitive);
@@ -145,7 +146,26 @@ class Mailcode_Factory_CommandSets_Set_If extends Mailcode_Factory_CommandSets_I
         
         throw $this->instantiator->exceptionUnexpectedType('IfContains', $command);
     }
-    
+
+    /**
+     * @param string $variable
+     * @param string[] $searchTerms
+     * @param bool $caseInsensitive
+     * @return Mailcode_Commands_Command_If_NotContains
+     * @throws Mailcode_Factory_Exception
+     */
+    public function ifNotContains(string $variable, array $searchTerms, bool $caseInsensitive=false) : Mailcode_Commands_Command_If_Contains
+    {
+        $command = $this->instantiator->buildIfNotContains('If', $variable, $searchTerms, $caseInsensitive);
+
+        if($command instanceof Mailcode_Commands_Command_If_NotContains)
+        {
+            return $command;
+        }
+
+        throw $this->instantiator->exceptionUnexpectedType('IfNotContains', $command);
+    }
+
     public function ifBeginsWith(string $variable, string $search, bool $caseInsensitive=false) : Mailcode_Commands_Command_If_BeginsWith
     {
         $command = $this->instantiator->buildIfBeginsWith('If', $variable, $search, $caseInsensitive);

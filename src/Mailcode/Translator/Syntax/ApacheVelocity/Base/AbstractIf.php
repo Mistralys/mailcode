@@ -172,7 +172,7 @@ EOD;
     * @param Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral[] $searchTerms
     * @return string
     */
-    protected function _translateContains(Mailcode_Variables_Variable $variable, bool $caseSensitive, array $searchTerms) : string
+    protected function _translateContains(Mailcode_Variables_Variable $variable, bool $caseSensitive, array $searchTerms, string $containsType) : string
     {
         $parts = array();
         $varName = $variable->getFullName();
@@ -182,18 +182,27 @@ EOD;
         {
             $opts = 'is';
         }
+
+        $sign = '';
+        $connector = '||';
+        if($containsType === 'not-contains')
+        {
+            $sign = '!';
+            $connector = '&&';
+        }
         
         foreach($searchTerms as $token)
         {
             $parts[] = sprintf(
-                '%s.matches("(?%s)%s")',
+                '%s%s.matches("(?%s)%s")',
+                $sign,
                 $varName,
                 $opts,
                 $this->filterRegexString(trim($token->getNormalized(), '"'))
             );
         }
 
-        return implode(' || ', $parts);
+        return implode(' '.$connector.' ', $parts);
     }
     
     protected function _translateSearch(string $mode, Mailcode_Variables_Variable $variable, bool $caseSensitive, string $searchTerm) : string
