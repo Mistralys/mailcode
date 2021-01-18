@@ -9,7 +9,7 @@ final class Translator_Velocity_BreeakTests extends VelocityTestCase
         $tests = array(
             array(
                 'label' => 'Break',
-                'mailcode' => Mailcode_Factory::break(),
+                'mailcode' => Mailcode_Factory::misc()->break(),
                 'expected' => '#{break}'
             )
         );

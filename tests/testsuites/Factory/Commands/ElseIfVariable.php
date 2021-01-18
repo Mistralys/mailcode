@@ -14,15 +14,15 @@ final class Factory_ElseIfVariableTests extends FactoryTestCase
     {
         $this->runCommand(
             'Variable string comparison',
-            function() { return Mailcode_Factory::elseIfVar('FOO.BAR', '==', 'Some text', true); }
+            function() { return Mailcode_Factory::elseIf()->var('FOO.BAR', '==', 'Some text', true); }
         );
         $this->runCommand(
             'Arithmetic operation, greater than',
-            function() { return Mailcode_Factory::elseIfVar('$FOO.BAR', '>', '6 * 2'); }
+            function() { return Mailcode_Factory::elseIf()->var('$FOO.BAR', '>', '6 * 2'); }
         );
         $this->runCommand(
             'Arithmetic operation, smaller than',
-            function() { return Mailcode_Factory::elseIfVar('$FOO.BAR', '<', '14.56'); }
+            function() { return Mailcode_Factory::elseIf()->var('$FOO.BAR', '<', '14.56'); }
         );
     }
     
@@ -30,12 +30,12 @@ final class Factory_ElseIfVariableTests extends FactoryTestCase
     {
         $this->runCommand(
             'Variable string comparison',
-            function() { return Mailcode_Factory::elseIfVarEquals('FOO.BAR', 'Some text', true); }
+            function() { return Mailcode_Factory::elseIf()->varEquals('FOO.BAR', 'Some text', true); }
         );
         
         $this->runCommand(
             'Arithmetic operation',
-            function() { return Mailcode_Factory::elseIfVarEquals('$FOO.BAR', '6 * 2'); }
+            function() { return Mailcode_Factory::elseIf()->varEquals('$FOO.BAR', '6 * 2'); }
         );
     }
 }

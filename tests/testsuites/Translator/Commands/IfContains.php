@@ -17,12 +17,12 @@ final class Translator_Velocity_IfContainsTests extends VelocityTestCase
         $tests = array(
             array(
                 'label' => 'If contains',
-                'mailcode' => Mailcode_Factory::if()->ifContains('FOO.BAR', 'Value'),
+                'mailcode' => Mailcode_Factory::if()->contains('FOO.BAR', array('Value')),
                 'expected' => '#if($FOO.BAR.matches("(?s)Value"))'
             ),
             array(
                 'label' => 'If contains with slash',
-                'mailcode' => Mailcode_Factory::if()->ifContains('FOO.BAR', 'Va\lue'),
+                'mailcode' => Mailcode_Factory::if()->contains('FOO.BAR', array('Va\lue')),
                 'expected' => sprintf(
                     '#if($FOO.BAR.matches("(?s)%s"))',
                     'Va[DBLSLASH]lue'
@@ -30,7 +30,7 @@ final class Translator_Velocity_IfContainsTests extends VelocityTestCase
             ),
             array(
                 'label' => 'If contains with special characters',
-                'mailcode' => Mailcode_Factory::if()->ifContains('FOO.BAR', '6 + 4 * 3'),
+                'mailcode' => Mailcode_Factory::if()->contains('FOO.BAR', array('6 + 4 * 3')),
                 'expected' => sprintf(
                     '#if($FOO.BAR.matches("(?s)%s"))',
                     addslashes('6 [SLASH]+ 4 [SLASH]* 3')
@@ -38,12 +38,12 @@ final class Translator_Velocity_IfContainsTests extends VelocityTestCase
             ),
             array(
                 'label' => 'Several search terms',
-                'mailcode' => Mailcode_Factory::if()->ifContainsAny('FOO.BAR', array('Foo', 'Bar')),
+                'mailcode' => Mailcode_Factory::if()->contains('FOO.BAR', array('Foo', 'Bar')),
                 'expected' => '#if($FOO.BAR.matches("(?s)Foo") || $FOO.BAR.matches("(?s)Bar"))'
             ),
             array(
                 'label' => 'If contains with slash',
-                'mailcode' => Mailcode_Factory::if()->ifContains('FOO.BAR', 'Value, "quoted" yeah?'),
+                'mailcode' => Mailcode_Factory::if()->contains('FOO.BAR', array('Value, "quoted" yeah?')),
                 'expected' => sprintf(
                     '#if($FOO.BAR.matches("(?s)%s"))',
                     'Value, [SLASH]"quoted[SLASH]" yeah[SLASH]?'
@@ -51,7 +51,7 @@ final class Translator_Velocity_IfContainsTests extends VelocityTestCase
             ),
             array(
                 'label' => 'If contains with slash',
-                'mailcode' => Mailcode_Factory::if()->ifContains('FOO.BAR', '(Value)'),
+                'mailcode' => Mailcode_Factory::if()->contains('FOO.BAR', array('(Value)')),
                 'expected' => sprintf(
                     '#if($FOO.BAR.matches("(?s)%s"))',
                     '[SLASH](Value[SLASH])'

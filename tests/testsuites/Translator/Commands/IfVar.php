@@ -9,17 +9,17 @@ final class Translator_Velocity_IfVarTests extends VelocityTestCase
         $tests = array(
             array(
                 'label' => 'If var equals string',
-                'mailcode' => Mailcode_Factory::if()->ifVarEqualsString('FOO.BAR', 'Value'),
+                'mailcode' => Mailcode_Factory::if()->varEqualsString('FOO.BAR', 'Value'),
                 'expected' => '#if($FOO.BAR == "Value")'
             ),
             array(
                 'label' => 'Boolean value',
-                'mailcode' => Mailcode_Factory::if()->ifVarEqualsString('FOO.BAR', 'true'),
+                'mailcode' => Mailcode_Factory::if()->varEqualsString('FOO.BAR', 'true'),
                 'expected' => '#if($FOO.BAR.toLowerCase() == "true")'
             ),
             array(
                 'label' => 'Boolean value, case insensitive',
-                'mailcode' => Mailcode_Factory::if()->ifVarEqualsString('FOO.BAR', 'FALSE'),
+                'mailcode' => Mailcode_Factory::if()->varEqualsString('FOO.BAR', 'FALSE'),
                 'expected' => '#if($FOO.BAR.toLowerCase() == "false")'
             )
         );

@@ -14,22 +14,22 @@ final class Factory_IfContainsTests extends FactoryTestCase
     {
         $this->runCommand(
             'Variable name without $',
-            function() { return Mailcode_Factory::if()->ifContains('FOO.BAR', 'Value'); }
+            function() { return Mailcode_Factory::if()->contains('FOO.BAR', array('Value')); }
         );
         
         $this->runCommand(
             'Variable name with $',
-            function() { return Mailcode_Factory::if()->ifContains('$VAR.NAME', 'Value'); }
+            function() { return Mailcode_Factory::if()->contains('$VAR.NAME', array('Value')); }
         );
         
         $this->runCommand(
             'Search for number',
-            function() { return Mailcode_Factory::if()->ifContains('$VAR.NAME', '64'); }
+            function() { return Mailcode_Factory::if()->contains('$VAR.NAME', array('64')); }
         );
         
         $this->runCommand(
             'Search for text with quotes',
-            function() { return Mailcode_Factory::if()->ifContains('$VAR.NAME', 'It\'s a "weird" foo.'); }
+            function() { return Mailcode_Factory::if()->contains('$VAR.NAME', array('It\'s a "weird" foo.')); }
         );
     }
 }

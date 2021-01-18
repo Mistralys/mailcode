@@ -17,12 +17,12 @@ final class Translator_Velocity_ElseIfContainsTests extends VelocityTestCase
         $tests = array(
             array(
                 'label' => 'ElseIf contains',
-                'mailcode' => Mailcode_Factory::elseIfContains('FOO.BAR', 'Value'),
+                'mailcode' => Mailcode_Factory::elseIf()->contains('FOO.BAR', array('Value')),
                 'expected' => '#elseif($FOO.BAR.matches("(?s)Value"))'
             ),
             array(
                 'label' => 'ElseIf contains with slash',
-                'mailcode' => Mailcode_Factory::elseIfContains('FOO.BAR', 'Va\lue'),
+                'mailcode' => Mailcode_Factory::elseIf()->contains('FOO.BAR', array('Va\lue')),
                 'expected' => sprintf(
                     '#elseif($FOO.BAR.matches("(?s)%s"))',
                     'Va[DBLSLASH]lue'
@@ -30,7 +30,7 @@ final class Translator_Velocity_ElseIfContainsTests extends VelocityTestCase
             ),
             array(
                 'label' => 'ElseIf contains with special characters',
-                'mailcode' => Mailcode_Factory::elseIfContains('FOO.BAR', '6 + 4 * 3'),
+                'mailcode' => Mailcode_Factory::elseIf()->contains('FOO.BAR', array('6 + 4 * 3')),
                 'expected' => sprintf(
                     '#elseif($FOO.BAR.matches("(?s)%s"))',
                     '6 [SLASH]+ 4 [SLASH]* 3'
@@ -38,12 +38,12 @@ final class Translator_Velocity_ElseIfContainsTests extends VelocityTestCase
             ),
             array(
                 'label' => 'Several search terms',
-                'mailcode' => Mailcode_Factory::elseIfContainsAny('FOO.BAR', array('Foo', 'Bar')),
+                'mailcode' => Mailcode_Factory::elseIf()->contains('FOO.BAR', array('Foo', 'Bar')),
                 'expected' => '#elseif($FOO.BAR.matches("(?s)Foo") || $FOO.BAR.matches("(?s)Bar"))'
             ),
             array(
                 'label' => 'With quotes in search term',
-                'mailcode' => Mailcode_Factory::elseIfContains('FOO.BAR', 'Value, "weird" huh?'),
+                'mailcode' => Mailcode_Factory::elseIf()->contains('FOO.BAR', array('Value, "weird" huh?')),
                 'expected' => sprintf(
                     '#elseif($FOO.BAR.matches("(?s)%s"))',
                     'Value, [SLASH]"weird[SLASH]" huh[SLASH]?'

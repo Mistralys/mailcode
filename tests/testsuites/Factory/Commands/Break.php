@@ -16,7 +16,7 @@ final class Factory_BreakTests extends FactoryTestCase
     {
         $this->runCommand(
             'Creating the command',
-            function() { return Mailcode_Factory::break(); }
+            function() { return Mailcode_Factory::misc()->break(); }
         );
     }
 }

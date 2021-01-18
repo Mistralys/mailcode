@@ -21,7 +21,7 @@ final class Factory_RendererTests extends MailcodeTestCase
             ),
             array(
                 'label' => 'Unquoted params',
-                'cmd' => Mailcode_Factory::set()->setVar('$VAR.NAME', '6 + 2', false),
+                'cmd' => Mailcode_Factory::set()->var('$VAR.NAME', '6 + 2', false),
                 'expected' => '{setvar: $VAR.NAME = 6 + 2}'
             )
         );

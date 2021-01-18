@@ -2,10 +2,8 @@
 
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands_Command;
-use Mailcode\Mailcode_Commands_Command_ShowDate;
 use Mailcode\Mailcode_Commands_Command_ShowNumber;
 use Mailcode\Mailcode_Factory;
-use Mailcode\Mailcode_Date_FormatInfo;
 use Mailcode\Mailcode_Commands_CommonConstants;
 
 final class Mailcode_ShowNumberTests extends MailcodeTestCase
@@ -62,7 +60,7 @@ final class Mailcode_ShowNumberTests extends MailcodeTestCase
     
     public function test_getFormat() : void
     {
-        $cmd = Mailcode_Factory::showNumber('foobar', '1 000,00:##');
+        $cmd = Mailcode_Factory::show()->number('foobar', '1 000,00:##');
         
         $this->assertEquals('$foobar', $cmd->getVariable()->getFullName());
         $this->assertEquals('1 000,00:##', $cmd->getFormatString());

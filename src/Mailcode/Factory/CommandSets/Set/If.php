@@ -32,7 +32,7 @@ class Mailcode_Factory_CommandSets_Set_If extends Mailcode_Factory_CommandSets_I
         throw $this->instantiator->exceptionUnexpectedType('If', $command);
     }
     
-    public function ifVar(string $variable, string $operand, string $value, bool $quoteValue=false) : Mailcode_Commands_Command_If_Variable
+    public function var(string $variable, string $operand, string $value, bool $quoteValue=false) : Mailcode_Commands_Command_If_Variable
     {
         $command = $this->instantiator->buildIfVar('If', $variable, $operand, $value, $quoteValue);
         
@@ -44,7 +44,7 @@ class Mailcode_Factory_CommandSets_Set_If extends Mailcode_Factory_CommandSets_I
         throw $this->instantiator->exceptionUnexpectedType('IfVar', $command);
     }
     
-    public function ifVarString(string $variable, string $operand, string $value) : Mailcode_Commands_Command_If_Variable
+    public function varString(string $variable, string $operand, string $value) : Mailcode_Commands_Command_If_Variable
     {
         $command = $this->instantiator->buildIfVar('If', $variable, $operand, $value, true);
         
@@ -56,7 +56,7 @@ class Mailcode_Factory_CommandSets_Set_If extends Mailcode_Factory_CommandSets_I
         throw $this->instantiator->exceptionUnexpectedType('IfVarString', $command);
     }
     
-    public function ifVarEquals(string $variable, string $value, bool $quoteValue=false) : Mailcode_Commands_Command_If_Variable
+    public function varEquals(string $variable, string $value, bool $quoteValue=false) : Mailcode_Commands_Command_If_Variable
     {
         $command = $this->instantiator->buildIfVar('If', $variable, '==', $value, $quoteValue);
         
@@ -68,7 +68,7 @@ class Mailcode_Factory_CommandSets_Set_If extends Mailcode_Factory_CommandSets_I
         throw $this->instantiator->exceptionUnexpectedType('IfVarEquals', $command);
     }
     
-    public function ifVarEqualsString(string $variable, string $value) : Mailcode_Commands_Command_If
+    public function varEqualsString(string $variable, string $value) : Mailcode_Commands_Command_If
     {
         $command = $this->instantiator->buildIfVar('If', $variable, '==', $value, true);
         
@@ -80,7 +80,7 @@ class Mailcode_Factory_CommandSets_Set_If extends Mailcode_Factory_CommandSets_I
         throw $this->instantiator->exceptionUnexpectedType('IfarEqualsString', $command);
     }
     
-    public function ifVarNotEquals(string $variable, string $value, bool $quoteValue=false) : Mailcode_Commands_Command_If_Variable
+    public function varNotEquals(string $variable, string $value, bool $quoteValue=false) : Mailcode_Commands_Command_If_Variable
     {
         $command = $this->instantiator->buildIfVar('If', $variable, '!=', $value, $quoteValue);
         
@@ -92,7 +92,7 @@ class Mailcode_Factory_CommandSets_Set_If extends Mailcode_Factory_CommandSets_I
         throw $this->instantiator->exceptionUnexpectedType('IfVarNotEquals', $command);
     }
     
-    public function ifVarNotEqualsString(string $variable, string $value) : Mailcode_Commands_Command_If_Variable
+    public function varNotEqualsString(string $variable, string $value) : Mailcode_Commands_Command_If_Variable
     {
         $command = $this->instantiator->buildIfVar('If', $variable, '!=', $value, true);
         
@@ -104,7 +104,7 @@ class Mailcode_Factory_CommandSets_Set_If extends Mailcode_Factory_CommandSets_I
         throw $this->instantiator->exceptionUnexpectedType('IfVarNotEqualsString', $command);
     }
     
-    public function ifEmpty(string $variable) : Mailcode_Commands_Command_If_Empty
+    public function empty(string $variable) : Mailcode_Commands_Command_If_Empty
     {
         $command = $this->instantiator->buildIfEmpty('If', $variable);
         
@@ -116,7 +116,7 @@ class Mailcode_Factory_CommandSets_Set_If extends Mailcode_Factory_CommandSets_I
         throw $this->instantiator->exceptionUnexpectedType('IfEmpty', $command);
     }
     
-    public function ifNotEmpty(string $variable) : Mailcode_Commands_Command_If_NotEmpty
+    public function notEmpty(string $variable) : Mailcode_Commands_Command_If_NotEmpty
     {
         $command = $this->instantiator->buildIfNotEmpty('If', $variable);
         
@@ -135,7 +135,7 @@ class Mailcode_Factory_CommandSets_Set_If extends Mailcode_Factory_CommandSets_I
      * @return Mailcode_Commands_Command_If_Contains
      * @throws Mailcode_Factory_Exception
      */
-    public function ifContains(string $variable, array $searchTerms, bool $caseInsensitive=false) : Mailcode_Commands_Command_If_Contains
+    public function contains(string $variable, array $searchTerms, bool $caseInsensitive=false) : Mailcode_Commands_Command_If_Contains
     {
         $command = $this->instantiator->buildIfContains('If', $variable, $searchTerms, $caseInsensitive);
         
@@ -154,7 +154,7 @@ class Mailcode_Factory_CommandSets_Set_If extends Mailcode_Factory_CommandSets_I
      * @return Mailcode_Commands_Command_If_NotContains
      * @throws Mailcode_Factory_Exception
      */
-    public function ifNotContains(string $variable, array $searchTerms, bool $caseInsensitive=false) : Mailcode_Commands_Command_If_Contains
+    public function notContains(string $variable, array $searchTerms, bool $caseInsensitive=false) : Mailcode_Commands_Command_If_Contains
     {
         $command = $this->instantiator->buildIfNotContains('If', $variable, $searchTerms, $caseInsensitive);
 
@@ -166,7 +166,7 @@ class Mailcode_Factory_CommandSets_Set_If extends Mailcode_Factory_CommandSets_I
         throw $this->instantiator->exceptionUnexpectedType('IfNotContains', $command);
     }
 
-    public function ifBeginsWith(string $variable, string $search, bool $caseInsensitive=false) : Mailcode_Commands_Command_If_BeginsWith
+    public function beginsWith(string $variable, string $search, bool $caseInsensitive=false) : Mailcode_Commands_Command_If_BeginsWith
     {
         $command = $this->instantiator->buildIfBeginsWith('If', $variable, $search, $caseInsensitive);
         
@@ -178,7 +178,7 @@ class Mailcode_Factory_CommandSets_Set_If extends Mailcode_Factory_CommandSets_I
         throw $this->instantiator->exceptionUnexpectedType('IfBeginsWith', $command);
     }
     
-    public function ifEndsWith(string $variable, string $search, bool $caseInsensitive=false) : Mailcode_Commands_Command_If_EndsWith
+    public function endsWith(string $variable, string $search, bool $caseInsensitive=false) : Mailcode_Commands_Command_If_EndsWith
     {
         $command = $this->instantiator->buildIfEndsWith('If', $variable, $search, $caseInsensitive);
         
@@ -190,7 +190,7 @@ class Mailcode_Factory_CommandSets_Set_If extends Mailcode_Factory_CommandSets_I
         throw $this->instantiator->exceptionUnexpectedType('IfEndsWith', $command);
     }
 
-    public function ifBiggerThan(string $variable, string $value) : Mailcode_Commands_Command_If_BiggerThan
+    public function biggerThan(string $variable, string $value) : Mailcode_Commands_Command_If_BiggerThan
     {
         $command = $this->instantiator->buildIfBiggerThan('If', $variable, $value);
 
@@ -202,7 +202,7 @@ class Mailcode_Factory_CommandSets_Set_If extends Mailcode_Factory_CommandSets_I
         throw $this->instantiator->exceptionUnexpectedType('IfBiggerThan', $command);
     }
 
-    public function ifSmallerThan(string $variable, string $value) : Mailcode_Commands_Command_If_SmallerThan
+    public function smallerThan(string $variable, string $value) : Mailcode_Commands_Command_If_SmallerThan
     {
         $command = $this->instantiator->buildIfSmallerThan('If', $variable, $value);
 
@@ -214,7 +214,7 @@ class Mailcode_Factory_CommandSets_Set_If extends Mailcode_Factory_CommandSets_I
         throw $this->instantiator->exceptionUnexpectedType('IfSmallerThan', $command);
     }
 
-    public function ifVarEqualsNumber(string $variable, string $value) : Mailcode_Commands_Command_If_EqualsNumber
+    public function varEqualsNumber(string $variable, string $value) : Mailcode_Commands_Command_If_EqualsNumber
     {
         $command = $this->instantiator->buildIfEquals('If', $variable, $value);
 

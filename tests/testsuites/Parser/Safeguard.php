@@ -216,7 +216,7 @@ final class Parser_SafeguardTests extends MailcodeTestCase
      */
     public function test_url_encoding_unsupported() : void
     {
-        $command = Mailcode_Factory::ifVarEqualsString('FOO', '==', 'Test');
+        $command = Mailcode_Factory::if()->varEqualsString('FOO', 'Test');
 
         try{
             $command->setURLEncoding(true);
@@ -413,9 +413,9 @@ EOD;
 
         $safeguard = Mailcode::create()->createSafeguard($subject);
 
-        $safe = $safeguard->makeSafe();
+        $safeguard->makeSafe();
 
-        // Replace with a text in which the placeholder is missing
+        // Use a text in which the placeholder is missing
         $safe = 'Here is some text.';
 
         try

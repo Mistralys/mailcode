@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Collection;
 use Mailcode\Mailcode_Commands_Command_Break;
+use Mailcode\Mailcode_Exception;
 use Mailcode\Mailcode_Factory;
 
 final class Mailcode_BreakTests extends MailcodeTestCase
@@ -49,7 +50,7 @@ final class Mailcode_BreakTests extends MailcodeTestCase
 EOT;
 
         $safeguard = Mailcode::create()->createSafeguard($code);
-        $safe = $safeguard->makeSafe();
+        $safeguard->makeSafe();
 
         $this->assertTrue($safeguard->isValid());
     }
@@ -64,14 +65,14 @@ EOT;
 
         $safeguard = Mailcode::create()->createSafeguard($code);
 
-        $this->expectException(\Mailcode\Mailcode_Exception::class);
+        $this->expectException(Mailcode_Exception::class);
 
         $safeguard->makeSafe();
     }
 
     public function test_highlight() : void
     {
-        $end = Mailcode_Factory::break();
+        $end = Mailcode_Factory::misc()->break();
 
         $expected = '<span class="mailcode-bracket">{</span><span class="mailcode-command-name">break</span><span class="mailcode-bracket">}</span>';
         
@@ -80,9 +81,9 @@ EOT;
 
     public function test_manualNesting() : void
     {
-        $for = Mailcode_Factory::for('SOURCE', 'RECORD');
-        $end = Mailcode_Factory::end();
-        $break = Mailcode_Factory::break();
+        $for = Mailcode_Factory::misc()->for('SOURCE', 'RECORD');
+        $end = Mailcode_Factory::misc()->end();
+        $break = Mailcode_Factory::misc()->break();
 
         $break->setParent($for);
 
@@ -98,9 +99,9 @@ EOT;
 
     public function test_manualNesting_error() : void
     {
-        $for = Mailcode_Factory::for('SOURCE', 'RECORD');
-        $end = Mailcode_Factory::end();
-        $break = Mailcode_Factory::break();
+        $for = Mailcode_Factory::misc()->for('SOURCE', 'RECORD');
+        $end = Mailcode_Factory::misc()->end();
+        $break = Mailcode_Factory::misc()->break();
 
         // Not setting the break command's parent
 

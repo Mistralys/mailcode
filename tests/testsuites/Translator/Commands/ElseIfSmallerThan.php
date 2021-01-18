@@ -9,21 +9,21 @@ final class Translator_Velocity_ElseIfSmallerThanTests extends VelocityTestCase
         $tests = array(
             array(
                 'label' => 'Integer value',
-                'mailcode' => Mailcode_Factory::elseIfSmallerThan('FOO.BAR', '100'),
+                'mailcode' => Mailcode_Factory::elseIf()->smallerThan('FOO.BAR', '100'),
                 'expected' => <<<'EOD'
 #elseif($number.toNumber('#.####', $FOO.BAR.replace(',', '.'), 'en_US') < 100)
 EOD
             ),
             array(
                 'label' => 'Value with comma',
-                'mailcode' => Mailcode_Factory::elseIfSmallerThan('FOO.BAR', '45,12'),
+                'mailcode' => Mailcode_Factory::elseIf()->smallerThan('FOO.BAR', '45,12'),
                 'expected' => <<<'EOD'
 #elseif($number.toNumber('#.####', $FOO.BAR.replace(',', '.'), 'en_US') < 45.12)
 EOD
             ),
             array(
                 'label' => 'Value with dot',
-                'mailcode' => Mailcode_Factory::elseIfSmallerThan('FOO.BAR', '45.12'),
+                'mailcode' => Mailcode_Factory::elseIf()->smallerThan('FOO.BAR', '45.12'),
                 'expected' => <<<'EOD'
 #elseif($number.toNumber('#.####', $FOO.BAR.replace(',', '.'), 'en_US') < 45.12)
 EOD

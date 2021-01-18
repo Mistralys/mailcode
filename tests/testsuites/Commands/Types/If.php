@@ -39,7 +39,7 @@ final class Mailcode_IfTests extends MailcodeTestCase
     */
     public function test_normalize_zero()
     {
-        $cmd = Mailcode_Factory::if("0 == 1");
+        $cmd = Mailcode_Factory::if()->if("0 == 1");
         
         $this->assertEquals('{if: 0 == 1}', $cmd->getNormalized());
     }

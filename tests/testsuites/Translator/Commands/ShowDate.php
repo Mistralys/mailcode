@@ -12,22 +12,22 @@ final class Translator_Velocity_ShowDateTests extends VelocityTestCase
         $tests = array(
             array(
                 'label' => 'Show date, default format',
-                'mailcode' => Mailcode_Factory::show()->showDate('FOO.BAR'),
+                'mailcode' => Mailcode_Factory::show()->date('FOO.BAR'),
                 'expected' => '${date.format("yyyy/MM/dd", $date.toDate("'.$defaultFormat.'", $FOO.BAR))}'
             ),
             array(
                 'label' => 'Show date, german format',
-                'mailcode' => Mailcode_Factory::show()->showDate('FOO.BAR', 'd.m.Y H:i:s'),
+                'mailcode' => Mailcode_Factory::show()->date('FOO.BAR', 'd.m.Y H:i:s'),
                 'expected' => '${date.format("dd.MM.yyyy H:m:s", $date.toDate("'.$defaultFormat.'", $FOO.BAR))}'
             ),
             array(
                 'label' => 'Show date, short year format',
-                'mailcode' => Mailcode_Factory::show()->showDate('FOO.BAR', 'd.m.y'),
+                'mailcode' => Mailcode_Factory::show()->date('FOO.BAR', 'd.m.y'),
                 'expected' => '${date.format("dd.MM.yy", $date.toDate("'.$defaultFormat.'", $FOO.BAR))}'
             ),
             array(
                 'label' => 'With URL encoding',
-                'mailcode' => Mailcode_Factory::show()->showDate('FOO.BAR', 'd.m.y')->setURLEncoding(true),
+                'mailcode' => Mailcode_Factory::show()->date('FOO.BAR', 'd.m.y')->setURLEncoding(true),
                 'expected' => '${esc.url($date.format("dd.MM.yy", $date.toDate("'.$defaultFormat.'", $FOO.BAR)))}'
             )
         );
@@ -37,7 +37,7 @@ final class Translator_Velocity_ShowDateTests extends VelocityTestCase
 
     public function test_setInternalFormat() : void
     {
-        $var = Mailcode_Factory::show()->showDate('FOO.BAR', 'd.m.Y');
+        $var = Mailcode_Factory::show()->date('FOO.BAR', 'd.m.Y');
 
         $var->setTranslationParam('internal_format', 'yyyy-MM-dd');
 

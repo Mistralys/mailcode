@@ -20,7 +20,7 @@ namespace Mailcode;
  */
 class Mailcode_Factory_CommandSets_Set_Show extends Mailcode_Factory_CommandSets_Set
 {
-    public function showVar(string $variableName) : Mailcode_Commands_Command_ShowVariable
+    public function var(string $variableName) : Mailcode_Commands_Command_ShowVariable
     {
         $variableName = $this->instantiator->filterVariableName($variableName);
         
@@ -41,7 +41,7 @@ class Mailcode_Factory_CommandSets_Set_Show extends Mailcode_Factory_CommandSets
         throw $this->instantiator->exceptionUnexpectedType('ShowVariable', $cmd);
     }
     
-    public function showDate(string $variableName, string $formatString="") : Mailcode_Commands_Command_ShowDate
+    public function date(string $variableName, string $formatString="") : Mailcode_Commands_Command_ShowDate
     {
         $variableName = $this->instantiator->filterVariableName($variableName);
         
@@ -75,7 +75,7 @@ class Mailcode_Factory_CommandSets_Set_Show extends Mailcode_Factory_CommandSets
         throw $this->instantiator->exceptionUnexpectedType('ShowDate', $cmd);
     }
 
-    public function showNumber(string $variableName, string $formatString="") : Mailcode_Commands_Command_ShowNumber
+    public function number(string $variableName, string $formatString="") : Mailcode_Commands_Command_ShowNumber
     {
         $variableName = $this->instantiator->filterVariableName($variableName);
 
@@ -109,7 +109,7 @@ class Mailcode_Factory_CommandSets_Set_Show extends Mailcode_Factory_CommandSets
         throw $this->instantiator->exceptionUnexpectedType('ShowNumber', $cmd);
     }
     
-    public function showSnippet(string $snippetName) : Mailcode_Commands_Command_ShowSnippet
+    public function snippet(string $snippetName) : Mailcode_Commands_Command_ShowSnippet
     {
         $snippetName = $this->instantiator->filterVariableName($snippetName);
         

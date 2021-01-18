@@ -73,7 +73,7 @@ final class Mailcode_ForTests extends MailcodeTestCase
     
     public function test_getVariables() : void
     {
-        $cmd = Mailcode_Factory::for('SOURCE', 'LOOP');
+        $cmd = Mailcode_Factory::misc()->for('SOURCE', 'LOOP');
         
         $this->assertInstanceOf(Mailcode_Variables_Variable::class, $cmd->getSourceVariable());
         $this->assertInstanceOf(Mailcode_Variables_Variable::class, $cmd->getLoopVariable());

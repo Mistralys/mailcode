@@ -14,12 +14,12 @@ final class Factory_IfEqualsNumberTests extends FactoryTestCase
     {
         $this->runCommand(
             'String number, variable without dollar',
-            function() { return Mailcode_Factory::ifVarEqualsNumber('FOO.BAR', '45,12'); }
+            function() { return Mailcode_Factory::if()->varEqualsNumber('FOO.BAR', '45,12'); }
         );
 
         $this->runCommand(
             'String number, variable with dollar',
-            function() { return Mailcode_Factory::ifVarEqualsNumber('$FOO.BAR', '45,12'); }
+            function() { return Mailcode_Factory::if()->varEqualsNumber('$FOO.BAR', '45,12'); }
         );
     }
 }

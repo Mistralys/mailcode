@@ -14,22 +14,22 @@ final class Factory_IfEndsWithTests extends FactoryTestCase
     {
         $this->runCommand(
             'Variable name without $',
-            function() { return Mailcode_Factory::ifEndsWith('FOO.BAR', 'Value'); }
+            function() { return Mailcode_Factory::if()->endsWith('FOO.BAR', 'Value'); }
         );
         
         $this->runCommand(
             'Variable name with $',
-            function() { return Mailcode_Factory::ifEndsWith('$VAR.NAME', 'Value'); }
+            function() { return Mailcode_Factory::if()->endsWith('$VAR.NAME', 'Value'); }
         );
         
         $this->runCommand(
             'Search for number',
-            function() { return Mailcode_Factory::ifEndsWith('$VAR.NAME', '64'); }
+            function() { return Mailcode_Factory::if()->endsWith('$VAR.NAME', '64'); }
         );
         
         $this->runCommand(
             'Search for text with quotes',
-            function() { return Mailcode_Factory::ifEndsWith('$VAR.NAME', 'It\'s a "weird" foo.'); }
+            function() { return Mailcode_Factory::if()->endsWith('$VAR.NAME', 'It\'s a "weird" foo.'); }
         );
     }
 }

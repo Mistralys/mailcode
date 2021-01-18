@@ -15,12 +15,12 @@ final class Factory_ForTests extends FactoryTestCase
     {
         $this->runCommand(
             'Variable name without $',
-            function() { return Mailcode_Factory::for('SOURCE', 'LOOPVAR'); }
+            function() { return Mailcode_Factory::misc()->for('SOURCE', 'LOOPVAR'); }
         );
         
         $this->runCommand(
             'Variable name with $',
-            function() { return Mailcode_Factory::for('$SOURCE', '$LOOPVAR'); }
+            function() { return Mailcode_Factory::misc()->for('$SOURCE', '$LOOPVAR'); }
         );
     }
     
@@ -28,6 +28,6 @@ final class Factory_ForTests extends FactoryTestCase
     {
         $this->expectException(Mailcode_Factory_Exception::class);
         
-        Mailcode_Factory::for('$SOURCE', '$SOURCE');
+        Mailcode_Factory::misc()->for('$SOURCE', '$SOURCE');
     }
 }

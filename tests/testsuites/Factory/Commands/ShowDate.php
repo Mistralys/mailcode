@@ -15,17 +15,17 @@ final class Factory_ShowDateTests extends FactoryTestCase
     {
         $this->runCommand(
             'Variable name without $',
-            function() { return Mailcode_Factory::showDate('VAR.NAME'); }
+            function() { return Mailcode_Factory::show()->date('VAR.NAME'); }
         );
         
         $this->runCommand(
             'Variable name with $',
-            function() { return Mailcode_Factory::showDate('$VAR.NAME'); }
+            function() { return Mailcode_Factory::show()->date('$VAR.NAME'); }
         );
         
         $this->runCommand(
             'With format string',
-            function() { return Mailcode_Factory::showDate('$VAR.NAME', 'd.m.Y'); }
+            function() { return Mailcode_Factory::show()->date('$VAR.NAME', 'd.m.Y'); }
         );
     }
     
@@ -33,13 +33,13 @@ final class Factory_ShowDateTests extends FactoryTestCase
     {
         $this->expectException(Mailcode_Factory_Exception::class);
         
-        Mailcode_Factory::showDate('0INVALIDVAR');
+        Mailcode_Factory::show()->date('0INVALIDVAR');
     }
     
     public function test_showDate_formatError()
     {
         $this->expectException(Mailcode_Factory_Exception::class);
         
-        Mailcode_Factory::showDate('VAR.NAME', 'd.m.Z');
+        Mailcode_Factory::show()->date('VAR.NAME', 'd.m.Z');
     }
 }

@@ -14,13 +14,13 @@ final class Factory_ElseIfTests extends FactoryTestCase
     {
         $this->runCommand(
             'Variable string comparison',
-            function() { return Mailcode_Factory::elseIf('$FOO.BAR == "Value"'); }
+            function() { return Mailcode_Factory::elseIf()->elseIf('$FOO.BAR == "Value"'); }
         );
         
         
         $this->runCommand(
             'Arithmetic operation',
-            function() { return Mailcode_Factory::elseIf('6 * 2 == 78'); }
+            function() { return Mailcode_Factory::elseIf()->elseIf('6 * 2 == 78'); }
         );
     }
 }

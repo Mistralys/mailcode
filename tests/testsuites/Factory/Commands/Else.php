@@ -16,7 +16,7 @@ final class Factory_ElseTests extends FactoryTestCase
     {
         $this->runCommand(
             'Creating the command',
-            function() { return Mailcode_Factory::else(); }
+            function() { return Mailcode_Factory::elseIf()->else(); }
         );
     }
 }

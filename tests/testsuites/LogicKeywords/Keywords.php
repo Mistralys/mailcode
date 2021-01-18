@@ -21,7 +21,7 @@ final class LogicKeywords_KeywordsTests extends MailcodeTestCase
     
     public function test_supported() : void
     {
-        $cmd = Mailcode_Factory::if()->ifEmpty('FOO.BAR');
+        $cmd = Mailcode_Factory::if()->empty('FOO.BAR');
         
         $this->assertTrue($cmd->supportsLogicKeywords());
         
@@ -34,7 +34,7 @@ final class LogicKeywords_KeywordsTests extends MailcodeTestCase
     
     public function test_append() : void
     {
-        $cmd = Mailcode_Factory::if()->ifEmpty('FOO.BAR');
+        $cmd = Mailcode_Factory::if()->empty('FOO.BAR');
         
         $logic = $cmd->getLogicKeywords();
 
@@ -49,7 +49,7 @@ final class LogicKeywords_KeywordsTests extends MailcodeTestCase
     
     public function test_append_noCommand() : void
     {
-        $cmd = Mailcode_Factory::if()->ifEmpty('FOO.BAR');
+        $cmd = Mailcode_Factory::if()->empty('FOO.BAR');
         
         $logic = $cmd->getLogicKeywords();
 
@@ -71,7 +71,7 @@ final class LogicKeywords_KeywordsTests extends MailcodeTestCase
     
     public function test_append_invalidCommand() : void
     {
-        $cmd = Mailcode_Factory::if()->ifEmpty('FOO.BAR');
+        $cmd = Mailcode_Factory::if()->empty('FOO.BAR');
         
         $logic = $cmd->getLogicKeywords();
         
@@ -93,7 +93,7 @@ final class LogicKeywords_KeywordsTests extends MailcodeTestCase
     
     public function test_normalize() : void
     {
-        $cmd = Mailcode_Factory::if()->ifEmpty('FOO.BAR');
+        $cmd = Mailcode_Factory::if()->empty('FOO.BAR');
         
         $logic = $cmd->getLogicKeywords();
         $logic->appendAND('$FOO.BAR == "Argh"', 'variable');

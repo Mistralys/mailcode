@@ -20,7 +20,7 @@ namespace Mailcode;
  */
 class Mailcode_Factory_CommandSets_Set_Set extends Mailcode_Factory_CommandSets_Set
 {
-    public function setVar(string $variableName, string $value, bool $quoteValue=true) : Mailcode_Commands_Command_SetVariable
+    public function var(string $variableName, string $value, bool $quoteValue=true) : Mailcode_Commands_Command_SetVariable
     {
         $variableName = $this->instantiator->filterVariableName($variableName);
         
@@ -56,8 +56,8 @@ class Mailcode_Factory_CommandSets_Set_Set extends Mailcode_Factory_CommandSets_
      * @return Mailcode_Commands_Command_SetVariable
      * @throws Mailcode_Factory_Exception
      */
-    public function setVarString(string $variableName, string $value) : Mailcode_Commands_Command_SetVariable
+    public function varString(string $variableName, string $value) : Mailcode_Commands_Command_SetVariable
     {
-        return $this->setVar($variableName, $value, true);
+        return $this->var($variableName, $value, true);
     }
 }

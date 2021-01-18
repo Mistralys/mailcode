@@ -9,12 +9,12 @@ final class Translator_Velocity_ElseIfBeginsWithTests extends VelocityTestCase
         $tests = array(
             array(
                 'label' => 'ElseIf begins with',
-                'mailcode' => Mailcode_Factory::elseIf()->elseIfBeginsWith('FOO.BAR', 'Search'),
+                'mailcode' => Mailcode_Factory::elseIf()->beginsWith('FOO.BAR', 'Search'),
                 'expected' => '#elseif($StringUtils.startsWith($FOO.BAR, "Search"))'
             ),
             array(
                 'label' => 'ElseIf begins with, case insensitive',
-                'mailcode' => Mailcode_Factory::elseIf()->elseIfBeginsWith('FOO.BAR', 'Search', true),
+                'mailcode' => Mailcode_Factory::elseIf()->beginsWith('FOO.BAR', 'Search', true),
                 'expected' => '#elseif($StringUtils.startsWithIgnoreCase($FOO.BAR, "Search"))'
             )
         );

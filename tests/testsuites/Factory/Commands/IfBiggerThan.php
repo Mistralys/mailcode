@@ -14,12 +14,12 @@ final class Factory_IfBiggerThanTests extends FactoryTestCase
     {
         $this->runCommand(
             'String number, variable without dollar',
-            function() { return Mailcode_Factory::ifBiggerThan('FOO.BAR', '45,12'); }
+            function() { return Mailcode_Factory::if()->biggerThan('FOO.BAR', '45,12'); }
         );
 
         $this->runCommand(
             'String number, variable with dollar',
-            function() { return Mailcode_Factory::ifBiggerThan('$FOO.BAR', '45,12'); }
+            function() { return Mailcode_Factory::if()->biggerThan('$FOO.BAR', '45,12'); }
         );
     }
 }
