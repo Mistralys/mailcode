@@ -14,12 +14,12 @@ final class Factory_IfEmptyTests extends FactoryTestCase
     {
         $this->runCommand(
             'Variable without dollar sign',
-            function() { return Mailcode_Factory::ifEmpty('FOO.BAR'); }
+            function() { return Mailcode_Factory::if()->ifEmpty('FOO.BAR'); }
         );
         
         $this->runCommand(
             'Variable with dollar sign',
-            function() { return Mailcode_Factory::ifEmpty('$FOO.BAR'); }
+            function() { return Mailcode_Factory::if()->ifEmpty('$FOO.BAR'); }
         );
     }
 }

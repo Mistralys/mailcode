@@ -23,7 +23,7 @@ final class Mailcode_EndTests extends MailcodeTestCase
     
     public function test_highlight()
     {
-        $end = Mailcode_Factory::end();
+        $end = Mailcode_Factory::misc()->end();
         
         $expected = '<span class="mailcode-bracket">{</span><span class="mailcode-command-name">end</span><span class="mailcode-bracket">}</span>';
         

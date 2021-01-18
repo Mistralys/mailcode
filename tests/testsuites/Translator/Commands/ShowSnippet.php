@@ -9,17 +9,17 @@ final class Translator_Velocity_ShowSnippetTests extends VelocityTestCase
         $tests = array(
             array(
                 'label' => 'Show snippet',
-                'mailcode' => Mailcode_Factory::showSnippet('$snippetname'),
+                'mailcode' => Mailcode_Factory::show()->showSnippet('$snippetname'),
                 'expected' => '${snippetname.replaceAll($esc.newline, "<br/>")}'
             ),
             array(
                 'label' => 'Show snippet, with URL encoding',
-                'mailcode' => Mailcode_Factory::showSnippet('$snippetname')->setURLEncoding(true),
+                'mailcode' => Mailcode_Factory::show()->showSnippet('$snippetname')->setURLEncoding(true),
                 'expected' => '${esc.url($snippetname.replaceAll($esc.newline, "<br/>"))}'
             ),
             array(
                 'label' => 'Show snippet, with URL decoding',
-                'mailcode' => Mailcode_Factory::showSnippet('$snippetname')->setURLDecoding(true),
+                'mailcode' => Mailcode_Factory::show()->showSnippet('$snippetname')->setURLDecoding(true),
                 'expected' => '${esc.unurl($snippetname.replaceAll($esc.newline, "<br/>"))}'
             )
         );

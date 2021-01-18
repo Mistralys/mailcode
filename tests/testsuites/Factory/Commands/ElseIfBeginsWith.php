@@ -14,22 +14,22 @@ final class Factory_ElseIfBeginsWithTests extends FactoryTestCase
     {
         $this->runCommand(
             'Variable name without $',
-            function() { return Mailcode_Factory::elseIfBeginsWith('FOO.BAR', 'Value'); }
+            function() { return Mailcode_Factory::elseIf()->elseIfBeginsWith('FOO.BAR', 'Value'); }
         );
         
         $this->runCommand(
             'Variable name with $',
-            function() { return Mailcode_Factory::elseIfBeginsWith('$VAR.NAME', 'Value'); }
+            function() { return Mailcode_Factory::elseIf()->elseIfBeginsWith('$VAR.NAME', 'Value'); }
         );
         
         $this->runCommand(
             'Search for number',
-            function() { return Mailcode_Factory::elseIfBeginsWith('$VAR.NAME', '64'); }
+            function() { return Mailcode_Factory::elseIf()->elseIfBeginsWith('$VAR.NAME', '64'); }
         );
         
         $this->runCommand(
             'Search for text with quotes',
-            function() { return Mailcode_Factory::elseIfBeginsWith('$VAR.NAME', 'It\'s a "weird" foo.'); }
+            function() { return Mailcode_Factory::elseIf()->elseIfBeginsWith('$VAR.NAME', 'It\'s a "weird" foo.'); }
         );
     }
 }

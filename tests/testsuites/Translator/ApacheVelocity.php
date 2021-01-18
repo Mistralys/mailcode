@@ -7,7 +7,7 @@ final class Translator_ApacheVelocityTests extends VelocityTestCase
 {
     public function test_logicKeywords()
     {
-        $cmd = Mailcode_Factory::ifVar('FOO.BAR', '==', 20);
+        $cmd = Mailcode_Factory::if()->ifVar('FOO.BAR', '==', 20);
         $cmd->getLogicKeywords()->appendAND('$BARFOO == "Other value"', 'variable');
         
         $expected = '#if($FOO.BAR == 20 && $BARFOO == "Other value")';

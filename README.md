@@ -598,7 +598,7 @@ $convertedString = $apache->translateSafeguard($safeguard);
 $apache = Mailcode::create()->createTranslator()->createSyntax('ApacheVelocity');
 
 // create a command
-$command = Mailcode_Factory::setVariable('VAR.NAME', '8');
+$command = Mailcode_Factory::set()->setVariable('VAR.NAME', '8');
 
 // convert it to an apache velocity command string
 $apacheString = $apache->translateCommand($command);

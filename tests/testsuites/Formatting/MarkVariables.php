@@ -151,7 +151,7 @@ final class Formatting_MarkVariablesTests extends MailcodeTestCase
     
     public function test_combineWithHighlighting() : void
     {
-        $command = Mailcode_Factory::showVar('FOOBAR');
+        $command = Mailcode_Factory::show()->showVar('FOOBAR');
         $commandString = $command->getNormalized();
         $template = '<test>%s</test>';
         

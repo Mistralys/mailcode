@@ -41,7 +41,7 @@ final class Mailcode_ShowSnippetTests extends MailcodeTestCase
     
     public function test_getVariable()
     {
-        $snippet = Mailcode_Factory::showSnippet('foobar');
+        $snippet = Mailcode_Factory::show()->showSnippet('foobar');
         
         $this->assertEquals('$foobar', $snippet->getVariable()->getFullName());
         $this->assertEquals('$foobar', $snippet->getVariableName());
@@ -53,7 +53,7 @@ final class Mailcode_ShowSnippetTests extends MailcodeTestCase
 
         $this->assertTrue($cmd->isURLEncoded());
 
-        $this->assertEquals('{showsnippet: $FOO urlencode:}', Mailcode_Factory::showSnippet('$FOO')->setURLEncoding(true)->getNormalized());
+        $this->assertEquals('{showsnippet: $FOO urlencode:}', Mailcode_Factory::show()->showSnippet('$FOO')->setURLEncoding(true)->getNormalized());
     }
 
     public function test_urldecode() : void
@@ -62,6 +62,6 @@ final class Mailcode_ShowSnippetTests extends MailcodeTestCase
 
         $this->assertTrue($cmd->isURLDecoded());
 
-        $this->assertEquals('{showsnippet: $FOO urldecode:}', Mailcode_Factory::showSnippet('$FOO')->setURLDecoding(true)->getNormalized());
+        $this->assertEquals('{showsnippet: $FOO urldecode:}', Mailcode_Factory::show()->showSnippet('$FOO')->setURLDecoding(true)->getNormalized());
     }
 }

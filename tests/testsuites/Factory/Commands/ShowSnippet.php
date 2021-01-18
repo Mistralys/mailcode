@@ -15,12 +15,12 @@ final class Factory_ShowSnippetTests extends FactoryTestCase
     {
         $this->runCommand(
             'Variable name without $',
-            function() { return Mailcode_Factory::showSnippet('snippet_name'); }
+            function() { return Mailcode_Factory::show()->showSnippet('snippet_name'); }
         );
         
         $this->runCommand(
             'Variable name with $',
-            function() { return Mailcode_Factory::showSnippet('$snippet_name'); }
+            function() { return Mailcode_Factory::show()->showSnippet('$snippet_name'); }
         );
     }
     
@@ -28,6 +28,6 @@ final class Factory_ShowSnippetTests extends FactoryTestCase
     {
         $this->expectException(Mailcode_Factory_Exception::class);
         
-        Mailcode_Factory::showSnippet('0invalid_var');
+        Mailcode_Factory::show()->showSnippet('0invalid_var');
     }
 }

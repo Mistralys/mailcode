@@ -51,7 +51,7 @@ final class Mailcode_CodeTests extends MailcodeTestCase
     
     public function test_getSyntaxName() : void
     {
-        $cmd = Mailcode_Factory::code('ApacheVelocity');
+        $cmd = Mailcode_Factory::misc()->code('ApacheVelocity');
         
         $this->assertEquals('ApacheVelocity', $cmd->getSyntaxName());
         $this->assertEquals('ApacheVelocity', $cmd->getSyntax()->getTypeID());

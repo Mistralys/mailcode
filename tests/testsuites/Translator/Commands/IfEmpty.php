@@ -9,12 +9,12 @@ final class Translator_Velocity_IfEmptyTests extends VelocityTestCase
         $tests = array(
             array(
                 'label' => 'If empty',
-                'mailcode' => Mailcode_Factory::ifEmpty('FOO.BAR'),
+                'mailcode' => Mailcode_Factory::if()->ifEmpty('FOO.BAR'),
                 'expected' => '#if($StringUtils.isEmpty($FOO.BAR))'
             ),
             array(
                 'label' => 'If not empty',
-                'mailcode' => Mailcode_Factory::ifNotEmpty('FOO.BAR'),
+                'mailcode' => Mailcode_Factory::if()->ifNotEmpty('FOO.BAR'),
                 'expected' => '#if(!$StringUtils.isEmpty($FOO.BAR))'
             )
         );

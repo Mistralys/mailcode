@@ -15,12 +15,12 @@ final class Factory_ShowVarTests extends FactoryTestCase
     {
         $this->runCommand(
             'Variable name without $',
-            function() { return Mailcode_Factory::showVar('VAR.NAME'); }
+            function() { return Mailcode_Factory::show()->showVar('VAR.NAME'); }
         );
 
         $this->runCommand(
             'Variable name with $',
-            function() { return Mailcode_Factory::showVar('$VAR.NAME'); }
+            function() { return Mailcode_Factory::show()->showVar('$VAR.NAME'); }
         );
     }
     
@@ -28,6 +28,6 @@ final class Factory_ShowVarTests extends FactoryTestCase
     {
         $this->expectException(Mailcode_Factory_Exception::class);
         
-        Mailcode_Factory::showVar('0INVALIDVAR');
+        Mailcode_Factory::show()->showVar('0INVALIDVAR');
     }
 }

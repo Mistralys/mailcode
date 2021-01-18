@@ -47,4 +47,17 @@ class Mailcode_Factory_CommandSets_Set_Set extends Mailcode_Factory_CommandSets_
         
         throw $this->instantiator->exceptionUnexpectedType('SetVariable', $cmd);
     }
+
+    /**
+     * Treats the value as a string literal, so automatically adds quotes around it.
+     *
+     * @param string $variableName
+     * @param string $value
+     * @return Mailcode_Commands_Command_SetVariable
+     * @throws Mailcode_Factory_Exception
+     */
+    public function setVarString(string $variableName, string $value) : Mailcode_Commands_Command_SetVariable
+    {
+        return $this->setVar($variableName, $value, true);
+    }
 }

@@ -14,12 +14,12 @@ final class Factory_IfSmallerThanTests extends FactoryTestCase
     {
         $this->runCommand(
             'String number, variable without dollar',
-            function() { return Mailcode_Factory::ifSmallerThan('FOO.BAR', '45,12'); }
+            function() { return Mailcode_Factory::if()->ifSmallerThan('FOO.BAR', '45,12'); }
         );
 
         $this->runCommand(
             'String number, variable with dollar',
-            function() { return Mailcode_Factory::ifSmallerThan('$FOO.BAR', '45,12'); }
+            function() { return Mailcode_Factory::if()->ifSmallerThan('$FOO.BAR', '45,12'); }
         );
     }
 }

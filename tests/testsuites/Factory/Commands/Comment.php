@@ -14,12 +14,12 @@ final class Factory_CommentTests extends FactoryTestCase
     {
         $this->runCommand(
             'Variable string comparison',
-            function() { return Mailcode_Factory::comment('Just some text here'); }
+            function() { return Mailcode_Factory::misc()->comment('Just some text here'); }
         );
         
         $this->runCommand(
             'With quotes in the text',
-            function() { return Mailcode_Factory::comment('Text with "a quoted part".'); }
+            function() { return Mailcode_Factory::misc()->comment('Text with "a quoted part".'); }
         );
     }
 }

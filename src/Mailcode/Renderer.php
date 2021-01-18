@@ -47,107 +47,107 @@ class Mailcode_Renderer
     */
     public function showVar(string $variableName) : string
     {
-        return $this->command2string(Mailcode_Factory::showVar($variableName));
+        return $this->command2string(Mailcode_Factory::show()->showVar($variableName));
     }
 
     public function showSnippet(string $snippetName) : string
     {
-        return $this->command2string(Mailcode_Factory::showSnippet($snippetName));
+        return $this->command2string(Mailcode_Factory::show()->showSnippet($snippetName));
     }
     
     public function setVar(string $variableName, string $value, bool $quoteValue=false) : string
     {
-        return $this->command2string(Mailcode_Factory::setVar($variableName, $value, $quoteValue));
+        return $this->command2string(Mailcode_Factory::set()->setVar($variableName, $value, $quoteValue));
     }
     
     public function setVarString(string $variableName, string $value) : string
     {
-        return $this->command2string(Mailcode_Factory::setVarString($variableName, $value));
+        return $this->command2string(Mailcode_Factory::set()->setVarString($variableName, $value));
     }
     
     public function if(string $condition, string $type='') : string
     {
-        return $this->command2string(Mailcode_Factory::if($condition, $type));
+        return $this->command2string(Mailcode_Factory::if()->if($condition, $type));
     }
     
     public function ifVar(string $variable, string $operand, string $value, bool $quoteValue=false) : string
     {
-        return $this->command2string(Mailcode_Factory::ifVar($variable, $operand, $value, $quoteValue));
+        return $this->command2string(Mailcode_Factory::if()->ifVar($variable, $operand, $value, $quoteValue));
     }
 
     public function ifVarString(string $variable, string $operand, string $value) : string
     {
-        return $this->command2string(Mailcode_Factory::ifVarString($variable, $operand, $value));
+        return $this->command2string(Mailcode_Factory::if()->ifVarString($variable, $operand, $value));
     }
     
     public function ifVarEquals(string $variable, string $value, bool $quoteValue=false) : string
     {
-        return $this->command2string(Mailcode_Factory::ifVarEquals($variable, $value, $quoteValue));
+        return $this->command2string(Mailcode_Factory::if()->ifVarEquals($variable, $value, $quoteValue));
     }
 
     public function ifVarEqualsString(string $variable, string $value) : string
     {
-        return $this->command2string(Mailcode_Factory::ifVarEqualsString($variable, $value));    
+        return $this->command2string(Mailcode_Factory::if()->ifVarEqualsString($variable, $value));
     }
     
     public function ifVarNotEquals(string $variable, string $value, bool $quoteValue=false) : string
     {
-        return $this->command2string(Mailcode_Factory::ifVarNotEquals($variable, $value, $quoteValue));
+        return $this->command2string(Mailcode_Factory::if()->ifVarNotEquals($variable, $value, $quoteValue));
     }
 
     public function ifVarNotEqualsString(string $variable, string $value) : string
     {
-        return $this->command2string(Mailcode_Factory::ifVarNotEqualsString($variable, $value));
+        return $this->command2string(Mailcode_Factory::if()->ifVarNotEqualsString($variable, $value));
     }
     
     public function elseIf(string $condition, string $type='') : string
     {
-        return $this->command2string(Mailcode_Factory::elseIf($condition, $type));
+        return $this->command2string(Mailcode_Factory::elseIf()->elseIf($condition, $type));
     }
     
     public function elseIfVar(string $variable, string $operand, string $value, bool $quoteValue=false) : string
     {
-        return $this->command2string(Mailcode_Factory::elseIfVar($variable, $operand, $value, $quoteValue));
+        return $this->command2string(Mailcode_Factory::elseIf()->elseIfVar($variable, $operand, $value, $quoteValue));
     }
 
     public function elseIfVarString(string $variable, string $operand, string $value) : string
     {
-        return $this->command2string(Mailcode_Factory::elseIfVarString($variable, $operand, $value));
+        return $this->command2string(Mailcode_Factory::elseIf()->elseIfVarString($variable, $operand, $value));
     }
     
     public function elseIfVarEquals(string $variable, string $value, bool $quoteValue=false) : string
     {
-        return $this->command2string(Mailcode_Factory::elseIfVarEquals($variable, $value, $quoteValue));
+        return $this->command2string(Mailcode_Factory::elseIf()->elseIfVarEquals($variable, $value, $quoteValue));
     }
 
     public function elseIfVarEqualsString(string $variable, string $value) : string
     {
-        return $this->command2string(Mailcode_Factory::elseIfVarEqualsString($variable, $value));
+        return $this->command2string(Mailcode_Factory::elseIf()->elseIfVarEqualsString($variable, $value));
     }
     
     public function elseIfVarNotEquals(string $variable, string $value, bool $quoteValue=false) : string
     {
-        return $this->command2string(Mailcode_Factory::elseIfVarNotEquals($variable, $value, $quoteValue));
+        return $this->command2string(Mailcode_Factory::elseIf()->elseIfVarNotEquals($variable, $value, $quoteValue));
     }
 
     public function elseIfVarNotEqualsString(string $variable, string $value) : string
     {
-        return $this->command2string(Mailcode_Factory::elseIfVarNotEqualsString($variable, $value));
+        return $this->command2string(Mailcode_Factory::elseIf()->elseIfVarNotEqualsString($variable, $value));
     }
     
     public function else() : string
     {
-        return $this->command2string(Mailcode_Factory::else());
+        return $this->command2string(Mailcode_Factory::elseIf()->else());
     }
     
     public function end() : string
     {
-        return $this->command2string(Mailcode_Factory::end());
+        return $this->command2string(Mailcode_Factory::misc()->end());
     }
     
     public function comment(string $comment) : string
     {
-        return $this->command2string(Mailcode_Factory::comment($comment));
+        return $this->command2string(Mailcode_Factory::misc()->comment($comment));
     }
     
     protected function command2string(Mailcode_Commands_Command $command) : string

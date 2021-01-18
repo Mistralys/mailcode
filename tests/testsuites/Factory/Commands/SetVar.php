@@ -15,17 +15,17 @@ final class Factory_SetVarTests extends FactoryTestCase
     {
         $this->runCommand(
             'Variable name without $',
-            function() { return Mailcode_Factory::setVar('VAR.NAME', 'Some text'); }
+            function() { return Mailcode_Factory::set()->setVar('VAR.NAME', 'Some text'); }
         );
         
         $this->runCommand(
             'Variable name with $',
-            function() { return Mailcode_Factory::setVar('$VAR.NAME', 'Some text'); }
+            function() { return Mailcode_Factory::set()->setVar('$VAR.NAME', 'Some text'); }
         );
         
         $this->runCommand(
             'Unquoted params',
-            function() { return Mailcode_Factory::setVar('$VAR.NAME', '6 + 2', false); }
+            function() { return Mailcode_Factory::set()->setVar('$VAR.NAME', '6 + 2', false); }
         );
     }
     
@@ -33,6 +33,6 @@ final class Factory_SetVarTests extends FactoryTestCase
     {
         $this->expectException(Mailcode_Factory_Exception::class);
         
-        Mailcode_Factory::setVar('$FOO.BAR', 'Some text', false);
+        Mailcode_Factory::set()->setVar('$FOO.BAR', 'Some text', false);
     }
 }

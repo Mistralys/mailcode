@@ -9,7 +9,7 @@ final class Translator_Velocity_ElseTests extends VelocityTestCase
         $tests = array(
             array(
                 'label' => 'Else',
-                'mailcode' => Mailcode_Factory::else(),
+                'mailcode' => Mailcode_Factory::elseIf()->else(),
                 'expected' => '#{else}'
             )
         );

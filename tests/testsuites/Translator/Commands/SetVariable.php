@@ -9,7 +9,7 @@ final class Translator_Velocity_SetVariableTests extends VelocityTestCase
         $tests = array(
             array(
                 'label' => 'Set variable',
-                'mailcode' => Mailcode_Factory::setVar('FOO.BAR', 'Value', true),
+                'mailcode' => Mailcode_Factory::set()->setVar('FOO.BAR', 'Value', true),
                 'expected' => '#set($FOO.BAR = "Value")'
             )
         );

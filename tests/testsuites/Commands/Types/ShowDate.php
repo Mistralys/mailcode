@@ -61,7 +61,7 @@ final class Mailcode_ShowDateTests extends MailcodeTestCase
     
     public function test_getVariable()
     {
-        $cmd = Mailcode_Factory::showDate('foobar');
+        $cmd = Mailcode_Factory::show()->showDate('foobar');
         
         $this->assertEquals('$foobar', $cmd->getVariable()->getFullName());
         $this->assertEquals('$foobar', $cmd->getVariableName());

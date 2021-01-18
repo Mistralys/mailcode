@@ -105,7 +105,15 @@ class Mailcode_Factory_Instantiator
         return $this->buildIf($ifType, $condition, $containsType);
     }
 
-    public function buildIfNotContains(string $ifType, string $variable, array $searchTerms, bool $caseInsensitive=false, string $containsType='contains') : Mailcode_Commands_IfBase
+    /**
+     * @param string $ifType
+     * @param string $variable
+     * @param string[] $searchTerms
+     * @param bool $caseInsensitive
+     * @return Mailcode_Commands_IfBase
+     * @throws Mailcode_Factory_Exception
+     */
+    public function buildIfNotContains(string $ifType, string $variable, array $searchTerms, bool $caseInsensitive=false) : Mailcode_Commands_IfBase
     {
         return $this->buildIfContains($ifType, $variable, $searchTerms, $caseInsensitive, 'not-contains');
     }

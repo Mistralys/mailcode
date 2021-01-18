@@ -61,21 +61,21 @@
             <?php 
             
                 $commands = array(
-                    Mailcode_Factory::showVar('VARIABLE.NAME'),
-                    Mailcode_Factory::comment('Some comments here'),
-                    Mailcode_Factory::showSnippet('snippet_name'),
-                    Mailcode_Factory::showDate('DATE.VARIABLE'),
-                    Mailcode_Factory::if('1 + 1 == 2'),
-                    Mailcode_Factory::ifContains('CUSTOMER.NAME', 'John'),
-                    Mailcode_Factory::ifVarEquals('NUMBER', 124),
+                    Mailcode_Factory::show()->showVar('VARIABLE.NAME'),
+                    Mailcode_Factory::misc()->comment('Some comments here'),
+                    Mailcode_Factory::show()->showSnippet('snippet_name'),
+                    Mailcode_Factory::show()->showDate('DATE.VARIABLE'),
+                    Mailcode_Factory::if()->if('1 + 1 == 2'),
+                    Mailcode_Factory::if()->ifContains('CUSTOMER.NAME', array('John')),
+                    Mailcode_Factory::if()->ifVarEquals('NUMBER', '124'),
                 );
                 
-                $and = Mailcode_Factory::elseIfVarEqualsString('STRINGVAR', 'John');
+                $and = Mailcode_Factory::elseIf()->elseIfVarEqualsString('STRINGVAR', 'John');
                 $and->getLogicKeywords()->appendOR('$STRINGVAR == "Steve"', "variable");
                 
                 $commands[] = $and;
                 
-                $commands[] = Mailcode_Factory::end();
+                $commands[] = Mailcode_Factory::misc()->end();
                 
                 foreach($commands as $command)
                 {

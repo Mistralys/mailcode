@@ -48,7 +48,7 @@ final class Mailcode_ShowVarTests extends MailcodeTestCase
     
     public function test_getVariable()
     {
-        $cmd = Mailcode_Factory::showVar('foobar');
+        $cmd = Mailcode_Factory::show()->showVar('foobar');
         
         $this->assertEquals('$foobar', $cmd->getVariable()->getFullName());
         $this->assertEquals('$foobar', $cmd->getVariableName());

@@ -29,7 +29,7 @@ final class Parser_HTMLHighlightingFormatterTests extends MailcodeTestCase
                 'label' => 'Command at beginning of the document',
                 'html' => '{setvar: $FOOBAR = "Foo"} <strong>Text here</strong>',
                 'highlighted' => 
-                    Mailcode_Factory::setVar('FOOBAR', 'Foo')->getHighlighted().
+                    Mailcode_Factory::set()->setVar('FOOBAR', 'Foo')->getHighlighted().
                     ' <strong>Text here</strong>'
             ),
             array(
