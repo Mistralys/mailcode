@@ -480,4 +480,30 @@ EOD;
         // No exception = safeguarding works.
         $this->addToAssertionCount(1);
     }
+
+    /**
+     * Test for a bug: Because the safeguard used a non-strict
+     * in_array comparison to check if a placeholder exists,
+     * the string "999000001999." (note the dot at the end) would
+     * match the placeholder "999000001999".
+     *
+     * In essence, this comparison is true in PHP:
+     * <code>"45." == "45"</code>
+     */
+    public function test_isPlaceholder_bugNumeric() : void
+    {
+        $text = '{showvar: $FOO}';
+
+        $safeguard = Mailcode::create()->createSafeguard($text);
+
+        $placeholders = $safeguard->getPlaceholderStrings();
+
+        foreach($placeholders as $placeholder)
+        {
+            if($safeguard->isPlaceholder($placeholder.'.'))
+            {
+                $this->fail('Should not find a placeholder.');
+            }
+        }
+    }
 }

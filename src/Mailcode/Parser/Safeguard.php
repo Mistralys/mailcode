@@ -505,7 +505,7 @@ class Mailcode_Parser_Safeguard
     {
         $ids = $this->getPlaceholderStrings();
         
-        return in_array($subject, $ids);
+        return in_array($subject, $ids, true);
     }
     
    /**
