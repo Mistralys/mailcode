@@ -154,11 +154,49 @@ class Mailcode_Factory_CommandSets_Set_If extends Mailcode_Factory_CommandSets_I
      * @return Mailcode_Commands_Command_If_NotContains
      * @throws Mailcode_Factory_Exception
      */
-    public function notContains(string $variable, array $searchTerms, bool $caseInsensitive=false) : Mailcode_Commands_Command_If_Contains
+    public function notContains(string $variable, array $searchTerms, bool $caseInsensitive=false) : Mailcode_Commands_Command_If_NotContains
     {
         $command = $this->instantiator->buildIfNotContains('If', $variable, $searchTerms, $caseInsensitive);
 
         if($command instanceof Mailcode_Commands_Command_If_NotContains)
+        {
+            return $command;
+        }
+
+        throw $this->instantiator->exceptionUnexpectedType('IfNotContains', $command);
+    }
+
+    /**
+     * @param string $variable
+     * @param array $searchTerms
+     * @param bool $caseInsensitive
+     * @return Mailcode_Commands_Command_If_ListContains
+     * @throws Mailcode_Factory_Exception
+     */
+    public function listContains(string $variable, array $searchTerms, bool $caseInsensitive=false) : Mailcode_Commands_Command_If_ListContains
+    {
+        $command = $this->instantiator->buildIfListContains('If', $variable, $searchTerms, $caseInsensitive);
+
+        if($command instanceof Mailcode_Commands_Command_If_ListContains)
+        {
+            return $command;
+        }
+
+        throw $this->instantiator->exceptionUnexpectedType('IfListContains', $command);
+    }
+
+    /**
+     * @param string $variable
+     * @param array $searchTerms
+     * @param bool $caseInsensitive
+     * @return Mailcode_Commands_Command_If_ListNotContains
+     * @throws Mailcode_Factory_Exception
+     */
+    public function listNotContains(string $variable, array $searchTerms, bool $caseInsensitive=false) : Mailcode_Commands_Command_If_ListNotContains
+    {
+        $command = $this->instantiator->buildIfListNotContains('If', $variable, $searchTerms, $caseInsensitive);
+
+        if($command instanceof Mailcode_Commands_Command_If_ListNotContains)
         {
             return $command;
         }

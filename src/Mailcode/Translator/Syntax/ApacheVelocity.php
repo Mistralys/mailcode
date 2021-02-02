@@ -56,7 +56,7 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
     * @param string $string
     * @return string
     */
-    protected function filterRegexString(string $string) : string
+    public function filterRegexString(string $string) : string
     {
         // Special case: previously escaped quotes. 
         // To avoid modifying them, we strip them out.

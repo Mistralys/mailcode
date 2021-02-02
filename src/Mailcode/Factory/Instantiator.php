@@ -117,7 +117,35 @@ class Mailcode_Factory_Instantiator
     {
         return $this->buildIfContains($ifType, $variable, $searchTerms, $caseInsensitive, 'not-contains');
     }
-    
+
+    /**
+     * @param string $ifType
+     * @param string $variable
+     * @param array $searchTerms
+     * @param bool $caseInsensitive
+     * @param string $containsType
+     * @return Mailcode_Commands_IfBase
+     * @throws Mailcode_Factory_Exception
+     */
+    public function buildIfListContains(string $ifType, string $variable, array $searchTerms, bool $caseInsensitive=false, string $containsType='list-contains') : Mailcode_Commands_IfBase
+    {
+        return $this->buildIfContains($ifType, $variable, $searchTerms, $caseInsensitive, 'list-contains');
+    }
+
+    /**
+     * @param string $ifType
+     * @param string $variable
+     * @param array $searchTerms
+     * @param bool $caseInsensitive
+     * @param string $containsType
+     * @return Mailcode_Commands_IfBase
+     * @throws Mailcode_Factory_Exception
+     */
+    public function buildIfListNotContains(string $ifType, string $variable, array $searchTerms, bool $caseInsensitive=false, string $containsType='list-contains') : Mailcode_Commands_IfBase
+    {
+        return $this->buildIfContains($ifType, $variable, $searchTerms, $caseInsensitive, 'list-not-contains');
+    }
+
     public function buildIfBeginsWith(string $ifType, string $variable, string $search, bool $caseInsensitive=false) : Mailcode_Commands_IfBase
     {
         return $this->buildIfSearch($ifType, 'begins-with', $variable, $search, $caseInsensitive);

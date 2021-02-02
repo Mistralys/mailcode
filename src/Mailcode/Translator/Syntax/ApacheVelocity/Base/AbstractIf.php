@@ -164,47 +164,21 @@ EOD;
             $value
         );
     }
-    
-   /**
-    * 
-    * @param Mailcode_Variables_Variable $variable
-    * @param bool $caseSensitive
-    * @param Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral[] $searchTerms
-    * @return string
-    */
+
+    /**
+     * @param Mailcode_Variables_Variable $variable
+     * @param bool $caseSensitive
+     * @param Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral[] $searchTerms
+     * @param string $containsType
+     * @return string
+     * @throws Mailcode_Exception
+     */
     protected function _translateContains(Mailcode_Variables_Variable $variable, bool $caseSensitive, array $searchTerms, string $containsType) : string
     {
-        $parts = array();
-        $varName = $variable->getFullName();
-
-        $opts = 's';
-        if($caseSensitive)
-        {
-            $opts = 'is';
-        }
-
-        $sign = '';
-        $connector = '||';
-        if($containsType === 'not-contains')
-        {
-            $sign = '!';
-            $connector = '&&';
-        }
-        
-        foreach($searchTerms as $token)
-        {
-            $parts[] = sprintf(
-                '%s%s.matches("(?%s)%s")',
-                $sign,
-                $varName,
-                $opts,
-                $this->filterRegexString(trim($token->getNormalized(), '"'))
-            );
-        }
-
-        return implode(' '.$connector.' ', $parts);
+        $builder = new Mailcode_Translator_Syntax_ApacheVelocity_Contains_StatementBuilder($this, $variable, $caseSensitive, $searchTerms, $containsType);
+        return $builder->render();
     }
-    
+
     protected function _translateSearch(string $mode, Mailcode_Variables_Variable $variable, bool $caseSensitive, string $searchTerm) : string
     {
         $method = $mode.'With';

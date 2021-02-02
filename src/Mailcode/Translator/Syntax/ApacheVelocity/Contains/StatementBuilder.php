@@ -1,0 +1,202 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Mailcode;
+
+class Mailcode_Translator_Syntax_ApacheVelocity_Contains_StatementBuilder
+{
+    const ERROR_INVALID_LIST_VARIABLE_NAME = 76701;
+
+    /**
+     * @var Mailcode_Variables_Variable
+     */
+    private $variable;
+
+    /**
+     * @var bool
+     */
+    private $caseSensitive;
+
+    /**
+     * @var array
+     */
+    private $searchTerms;
+
+    /**
+     * @var string
+     */
+    private $containsType;
+
+    /**
+     * @var Mailcode_Translator_Syntax_ApacheVelocity
+     */
+    private $translator;
+
+    public function __construct(Mailcode_Translator_Syntax_ApacheVelocity $translator, Mailcode_Variables_Variable $variable, bool $caseSensitive, array $searchTerms, string $containsType)
+    {
+        $this->translator = $translator;
+        $this->variable = $variable;
+        $this->caseSensitive = $caseSensitive;
+        $this->searchTerms = $searchTerms;
+        $this->containsType = $containsType;
+    }
+
+    /**
+     * Is this a not contains command? (list or regular)
+     * @return bool
+     */
+    public function isNotContains() : bool
+    {
+        return strstr($this->containsType, 'not-contains') !== false;
+    }
+
+    /**
+     * Is this a contains command to be used on a list variable?
+     * @return bool
+     */
+    public function isList() : bool
+    {
+        return strstr($this->containsType, 'list-') !== false;
+    }
+
+    /**
+     * Gets the sign to prepend the command with, i.e.
+     * whether to add the negation "!" or not, depending
+     * on the type of command.
+     *
+     * @return string
+     */
+    public function getSign() : string
+    {
+        if($this->isNotContains())
+        {
+            return '!';
+        }
+
+        return '';
+    }
+
+    /**
+     * Gets the logical connector sign to combine several search
+     * terms with, i.e. "&&" or "||" depending on whether it is
+     * a regular contains or not contains.
+     *
+     * @return string
+     */
+    public function getConnector()
+    {
+        if($this->isNotContains())
+        {
+            return '&&';
+        }
+
+        return '||';
+    }
+
+    /**
+     * @return string
+     * @throws Mailcode_Exception
+     */
+    public function render() : string
+    {
+        $parts = array();
+
+        foreach($this->searchTerms as $token)
+        {
+            $parts[] = $this->renderCommand($token);
+        }
+
+        return implode(' '.$this->getConnector().' ', $parts);
+    }
+
+    /**
+     * @param Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral $searchTerm
+     * @return string
+     * @throws Mailcode_Exception
+     */
+    private function renderCommand(Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral $searchTerm) : string
+    {
+        if($this->isList())
+        {
+            $command = $this->renderListCommand($searchTerm);
+        }
+        else
+        {
+            $command = $this->renderRegularCommand($searchTerm);
+        }
+
+        return $this->getSign().$command;
+    }
+
+    private function renderRegularCommand(Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral $searchTerm) : string
+    {
+        return sprintf(
+            '%s.matches(%s)',
+            $this->variable->getFullName(),
+            $this->renderRegex($searchTerm)
+        );
+    }
+
+    /**
+     * @param Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral $searchTerm
+     * @return string
+     * @throws Mailcode_Exception
+     */
+    private function renderListCommand(Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral $searchTerm) : string
+    {
+        $name = $this->parseVarName();
+
+        return sprintf(
+            '$map.hasElement(%s.list(), "%s", %s)',
+            '$'.$name['path'],
+            $name['name'],
+            $this->renderRegex($searchTerm)
+        );
+    }
+
+    private function renderRegex(Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral $searchTerm) : string
+    {
+        $opts = 's';
+        if($this->caseSensitive)
+        {
+            $opts = 'is';
+        }
+
+        $filtered = $this->translator->filterRegexString(trim($searchTerm->getNormalized(), '"'));
+
+        return sprintf(
+            '"(?%s)%s"',
+            $opts,
+            $filtered
+        );
+    }
+
+    /**
+     * @return array<string,string>
+     * @throws Mailcode_Exception
+     */
+     private function parseVarName() : array
+     {
+         $tokens = explode('.', ltrim($this->variable->getFullName(), '$'));
+
+         if(count($tokens) === 2)
+         {
+             return array(
+                 'path' => $tokens[0],
+                 'name' => $tokens[1]
+             );
+         }
+
+         throw new Mailcode_Exception(
+             'Invalid variable name for a list property.',
+             sprintf(
+                 'Exactly 2 parts are required, variable [%s] has [%s].',
+                 $this->variable->getFullName(),
+                 count($tokens)
+             ),
+             self::ERROR_INVALID_LIST_VARIABLE_NAME
+         );
+     }
+}
+

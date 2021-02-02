@@ -14,7 +14,7 @@ namespace Mailcode;
 /**
  * Mailcode command: opening IF NOT CONTAINS statement.
  * 
- * Checks if a variable value contains a search string.
+ * Checks if a variable value does not contain a search string.
  *
  * @package Mailcode
  * @subpackage Commands

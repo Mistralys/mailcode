@@ -110,6 +110,26 @@ class Mailcode_Translator_Syntax_ApacheVelocity_If extends Mailcode_Translator_S
             $command->getType()
         );
     }
+
+    protected function translateListContains(Mailcode_Commands_Command_If_ListContains $command) : string
+    {
+        return $this->_translateContains(
+            $command->getVariable(),
+            $command->isCaseInsensitive(),
+            $command->getSearchTerms(),
+            $command->getType()
+        );
+    }
+
+    protected function translateListNotContains(Mailcode_Commands_Command_If_ListNotContains $command) : string
+    {
+        return $this->_translateContains(
+            $command->getVariable(),
+            $command->isCaseInsensitive(),
+            $command->getSearchTerms(),
+            $command->getType()
+        );
+    }
     
     protected function translateEmpty(Mailcode_Commands_Command_If_Empty $command) : string
     {

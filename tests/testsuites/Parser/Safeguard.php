@@ -505,5 +505,7 @@ EOD;
                 $this->fail('Should not find a placeholder.');
             }
         }
+
+        $this->addToAssertionCount(1);
     }
 }
