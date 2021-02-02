@@ -4,7 +4,12 @@
 
 Mailcode is a preprocessor command syntax created for use in emailings.
 
-Mailcode is verbose by design, without shorthand notations, for both better readability and performance. It has been developed to unify interchangeable backend preprocessor syntaxes into one language that's easy to use. 
+It aims to be easy to use by authors, and usable in a number of popular web formats, 
+from plain text to HTML and XML. The Mailcode syntax is verbose by design, without 
+shorthand notations, for both better readability and performance. 
+
+It has been developed to support interchangeable backend preprocessor syntaxes,
+to unify these into a single language. 
 
 ## The syntax
 
@@ -160,6 +165,30 @@ Matching a variable value if it does NOT contain any of the search terms:
 
 ```
 {if not-contains: $PRODUCT.NAME "Term 1" "Term 2" "Term 3"}
+```
+
+#### Searching for substrings in lists
+
+If a variable contains several records, it is possible to search through a property in all records, without having to use a loop:
+
+```
+{if list-contains: $PRODUCTS.NAME "Server"}
+```
+
+This will search in the `NAME` property of all products for the specified search term.
+
+The command otherwise behaves just like  the `contains` command, with the same options.
+
+Case insensitive search:
+
+```
+{if list-contains: $PRODUCTS.NAME "server" insensitive:}
+```
+
+Negating the search, applying it only if the search terms are not found:
+
+```
+{if list-not-contains: $PRODUCTS.NAME "Hosting" "WordPress"}
 ```
 
 #### Searching by position
@@ -615,6 +644,7 @@ The following tools have to be enabled in the Velocity templates:
   * [DateTool](https://velocity.apache.org/tools/devel/apidocs/org/apache/velocity/tools/generic/DateTool.html)
   * [EscapeTool](https://velocity.apache.org/tools/devel/apidocs/org/apache/velocity/tools/generic/EscapeTool.html)
   * [StringUtils](http://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/StringUtils.html)
+  * Map command for lists (custom command, see below)
 
 These tools can be added to the context of templates like this:
 
@@ -632,8 +662,27 @@ Commands that require these tools:
   - ShowSnippet (EscapeTool)
   - If Empty / If Not Empty (StringUtils)
   - ElseIf Empty / ElseIf Not Empty (StringUtils)
+  - List contains / List not contains (Map command)
 
 If these tools are not available, these commands will throw errors if they are used in a template.
+
+#### Map command for lists
+
+The commands `list-contains` and `list-not-contains` depend on a custom command which we implemented on the Velocity side for our project.
+
+This basically provides the following Velocity command, assuming that `$PRODUCTS` is a list of records:
+
+```
+#if($map.hasElement($PRODUCTS.list(), "NAME", "(?s)Value") )
+```
+
+The matching java code then looks like this:
+
+```
+return list.stream().anyMatch(map -> map.get("NAME").matches("(?s)Value"));
+```
+
+To use those commands, this has to be implemented in your Velocity engine.
 
 #### Configuring date formats
 
