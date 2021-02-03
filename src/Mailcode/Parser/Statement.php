@@ -51,14 +51,25 @@ class Mailcode_Parser_Statement
      */
     protected $freeform = false;
 
-    public function __construct(string $statement, bool $freeform=false)
+    /**
+     * @var Mailcode_Commands_Command|null
+     */
+    private $sourceCommand;
+
+    public function __construct(string $statement, bool $freeform=false, ?Mailcode_Commands_Command $sourceCommand=null)
     {
+        $this->sourceCommand = $sourceCommand;
         $this->statement = $statement;
         $this->result = new OperationResult($this);
         $this->tokenizer = new Mailcode_Parser_Statement_Tokenizer($this);
         $this->freeform = $freeform;
 
         $this->validate();
+    }
+
+    public function getSourceCommand() : ?Mailcode_Commands_Command
+    {
+        return $this->sourceCommand;
     }
 
     public function getStatementString() : string

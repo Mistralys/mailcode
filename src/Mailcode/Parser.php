@@ -230,17 +230,18 @@ class Mailcode_Parser
     {
         return new Mailcode_Parser_Safeguard($this, $subject);
     }
-    
-   /**
-    * Creates a statement parser, which is used to validate arbitrary
-    * command statements.
-    * 
-    * @param string $statement
-    * @param bool $freeform
-    * @return Mailcode_Parser_Statement
-    */
-    public function createStatement(string $statement, bool $freeform=false) : Mailcode_Parser_Statement
+
+    /**
+     * Creates a statement parser, which is used to validate arbitrary
+     * command statements.
+     *
+     * @param string $statement
+     * @param bool $freeform
+     * @param Mailcode_Commands_Command|null $sourceCommand
+     * @return Mailcode_Parser_Statement
+     */
+    public function createStatement(string $statement, bool $freeform=false, ?Mailcode_Commands_Command $sourceCommand=null) : Mailcode_Parser_Statement
     {
-        return new Mailcode_Parser_Statement($statement, $freeform);
+        return new Mailcode_Parser_Statement($statement, $freeform, $sourceCommand);
     }
 }

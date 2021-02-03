@@ -70,6 +70,11 @@ class Mailcode_Parser_Statement_Tokenizer
         $this->tokenize($statement->getStatementString());
     }
 
+    public function getSourceCommand() : ?Mailcode_Commands_Command
+    {
+        return $this->statement->getSourceCommand();
+    }
+
    /**
     * Retrieves all tokens detected in the statement string, in 
     * the order they were found.
@@ -215,7 +220,7 @@ class Mailcode_Parser_Statement_Tokenizer
 
         $class = '\Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_'.$type;
 
-        return new $class($tokenID, $matchedText, $subject);
+        return new $class($tokenID, $matchedText, $subject, $this->getSourceCommand());
     }
 
     public function appendKeyword(string $name) : Mailcode_Parser_Statement_Tokenizer_Token_Keyword

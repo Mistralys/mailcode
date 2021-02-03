@@ -34,17 +34,32 @@ abstract class Mailcode_Parser_Statement_Tokenizer_Token implements Mailcode_Par
     * @var mixed
     */
     protected $subject;
-    
-   /**
-    * @param string $tokenID
-    * @param string $matchedText
-    * @param mixed $subject
-    */
-    public function __construct(string $tokenID, string $matchedText, $subject=null)
+
+    /**
+     * @var Mailcode_Commands_Command|null
+     */
+    private $sourceCommand;
+
+    /**
+     * @param string $tokenID
+     * @param string $matchedText
+     * @param mixed $subject
+     * @param Mailcode_Commands_Command|null $sourceCommand
+     */
+    public function __construct(string $tokenID, string $matchedText, $subject=null, ?Mailcode_Commands_Command $sourceCommand=null)
     {
         $this->tokenID = $tokenID;
         $this->matchedText = $matchedText;
         $this->subject = $subject;
+        $this->sourceCommand = $sourceCommand;
+    }
+
+    /**
+     * @return Mailcode_Commands_Command|null
+     */
+    public function getSourceCommand(): ?Mailcode_Commands_Command
+    {
+        return $this->sourceCommand;
     }
     
    /**
