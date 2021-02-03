@@ -112,7 +112,7 @@ EOD;
 
         if($format->hasDecimals())
         {
-            $result .= '.'.str_repeat('#', $format->getDecimals());
+            $result .= '.'.str_repeat('0', $format->getDecimals());
         }
 
         return $result;
