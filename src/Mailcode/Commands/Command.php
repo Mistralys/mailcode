@@ -210,13 +210,14 @@ abstract class Mailcode_Commands_Command
     {
         return $this->type === '__dummy';
     }
-    
-   /**
-    * Retrieves a hash of the actual matched command string,
-    * which is used in collections to detect duplicate commands.
-    * 
-    * @return string
-    */
+
+    /**
+     * Retrieves a hash of the actual matched command string,
+     * which is used in collections to detect duplicate commands.
+     *
+     * @return string
+     * @throws Mailcode_Exception
+     */
     public function getHash() : string
     {
         $this->requireNonDummy();
@@ -477,7 +478,7 @@ abstract class Mailcode_Commands_Command
     */
     public function getVariables() : Mailcode_Variables_Collection_Regular
     {
-        return Mailcode::create()->findVariables($this->paramsString);
+        return Mailcode::create()->findVariables($this->paramsString, $this);
     }
     
     public function __toString()
