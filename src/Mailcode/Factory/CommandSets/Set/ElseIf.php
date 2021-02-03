@@ -142,6 +142,13 @@ class Mailcode_Factory_CommandSets_Set_ElseIf extends Mailcode_Factory_CommandSe
         throw $this->instantiator->exceptionUnexpectedType('ElseIfNotContains', $command);
     }
 
+    /**
+     * @param string $variable
+     * @param string[] $searchTerms
+     * @param bool $caseInsensitive
+     * @return Mailcode_Commands_Command_ElseIf_ListContains
+     * @throws Mailcode_Factory_Exception
+     */
     public function listContains(string $variable, array $searchTerms, bool $caseInsensitive=false) : Mailcode_Commands_Command_ElseIf_ListContains
     {
         $command = $this->instantiator->buildIfListContains('ElseIf', $variable, $searchTerms, $caseInsensitive);
@@ -154,6 +161,13 @@ class Mailcode_Factory_CommandSets_Set_ElseIf extends Mailcode_Factory_CommandSe
         throw $this->instantiator->exceptionUnexpectedType('ElseIfListContains', $command);
     }
 
+    /**
+     * @param string $variable
+     * @param string[] $searchTerms
+     * @param bool $caseInsensitive
+     * @return Mailcode_Commands_Command_ElseIf_ListNotContains
+     * @throws Mailcode_Factory_Exception
+     */
     public function listNotContains(string $variable, array $searchTerms, bool $caseInsensitive=false) : Mailcode_Commands_Command_ElseIf_ListNotContains
     {
         $command = $this->instantiator->buildIfListNotContains('ElseIf', $variable, $searchTerms, $caseInsensitive);

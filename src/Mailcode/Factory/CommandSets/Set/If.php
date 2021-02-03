@@ -168,7 +168,7 @@ class Mailcode_Factory_CommandSets_Set_If extends Mailcode_Factory_CommandSets_I
 
     /**
      * @param string $variable
-     * @param array $searchTerms
+     * @param string[] $searchTerms
      * @param bool $caseInsensitive
      * @return Mailcode_Commands_Command_If_ListContains
      * @throws Mailcode_Factory_Exception
@@ -187,7 +187,7 @@ class Mailcode_Factory_CommandSets_Set_If extends Mailcode_Factory_CommandSets_I
 
     /**
      * @param string $variable
-     * @param array $searchTerms
+     * @param string[] $searchTerms
      * @param bool $caseInsensitive
      * @return Mailcode_Commands_Command_If_ListNotContains
      * @throws Mailcode_Factory_Exception

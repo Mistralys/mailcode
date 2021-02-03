@@ -19,7 +19,7 @@ class Mailcode_Translator_Syntax_ApacheVelocity_Contains_StatementBuilder
     private $caseSensitive;
 
     /**
-     * @var array
+     * @var Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral[]
      */
     private $searchTerms;
 
@@ -33,6 +33,14 @@ class Mailcode_Translator_Syntax_ApacheVelocity_Contains_StatementBuilder
      */
     private $translator;
 
+    /**
+     * Mailcode_Translator_Syntax_ApacheVelocity_Contains_StatementBuilder constructor.
+     * @param Mailcode_Translator_Syntax_ApacheVelocity $translator
+     * @param Mailcode_Variables_Variable $variable
+     * @param bool $caseSensitive
+     * @param Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral[] $searchTerms
+     * @param string $containsType
+     */
     public function __construct(Mailcode_Translator_Syntax_ApacheVelocity $translator, Mailcode_Variables_Variable $variable, bool $caseSensitive, array $searchTerms, string $containsType)
     {
         $this->translator = $translator;

@@ -121,7 +121,7 @@ class Mailcode_Factory_Instantiator
     /**
      * @param string $ifType
      * @param string $variable
-     * @param array $searchTerms
+     * @param string[] $searchTerms
      * @param bool $caseInsensitive
      * @param string $containsType
      * @return Mailcode_Commands_IfBase
@@ -135,7 +135,7 @@ class Mailcode_Factory_Instantiator
     /**
      * @param string $ifType
      * @param string $variable
-     * @param array $searchTerms
+     * @param string[] $searchTerms
      * @param bool $caseInsensitive
      * @param string $containsType
      * @return Mailcode_Commands_IfBase
