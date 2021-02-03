@@ -8,7 +8,7 @@ class Mailcode_Parser_Statement_Tokenizer_Process_Variables extends Mailcode_Par
 {
     protected function _process() : void
     {
-        $vars = Mailcode::create()->findVariables($this->tokenized)->getGroupedByHash();
+        $vars = Mailcode::create()->findVariables($this->tokenized, $this->tokenizer->getSourceCommand())->getGroupedByHash();
 
         foreach($vars as $var)
         {
