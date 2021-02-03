@@ -42,7 +42,8 @@ trait Mailcode_Traits_Commands_Validation_ParseParams
 
         $this->params = $this->mailcode->getParser()->createStatement(
             $this->paramsString,
-            $this->hasFreeformParameters()
+            $this->hasFreeformParameters(),
+            $this
         );
 
         if(!$this->params->isValid())
