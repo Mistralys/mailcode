@@ -31,9 +31,10 @@ final class Variables_VariablesTests extends MailcodeTestCase
         $this->assertSame(5, $merged->countVariables(), '5 variables in total, ungrouped');
         $this->assertSame(4, count($merged->getGroupedByHash()), '4 variables grouped by hash');
         $this->assertSame(3, count($merged->getGroupedByName()), '3 variables grouped by name');
+        $this->assertSame(3, count($merged->getGroupedByUniqueName()), '3 variables grouped by unique name');
     }
     
-    public function test_collection_mergeInvalid()
+    public function test_collection_mergeInvalid() : void
     {
         $vars = Mailcode::create()->createVariables();
         
@@ -57,27 +58,29 @@ final class Variables_VariablesTests extends MailcodeTestCase
         }
     }
     
-    public function test_collection_commandVariables()
+    public function test_collection_commandVariables() : void
     {
         $collection = Mailcode::create()->parseString("
             {showvar: \$FOO.BAR} 
             {showvar: \$BAR.FOO} 
             {showvar: \$ANOTHER.ONE} 
-            {showvar: \$FOO.BAR}"
+            {showvar: \$FOO.BAR}
+            {for: \$ENTRY in: \$FOO.BAR}"
         );
         
         $vars = $collection->getVariables();
         
-        $this->assertSame(4, $vars->countVariables());
-        $this->assertSame(3, count($vars->getGroupedByName()));
+        $this->assertSame(6, $vars->countVariables());
+        $this->assertSame(4, count($vars->getGroupedByName()));
+        $this->assertSame(5, count($vars->getGroupedByUniqueName()));
     }
 
    /**
-    * Checking the variables parsing, incuding verifying the 
+    * Checking the variables parsing, including verifying the
     * resulting name to ensure that what was matched corresponds
     * to what is expected.
     */
-    public function test_parseVariableName()
+    public function test_parseVariableName() : void
     {
         $tests = array(
             array(

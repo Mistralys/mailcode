@@ -120,7 +120,7 @@ abstract class Mailcode_Variables_Collection
     * 
     * @return Mailcode_Variables_Variable[]
     */
-    public function getGroupedByHash()
+    public function getGroupedByHash() : array
     {
         $entries = array();
         
@@ -137,7 +137,7 @@ abstract class Mailcode_Variables_Collection
     * 
     * @return Mailcode_Variables_Variable[]
     */
-    public function getGroupedByName()
+    public function getGroupedByName() : array
     {
         $entries = array();
         
@@ -148,10 +148,29 @@ abstract class Mailcode_Variables_Collection
         
         return $this->sortVariables($entries);
     }
+
+    /**
+     * Retrieves all variables, grouped by the unique commands
+     * they are tied to.
+     *
+     * @return Mailcode_Variables_Variable[]
+     * @throws Mailcode_Exception
+     */
+    public function getGroupedByUniqueName() : array
+    {
+        $entries = array();
+
+        foreach($this->variables as $variable)
+        {
+            $entries[$variable->getUniqueName()] = $variable;
+        }
+
+        return $this->sortVariables($entries);
+    }
     
    /**
     * Retrieves all variables, in the order they were addded.
-    * @return \Mailcode\Mailcode_Variables_Variable[]
+    * @return Mailcode_Variables_Variable[]
     */
     public function getAll()
     {
