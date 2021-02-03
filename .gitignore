@@ -1,4 +1,5 @@
-docs/cache
+docs/cache/
+docs/config/cache/
 vendor
 docs/phpstan/output.txt
 .idea/
@@ -7,3 +8,4 @@ localization/storage.json
 tests/assets/files/test-highlight-output.html
 tests/assets/files/test-highlight-marked-variables.html
 tests/assets/files/test-highlight-output-raw.html
+docs/config/resultCache.php
