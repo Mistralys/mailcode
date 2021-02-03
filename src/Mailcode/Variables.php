@@ -26,14 +26,15 @@ class Mailcode_Variables
     * @var Mailcode_Variables_Collection_Regular
     */
     protected $collection;
-    
-   /**
-    * Parses the specified string to find all variable names contained within, if any.
-    * 
-    * @param string $subject
-    * @return Mailcode_Variables_Collection_Regular
-    */
-    public function parseString(string $subject) : Mailcode_Variables_Collection_Regular
+
+    /**
+     * Parses the specified string to find all variable names contained within, if any.
+     *
+     * @param string $subject
+     * @param Mailcode_Commands_Command|null $sourceCommand
+     * @return Mailcode_Variables_Collection_Regular
+     */
+    public function parseString(string $subject, ?Mailcode_Commands_Command $sourceCommand=null) : Mailcode_Variables_Collection_Regular
     {
         $this->collection = new Mailcode_Variables_Collection_Regular();
         
@@ -49,18 +50,18 @@ class Mailcode_Variables
         {
             if(!empty($matches[3][$idx]))
             {
-                $this->addSingle($matches[3][$idx], $matchedText);
+                $this->addSingle($matches[3][$idx], $matchedText, $sourceCommand);
             }
             else 
             {
-                $this->addPathed($matches[1][$idx], $matches[2][$idx], $matchedText);
+                $this->addPathed($matches[1][$idx], $matches[2][$idx], $matchedText, $sourceCommand);
             }
         }
         
         return $this->collection;
     }
     
-    protected function addSingle(string $name, string $matchedText) : void
+    protected function addSingle(string $name, string $matchedText, ?Mailcode_Commands_Command $sourceCommand=null) : void
     {
         // ignore US style numbers like $451
         if(is_numeric($name))
@@ -68,10 +69,10 @@ class Mailcode_Variables
             return;
         }
         
-        $this->collection->add(new Mailcode_Variables_Variable('', $name, $matchedText));
+        $this->collection->add(new Mailcode_Variables_Variable('', $name, $matchedText, $sourceCommand));
     }
     
-    protected function addPathed(string $path, string $name, string $matchedText) : void
+    protected function addPathed(string $path, string $name, string $matchedText, ?Mailcode_Commands_Command $sourceCommand=null) : void
     {
         // ignore US style numbers like $45.12
         if(is_numeric($path.'.'.$name))
@@ -79,6 +80,6 @@ class Mailcode_Variables
             return;
         }
         
-        $this->collection->add(new Mailcode_Variables_Variable($path, $name, $matchedText));
+        $this->collection->add(new Mailcode_Variables_Variable($path, $name, $matchedText, $sourceCommand));
     }
 }

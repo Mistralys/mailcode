@@ -66,12 +66,31 @@ class Mailcode_Variables_Variable
         'underscore_path',
         'underscore_name'
     );
-    
-    public function __construct(string $path, string $name, string $matchedText)
+
+    /**
+     * @var Mailcode_Commands_Command|null
+     */
+    private $command;
+
+    public function __construct(string $path, string $name, string $matchedText, ?Mailcode_Commands_Command $sourceCommand=null)
     {
         $this->path = $path;
         $this->name = $name;
         $this->matchedText = $matchedText;
+        $this->command = $sourceCommand;
+    }
+
+    /**
+     * Retrieves the source command of the variable, if any.
+     * The string parser automatically sets the variable's
+     * command, but if it was created via other means it will
+     * not have one.
+     *
+     * @return Mailcode_Commands_Command|null
+     */
+    public function getSourceCommand() : ?Mailcode_Commands_Command
+    {
+        return $this->command;
     }
     
     public function getFullName() : string
@@ -82,6 +101,24 @@ class Mailcode_Variables_Variable
         }
         
         return '$'.$this->path.'.'.$this->name;
+    }
+
+    /**
+     * Retrieves the name of the variable with a suffix that
+     * uniquely identifies it together with the command it
+     * came from. Used for grouping identical variables.
+     *
+     * @return string
+     * @throws Mailcode_Exception
+     */
+    public function getUniqueName() : string
+    {
+        if(isset($this->command))
+        {
+            return $this->getFullName().'/'.$this->command->getHash();
+        }
+
+        return $this->getFullName();
     }
     
     public function getName() : string

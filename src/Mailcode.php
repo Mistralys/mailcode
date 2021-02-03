@@ -106,16 +106,17 @@ class Mailcode
     {
         return new Mailcode_StringContainer($subject);
     }
-    
-   /**
-    * Attempts to find all variables in the target string.
-    * 
-    * @param string $subject
-    * @return Mailcode_Variables_Collection_Regular
-    */
-    public function findVariables(string $subject) : Mailcode_Variables_Collection_Regular
+
+    /**
+     * Attempts to find all variables in the target string.
+     *
+     * @param string $subject
+     * @param Mailcode_Commands_Command|null $sourceCommand
+     * @return Mailcode_Variables_Collection_Regular
+     */
+    public function findVariables(string $subject, ?Mailcode_Commands_Command $sourceCommand=null) : Mailcode_Variables_Collection_Regular
     {
-        return $this->createVariables()->parseString($subject);
+        return $this->createVariables()->parseString($subject, $sourceCommand);
     }
     
     public function createVariables() : Mailcode_Variables
