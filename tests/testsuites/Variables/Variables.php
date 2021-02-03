@@ -234,4 +234,76 @@ final class Variables_VariablesTests extends MailcodeTestCase
             $this->assertInstanceOf(Mailcode_Variables_Variable::class, $result->getByFullName($test['var'])->getFirst());
         }
     }
+
+    public function test_sourceCommand_none() : void
+    {
+        $vars = Mailcode::create()->createVariables();
+
+        $collection = $vars->parseString('
+            $FOO.BAR 
+            $BAR.FOO
+        ');
+
+        $all = $collection->getAll();
+
+        foreach ($all as $var)
+        {
+            $this->assertNull($var->getSourceCommand());
+        }
+    }
+
+    public function test_sourceCommand_exists() : void
+    {
+        $string = '
+            {showvar: $FOO.BAR} 
+            {for: $ENTRY in: $LOOP}
+                {if variable: $IF == "Text"}
+                {end}
+            {end}
+        ';
+
+        $collection = Mailcode::create()->parseString($string);
+        $vars = $collection->getVariables()->getAll();
+
+        $this->assertNotEmpty($vars);
+
+        foreach ($vars as $var)
+        {
+            $this->assertNotNull($var->getSourceCommand(), 'Should have a command set: ' . $var->getFullName());
+        }
+    }
+
+    public function test_sourceCommand_viaCommand() : void
+    {
+        $string = '
+            {showvar: $FOO.BAR} 
+            {for: $ENTRY in: $LOOP}
+                {if variable: $IF == "Text"}
+                {end}
+            {end}
+        ';
+
+        $commands = Mailcode::create()->parseString($string)->getCommands();
+        $vars = array();
+
+        foreach ($commands as $command)
+        {
+            $vars = array_merge($vars, $command->getVariables()->getAll());
+        }
+
+        $this->assertCount(4, $vars);
+
+        foreach ($vars as $var)
+        {
+            $this->assertNotNull($var->getSourceCommand());
+        }
+    }
+
+    public function test_sourceCommand_specialMethods() : void
+    {
+        $cmd = \Mailcode\Mailcode_Factory::misc()->for('RECORD', 'LOOP');
+
+        $this->assertNotNull($cmd->getLoopVariable()->getSourceCommand(), 'Loop variable must have a source command');
+        $this->assertNotNull($cmd->getSourceVariable()->getSourceCommand(), 'Source variable must have a source command');
+    }
 }
