@@ -275,9 +275,21 @@ class Mailcode_Collection
      *
      * @return Mailcode_Commands_ShowBase[]
      */
-    public function getShowCommands()
+    public function getShowCommands(): array
     {
         return $this->getCommandsByClass(Mailcode_Commands_ShowBase::class);
+    }
+
+    /**
+     * Retrieves all commands that implement the ListVariables interface,
+     * meaning that they use list variables.
+     *
+     * @return Mailcode_Interfaces_Commands_ListVariables[]
+     * @see Mailcode_Interfaces_Commands_ListVariables
+     */
+    public function getListVariableCommands() : array
+    {
+        return $this->getCommandsByClass(Mailcode_Interfaces_Commands_ListVariables::class);
     }
 
     /**
@@ -285,7 +297,7 @@ class Mailcode_Collection
     * 
     * @return Mailcode_Commands_Command_ShowVariable[]
     */
-    public function getShowVariableCommands()
+    public function getShowVariableCommands(): array
     {
         return $this->getCommandsByClass(Mailcode_Commands_Command_ShowVariable::class);
     }
