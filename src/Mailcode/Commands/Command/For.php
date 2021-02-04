@@ -18,14 +18,18 @@ namespace Mailcode;
  * @subpackage Commands
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Mailcode_Commands_Command_For extends Mailcode_Commands_Command implements Mailcode_Commands_Command_Type_Opening
+class Mailcode_Commands_Command_For extends Mailcode_Commands_Command implements Mailcode_Commands_Command_Type_Opening, Mailcode_Interfaces_Commands_ListVariables
 {
+    use Mailcode_Traits_Commands_ListVariables;
+
     const ERROR_SOURCE_VARIABLE_NOT_AVAILABLE = 64101;
     const ERROR_LOOP_VARIABLE_NOT_AVAILABLE = 64102;
     
     const VALIDATION_INVALID_FOR_STATEMENT = 49701;
     const VALIDATION_WRONG_KEYWORD = 49702;
     const VALIDATION_VARIABLE_NAME_IS_THE_SAME = 49703;
+    const VALIDATION_VARIABLE_NAME_WITH_DOT = 49704;
+    const VALIDATION_LOOP_VARIABLE_NAME_WITH_DOT = 49705;
     
    /**
     * @var Mailcode_Parser_Statement_Tokenizer_Token_Variable|NULL
@@ -82,7 +86,9 @@ class Mailcode_Commands_Command_For extends Mailcode_Commands_Command implements
         return array(
             'statement',
             'keyword',
-            'variable_names'
+            'variable_names',
+            'list_var',
+            'record_var'
         );
     }
     
@@ -162,5 +168,43 @@ class Mailcode_Commands_Command_For extends Mailcode_Commands_Command implements
             t('The source and loop variables have the same name.'),
             self::VALIDATION_VARIABLE_NAME_IS_THE_SAME
         );
+    }
+
+    protected function validateSyntax_list_var() : void
+    {
+        $name = $this->sourceVar->getVariable()->getFullName();
+
+        $parts = explode('.', $name);
+
+        if(count($parts) === 1) {
+            return;
+        }
+
+        $this->validationResult->makeError(
+            t('The source variable is not a list variable:').' '.
+            t('Expected a variable without dot, like %1$s.', '<code>$'.t('LIST').'</code>'),
+            self::VALIDATION_VARIABLE_NAME_WITH_DOT
+        );
+    }
+
+    protected function validateSyntax_record_var() : void
+    {
+        $name = $this->loopVar->getVariable()->getFullName();
+
+        $parts = explode('.', $name);
+
+        if(count($parts) === 1) {
+            return;
+        }
+
+        $this->validationResult->makeError(
+            t('The loop record variable may not have a dot in its name.'),
+            self::VALIDATION_LOOP_VARIABLE_NAME_WITH_DOT
+        );
+    }
+
+    protected function _collectListVariables(Mailcode_Variables_Collection_Regular $collection): void
+    {
+        $collection->add($this->getSourceVariable());
     }
 }
