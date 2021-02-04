@@ -13,14 +13,7 @@ namespace Mailcode;
 
 use AppUtils\OperationResult;
 
-/**
- * Base command class with the common functionality for all commands.
- *
- * @package Mailcode
- * @subpackage Commands
- * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
- */
-abstract class Mailcode_Commands_Command
+abstract class Mailcode_Commands_Command implements Mailcode_Interfaces_Commands_Command
 {
     use Mailcode_Traits_Commands_Validation_EmptyParams;
     use Mailcode_Traits_Commands_Validation_ParamKeywords;
@@ -162,10 +155,7 @@ abstract class Mailcode_Commands_Command
     {
         return $this->parent;
     }
-    
-   /**
-    * @return string The ID of the command = the name of the command class file.
-    */
+
     public function getID() : string
     {
         // account for commands with types: If_Variable should still return If.
@@ -173,51 +163,24 @@ abstract class Mailcode_Commands_Command
         $tokens = explode('_', $base);
         return array_shift($tokens);
     }
-    
-   /**
-    * Sets an optional comment that is not used anywhere, but
-    * can be used by the application to track why a command is
-    * used somewhere. 
-    * 
-    * @param string $comment
-    * @return Mailcode_Commands_Command
-    */
+
     public function setComment(string $comment) : Mailcode_Commands_Command
     {
         $this->comment = $comment;
         
         return $this;
     }
-    
-   /**
-    * Retrieves the previously set comment, if any.
-    * 
-    * @return string
-    */
+
     public function getComment() : string
     {
         return $this->comment;
     }
-    
-   /**
-    * Checks whether this is a dummy command, which is only
-    * used to access information on the command type. It cannot
-    * be used as an actual live command.
-    * 
-    * @return bool
-    */
+
     public function isDummy() : bool
     {
         return $this->type === '__dummy';
     }
 
-    /**
-     * Retrieves a hash of the actual matched command string,
-     * which is used in collections to detect duplicate commands.
-     *
-     * @return string
-     * @throws Mailcode_Exception
-     */
     public function getHash() : string
     {
         $this->requireNonDummy();
@@ -408,13 +371,7 @@ abstract class Mailcode_Commands_Command
     abstract public function supportsType() : bool;
 
     abstract public function supportsURLEncoding() : bool;
-    
-   /**
-    * Whether the command allows using logic keywords like "and:" or "or:"
-    * in the command parameters.
-    * 
-    * @return bool
-    */
+
     abstract public function supportsLogicKeywords() : bool;
     
     abstract public function generatesContent() : bool;
@@ -459,23 +416,12 @@ abstract class Mailcode_Commands_Command
         
         return $normalizer->normalize();
     }
-    
-   /**
-    * Retrieves the names of all the command's supported types: the part
-    * between the command name and the colon. Example: {command type: params}.
-    * 
-    * @return string[]
-    */
+
     public function getSupportedTypes() : array
     {
         return array();
     }
-    
-   /**
-    * Retrieves all variable names used in the command.
-    * 
-    * @return Mailcode_Variables_Collection_Regular
-    */
+
     public function getVariables() : Mailcode_Variables_Collection_Regular
     {
         return Mailcode::create()->findVariables($this->paramsString, $this);
@@ -500,26 +446,12 @@ abstract class Mailcode_Commands_Command
         );
     }
 
-   /**
-    * Sets a parameter for the translation backend. The backend can use
-    * these to allow command-specific configurations.
-    *
-    * @param string $name
-    * @param mixed $value
-    * @return $this
-    */
     public function setTranslationParam(string $name, $value)
     {
         $this->translationParams[$name] = $value;
         return $this;
     }
 
-   /**
-    * Retrieves a previously set translation parameter.
-    *
-    * @param string $name
-    * @return mixed
-    */
     public function getTranslationParam(string $name)
     {
         if(isset($this->translationParams[$name]))
@@ -530,10 +462,6 @@ abstract class Mailcode_Commands_Command
         return null;
     }
 
-    /**
-     * @param bool $encoding
-     * @return $this
-     */
     public function setURLEncoding(bool $encoding=true)
     {
         $this->requireURLEncoding();
@@ -543,13 +471,6 @@ abstract class Mailcode_Commands_Command
         return $this;
     }
 
-    /**
-     * Enables URL decoding for the command.
-     *
-     * @param bool $decode
-     * @return $this
-     * @throws Mailcode_Exception
-     */
     public function setURLDecoding(bool $decode=true)
     {
         $this->requireURLEncoding();
