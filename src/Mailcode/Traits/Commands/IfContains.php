@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use AppUtils\OperationResult;
+
 /**
  * Mailcode command: opening IF statement.
  *
@@ -19,7 +21,7 @@ namespace Mailcode;
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * 
  * @property Mailcode_Parser_Statement $params
- * @property \AppUtils\OperationResult $validationResult
+ * @property OperationResult $validationResult
  * @property Mailcode_Parser_Statement_Validator $validator
  * @property Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral[] $searchTerms
  */
