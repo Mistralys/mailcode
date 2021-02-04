@@ -12,6 +12,16 @@ It all happened on {showdate: $DATE}.
 Insert content of {showsnippet: $SNIPPET} here.
 EOD;
 
+    protected $tplListVars = <<<'EOD'
+{for: $RECORD in: $FORLIST}
+    {if list-contains: $CONTAINS.PROP "Term"}
+    {end}
+    {if list-not-contains: $NOTCONTAINS.PROP "Term"}
+    {end}
+{end}
+EOD;
+
+
     public function test_getCommands() : void
     {
         $collection = Mailcode::create()->parseString($this->tplShowVars);
@@ -31,5 +41,29 @@ EOD;
 
         $this->assertNotSame($collectionA, $merged);
         $this->assertCount(5, $merged->getCommands());
+    }
+
+    public function test_getListVariables() : void
+    {
+        $collection = Mailcode::create()->parseString($this->tplListVars);
+        $commands = $collection->getListVariableCommands();
+
+        $this->assertCount(3, $commands);
+
+        $names = array();
+        foreach($commands as $command)
+        {
+            $names = array_merge($names, $command->getListVariables()->getNames());
+        }
+
+        sort($names);
+
+        $expected = array(
+            '$CONTAINS',
+            '$FORLIST',
+            '$NOTCONTAINS'
+        );
+
+        $this->assertEquals($expected, $names);
     }
 }
