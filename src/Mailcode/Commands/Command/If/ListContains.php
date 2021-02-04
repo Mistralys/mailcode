@@ -20,6 +20,21 @@ namespace Mailcode;
  * @subpackage Commands
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Mailcode_Commands_Command_If_ListContains extends Mailcode_Commands_Command_If_Contains
+class Mailcode_Commands_Command_If_ListContains extends Mailcode_Commands_Command_If_Contains implements Mailcode_Interfaces_Commands_ListVariables, Mailcode_Interfaces_Commands_ListPropertyVariable
 {
+    use Mailcode_Traits_Commands_ListVariables;
+    use Mailcode_Traits_Commands_Validation_ListPropertyVariable;
+
+    protected function getValidations(): array
+    {
+        $validations = parent::getValidations();
+        $validations[] = 'list_property_variable';
+
+        return $validations;
+    }
+
+    protected function _collectListVariables(Mailcode_Variables_Collection_Regular $collection): void
+    {
+        $collection->add($this->getListVariable());
+    }
 }
