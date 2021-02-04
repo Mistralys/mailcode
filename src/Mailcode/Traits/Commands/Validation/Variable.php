@@ -59,12 +59,13 @@ trait Mailcode_Traits_Commands_Validation_Variable
             Mailcode_Commands_CommonConstants::ERROR_NO_VARIABLE_AVAILABLE
         );
     }
-    
-   /**
-    * Retrieves the variable being compared.
-    *
-    * @return Mailcode_Variables_Variable
-    */
+
+    /**
+     * Retrieves the variable being compared.
+     *
+     * @return Mailcode_Variables_Variable
+     * @throws Mailcode_Exception
+     */
     public function getVariable() : Mailcode_Variables_Variable
     {
         if(isset($this->variableToken))
