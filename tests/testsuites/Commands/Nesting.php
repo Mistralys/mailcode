@@ -69,7 +69,7 @@ final class Mailcode_Commands_NestingTests extends MailcodeTestCase
     public function test_wrongParent()
     {
         $string =
-        '{for: $NAME in: $FOO.BAR}
+        '{for: $NAME in: $FOO}
             {else}
         {end}';
         

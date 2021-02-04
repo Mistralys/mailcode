@@ -26,19 +26,19 @@ final class Mailcode_ForTests extends MailcodeTestCase
             ),
             array(
                 'label' => 'With only a variable',
-                'string' => '{for: $FOO.BAR}{end}',
+                'string' => '{for: $FOO}{end}',
                 'valid' => false,
                 'code' => Mailcode_Commands_Command_For::VALIDATION_INVALID_FOR_STATEMENT
             ),
             array(
                 'label' => 'With invalid variable',
-                'string' => '{for: $5OOBAR in: $SOMEVAR.YO}{end}',
+                'string' => '{for: $5OOBAR in: $SOMEVAR}{end}',
                 'valid' => false,
                 'code' => Mailcode_Commands_Command::VALIDATION_INVALID_PARAMS_STATEMENT
             ),
             array(
                 'label' => 'With missing container variable',
-                'string' => '{for: $FOO.BAR in: }{end}',
+                'string' => '{for: $RECORD in: }{end}',
                 'valid' => false,
                 'code' => Mailcode_Commands_Command_For::VALIDATION_INVALID_FOR_STATEMENT
             ),
@@ -61,8 +61,20 @@ final class Mailcode_ForTests extends MailcodeTestCase
                 'code' => Mailcode_Commands_Command_For::VALIDATION_VARIABLE_NAME_IS_THE_SAME
             ),
             array(
+                'label' => 'List variable with dot',
+                'string' => '{for: $RECORD in: $LIST.PROP}{end}',
+                'valid' => false,
+                'code' => Mailcode_Commands_Command_For::VALIDATION_VARIABLE_NAME_WITH_DOT
+            ),
+            array(
+                'label' => 'List loop variable with dot',
+                'string' => '{for: $RECORD.PROP in: $LIST}{end}',
+                'valid' => false,
+                'code' => Mailcode_Commands_Command_For::VALIDATION_LOOP_VARIABLE_NAME_WITH_DOT
+            ),
+            array(
                 'label' => 'Valid statement',
-                'string' => '{for: $FOO.BAR in: $BAR.FOO}{end}',
+                'string' => '{for: $RECORD in: $LIST}{end}',
                 'valid' => true,
                 'code' => 0
             )
@@ -101,5 +113,19 @@ final class Mailcode_ForTests extends MailcodeTestCase
         $this->expectException(Mailcode_Exception::class);
         
         $cmd->getSourceVariable();
+    }
+
+    /**
+     * Fetch all list variables found in the command: this is always
+     * a single variable, the source variable of the command.
+     */
+    public function test_getListVariables() : void
+    {
+        $cmd = Mailcode_Factory::misc()->for('LIST', 'RECORD');
+
+        $listVars = $cmd->getListVariables()->getAll();
+
+        $this->assertCount(1, $listVars);
+        $this->assertEquals('$LIST', $listVars[0]->getFullName());
     }
 }

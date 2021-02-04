@@ -14,7 +14,7 @@ final class Parser_NestingTests extends MailcodeTestCase
     public function notest_simpleNesting() : void
     {
         $string =
-        '{for: $RECORD in: $FOO.BAR}
+        '{for: $RECORD in: $FOO}
             {showvar: $RECORD.NAME}
             {showvar: $BARFOO}
         {end}';
@@ -39,7 +39,7 @@ final class Parser_NestingTests extends MailcodeTestCase
     {
         $string =
         '{if empty: $LOPOS}
-            {for: $RECORD in: $FOO.BAR}
+            {for: $RECORD in: $FOO}
                 {showvar: $RECORD.NAME}
             {end}
         {end}';

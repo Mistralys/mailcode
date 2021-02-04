@@ -74,7 +74,7 @@ final class Mailcode_ShowDateTests extends MailcodeTestCase
     public function test_isInLoop() : void
     {
         $string =
-        '{for: $RECORD in: $FOO.BAR}
+        '{for: $RECORD in: $FOO}
             {if not-empty: $RECORD.NAME}
                 {showdate: $RECORD.NAME}
             {end}

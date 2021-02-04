@@ -1,6 +1,8 @@
 <?php
 
 use Mailcode\Mailcode;
+use Mailcode\Mailcode_Factory;
+use Mailcode\Mailcode_Variables_Collection;
 use Mailcode\Mailcode_Variables_Collection_Regular;
 use Mailcode\Mailcode_Variables;
 use Mailcode\Mailcode_Variables_Variable;
@@ -60,19 +62,22 @@ final class Variables_VariablesTests extends MailcodeTestCase
     
     public function test_collection_commandVariables() : void
     {
-        $collection = Mailcode::create()->parseString("
-            {showvar: \$FOO.BAR} 
-            {showvar: \$BAR.FOO} 
-            {showvar: \$ANOTHER.ONE} 
-            {showvar: \$FOO.BAR}
-            {for: \$ENTRY in: \$FOO.BAR}"
+        $collection = Mailcode::create()->parseString('
+            {showvar: $FOO.BAR} 
+            {showvar: $BAR.FOO} 
+            {showvar: $ANOTHER.ONE} 
+            {showvar: $FOO.BAR}
+            {if list-contains: $FOO.BAR "Search"}
+            {for: $RECORD in: $LIST}'
         );
         
         $vars = $collection->getVariables();
-        
-        $this->assertSame(6, $vars->countVariables());
-        $this->assertSame(4, count($vars->getGroupedByName()));
-        $this->assertSame(5, count($vars->getGroupedByUniqueName()));
+
+        $this->assertSame(7, $vars->countVariables(), $this->debugVariablesCollection($vars));
+        $this->assertSame(5, count($vars->getGroupedByName()), $this->debugVariablesCollection($vars));
+
+        // By unique name, the $FOO.BAR appears 2x
+        $this->assertSame(6, count($vars->getGroupedByUniqueName()), $this->debugVariablesCollection($vars));
     }
 
    /**
@@ -284,14 +289,22 @@ final class Variables_VariablesTests extends MailcodeTestCase
         ';
 
         $commands = Mailcode::create()->parseString($string)->getCommands();
-        $vars = array();
+        $collection = new Mailcode_Variables_Collection_Regular();
 
         foreach ($commands as $command)
         {
-            $vars = array_merge($vars, $command->getVariables()->getAll());
+            $collection = $collection->mergeWith($command->getVariables());
         }
 
-        $this->assertCount(4, $vars);
+        $vars = $collection->getGroupedByName();
+
+        $names = array();
+        foreach($vars as $var)
+        {
+            $names[] = $var->getFullName();
+        }
+
+        $this->assertCount(4, $vars, sprintf('Gotten: [%s]', implode(', ', $names)));
 
         foreach ($vars as $var)
         {
@@ -301,7 +314,7 @@ final class Variables_VariablesTests extends MailcodeTestCase
 
     public function test_sourceCommand_specialMethods() : void
     {
-        $cmd = \Mailcode\Mailcode_Factory::misc()->for('RECORD', 'LOOP');
+        $cmd = Mailcode_Factory::misc()->for('RECORD', 'LOOP');
 
         $this->assertNotNull($cmd->getLoopVariable()->getSourceCommand(), 'Loop variable must have a source command');
         $this->assertNotNull($cmd->getSourceVariable()->getSourceCommand(), 'Source variable must have a source command');
