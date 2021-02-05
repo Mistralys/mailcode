@@ -103,7 +103,7 @@ EOD;
 
     private function translateFormat(Mailcode_Number_Info $format) : string
     {
-        $result = '#';
+        $result = '0';
 
         if($format->hasThousandsSeparator())
         {
