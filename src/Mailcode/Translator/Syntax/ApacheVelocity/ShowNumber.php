@@ -107,7 +107,7 @@ EOD;
 
         if($format->hasThousandsSeparator())
         {
-            $result = '#,###';
+            $result = '#,##0';
         }
 
         if($format->hasDecimals())
