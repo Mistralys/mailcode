@@ -56,7 +56,7 @@ class Mailcode_Parser_Safeguard_URLAnalyzer
 
     private function analyzeURL(string $url) : void
     {
-        if(stristr($url, 'tel:'))
+        if(stristr($url, 'tel:') !== false)
         {
             return;
         }
@@ -72,9 +72,10 @@ class Mailcode_Parser_Safeguard_URLAnalyzer
                 continue;
             }
 
-            if(strstr($url, $placeholder->getReplacementText()) && !$command->isURLDecoded())
+            if(strstr($url, $placeholder->getReplacementText()) !== false && !$command->isURLDecoded())
             {
                 $command->setURLEncoding(true);
+                break;
             }
         }
     }

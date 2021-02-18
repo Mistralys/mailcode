@@ -24,11 +24,15 @@ namespace Mailcode;
 trait Mailcode_Traits_Formatting_HTMLHighlighting
 {
    /**
-    * @var string[]
+    * Stored this way so we can use isset() instead
+    * of using in_array, which is some magnitudes slower.
+    * The boolean value is not used otherwise.
+    *
+    * @var array<string,bool>
     */
     private $excludeTags = array(
-        'style', // NOTE: style tags are excluded natively on the parser level.
-        'script'
+        'style' => true, // NOTE: style tags are excluded natively on the parser level.
+        'script' => true
     );
     
    /**
@@ -42,11 +46,8 @@ trait Mailcode_Traits_Formatting_HTMLHighlighting
     {
         $tagName = strtolower($tagName);
         
-        if(!in_array($tagName, $this->excludeTags))
-        {
-            $this->excludeTags[] = $tagName;
-        }
-        
+        $this->excludeTags[$tagName] = true;
+
         return $this;
     }
     
@@ -76,7 +77,7 @@ trait Mailcode_Traits_Formatting_HTMLHighlighting
     {
         $tagName = strtolower($tagName);
         
-        return in_array($tagName, $this->excludeTags);
+        return isset($this->excludeTags[$tagName]);
     }
     
     public function getReplaceString(Mailcode_Parser_Safeguard_Formatter_Location $location): string
