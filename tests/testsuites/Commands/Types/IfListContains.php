@@ -79,6 +79,20 @@ final class Mailcode_IfListContainsTests extends MailcodeTestCase
         $this->assertEquals('$LIST.PROP', $propVar->getFullName());
     }
 
+    public function test_caseDisabledByDefault() : void
+    {
+        $cmd = Mailcode_Factory::if()->listContains('LIST.PROP', array("Foo"));
+
+        $this->assertFalse($cmd->isCaseInsensitive());
+    }
+
+    public function test_isCaseInsensitive() : void
+    {
+        $cmd = Mailcode_Factory::if()->listContains('LIST.PROP', array("Foo"), true);
+
+        $this->assertTrue($cmd->isCaseInsensitive());
+    }
+
     public function test_regexDisabledByDefault() : void
     {
         $cmd = Mailcode_Factory::if()->listContains('LIST.PROP', array("Foo"));
