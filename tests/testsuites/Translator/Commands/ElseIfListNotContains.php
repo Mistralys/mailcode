@@ -18,13 +18,13 @@ final class Translator_Velocity_ElseIfListNotContainsTests extends VelocityTestC
             array(
                 'label' => 'ElseIf list contains',
                 'mailcode' => Mailcode_Factory::elseIf()->listNotContains('FOO.BAR', array('Value')),
-                'expected' => '#elseif(!$map.hasElement($FOO.list(), "BAR", "(?s)Value"))'
+                'expected' => '#elseif(!$map.hasElement($FOO.list(), "BAR", "(?s).*Value.*"))'
             ),
             array(
                 'label' => 'ElseIf contains with slash',
                 'mailcode' => Mailcode_Factory::elseIf()->listNotContains('FOO.BAR', array('Va\lue')),
                 'expected' => sprintf(
-                    '#elseif(!$map.hasElement($FOO.list(), "BAR", "(?s)%s"))',
+                    '#elseif(!$map.hasElement($FOO.list(), "BAR", "(?s).*%s.*"))',
                     'Va[DBLSLASH]lue'
                 )
             ),
@@ -32,20 +32,20 @@ final class Translator_Velocity_ElseIfListNotContainsTests extends VelocityTestC
                 'label' => 'ElseIf contains with special characters',
                 'mailcode' => Mailcode_Factory::elseIf()->listNotContains('FOO.BAR', array('6 + 4 * 3')),
                 'expected' => sprintf(
-                    '#elseif(!$map.hasElement($FOO.list(), "BAR", "(?s)%s"))',
+                    '#elseif(!$map.hasElement($FOO.list(), "BAR", "(?s).*%s.*"))',
                     '6 [SLASH]+ 4 [SLASH]* 3'
                 )
             ),
             array(
                 'label' => 'Several search terms',
                 'mailcode' => Mailcode_Factory::elseIf()->listNotContains('FOO.BAR', array('Foo', 'Bar')),
-                'expected' => '#elseif(!$map.hasElement($FOO.list(), "BAR", "(?s)Foo") && !$map.hasElement($FOO.list(), "BAR", "(?s)Bar"))'
+                'expected' => '#elseif(!$map.hasElement($FOO.list(), "BAR", "(?s).*Foo.*") && !$map.hasElement($FOO.list(), "BAR", "(?s).*Bar.*"))'
             ),
             array(
                 'label' => 'With quotes in search term',
                 'mailcode' => Mailcode_Factory::elseIf()->listNotContains('FOO.BAR', array('Value, "weird" huh?')),
                 'expected' => sprintf(
-                    '#elseif(!$map.hasElement($FOO.list(), "BAR", "(?s)%s"))',
+                    '#elseif(!$map.hasElement($FOO.list(), "BAR", "(?s).*%s.*"))',
                     'Value, [SLASH]"weird[SLASH]" huh[SLASH]?'
                 )
             )

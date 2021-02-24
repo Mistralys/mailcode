@@ -51,8 +51,8 @@ final class Translator_Velocity_IfListEndsWithTests extends VelocityTestCase
             ),
             array(
                 'label' => 'With regex mode enabled',
-                'mailcode' => Mailcode_Factory::if()->listEndsWith('FOO.BAR', array('.*Foo.*'), false, true),
-                'expected' => '#if($map.hasElement($FOO.list(), "BAR", "(?s).*Foo.*"))'
+                'mailcode' => Mailcode_Factory::if()->listEndsWith('FOO.BAR', array('.+Foo.+'), false, true),
+                'expected' => '#if($map.hasElement($FOO.list(), "BAR", "(?s).+Foo.+"))'
             )
         );
         

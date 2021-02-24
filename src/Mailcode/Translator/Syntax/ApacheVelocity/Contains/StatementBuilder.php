@@ -196,7 +196,7 @@ class Mailcode_Translator_Syntax_ApacheVelocity_Contains_StatementBuilder
     /**
      * Adds the search wildcard before or after the search string
      * for the `list-begins-with` and `list-ends-with` command
-     * flavors.
+     * flavors, or on both ends for the standard command.
      *
      * @param string $searchTerm
      * @return string
@@ -213,7 +213,7 @@ class Mailcode_Translator_Syntax_ApacheVelocity_Contains_StatementBuilder
             return $searchTerm.'.*';
         }
 
-        return $searchTerm;
+        return '.*'.$searchTerm.'.*';
     }
 
     /**
