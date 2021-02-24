@@ -180,6 +180,44 @@ class Mailcode_Factory_CommandSets_Set_ElseIf extends Mailcode_Factory_CommandSe
         throw $this->instantiator->exceptionUnexpectedType('ElseIfListNotContains', $command);
     }
 
+    /**
+     * @param string $variable
+     * @param string[] $searchTerms
+     * @param bool $caseInsensitive
+     * @return Mailcode_Commands_Command_ElseIf_ListBeginsWith
+     * @throws Mailcode_Factory_Exception
+     */
+    public function listBeginsWith(string $variable, array $searchTerms, bool $caseInsensitive=false) : Mailcode_Commands_Command_ElseIf_ListBeginsWith
+    {
+        $command = $this->instantiator->buildIfListContains('ElseIf', $variable, $searchTerms, $caseInsensitive, 'list-begins-with');
+
+        if($command instanceof Mailcode_Commands_Command_ElseIf_ListBeginsWith)
+        {
+            return $command;
+        }
+
+        throw $this->instantiator->exceptionUnexpectedType('ElseIfListBeginsWith', $command);
+    }
+
+    /**
+     * @param string $variable
+     * @param string[] $searchTerms
+     * @param bool $caseInsensitive
+     * @return Mailcode_Commands_Command_ElseIf_ListEndsWith
+     * @throws Mailcode_Factory_Exception
+     */
+    public function listEndsWith(string $variable, array $searchTerms, bool $caseInsensitive=false) : Mailcode_Commands_Command_ElseIf_ListEndsWith
+    {
+        $command = $this->instantiator->buildIfListContains('ElseIf', $variable, $searchTerms, $caseInsensitive, 'list-ends-with');
+
+        if($command instanceof Mailcode_Commands_Command_ElseIf_ListEndsWith)
+        {
+            return $command;
+        }
+
+        throw $this->instantiator->exceptionUnexpectedType('ElseIfListEndsWith', $command);
+    }
+
     public function beginsWith(string $variable, string $search, bool $caseInsensitive=false) : Mailcode_Commands_Command_ElseIf_BeginsWith
     {
         $command = $this->instantiator->buildIfBeginsWith('ElseIf', $variable, $search, $caseInsensitive);
