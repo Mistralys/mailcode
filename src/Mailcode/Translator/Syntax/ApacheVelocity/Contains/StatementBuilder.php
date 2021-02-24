@@ -172,12 +172,36 @@ class Mailcode_Translator_Syntax_ApacheVelocity_Contains_StatementBuilder
         }
 
         $filtered = $this->translator->filterRegexString(trim($searchTerm->getNormalized(), '"'));
+        $filtered = $this->addWildcards($filtered);
 
         return sprintf(
             '"(?%s)%s"',
             $opts,
             $filtered
         );
+    }
+
+    /**
+     * Adds the search wildcard before or after the search string
+     * for the `list-begins-with` and `list-ends-with` command
+     * flavors.
+     *
+     * @param string $searchTerm
+     * @return string
+     */
+    private function addWildcards(string $searchTerm) : string
+    {
+        if($this->containsType === 'list-begins-with')
+        {
+            return '.*'.$searchTerm;
+        }
+
+        if($this->containsType === 'list-ends-with')
+        {
+            return $searchTerm.'.*';
+        }
+
+        return $searchTerm;
     }
 
     /**
