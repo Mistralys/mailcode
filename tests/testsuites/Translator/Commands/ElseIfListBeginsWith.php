@@ -48,6 +48,11 @@ final class Translator_Velocity_ElseIfListBeginsWithTests extends VelocityTestCa
                     '#elseif($map.hasElement($FOO.list(), "BAR", "(?s).*%s"))',
                     'Value, [SLASH]"weird[SLASH]" huh[SLASH]?'
                 )
+            ),
+            array(
+                'label' => 'With regex mode enabled',
+                'mailcode' => Mailcode_Factory::elseIf()->listBeginsWith('FOO.BAR', array('.*Foo.*'), false, true),
+                'expected' => '#elseif($map.hasElement($FOO.list(), "BAR", "(?s).*Foo.*"))'
             )
         );
         

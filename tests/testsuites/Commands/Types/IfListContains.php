@@ -78,4 +78,18 @@ final class Mailcode_IfListContainsTests extends MailcodeTestCase
         $this->assertEquals('$LIST', $listVar->getFullName());
         $this->assertEquals('$LIST.PROP', $propVar->getFullName());
     }
+
+    public function test_regexDisabledByDefault() : void
+    {
+        $cmd = Mailcode_Factory::if()->listContains('LIST.PROP', array("Foo"));
+
+        $this->assertFalse($cmd->isRegexEnabled());
+    }
+
+    public function test_isRegexEnabled() : void
+    {
+        $cmd = Mailcode_Factory::if()->listContains('LIST.PROP', array("Foo"), false, true);
+
+        $this->assertTrue($cmd->isRegexEnabled());
+    }
 }

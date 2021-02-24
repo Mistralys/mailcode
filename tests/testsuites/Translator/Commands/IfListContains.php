@@ -48,6 +48,11 @@ final class Translator_Velocity_IfListContainsTests extends VelocityTestCase
                     '#if($map.hasElement($FOO.list(), "BAR", "(?s)%s"))',
                     'Value, [SLASH]"weird[SLASH]" huh[SLASH]?'
                 )
+            ),
+            array(
+                'label' => 'With regex mode enabled',
+                'mailcode' => Mailcode_Factory::if()->listContains('FOO.BAR', array('.*Foo.*'), false, true),
+                'expected' => '#if($map.hasElement($FOO.list(), "BAR", "(?s).*Foo.*"))'
             )
         );
         
