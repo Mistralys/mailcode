@@ -53,7 +53,7 @@ trait Mailcode_Traits_Commands_Validation_CaseSensitive
         return $this->caseInsensitive;
     }
     
-    public function getRegexToken() : ?Mailcode_Parser_Statement_Tokenizer_Token_Keyword
+    public function getCaseToken() : ?Mailcode_Parser_Statement_Tokenizer_Token_Keyword
     {
         if($this->regexToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_Keyword)
         {
