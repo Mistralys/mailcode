@@ -21,6 +21,8 @@ namespace Mailcode;
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  *
  * @property Mailcode_Parser_Statement_Validator $validator
+ *
+ * @see Mailcode_Interfaces_Commands_CaseSensitive
  */
 trait Mailcode_Traits_Commands_Validation_CaseSensitive
 {
@@ -32,7 +34,7 @@ trait Mailcode_Traits_Commands_Validation_CaseSensitive
    /**
     * @var Mailcode_Parser_Statement_Tokenizer_Token_Keyword|NULL
     */
-    protected $caseToken;
+    protected $regexToken;
     
     protected function validateSyntax_case_sensitive() : void
     {
@@ -42,7 +44,7 @@ trait Mailcode_Traits_Commands_Validation_CaseSensitive
         
         if($val->isValid())
         {
-            $this->caseToken = $val->getToken();
+            $this->regexToken = $val->getToken();
         }
     }
     
@@ -51,11 +53,11 @@ trait Mailcode_Traits_Commands_Validation_CaseSensitive
         return $this->caseInsensitive;
     }
     
-    public function getCaseToken() : ?Mailcode_Parser_Statement_Tokenizer_Token_Keyword
+    public function getRegexToken() : ?Mailcode_Parser_Statement_Tokenizer_Token_Keyword
     {
-        if($this->caseToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_Keyword)
+        if($this->regexToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_Keyword)
         {
-            return $this->caseToken;
+            return $this->regexToken;
         }
         
         return null;

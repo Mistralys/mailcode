@@ -34,20 +34,27 @@ class Mailcode_Translator_Syntax_ApacheVelocity_Contains_StatementBuilder
     private $translator;
 
     /**
+     * @var bool
+     */
+    private $regexEnabled;
+
+    /**
      * Mailcode_Translator_Syntax_ApacheVelocity_Contains_StatementBuilder constructor.
      * @param Mailcode_Translator_Syntax_ApacheVelocity $translator
      * @param Mailcode_Variables_Variable $variable
      * @param bool $caseSensitive
+     * @param bool $regexEnabled
      * @param Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral[] $searchTerms
      * @param string $containsType
      */
-    public function __construct(Mailcode_Translator_Syntax_ApacheVelocity $translator, Mailcode_Variables_Variable $variable, bool $caseSensitive, array $searchTerms, string $containsType)
+    public function __construct(Mailcode_Translator_Syntax_ApacheVelocity $translator, Mailcode_Variables_Variable $variable, bool $caseSensitive, bool $regexEnabled, array $searchTerms, string $containsType)
     {
         $this->translator = $translator;
         $this->variable = $variable;
         $this->caseSensitive = $caseSensitive;
         $this->searchTerms = $searchTerms;
         $this->containsType = $containsType;
+        $this->regexEnabled = $regexEnabled;
     }
 
     /**
@@ -171,8 +178,13 @@ class Mailcode_Translator_Syntax_ApacheVelocity_Contains_StatementBuilder
             $opts = 'is';
         }
 
-        $filtered = $this->translator->filterRegexString(trim($searchTerm->getNormalized(), '"'));
-        $filtered = $this->addWildcards($filtered);
+        $filtered = trim($searchTerm->getNormalized(), '"');
+
+        if(!$this->regexEnabled)
+        {
+            $filtered = $this->translator->filterRegexString($filtered);
+            $filtered = $this->addWildcards($filtered);
+        }
 
         return sprintf(
             '"(?%s)%s"',

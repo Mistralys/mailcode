@@ -168,14 +168,15 @@ EOD;
     /**
      * @param Mailcode_Variables_Variable $variable
      * @param bool $caseSensitive
+     * @param bool $regexEnabled
      * @param Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral[] $searchTerms
      * @param string $containsType
      * @return string
      * @throws Mailcode_Exception
      */
-    protected function _translateContains(Mailcode_Variables_Variable $variable, bool $caseSensitive, array $searchTerms, string $containsType) : string
+    protected function _translateContains(Mailcode_Variables_Variable $variable, bool $caseSensitive, bool $regexEnabled, array $searchTerms, string $containsType) : string
     {
-        $builder = new Mailcode_Translator_Syntax_ApacheVelocity_Contains_StatementBuilder($this, $variable, $caseSensitive, $searchTerms, $containsType);
+        $builder = new Mailcode_Translator_Syntax_ApacheVelocity_Contains_StatementBuilder($this, $variable, $caseSensitive, $regexEnabled, $searchTerms, $containsType);
         return $builder->render();
     }
 

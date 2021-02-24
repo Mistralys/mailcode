@@ -170,12 +170,13 @@ class Mailcode_Factory_CommandSets_Set_If extends Mailcode_Factory_CommandSets_I
      * @param string $variable
      * @param string[] $searchTerms
      * @param bool $caseInsensitive
+     * @param bool $regexEnabled
      * @return Mailcode_Commands_Command_If_ListContains
      * @throws Mailcode_Factory_Exception
      */
-    public function listContains(string $variable, array $searchTerms, bool $caseInsensitive=false) : Mailcode_Commands_Command_If_ListContains
+    public function listContains(string $variable, array $searchTerms, bool $caseInsensitive=false, bool $regexEnabled=false) : Mailcode_Commands_Command_If_ListContains
     {
-        $command = $this->instantiator->buildIfListContains('If', $variable, $searchTerms, $caseInsensitive, 'list-contains');
+        $command = $this->instantiator->buildIfListContains('If', $variable, $searchTerms, $caseInsensitive, $regexEnabled, 'list-contains');
 
         if($command instanceof Mailcode_Commands_Command_If_ListContains)
         {
@@ -208,12 +209,13 @@ class Mailcode_Factory_CommandSets_Set_If extends Mailcode_Factory_CommandSets_I
      * @param string $variable
      * @param string[] $searchTerms
      * @param bool $caseInsensitive
+     * @param bool $regexEnabled
      * @return Mailcode_Commands_Command_If_ListBeginsWith
      * @throws Mailcode_Factory_Exception
      */
-    public function listBeginsWith(string $variable, array $searchTerms, bool $caseInsensitive=false) : Mailcode_Commands_Command_If_ListBeginsWith
+    public function listBeginsWith(string $variable, array $searchTerms, bool $caseInsensitive=false, bool $regexEnabled=false) : Mailcode_Commands_Command_If_ListBeginsWith
     {
-        $command = $this->instantiator->buildIfListContains('If', $variable, $searchTerms, $caseInsensitive, 'list-begins-with');
+        $command = $this->instantiator->buildIfListContains('If', $variable, $searchTerms, $caseInsensitive, $regexEnabled,'list-begins-with');
 
         if($command instanceof Mailcode_Commands_Command_If_ListBeginsWith)
         {
@@ -227,12 +229,13 @@ class Mailcode_Factory_CommandSets_Set_If extends Mailcode_Factory_CommandSets_I
      * @param string $variable
      * @param string[] $searchTerms
      * @param bool $caseInsensitive
+     * @param bool $regexEnabled
      * @return Mailcode_Commands_Command_If_ListEndsWith
      * @throws Mailcode_Factory_Exception
      */
-    public function listEndsWith(string $variable, array $searchTerms, bool $caseInsensitive=false) : Mailcode_Commands_Command_If_ListEndsWith
+    public function listEndsWith(string $variable, array $searchTerms, bool $caseInsensitive=false, bool $regexEnabled=false) : Mailcode_Commands_Command_If_ListEndsWith
     {
-        $command = $this->instantiator->buildIfListContains('If', $variable, $searchTerms, $caseInsensitive, 'list-ends-with');
+        $command = $this->instantiator->buildIfListContains('If', $variable, $searchTerms, $caseInsensitive, $regexEnabled,'list-ends-with');
 
         if($command instanceof Mailcode_Commands_Command_If_ListEndsWith)
         {

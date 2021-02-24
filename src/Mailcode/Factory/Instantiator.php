@@ -83,39 +83,45 @@ class Mailcode_Factory_Instantiator
      * @param string $variable
      * @param string[] $searchTerms
      * @param bool $caseInsensitive
+     * @param bool $regexEnabled
+     * @param string $containsType
      * @return Mailcode_Commands_IfBase
      * @throws Mailcode_Factory_Exception
      */
-    public function buildIfContains(string $ifType, string $variable, array $searchTerms, bool $caseInsensitive=false, string $containsType='contains') : Mailcode_Commands_IfBase
+    public function buildIfContains(string $ifType, string $variable, array $searchTerms, bool $caseInsensitive=false, bool $regexEnabled=false, string $containsType='contains') : Mailcode_Commands_IfBase
     {
-        $keyword = ' ';
-        
-        if($caseInsensitive)
-        {
-            $keyword = ' '.Mailcode_Commands_Keywords::TYPE_INSENSITIVE;
-        }
-        
         $condition = sprintf(
             '%s%s"%s"',
             $this->filterVariableName($variable),
-            $keyword,
+            $this->renderListKeywords($caseInsensitive, $regexEnabled),
             implode('" "', array_map(array($this, 'filterLiteral'), $searchTerms))
         );
         
         return $this->buildIf($ifType, $condition, $containsType);
     }
 
-    /**
-     * @param string $ifType
-     * @param string $variable
-     * @param string[] $searchTerms
-     * @param bool $caseInsensitive
-     * @return Mailcode_Commands_IfBase
-     * @throws Mailcode_Factory_Exception
-     */
-    public function buildIfNotContains(string $ifType, string $variable, array $searchTerms, bool $caseInsensitive=false) : Mailcode_Commands_IfBase
+    private function renderListKeywords(bool $caseInsensitive=false, bool $regexEnabled=false) : string
     {
-        return $this->buildIfContains($ifType, $variable, $searchTerms, $caseInsensitive, 'not-contains');
+        $keywords = array();
+
+        if($caseInsensitive)
+        {
+            $keywords[] = Mailcode_Commands_Keywords::TYPE_INSENSITIVE;
+        }
+
+        if($regexEnabled)
+        {
+            $keywords[] = Mailcode_Commands_Keywords::TYPE_REGEX;
+        }
+
+        $keywordsString = '';
+
+        if(!empty($keywords))
+        {
+            $keywordsString = ' '.implode(' ', $keywords);
+        }
+
+        return $keywordsString;
     }
 
     /**
@@ -123,13 +129,28 @@ class Mailcode_Factory_Instantiator
      * @param string $variable
      * @param string[] $searchTerms
      * @param bool $caseInsensitive
+     * @param bool $regexEnabled
+     * @return Mailcode_Commands_IfBase
+     * @throws Mailcode_Factory_Exception
+     */
+    public function buildIfNotContains(string $ifType, string $variable, array $searchTerms, bool $caseInsensitive=false, bool $regexEnabled=false) : Mailcode_Commands_IfBase
+    {
+        return $this->buildIfContains($ifType, $variable, $searchTerms, $caseInsensitive, $regexEnabled, 'not-contains');
+    }
+
+    /**
+     * @param string $ifType
+     * @param string $variable
+     * @param string[] $searchTerms
+     * @param bool $caseInsensitive
+     * @param bool $regexEnabled
      * @param string $containsType
      * @return Mailcode_Commands_IfBase
      * @throws Mailcode_Factory_Exception
      */
-    public function buildIfListContains(string $ifType, string $variable, array $searchTerms, bool $caseInsensitive=false, string $containsType='list-contains') : Mailcode_Commands_IfBase
+    public function buildIfListContains(string $ifType, string $variable, array $searchTerms, bool $caseInsensitive=false, bool $regexEnabled=false, string $containsType='list-contains') : Mailcode_Commands_IfBase
     {
-        return $this->buildIfContains($ifType, $variable, $searchTerms, $caseInsensitive, $containsType);
+        return $this->buildIfContains($ifType, $variable, $searchTerms, $caseInsensitive, $regexEnabled, $containsType);
     }
 
     /**
@@ -137,12 +158,13 @@ class Mailcode_Factory_Instantiator
      * @param string $variable
      * @param string[] $searchTerms
      * @param bool $caseInsensitive
+     * @param bool $regexEnabled
      * @return Mailcode_Commands_IfBase
      * @throws Mailcode_Factory_Exception
      */
-    public function buildIfListNotContains(string $ifType, string $variable, array $searchTerms, bool $caseInsensitive=false) : Mailcode_Commands_IfBase
+    public function buildIfListNotContains(string $ifType, string $variable, array $searchTerms, bool $caseInsensitive=false, bool $regexEnabled=false) : Mailcode_Commands_IfBase
     {
-        return $this->buildIfContains($ifType, $variable, $searchTerms, $caseInsensitive, 'list-not-contains');
+        return $this->buildIfContains($ifType, $variable, $searchTerms, $caseInsensitive, $regexEnabled, 'list-not-contains');
     }
 
     public function buildIfBeginsWith(string $ifType, string $variable, string $search, bool $caseInsensitive=false) : Mailcode_Commands_IfBase

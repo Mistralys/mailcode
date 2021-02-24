@@ -95,7 +95,8 @@ class Mailcode_Translator_Syntax_ApacheVelocity_If extends Mailcode_Translator_S
     {
         return $this->_translateContains(
             $command->getVariable(), 
-            $command->isCaseInsensitive(), 
+            $command->isCaseInsensitive(),
+            false,
             $command->getSearchTerms(),
             $command->getType()
         );
@@ -106,6 +107,7 @@ class Mailcode_Translator_Syntax_ApacheVelocity_If extends Mailcode_Translator_S
         return $this->_translateContains(
             $command->getVariable(),
             $command->isCaseInsensitive(),
+            false,
             $command->getSearchTerms(),
             $command->getType()
         );
@@ -116,6 +118,7 @@ class Mailcode_Translator_Syntax_ApacheVelocity_If extends Mailcode_Translator_S
         return $this->_translateContains(
             $command->getVariable(),
             $command->isCaseInsensitive(),
+            $command->isRegexEnabled(),
             $command->getSearchTerms(),
             $command->getType()
         );
@@ -126,6 +129,7 @@ class Mailcode_Translator_Syntax_ApacheVelocity_If extends Mailcode_Translator_S
         return $this->_translateContains(
             $command->getVariable(),
             $command->isCaseInsensitive(),
+            $command->isRegexEnabled(),
             $command->getSearchTerms(),
             $command->getType()
         );
@@ -136,6 +140,7 @@ class Mailcode_Translator_Syntax_ApacheVelocity_If extends Mailcode_Translator_S
         return $this->_translateContains(
             $command->getVariable(),
             $command->isCaseInsensitive(),
+            $command->isRegexEnabled(),
             $command->getSearchTerms(),
             $command->getType()
         );
@@ -146,6 +151,7 @@ class Mailcode_Translator_Syntax_ApacheVelocity_If extends Mailcode_Translator_S
         return $this->_translateContains(
             $command->getVariable(),
             $command->isCaseInsensitive(),
+            $command->isRegexEnabled(),
             $command->getSearchTerms(),
             $command->getType()
         );
