@@ -46,9 +46,7 @@ class Mailcode_Parser_Statement_Validator
     */
     public function createVariable() : Mailcode_Parser_Statement_Validator_Type_Variable
     {
-        $validate = new Mailcode_Parser_Statement_Validator_Type_Variable($this->statement);
-        
-        return $validate;
+        return new Mailcode_Parser_Statement_Validator_Type_Variable($this->statement);
     }
     
    /**
@@ -60,26 +58,20 @@ class Mailcode_Parser_Statement_Validator
     */
     public function createKeyword(string $keywordName) : Mailcode_Parser_Statement_Validator_Type_Keyword
     {
-        $validate = new Mailcode_Parser_Statement_Validator_Type_Keyword(
+        return new Mailcode_Parser_Statement_Validator_Type_Keyword(
             $this->statement,
             $keywordName
         );
-        
-        return $validate;
     }
     
     public function createStringLiteral() : Mailcode_Parser_Statement_Validator_Type_StringLiteral
     {
-        $validate = new Mailcode_Parser_Statement_Validator_Type_StringLiteral($this->statement);
-        
-        return $validate;
+        return new Mailcode_Parser_Statement_Validator_Type_StringLiteral($this->statement);
     }
     
     public function createValue() : Mailcode_Parser_Statement_Validator_Type_Value
     {
-        $validate = new Mailcode_Parser_Statement_Validator_Type_Value($this->statement);
-        
-        return $validate;
+        return new Mailcode_Parser_Statement_Validator_Type_Value($this->statement);
     }
     
     public function createOperand(string $sign='') : Mailcode_Parser_Statement_Validator_Type_Operand
