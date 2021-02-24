@@ -23,6 +23,7 @@ class Mailcode_Commands_Keywords
 {
     const TYPE_IN = 'in:';
     const TYPE_INSENSITIVE = 'insensitive:';
+    const TYPE_REGEX = 'regex:';
     const TYPE_URLENCODE = 'urlencode:';
     const TYPE_URLDECODE = 'urldecode:';
 
@@ -35,7 +36,8 @@ class Mailcode_Commands_Keywords
             self::TYPE_IN,
             self::TYPE_INSENSITIVE,
             self::TYPE_URLDECODE,
-            self::TYPE_URLENCODE
+            self::TYPE_URLENCODE,
+            self::TYPE_REGEX
         );
     }
 }
