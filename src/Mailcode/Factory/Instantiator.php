@@ -129,7 +129,7 @@ class Mailcode_Factory_Instantiator
      */
     public function buildIfListContains(string $ifType, string $variable, array $searchTerms, bool $caseInsensitive=false, string $containsType='list-contains') : Mailcode_Commands_IfBase
     {
-        return $this->buildIfContains($ifType, $variable, $searchTerms, $caseInsensitive, 'list-contains');
+        return $this->buildIfContains($ifType, $variable, $searchTerms, $caseInsensitive, $containsType);
     }
 
     /**
@@ -137,11 +137,10 @@ class Mailcode_Factory_Instantiator
      * @param string $variable
      * @param string[] $searchTerms
      * @param bool $caseInsensitive
-     * @param string $containsType
      * @return Mailcode_Commands_IfBase
      * @throws Mailcode_Factory_Exception
      */
-    public function buildIfListNotContains(string $ifType, string $variable, array $searchTerms, bool $caseInsensitive=false, string $containsType='list-contains') : Mailcode_Commands_IfBase
+    public function buildIfListNotContains(string $ifType, string $variable, array $searchTerms, bool $caseInsensitive=false) : Mailcode_Commands_IfBase
     {
         return $this->buildIfContains($ifType, $variable, $searchTerms, $caseInsensitive, 'list-not-contains');
     }
