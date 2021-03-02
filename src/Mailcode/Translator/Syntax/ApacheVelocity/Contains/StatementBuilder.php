@@ -205,12 +205,12 @@ class Mailcode_Translator_Syntax_ApacheVelocity_Contains_StatementBuilder
     {
         if($this->containsType === 'list-begins-with')
         {
-            return '.*'.$searchTerm;
+            return $searchTerm.'.*';
         }
 
         if($this->containsType === 'list-ends-with')
         {
-            return $searchTerm.'.*';
+            return '.*'.$searchTerm;
         }
 
         return '.*'.$searchTerm.'.*';

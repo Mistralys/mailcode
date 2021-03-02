@@ -18,13 +18,13 @@ final class Translator_Velocity_IfListEndsWithTests extends VelocityTestCase
             array(
                 'label' => 'If list contains',
                 'mailcode' => Mailcode_Factory::if()->listEndsWith('FOO.BAR', array('Value')),
-                'expected' => '#if($map.hasElement($FOO.list(), "BAR", "(?s)Value.*"))'
+                'expected' => '#if($map.hasElement($FOO.list(), "BAR", "(?s).*Value"))'
             ),
             array(
                 'label' => 'If contains with slash',
                 'mailcode' => Mailcode_Factory::if()->listEndsWith('FOO.BAR', array('Va\lue')),
                 'expected' => sprintf(
-                    '#if($map.hasElement($FOO.list(), "BAR", "(?s)%s.*"))',
+                    '#if($map.hasElement($FOO.list(), "BAR", "(?s).*%s"))',
                     'Va[DBLSLASH]lue'
                 )
             ),
@@ -32,20 +32,20 @@ final class Translator_Velocity_IfListEndsWithTests extends VelocityTestCase
                 'label' => 'If contains with special characters',
                 'mailcode' => Mailcode_Factory::if()->listEndsWith('FOO.BAR', array('6 + 4 * 3')),
                 'expected' => sprintf(
-                    '#if($map.hasElement($FOO.list(), "BAR", "(?s)%s.*"))',
+                    '#if($map.hasElement($FOO.list(), "BAR", "(?s).*%s"))',
                     '6 [SLASH]+ 4 [SLASH]* 3'
                 )
             ),
             array(
                 'label' => 'Several search terms',
                 'mailcode' => Mailcode_Factory::if()->listEndsWith('FOO.BAR', array('Foo', 'Bar')),
-                'expected' => '#if($map.hasElement($FOO.list(), "BAR", "(?s)Foo.*") || $map.hasElement($FOO.list(), "BAR", "(?s)Bar.*"))'
+                'expected' => '#if($map.hasElement($FOO.list(), "BAR", "(?s).*Foo") || $map.hasElement($FOO.list(), "BAR", "(?s).*Bar"))'
             ),
             array(
                 'label' => 'With quotes in search term',
                 'mailcode' => Mailcode_Factory::if()->listEndsWith('FOO.BAR', array('Value, "weird" huh?')),
                 'expected' => sprintf(
-                    '#if($map.hasElement($FOO.list(), "BAR", "(?s)%s.*"))',
+                    '#if($map.hasElement($FOO.list(), "BAR", "(?s).*%s"))',
                     'Value, [SLASH]"weird[SLASH]" huh[SLASH]?'
                 )
             ),
