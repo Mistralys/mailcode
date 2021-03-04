@@ -190,12 +190,13 @@ class Mailcode_Factory_CommandSets_Set_If extends Mailcode_Factory_CommandSets_I
      * @param string $variable
      * @param string[] $searchTerms
      * @param bool $caseInsensitive
+     * @param bool $regexEnabled
      * @return Mailcode_Commands_Command_If_ListNotContains
      * @throws Mailcode_Factory_Exception
      */
-    public function listNotContains(string $variable, array $searchTerms, bool $caseInsensitive=false) : Mailcode_Commands_Command_If_ListNotContains
+    public function listNotContains(string $variable, array $searchTerms, bool $caseInsensitive=false, bool $regexEnabled=false) : Mailcode_Commands_Command_If_ListNotContains
     {
-        $command = $this->instantiator->buildIfListNotContains('If', $variable, $searchTerms, $caseInsensitive);
+        $command = $this->instantiator->buildIfListNotContains('If', $variable, $searchTerms, $caseInsensitive, $regexEnabled);
 
         if($command instanceof Mailcode_Commands_Command_If_ListNotContains)
         {
