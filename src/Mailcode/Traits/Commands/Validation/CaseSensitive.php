@@ -38,7 +38,7 @@ trait Mailcode_Traits_Commands_Validation_CaseSensitive
     
     protected function validateSyntax_case_sensitive() : void
     {
-        $val = $this->validator->createKeyword('insensitive');
+        $val = $this->validator->createKeyword(Mailcode_Commands_Keywords::TYPE_INSENSITIVE);
         
         $this->caseInsensitive = $val->isValid();
         

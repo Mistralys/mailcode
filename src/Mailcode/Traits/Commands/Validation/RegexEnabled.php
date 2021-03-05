@@ -38,7 +38,7 @@ trait Mailcode_Traits_Commands_Validation_RegexEnabled
 
     protected function validateSyntax_regex_enabled() : void
     {
-        $val = $this->validator->createKeyword('regex');
+        $val = $this->validator->createKeyword(Mailcode_Commands_Keywords::TYPE_REGEX);
 
         $this->regexEnabled = $val->isValid();
 
