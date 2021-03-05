@@ -35,18 +35,13 @@ trait Mailcode_Traits_Commands_Validation_ParseParams
 
     protected function validateSyntax_params_parse() : void
     {
-        if(!$this->requiresParameters())
-        {
-            return;
-        }
-
         $this->params = $this->mailcode->getParser()->createStatement(
             $this->paramsString,
             $this->hasFreeformParameters(),
             $this
         );
 
-        if(!$this->params->isValid())
+        if(!$this->params->isValid() && $this->requiresParameters())
         {
             $error = $this->params->getValidationResult();
 
