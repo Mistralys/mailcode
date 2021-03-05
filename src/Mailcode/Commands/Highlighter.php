@@ -74,15 +74,18 @@ class Mailcode_Commands_Highlighter
         }
         
         $tokens = $params->getInfo()->getTokens();
-        
-        $this->parts[] = '<span class="mailcode-params">';
-        
-        foreach($tokens as $token)
+
+        if(!empty($tokens))
         {
-            $this->appendParamToken($token);
+            $this->parts[] = '<span class="mailcode-params">';
+
+            foreach ($tokens as $token)
+            {
+                $this->appendParamToken($token);
+            }
+
+            $this->parts[] = '</span>';
         }
-        
-        $this->parts[] = '</span>';
     }
     
     protected function appendParamToken(Mailcode_Parser_Statement_Tokenizer_Token $token) : void
