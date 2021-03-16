@@ -36,7 +36,7 @@ class Mailcode_Collection
     protected $errors = array();
     
    /**
-    * @var OperationResult|NULL
+    * @var OperationResult
     */
     protected $validationResult;
 
@@ -46,11 +46,17 @@ class Mailcode_Collection
     private $finalized = false;
 
     /**
-    * Adds a command to the collection.
-    * 
-    * @param Mailcode_Commands_Command $command
-    * @return Mailcode_Collection
-    */
+     * @var bool
+     */
+    private $validating = false;
+
+    /**
+     * Adds a command to the collection.
+     *
+     * @param Mailcode_Commands_Command $command
+     * @return Mailcode_Collection
+     * @throws Mailcode_Exception
+     */
     public function addCommand(Mailcode_Commands_Command $command) : Mailcode_Collection
     {
         if($this->finalized)
@@ -171,23 +177,28 @@ class Mailcode_Collection
     * Retrieves all commands that were detected, in the exact order
     * they were found.
     * 
-    * @return \Mailcode\Mailcode_Commands_Command[]
+    * @return Mailcode_Commands_Command[]
     */
     public function getCommands()
     {
-       return $this->commands;
+        $this->validate();
+
+        return $this->commands;
     }
-    
-   /**
-    * Retrieves all unique commands by their matched
-    * string hash: this ensures only commands that were
-    * written the exact same way (including spacing)
-    * are returned.
-    * 
-    * @return \Mailcode\Mailcode_Commands_Command[]
-    */
-    public function getGroupedByHash()
+
+    /**
+     * Retrieves all unique commands by their matched
+     * string hash: this ensures only commands that were
+     * written the exact same way (including spacing)
+     * are returned.
+     *
+     * @return Mailcode_Commands_Command[]
+     * @throws Mailcode_Exception
+     */
+    public function getGroupedByHash() : array
     {
+        $this->validate();
+
         $hashes = array();
         
         foreach($this->commands as $command)
@@ -203,12 +214,13 @@ class Mailcode_Collection
         return array_values($hashes);
     }
 
-   /**
-    * Adds several commands at once.
-    * 
-    * @param Mailcode_Commands_Command[] $commands
-    * @return Mailcode_Collection
-    */
+    /**
+     * Adds several commands at once.
+     *
+     * @param Mailcode_Commands_Command[] $commands
+     * @return Mailcode_Collection
+     * @throws Mailcode_Exception
+     */
     public function addCommands(array $commands) : Mailcode_Collection
     {
         foreach($commands as $command)
@@ -218,7 +230,7 @@ class Mailcode_Collection
         
         return $this;
     }
-    
+
     public function mergeWith(Mailcode_Collection $collection) : Mailcode_Collection
     {
         $merged = new Mailcode_Collection();
@@ -230,6 +242,8 @@ class Mailcode_Collection
     
     public function getVariables() : Mailcode_Variables_Collection
     {
+        $this->validate();
+
         $collection = new Mailcode_Variables_Collection_Regular();
         
         foreach($this->commands as $command)
@@ -239,19 +253,41 @@ class Mailcode_Collection
         
         return $collection;
     }
-    
+
+    /**
+     * Whether the collection has been validated yet. This is used
+     * primarily in the test suites.
+     *
+     * @return bool
+     */
+    public function hasBeenValidated() : bool
+    {
+        return isset($this->validationResult);
+    }
+
     public function getValidationResult() : OperationResult
     {
-        if($this->validationResult instanceof OperationResult)
+        $this->validate();
+
+        return $this->validationResult;
+    }
+
+    private function validate() : void
+    {
+        if(isset($this->validationResult) || $this->validating)
         {
-            return $this->validationResult;
+            return;
         }
+
+        // The nesting validator calls the getCommands() method, which
+        // creates a circular call, since that calls validate(). To
+        // avoid this issue, we use the validating flag.
+        $this->validating = true;
         
         $nesting = new Mailcode_Collection_NestingValidator($this);
-        
-        $this->validationResult = $nesting->validate(); 
-        
-        return $this->validationResult;
+        $this->validationResult = $nesting->validate();
+
+        $this->validating = false;
     }
     
     public function hasErrorCode(int $code) : bool
