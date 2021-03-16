@@ -155,4 +155,17 @@ class Mailcode
     {
         return new Mailcode_Styler();
     }
+
+    /**
+     * Creates a new pre processor instance for the specified content
+     * string, to replace all pre process enabled commands with their
+     * corresponding contents.
+     *
+     * @param string $subject
+     * @return Mailcode_PreProcessor
+     */
+    public function createPreProcessor(string $subject) : Mailcode_PreProcessor
+    {
+        return new Mailcode_PreProcessor($subject);
+    }
 }
