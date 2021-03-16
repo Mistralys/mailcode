@@ -28,6 +28,7 @@ class Mailcode_Commands_Command_Comment extends Mailcode_Commands_Command implem
     protected function init() : void
     {
         $this->commentString = trim(trim($this->paramsString), '"');
+        $this->commentString = str_replace('\"', '"', $this->commentString);
     }
 
     public function hasFreeformParameters() : bool
