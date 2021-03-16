@@ -265,6 +265,11 @@ class Mailcode_Parser_Safeguard_Formatting
     {
         return new Mailcode_Parser_Safeguard_Formatter_Type_MarkVariables($this);
     }
+
+    public function createPreProcessing() : Mailcode_Parser_Safeguard_Formatter_Type_PreProcessing
+    {
+        return new Mailcode_Parser_Safeguard_Formatter_Type_PreProcessing($this);
+    }
     
     public function toString() : string
     {
