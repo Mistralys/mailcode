@@ -18,7 +18,7 @@ namespace Mailcode;
  * @subpackage Parser
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * 
- * @property Mailcode_Parser_Safeguard_Formatter_Type_SingleLines $formatter
+ * @property Mailcode_Parser_Safeguard_Formatter_Type_Normalized $formatter
  */
 class Mailcode_Parser_Safeguard_Formatter_Type_Normalized_Location extends Mailcode_Parser_Safeguard_Formatter_Location
 {
