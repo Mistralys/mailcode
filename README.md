@@ -167,9 +167,10 @@ Matching a variable value if it does NOT contain any of the search terms:
 {if not-contains: $PRODUCT.NAME "Term 1" "Term 2" "Term 3"}
 ```
 
-#### Searching for substrings in lists
+#### Searching lists by partial matches
 
-If a variable contains several records, it is possible to search through a property in all records, without having to use a loop:
+If a variable contains several records, it is possible to search through a property 
+in all records, without having to use a loop:
 
 ```
 {if list-contains: $PRODUCTS.NAME "Server"}
@@ -191,7 +192,33 @@ Negating the search, applying it only if the search terms are not found:
 {if list-not-contains: $PRODUCTS.NAME "Hosting" "WordPress"}
 ```
 
-#### Searching by position
+#### Searching lists by regular expressions
+
+The `list-contains` can be switched to regex mode with the `regex:` keyword:
+
+```
+{if list-contains: $PRODUCTS.NAME regex: "\\ASuperName\\Z"}
+```
+
+  > NOTE: This can be combined with the `insensitive:` keyword to make the
+    regular expression case insensitive.
+
+#### Searching lists by exact matches
+
+Using regular expressions allows searching for exact matches by using the
+beginning and end anchors `\A` and `\Z`, but this is unwieldy and not
+exactly readable. The `list-equals` command does exactly this.
+
+```
+{if list-equals: $PRODUCT.NAME "Search"}
+```
+
+This will match only if an entry in the list is an exact match for "Search".
+
+It can be combined with the `insensitive:` keyword to search for the full
+search term, but in a case insensitive way.
+
+#### Searching lists by beginning or end
 
 Checking if a variable value starts with a specific string:
 
@@ -280,12 +307,16 @@ Using OR:
 
 ### Comments
 
-Comments do not have to be quoted, but can be.
+Comments may be added to document things. Whether they are used when translated
+to an specific preprocessor language depends on the translator. In general, 
+the comments are converted to the target language.
 
 ```
-{comment: This is a comment.}
 {comment: "This is a quoted comment."}
 ```
+
+  > NOTE: Comments can contain special characters, except other Mailcode commands
+    or texts that can be mistaken for commands (which use the brackets {}).
 
 ## Integrated preprocessing
 
@@ -347,6 +378,21 @@ This gives the following pre-processed text:
 This is a multiline code block.
 </pre>
 ```
+
+## Working with commands
+
+### Closing, opening and sibling commands
+
+Commands like for loops, and if statements that have a closing command
+and are closed using the `{end}` command support accessing their siblings,
+and respective opening and closing commands.
+
+For example, the closing command of an if statement has the `getOpeningCommand()`
+method, which returns the if command that it closes, and vice versa. If command
+structures with `elseif` and `else` commands allow traversing the whole list of
+sibling commands.
+
+This makes it easy to work with complex command structures.
 
 ## Date formats
 
