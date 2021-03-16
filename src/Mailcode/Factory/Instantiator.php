@@ -277,6 +277,10 @@ class Mailcode_Factory_Instantiator
      */
     public function quoteString(string $string) : string
     {
+        if(substr($string, 0, 1) === '"' && substr($string, -1, 1) === '"') {
+            return $string;
+        }
+
         return '"'.str_replace('"', '\"', $string).'"';
     }
     
