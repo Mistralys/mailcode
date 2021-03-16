@@ -34,7 +34,7 @@ class Mailcode_Parser_Safeguard_Formatter_Type_PreProcessing extends Mailcode_Pa
         {
             $opening = $command->getOpeningCommand();
 
-            if($opening !== null) {
+            if($opening instanceof Mailcode_Interfaces_Commands_PreProcessing) {
                 return $opening->preProcessClosing();
             }
         }
