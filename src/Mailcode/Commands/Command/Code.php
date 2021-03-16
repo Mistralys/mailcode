@@ -25,6 +25,7 @@ class Mailcode_Commands_Command_Code
         Mailcode_Interfaces_Commands_ProtectedContent
 {
     use Mailcode_Traits_Commands_ProtectedContent;
+    use Mailcode_Traits_Commands_Type_Opening;
 
     const ERROR_LANG_TOKEN_MISSING = 73101;
 

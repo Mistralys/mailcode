@@ -20,6 +20,8 @@ namespace Mailcode;
  */
 class Mailcode_Commands_Command_End extends Mailcode_Commands_Command implements Mailcode_Commands_Command_Type_Closing
 {
+    use Mailcode_Traits_Commands_Type_Closing;
+
     public function getName() : string
     {
         return 'end';

@@ -21,6 +21,7 @@ namespace Mailcode;
 class Mailcode_Commands_Command_For extends Mailcode_Commands_Command implements Mailcode_Commands_Command_Type_Opening, Mailcode_Interfaces_Commands_ListVariables
 {
     use Mailcode_Traits_Commands_ListVariables;
+    use Mailcode_Traits_Commands_Type_Opening;
 
     const ERROR_SOURCE_VARIABLE_NOT_AVAILABLE = 64101;
     const ERROR_LOOP_VARIABLE_NOT_AVAILABLE = 64102;

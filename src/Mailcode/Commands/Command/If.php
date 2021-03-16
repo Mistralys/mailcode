@@ -20,6 +20,8 @@ namespace Mailcode;
  */
 class Mailcode_Commands_Command_If extends Mailcode_Commands_IfBase implements Mailcode_Commands_Command_Type_Opening
 {
+    use Mailcode_Traits_Commands_Type_Opening;
+
     public function getName() : string
     {
         return 'if';

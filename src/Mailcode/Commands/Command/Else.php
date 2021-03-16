@@ -20,6 +20,8 @@ namespace Mailcode;
  */
 class Mailcode_Commands_Command_Else extends Mailcode_Commands_Command implements Mailcode_Commands_Command_Type_Sibling
 {
+    use Mailcode_Traits_Commands_Type_Sibling;
+
     public function getName() : string
     {
         return 'else';
