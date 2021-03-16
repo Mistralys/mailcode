@@ -91,6 +91,33 @@ class Mailcode_Factory_CommandSets_Set_Misc extends Mailcode_Factory_CommandSets
         throw $this->instantiator->exceptionUnexpectedType('Break', $cmd);
     }
 
+    public function mono(bool $multiline=false) : Mailcode_Commands_Command_Mono
+    {
+        $params = '';
+        $source = '{code}';
+
+        if($multiline) {
+            $params = 'multiline:';
+            $source = '{code: multiline:}';
+        }
+
+        $cmd = Mailcode::create()->getCommands()->createCommand(
+            'Mono',
+            '',
+            $params,
+            $source
+        );
+
+        $this->instantiator->checkCommand($cmd);
+
+        if($cmd instanceof Mailcode_Commands_Command_Mono)
+        {
+            return $cmd;
+        }
+
+        throw $this->instantiator->exceptionUnexpectedType('Mono', $cmd);
+    }
+
     public function code(string $language) : Mailcode_Commands_Command_Code
     {
         $cmd = Mailcode::create()->getCommands()->createCommand(
