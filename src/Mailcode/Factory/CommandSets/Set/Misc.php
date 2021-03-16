@@ -20,15 +20,21 @@ namespace Mailcode;
  */
 class Mailcode_Factory_CommandSets_Set_Misc extends Mailcode_Factory_CommandSets_Set
 {
+    /**
+     * @param string $comments Quoted or unquoted string.
+     * @return Mailcode_Commands_Command_Comment
+     * @throws Mailcode_Exception
+     * @throws Mailcode_Factory_Exception
+     */
     public function comment(string $comments) : Mailcode_Commands_Command_Comment
     {
         $cmd = Mailcode::create()->getCommands()->createCommand(
             'Comment',
             '', // type
-            $comments, // params
+            $this->instantiator->quoteString($comments),
             sprintf(
-                '{comment: %s}',
-                $comments
+                '{comment: "%s"}',
+                $this->instantiator->quoteString($comments)
             )
         );
     
@@ -41,7 +47,16 @@ class Mailcode_Factory_CommandSets_Set_Misc extends Mailcode_Factory_CommandSets
         
         throw $this->instantiator->exceptionUnexpectedType('Comment', $cmd);
     }
-    
+
+    /**
+     * Creates a for loop command.
+     *
+     * @param string $sourceVariable
+     * @param string $loopVariable
+     * @return Mailcode_Commands_Command_For
+     * @throws Mailcode_Exception
+     * @throws Mailcode_Factory_Exception
+     */
     public function for(string $sourceVariable, string $loopVariable) : Mailcode_Commands_Command_For
     {
         $sourceVariable = '$'.ltrim($sourceVariable, '$');
@@ -72,6 +87,15 @@ class Mailcode_Factory_CommandSets_Set_Misc extends Mailcode_Factory_CommandSets
         throw $this->instantiator->exceptionUnexpectedType('For', $cmd);
     }
 
+    /**
+     * Creates a break command, which can be used to break out of
+     * a loop command. Using this outside of a loop will trigger
+     * a validation error.
+     *
+     * @return Mailcode_Commands_Command_Break
+     * @throws Mailcode_Exception
+     * @throws Mailcode_Factory_Exception
+     */
     public function break() : Mailcode_Commands_Command_Break
     {
         $cmd = Mailcode::create()->getCommands()->createCommand(
@@ -91,15 +115,35 @@ class Mailcode_Factory_CommandSets_Set_Misc extends Mailcode_Factory_CommandSets
         throw $this->instantiator->exceptionUnexpectedType('Break', $cmd);
     }
 
-    public function mono(bool $multiline=false) : Mailcode_Commands_Command_Mono
+    /**
+     * Creates a preprocessor command to format text as preformatted.
+     *
+     * NOTE: Requires the Mailcode text to be preprocessed using the
+     * preprocessor. See the documentation on how to use it.
+     *
+     * @param bool $multiline
+     * @param string[] $classes
+     * @return Mailcode_Commands_Command_Mono
+     * @throws Mailcode_Exception
+     * @throws Mailcode_Factory_Exception
+     */
+    public function mono(bool $multiline=false, array $classes=array()) : Mailcode_Commands_Command_Mono
     {
         $params = '';
-        $source = '{code}';
+        $source = '{code';
 
         if($multiline) {
             $params = 'multiline:';
-            $source = '{code: multiline:}';
+            $source = '{code: multiline:';
         }
+
+        if(!empty($classes)) {
+            $classString = sprintf('"%s"', implode(' ', $classes));
+            $params .= $classString;
+            $source .= $classString;
+        }
+
+        $source .= '}';
 
         $cmd = Mailcode::create()->getCommands()->createCommand(
             'Mono',
