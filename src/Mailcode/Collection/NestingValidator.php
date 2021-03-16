@@ -175,7 +175,10 @@ class Mailcode_Collection_NestingValidator
             
             return;
         }
-        
+
+        $command->registerOpening($parent);
+        $parent->registerSibling($command);
+
         $this->log(sprintf('Sibling command %s in %s', $command->getName(), $parent->getName()));
     }
     
@@ -191,9 +194,21 @@ class Mailcode_Collection_NestingValidator
             return;
         }
         
-        $close = array_pop($this->stack);
-        
-        $this->log(sprintf('Closing command %s', $close->getName()));
+        $openingCommand = array_pop($this->stack);
+
+        if($openingCommand instanceof Mailcode_Commands_Command_Type_Opening)
+        {
+            $this->log(sprintf('Closing command %s', $openingCommand->getName()));
+
+            $command->registerOpening($openingCommand);
+            $openingCommand->registerClosing($command);
+            return;
+        }
+
+        $this->validationResult->makeError(
+            t('Trying to close a non-opening command.'),
+            878978979
+        );
     }
     
     protected function log(string $message) : void

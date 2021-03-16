@@ -20,4 +20,7 @@ namespace Mailcode;
  */
 interface Mailcode_Commands_Command_Type_Closing extends Mailcode_Commands_Command_Type
 {
+    public function registerOpening(Mailcode_Commands_Command_Type_Opening $command) : void;
+
+    public function getOpeningCommand() : ?Mailcode_Commands_Command_Type_Opening;
 }

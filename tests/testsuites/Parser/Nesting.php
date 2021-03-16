@@ -7,6 +7,8 @@ use Mailcode\Mailcode_Commands_Command;
 use Mailcode\Mailcode_Commands_Command_For;
 use Mailcode\Mailcode_Commands_Command_If;
 use Mailcode\Mailcode_Commands_Command_ShowVariable;
+use Mailcode\Mailcode_Commands_Command_Type_Closing;
+use Mailcode\Mailcode_Commands_Command_Type_Opening;
 use Mailcode\Mailcode_Parser;
 
 final class Parser_NestingTests extends MailcodeTestCase
@@ -61,5 +63,67 @@ final class Parser_NestingTests extends MailcodeTestCase
         $this->assertNull($if->getParent());
         $this->assertEquals($if, $for->getParent(), 'IF command should be the parent.');
         $this->assertEquals($for, $show->getParent(), 'FOR command should be the parent.');
+    }
+
+    /**
+     * The nesting handler must correctly set the command's opening
+     * and closing command instances.
+     */
+    public function test_openingAndClosing() : void
+    {
+        $string =
+        '{if empty: $LOPOS}
+            {for: $RECORD in: $FOO}
+                {showvar: $RECORD.NAME}
+            {end}
+        {end}';
+
+        $commands = Mailcode::create()->parseString($string)->getCommands();
+
+        $ifOpening = array_shift($commands);
+        $ifClosing = array_pop($commands);
+        $forOpening = array_shift($commands);
+        $forClosing = array_pop($commands);
+
+        $this->assertInstanceOf(Mailcode_Commands_Command_Type_Opening::class, $ifOpening);
+        $this->assertInstanceOf(Mailcode_Commands_Command_Type_Closing::class, $ifClosing);
+
+        $this->assertSame($ifClosing, $ifOpening->getClosingCommand());
+        $this->assertSame($ifOpening, $ifClosing->getOpeningCommand());
+        $this->assertSame($forClosing, $forOpening->getClosingCommand());
+        $this->assertSame($forOpening, $forClosing->getOpeningCommand());
+    }
+
+    /**
+     * Ensure that sibling commands correctly get assigned their
+     * whole siblings tree.
+     */
+    public function test_siblings() : void
+    {
+        $string =
+        '{if empty: $FIRST}
+            Text here
+        {elseif empty: $SECOND}
+            More text
+        {elseif empty: $THIRD}
+            Yahoo
+        {else}
+            And a last one.
+        {end}';
+
+        $commands = Mailcode::create()->parseString($string)->getCommands();
+
+        $ifFirst = array_shift($commands);
+        $ifSecond = array_shift($commands);
+        $ifThird = array_shift($commands);
+        $else = array_shift($commands);
+        $end = array_shift($commands);
+
+        $this->assertCount(3, $ifFirst->getSiblingCommands());
+        $this->assertSame($ifFirst, $ifSecond->getOpeningCommand());
+        $this->assertContains($ifThird, $ifSecond->getSiblingCommands());
+        $this->assertContains($else, $ifSecond->getSiblingCommands());
+        $this->assertContains($ifSecond, $else->getSiblingCommands());
+        $this->assertSame($ifFirst, $end->getOpeningCommand());
     }
 }
