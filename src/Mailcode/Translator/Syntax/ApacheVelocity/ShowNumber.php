@@ -24,20 +24,17 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ShowNumber extends Mailcode_Tran
 {
     public function translate(Mailcode_Commands_Command_ShowNumber $command): string
     {
-        $template = <<<'EOD'
-number.format('%s', $number.toNumber('#.####', $%s.replace(',', '.'), 'en_US'), '%s')
-EOD;
+        $template = "price.format(%s, %s, '%s', '%s')";
 
         $varName = ltrim($command->getVariableName(), '$');
         $formatInfo = $command->getFormatInfo();
-        $javaFormat = $this->translateFormat($formatInfo);
-        $locale = $this->getLocale($formatInfo);
 
         $statement = sprintf(
             $template,
-            $javaFormat,
-            $varName,
-            $locale
+            '$'.$varName,
+            $formatInfo->getDecimals(),
+            $formatInfo->getDecimalsSeparator(),
+            $formatInfo->getThousandsSeparator()
         );
 
         if($command->isURLEncoded())
@@ -52,69 +49,5 @@ EOD;
             '${%s}',
             $statement
         );
-    }
-
-    /**
-     * en_US: 100,000.00
-     * de_DE: 100.000,00
-     * fr_FR: 100 000,00
-     *
-     * @var array<string,string>
-     */
-    protected $typeLocales = array(
-        // No separators at all
-        '__' => 'en_US',
-
-        // International variants
-        ',.' => 'en_US',
-        '.,' => 'de_DE',
-        ' ,' => 'fr_FR',
-
-        // No thousands separator
-        '_.' => 'en_US',
-        '_,' => 'de_DE',
-
-        // Do decimals separator
-        ',_' => 'en_US',
-        '._' => 'de_DE',
-        ' _' => 'fr_FR'
-    );
-
-    private function getLocale(Mailcode_Number_Info $format) : string
-    {
-        $th = $format->getThousandsSeparator();
-        $dc = $format->getDecimalsSeparator();
-
-        if ($th === '') {
-            $th = '_';
-        }
-        if ($dc === '') {
-            $dc = '_';
-        }
-
-        $type = $th . $dc;
-
-        if (isset($this->typeLocales[$type])) {
-            return $this->typeLocales[$type];
-        }
-
-        return 'en_US';
-    }
-
-    private function translateFormat(Mailcode_Number_Info $format) : string
-    {
-        $result = '0';
-
-        if($format->hasThousandsSeparator())
-        {
-            $result = '#,##0';
-        }
-
-        if($format->hasDecimals())
-        {
-            $result .= '.'.str_repeat('0', $format->getDecimals());
-        }
-
-        return $result;
     }
 }
