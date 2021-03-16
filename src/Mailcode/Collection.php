@@ -36,7 +36,7 @@ class Mailcode_Collection
     protected $errors = array();
     
    /**
-    * @var OperationResult
+    * @var OperationResult|NULL
     */
     protected $validationResult;
 
