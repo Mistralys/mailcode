@@ -66,4 +66,20 @@ EOD;
 
         $this->assertEquals($expected, $names);
     }
+
+    /**
+     * The validation must be executed automatically when fetching
+     * a collection's commands, as this is where the nesting is
+     * initialized.
+     */
+    public function test_validateBeforeGetCommands() : void
+    {
+        $string = '{showvar: $RECORD.NAME}';
+
+        $collection = Mailcode::create()->parseString($string);
+
+        $this->assertFalse($collection->hasBeenValidated());
+        $collection->getCommands();
+        $this->assertTrue($collection->hasBeenValidated());
+    }
 }
