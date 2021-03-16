@@ -124,6 +124,17 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ElseIf extends Mailcode_Translat
         );
     }
 
+    protected function translateListEquals(Mailcode_Commands_Command_ElseIf_ListEquals $command) : string
+    {
+        return $this->_translateContains(
+            $command->getVariable(),
+            $command->isCaseInsensitive(),
+            false,
+            $command->getSearchTerms(),
+            $command->getType()
+        );
+    }
+
     protected function translateListNotContains(Mailcode_Commands_Command_ElseIf_ListNotContains $command) : string
     {
         return $this->_translateContains(

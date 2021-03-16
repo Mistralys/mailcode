@@ -78,6 +78,7 @@ abstract class Mailcode_Commands_IfBase extends Mailcode_Commands_Command
             'contains',
             'not-contains',
             'list-contains',
+            'list-equals',
             'list-not-contains',
             'list-begins-with',
             'list-ends-with',

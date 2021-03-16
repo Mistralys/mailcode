@@ -213,6 +213,11 @@ class Mailcode_Translator_Syntax_ApacheVelocity_Contains_StatementBuilder
             return '.*'.$searchTerm;
         }
 
+        if($this->containsType === 'list-equals')
+        {
+            return '\\\A'.$searchTerm.'\\\Z';
+        }
+
         return '.*'.$searchTerm.'.*';
     }
 

@@ -166,6 +166,25 @@ class Mailcode_Factory_CommandSets_Set_ElseIf extends Mailcode_Factory_CommandSe
      * @param string $variable
      * @param string[] $searchTerms
      * @param bool $caseInsensitive
+     * @return Mailcode_Commands_Command_ElseIf_ListEquals
+     * @throws Mailcode_Factory_Exception
+     */
+    public function listEquals(string $variable, array $searchTerms, bool $caseInsensitive=false) : Mailcode_Commands_Command_ElseIf_ListEquals
+    {
+        $command = $this->instantiator->buildIfListContains('ElseIf', $variable, $searchTerms, $caseInsensitive, false, 'list-equals');
+
+        if($command instanceof Mailcode_Commands_Command_ElseIf_ListEquals)
+        {
+            return $command;
+        }
+
+        throw $this->instantiator->exceptionUnexpectedType('ElseIfListEquals', $command);
+    }
+
+    /**
+     * @param string $variable
+     * @param string[] $searchTerms
+     * @param bool $caseInsensitive
      * @param bool $regexEnabled
      * @return Mailcode_Commands_Command_ElseIf_ListNotContains
      * @throws Mailcode_Factory_Exception
