@@ -287,6 +287,67 @@ Comments do not have to be quoted, but can be.
 {comment: "This is a quoted comment."}
 ```
 
+## Integrated preprocessing
+
+Mailcode is a preprocessor language meant to be interpreted by a preprocessor
+service, but some commands are made to be preprocessed natively by Mailcode 
+itself. One example is the `mono` command, which applies monospace formatting
+to text.
+
+The preprocessing is optional, and can be done with the specialized PreProcessor
+class.
+
+  > NOTE: When translating to an output syntax like Apache Velocity, the default
+    behavior is to strip out leftover preprocessor commands, so there can be no 
+    Mailcode commands in the translated text.
+
+### Working with the PreProcessor
+
+The PreProcessor is very easy to use: simply feed it a string with Mailcode 
+commands, and all commands that support pre-processing will be rendered.
+After this, the resulting string can be passed into a safeguard instance or
+parsed to fetch the commands.
+
+```php
+$subject = '(Mailcode text)';
+
+$processor = \Mailcode\Mailcode::create()->createPreProcessor($subject);
+$result = $processor->render();
+```
+
+  > NOTE: While the preprocessing can be done after safeguarding a text,
+    it is recommended to do it beforehand, to avoid the overhead of
+    unnecessarily parsing the commands. Also, these commands may actually 
+    generate new Mailcode syntax to parse.
+
+### Format a text as code
+
+```
+This text is {mono}monospaced{end}.
+```
+
+The resulting pre-processed text will look like this:
+
+```html
+This text is <code>monospaced</code>.
+```
+
+To create a `<pre>` tag, simply add the multiline keyword:
+
+```
+{mono: multiline:}
+This is a multiline code block.
+{end}
+```
+
+This gives the following pre-processed text:
+
+```html
+<pre>
+This is a multiline code block.
+</pre>
+```
+
 ## Date formats
 
 ### Supported formatting characters
