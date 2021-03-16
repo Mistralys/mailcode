@@ -28,6 +28,7 @@ class Mailcode_Collection_NestingValidator
     const VALIDATION_SIBLING_WRONG_PARENT = 49102; 
     const VALIDATION_COMMANDS_ALREADY_CLOSED = 49103;
     const VALIDATION_UNCLOSED_COMMAND = 49104;
+    const VALIDATION_CLOSING_NON_OPENING_COMMAND = 49105;
     
    /**
     * @var Mailcode_Collection
@@ -53,7 +54,17 @@ class Mailcode_Collection_NestingValidator
     {
         return $this->collection;
     }
-    
+
+    /**
+     * @return OperationResult
+     * @throws Mailcode_Exception
+     *
+     * @see Mailcode_Collection_NestingValidator::validate_Closing()
+     * @see Mailcode_Collection_NestingValidator::validate_Opening()
+     * @see Mailcode_Collection_NestingValidator::validate_Sibling()
+     * @see Mailcode_Collection_NestingValidator::validate_Standalone()
+     * @see Mailcode_Collection_NestingValidator::validate_Unclosed()
+     */
     public function validate() : OperationResult
     {
         $this->validationResult = new OperationResult($this);
@@ -207,7 +218,7 @@ class Mailcode_Collection_NestingValidator
 
         $this->validationResult->makeError(
             t('Trying to close a non-opening command.'),
-            878978979
+            self::VALIDATION_CLOSING_NON_OPENING_COMMAND
         );
     }
     
