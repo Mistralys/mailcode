@@ -20,8 +20,6 @@ namespace Mailcode;
  */
 class Mailcode_Commands_Command_ShowDate extends Mailcode_Commands_ShowBase
 {
-    const VALIDATION_NOT_A_FORMAT_STRING = 55401;
-    
    /**
     * The date format string.
     * @var string
