@@ -24,15 +24,21 @@ abstract class Mailcode_Factory_CommandSets_Set
     * @var Mailcode_Factory_Instantiator
     */
     protected $instantiator;
-    
+
+    /**
+     * @var Mailcode_Commands
+     */
+    protected $commands;
+
     public function __construct()
     {
         $this->instantiator = new Mailcode_Factory_Instantiator();
+        $this->commands = Mailcode::create()->getCommands();
     }
     
     public function end() : Mailcode_Commands_Command_End
     {
-        $cmd = Mailcode::create()->getCommands()->createCommand(
+        $cmd = $this->commands->createCommand(
             'End',
             '',
             '',
