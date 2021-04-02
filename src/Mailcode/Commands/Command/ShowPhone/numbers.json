@@ -1,0 +1,1227 @@
+{
+    "AC": {
+        "label": "AC",
+        "local": "62889",
+        "international": "+247 62889"
+    },
+    "AD": {
+        "label": "Andorra",
+        "local": "712 345",
+        "international": "+376 712 345"
+    },
+    "AE": {
+        "label": "United Arab Emirates",
+        "local": "02 234 5678",
+        "international": "+971 2 234 5678"
+    },
+    "AF": {
+        "label": "Afghanistan",
+        "local": "023 456 7890",
+        "international": "+93 23 456 7890"
+    },
+    "AG": {
+        "label": "Antigua and Barbuda",
+        "local": "(268) 460-1234",
+        "international": "+1 268-460-1234"
+    },
+    "AI": {
+        "label": "Anguilla",
+        "local": "(264) 461-2345",
+        "international": "+1 264-461-2345"
+    },
+    "AL": {
+        "label": "Albania",
+        "local": "022 345 678",
+        "international": "+355 22 345 678"
+    },
+    "AM": {
+        "label": "Armenia",
+        "local": "(010) 123456",
+        "international": "+374 10 123456"
+    },
+    "AO": {
+        "label": "Angola",
+        "local": "222 123 456",
+        "international": "+244 222 123 456"
+    },
+    "AR": {
+        "label": "Argentina",
+        "local": "011 2345-6789",
+        "international": "+54 11 2345-6789"
+    },
+    "AS": {
+        "label": "American Samoa",
+        "local": "(684) 622-1234",
+        "international": "+1 684-622-1234"
+    },
+    "AT": {
+        "label": "Austria",
+        "local": "01 234567890",
+        "international": "+43 1 234567890"
+    },
+    "AU": {
+        "label": "Australia",
+        "local": "(02) 1234 5678",
+        "international": "+61 2 1234 5678"
+    },
+    "AW": {
+        "label": "Aruba",
+        "local": "521 2345",
+        "international": "+297 521 2345"
+    },
+    "AX": {
+        "label": "AX",
+        "local": "018 1234567",
+        "international": "+358 18 1234567"
+    },
+    "AZ": {
+        "label": "Azerbaijan",
+        "local": "(012) 312 34 56",
+        "international": "+994 12 312 34 56"
+    },
+    "BA": {
+        "label": "Bosnia and Herzegovina",
+        "local": "030 212-345",
+        "international": "+387 30 212-345"
+    },
+    "BB": {
+        "label": "Barbados",
+        "local": "(246) 412-3456",
+        "international": "+1 246-412-3456"
+    },
+    "BD": {
+        "label": "Bangladesh",
+        "local": "02-7111234",
+        "international": "+880 2-7111234"
+    },
+    "BE": {
+        "label": "Belgium",
+        "local": "012 34 56 78",
+        "international": "+32 12 34 56 78"
+    },
+    "BF": {
+        "label": "Burkina Faso",
+        "local": "20 49 12 34",
+        "international": "+226 20 49 12 34"
+    },
+    "BG": {
+        "label": "Bulgaria",
+        "local": "02 123 456",
+        "international": "+359 2 123 456"
+    },
+    "BH": {
+        "label": "Bahrain",
+        "local": "1700 1234",
+        "international": "+973 1700 1234"
+    },
+    "BI": {
+        "label": "Burundi",
+        "local": "22 20 12 34",
+        "international": "+257 22 20 12 34"
+    },
+    "BJ": {
+        "label": "Benin",
+        "local": "20 21 12 34",
+        "international": "+229 20 21 12 34"
+    },
+    "BL": {
+        "label": "Saint Barthelemy",
+        "local": "0590 27 12 34",
+        "international": "+590 590 27 12 34"
+    },
+    "BM": {
+        "label": "Bermuda",
+        "local": "(441) 412-3456",
+        "international": "+1 441-412-3456"
+    },
+    "BN": {
+        "label": "Brunei",
+        "local": "234 5678",
+        "international": "+673 234 5678"
+    },
+    "BO": {
+        "label": "Bolivia",
+        "local": "2 2123456",
+        "international": "+591 2 2123456"
+    },
+    "BQ": {
+        "label": "BQ",
+        "local": "715 1234",
+        "international": "+599 715 1234"
+    },
+    "BR": {
+        "label": "Brazil",
+        "local": "(11) 2345-6789",
+        "international": "+55 11 2345-6789"
+    },
+    "BS": {
+        "label": "Bahamas",
+        "local": "(242) 345-6789",
+        "international": "+1 242-345-6789"
+    },
+    "BT": {
+        "label": "Bhutan",
+        "local": "2 345 678",
+        "international": "+975 2 345 678"
+    },
+    "BW": {
+        "label": "Botswana",
+        "local": "240 1234",
+        "international": "+267 240 1234"
+    },
+    "BY": {
+        "label": "Belarus",
+        "local": "8 0152 45-09-11",
+        "international": "+375 152 45-09-11"
+    },
+    "BZ": {
+        "label": "Belize",
+        "local": "222-1234",
+        "international": "+501 222-1234"
+    },
+    "CA": {
+        "label": "Canada",
+        "local": "(506) 234-5678",
+        "international": "+1 506-234-5678"
+    },
+    "CC": {
+        "label": "Cocos Islands",
+        "local": "(08) 9162 1234",
+        "international": "+61 8 9162 1234"
+    },
+    "CD": {
+        "label": "Democratic Republic of the Congo",
+        "local": "012 34567",
+        "international": "+243 12 34567"
+    },
+    "CF": {
+        "label": "Central African Republic",
+        "local": "21 61 23 45",
+        "international": "+236 21 61 23 45"
+    },
+    "CG": {
+        "label": "Republic of the Congo",
+        "local": "22 212 3456",
+        "international": "+242 22 212 3456"
+    },
+    "CH": {
+        "label": "Switzerland",
+        "local": "021 234 56 78",
+        "international": "+41 21 234 56 78"
+    },
+    "CI": {
+        "label": "Ivory Coast",
+        "local": "21 23 45 67",
+        "international": "+225 21 23 45 67"
+    },
+    "CK": {
+        "label": "Cook Islands",
+        "local": "21 234",
+        "international": "+682 21 234"
+    },
+    "CL": {
+        "label": "Chile",
+        "local": "(2) 2123 4567",
+        "international": "+56 2 2123 4567"
+    },
+    "CM": {
+        "label": "Cameroon",
+        "local": "2 22 12 34 56",
+        "international": "+237 2 22 12 34 56"
+    },
+    "CN": {
+        "label": "China",
+        "local": "010 1234 5678",
+        "international": "+86 10 1234 5678"
+    },
+    "CO": {
+        "label": "Colombia",
+        "local": "(1) 2345678",
+        "international": "+57 1 2345678"
+    },
+    "CR": {
+        "label": "Costa Rica",
+        "local": "2212 3456",
+        "international": "+506 2212 3456"
+    },
+    "CU": {
+        "label": "Cuba",
+        "local": "(07) 1234567",
+        "international": "+53 7 1234567"
+    },
+    "CV": {
+        "label": "Cape Verde",
+        "local": "221 12 34",
+        "international": "+238 221 12 34"
+    },
+    "CW": {
+        "label": "Curacao",
+        "local": "9 435 1234",
+        "international": "+599 9 435 1234"
+    },
+    "CX": {
+        "label": "Christmas Island",
+        "local": "(08) 9164 1234",
+        "international": "+61 8 9164 1234"
+    },
+    "CY": {
+        "label": "Cyprus",
+        "local": "22 345678",
+        "international": "+357 22 345678"
+    },
+    "CZ": {
+        "label": "Czech Republic",
+        "local": "212 345 678",
+        "international": "+420 212 345 678"
+    },
+    "DE": {
+        "label": "Germany",
+        "local": "030 123456",
+        "international": "+49 30 123456"
+    },
+    "DJ": {
+        "label": "Djibouti",
+        "local": "21 36 00 03",
+        "international": "+253 21 36 00 03"
+    },
+    "DK": {
+        "label": "Denmark",
+        "local": "32 12 34 56",
+        "international": "+45 32 12 34 56"
+    },
+    "DM": {
+        "label": "Dominica",
+        "local": "(767) 420-1234",
+        "international": "+1 767-420-1234"
+    },
+    "DO": {
+        "label": "Dominican Republic",
+        "local": "(809) 234-5678",
+        "international": "+1 809-234-5678"
+    },
+    "DZ": {
+        "label": "Algeria",
+        "local": "012 34 56 78",
+        "international": "+213 12 34 56 78"
+    },
+    "EC": {
+        "label": "Ecuador",
+        "local": "(02) 212-3456",
+        "international": "+593 2-212-3456"
+    },
+    "EE": {
+        "label": "Estonia",
+        "local": "321 2345",
+        "international": "+372 321 2345"
+    },
+    "EG": {
+        "label": "Egypt",
+        "local": "02 34567890",
+        "international": "+20 2 34567890"
+    },
+    "EH": {
+        "label": "Western Sahara",
+        "local": "05288-12345",
+        "international": "+212 5288-12345"
+    },
+    "ER": {
+        "label": "Eritrea",
+        "local": "08 370 362",
+        "international": "+291 8 370 362"
+    },
+    "ES": {
+        "label": "Spain",
+        "local": "810 12 34 56",
+        "international": "+34 810 12 34 56"
+    },
+    "ET": {
+        "label": "Ethiopia",
+        "local": "011 111 2345",
+        "international": "+251 11 111 2345"
+    },
+    "FI": {
+        "label": "Finland",
+        "local": "013 1234567",
+        "international": "+358 13 1234567"
+    },
+    "FJ": {
+        "label": "Fiji",
+        "local": "321 2345",
+        "international": "+679 321 2345"
+    },
+    "FK": {
+        "label": "Falkland Islands",
+        "local": "31234",
+        "international": "+500 31234"
+    },
+    "FM": {
+        "label": "Micronesia",
+        "local": "320 1234",
+        "international": "+691 320 1234"
+    },
+    "FO": {
+        "label": "Faroe Islands",
+        "local": "201234",
+        "international": "+298 201234"
+    },
+    "FR": {
+        "label": "France",
+        "local": "01 23 45 67 89",
+        "international": "+33 1 23 45 67 89"
+    },
+    "GA": {
+        "label": "Gabon",
+        "local": "01 44 12 34",
+        "international": "+241 01 44 12 34"
+    },
+    "GB": {
+        "label": "United Kingdom",
+        "local": "0121 234 5678",
+        "international": "+44 121 234 5678"
+    },
+    "GD": {
+        "label": "Grenada",
+        "local": "(473) 269-1234",
+        "international": "+1 473-269-1234"
+    },
+    "GE": {
+        "label": "Georgia",
+        "local": "032 212 34 56",
+        "international": "+995 32 212 34 56"
+    },
+    "GF": {
+        "label": "GF",
+        "local": "0594 10 12 34",
+        "international": "+594 594 10 12 34"
+    },
+    "GG": {
+        "label": "Guernsey",
+        "local": "01481 256789",
+        "international": "+44 1481 256789"
+    },
+    "GH": {
+        "label": "Ghana",
+        "local": "030 234 5678",
+        "international": "+233 30 234 5678"
+    },
+    "GI": {
+        "label": "Gibraltar",
+        "local": "200 12345",
+        "international": "+350 200 12345"
+    },
+    "GL": {
+        "label": "Greenland",
+        "local": "32 10 00",
+        "international": "+299 32 10 00"
+    },
+    "GM": {
+        "label": "Gambia",
+        "local": "566 1234",
+        "international": "+220 566 1234"
+    },
+    "GN": {
+        "label": "Guinea",
+        "local": "30 24 12 34",
+        "international": "+224 30 24 12 34"
+    },
+    "GP": {
+        "label": "GP",
+        "local": "0590 20 12 34",
+        "international": "+590 590 20 12 34"
+    },
+    "GQ": {
+        "label": "Equatorial Guinea",
+        "local": "333 091 234",
+        "international": "+240 333 091 234"
+    },
+    "GR": {
+        "label": "Greece",
+        "local": "21 2345 6789",
+        "international": "+30 21 2345 6789"
+    },
+    "GT": {
+        "label": "Guatemala",
+        "local": "2245 6789",
+        "international": "+502 2245 6789"
+    },
+    "GU": {
+        "label": "Guam",
+        "local": "(671) 300-1234",
+        "international": "+1 671-300-1234"
+    },
+    "GW": {
+        "label": "Guinea-Bissau",
+        "local": "443 201 234",
+        "international": "+245 443 201 234"
+    },
+    "GY": {
+        "label": "Guyana",
+        "local": "220 1234",
+        "international": "+592 220 1234"
+    },
+    "HK": {
+        "label": "Hong Kong",
+        "local": "2123 4567",
+        "international": "+852 2123 4567"
+    },
+    "HN": {
+        "label": "Honduras",
+        "local": "2212-3456",
+        "international": "+504 2212-3456"
+    },
+    "HR": {
+        "label": "Croatia",
+        "local": "01 2345 678",
+        "international": "+385 1 2345 678"
+    },
+    "HT": {
+        "label": "Haiti",
+        "local": "22 45 3300",
+        "international": "+509 22 45 3300"
+    },
+    "HU": {
+        "label": "Hungary",
+        "local": "(06 1) 234 5678",
+        "international": "+36 1 234 5678"
+    },
+    "ID": {
+        "label": "Indonesia",
+        "local": "(021) 8350123",
+        "international": "+62 21 8350123"
+    },
+    "IE": {
+        "label": "Ireland",
+        "local": "(022) 12345",
+        "international": "+353 22 12345"
+    },
+    "IL": {
+        "label": "Israel",
+        "local": "02-123-4567",
+        "international": "+972 2-123-4567"
+    },
+    "IM": {
+        "label": "Isle of Man",
+        "local": "01624 756789",
+        "international": "+44 1624 756789"
+    },
+    "IN": {
+        "label": "India",
+        "local": "074104 10123",
+        "international": "+91 74104 10123"
+    },
+    "IO": {
+        "label": "British Indian Ocean Territory",
+        "local": "370 9100",
+        "international": "+246 370 9100"
+    },
+    "IQ": {
+        "label": "Iraq",
+        "local": "01 234 5678",
+        "international": "+964 1 234 5678"
+    },
+    "IR": {
+        "label": "Iran",
+        "local": "021 2345 6789",
+        "international": "+98 21 2345 6789"
+    },
+    "IS": {
+        "label": "Iceland",
+        "local": "410 1234",
+        "international": "+354 410 1234"
+    },
+    "IT": {
+        "label": "Italy",
+        "local": "02 1234 5678",
+        "international": "+39 02 1234 5678"
+    },
+    "JE": {
+        "label": "Jersey",
+        "local": "01534 456789",
+        "international": "+44 1534 456789"
+    },
+    "JM": {
+        "label": "Jamaica",
+        "local": "(876) 523-0123",
+        "international": "+1 876-523-0123"
+    },
+    "JO": {
+        "label": "Jordan",
+        "local": "(06) 200 1234",
+        "international": "+962 6 200 1234"
+    },
+    "JP": {
+        "label": "Japan",
+        "local": "03-1234-5678",
+        "international": "+81 3-1234-5678"
+    },
+    "KE": {
+        "label": "Kenya",
+        "local": "020 2012345",
+        "international": "+254 20 2012345"
+    },
+    "KG": {
+        "label": "Kyrgyzstan",
+        "local": "0312 123 456",
+        "international": "+996 312 123 456"
+    },
+    "KH": {
+        "label": "Cambodia",
+        "local": "023 756 789",
+        "international": "+855 23 756 789"
+    },
+    "KI": {
+        "label": "Kiribati",
+        "local": "31234",
+        "international": "+686 31234"
+    },
+    "KM": {
+        "label": "Comoros",
+        "local": "771 23 45",
+        "international": "+269 771 23 45"
+    },
+    "KN": {
+        "label": "Saint Kitts and Nevis",
+        "local": "(869) 236-1234",
+        "international": "+1 869-236-1234"
+    },
+    "KP": {
+        "label": "North Korea",
+        "local": "02 123 4567",
+        "international": "+850 2 123 4567"
+    },
+    "KR": {
+        "label": "South Korea",
+        "local": "02-212-3456",
+        "international": "+82 2-212-3456"
+    },
+    "KW": {
+        "label": "Kuwait",
+        "local": "2234 5678",
+        "international": "+965 2234 5678"
+    },
+    "KY": {
+        "label": "Cayman Islands",
+        "local": "(345) 222-1234",
+        "international": "+1 345-222-1234"
+    },
+    "KZ": {
+        "label": "Kazakhstan",
+        "local": "8 (71234) 5 67 89",
+        "international": "+7 71234 5 67 89"
+    },
+    "LA": {
+        "label": "Laos",
+        "local": "021 212 862",
+        "international": "+856 21 212 862"
+    },
+    "LB": {
+        "label": "Lebanon",
+        "local": "01 123 456",
+        "international": "+961 1 123 456"
+    },
+    "LC": {
+        "label": "Saint Lucia",
+        "local": "(758) 430-5678",
+        "international": "+1 758-430-5678"
+    },
+    "LI": {
+        "label": "Liechtenstein",
+        "local": "234 56 78",
+        "international": "+423 234 56 78"
+    },
+    "LK": {
+        "label": "Sri Lanka",
+        "local": "0112 345 678",
+        "international": "+94 112 345 678"
+    },
+    "LR": {
+        "label": "Liberia",
+        "local": "021 234 567",
+        "international": "+231 21 234 567"
+    },
+    "LS": {
+        "label": "Lesotho",
+        "local": "2212 3456",
+        "international": "+266 2212 3456"
+    },
+    "LT": {
+        "label": "Lithuania",
+        "local": "(8-312) 34567",
+        "international": "+370 312 34567"
+    },
+    "LU": {
+        "label": "Luxembourg",
+        "local": "27 12 34 56",
+        "international": "+352 27 12 34 56"
+    },
+    "LV": {
+        "label": "Latvia",
+        "local": "63 123 456",
+        "international": "+371 63 123 456"
+    },
+    "LY": {
+        "label": "Libya",
+        "local": "021-2345678",
+        "international": "+218 21-2345678"
+    },
+    "MA": {
+        "label": "Morocco",
+        "local": "0520-123456",
+        "international": "+212 520-123456"
+    },
+    "MC": {
+        "label": "Monaco",
+        "local": "99 12 34 56",
+        "international": "+377 99 12 34 56"
+    },
+    "MD": {
+        "label": "Moldova",
+        "local": "022 212 345",
+        "international": "+373 22 212 345"
+    },
+    "ME": {
+        "label": "Montenegro",
+        "local": "030 234 567",
+        "international": "+382 30 234 567"
+    },
+    "MF": {
+        "label": "Saint Martin",
+        "local": "0590 27 12 34",
+        "international": "+590 590 27 12 34"
+    },
+    "MG": {
+        "label": "Madagascar",
+        "local": "020 21 234 56",
+        "international": "+261 20 21 234 56"
+    },
+    "MH": {
+        "label": "Marshall Islands",
+        "local": "247-1234",
+        "international": "+692 247-1234"
+    },
+    "MK": {
+        "label": "Macedonia",
+        "local": "02 201 2345",
+        "international": "+389 2 201 2345"
+    },
+    "ML": {
+        "label": "Mali",
+        "local": "20 21 23 45",
+        "international": "+223 20 21 23 45"
+    },
+    "MM": {
+        "label": "Myanmar",
+        "local": "01 234 567",
+        "international": "+95 1 234 567"
+    },
+    "MN": {
+        "label": "Mongolia",
+        "local": "5312 3456",
+        "international": "+976 5312 3456"
+    },
+    "MO": {
+        "label": "Macau",
+        "local": "2821 2345",
+        "international": "+853 2821 2345"
+    },
+    "MP": {
+        "label": "Northern Mariana Islands",
+        "local": "(670) 234-5678",
+        "international": "+1 670-234-5678"
+    },
+    "MQ": {
+        "label": "MQ",
+        "local": "0596 30 12 34",
+        "international": "+596 596 30 12 34"
+    },
+    "MR": {
+        "label": "Mauritania",
+        "local": "35 12 34 56",
+        "international": "+222 35 12 34 56"
+    },
+    "MS": {
+        "label": "Montserrat",
+        "local": "(664) 491-2345",
+        "international": "+1 664-491-2345"
+    },
+    "MT": {
+        "label": "Malta",
+        "local": "2100 1234",
+        "international": "+356 2100 1234"
+    },
+    "MU": {
+        "label": "Mauritius",
+        "local": "5448 0123",
+        "international": "+230 5448 0123"
+    },
+    "MV": {
+        "label": "Maldives",
+        "local": "670-1234",
+        "international": "+960 670-1234"
+    },
+    "MW": {
+        "label": "Malawi",
+        "local": "01 234 567",
+        "international": "+265 1 234 567"
+    },
+    "MX": {
+        "label": "Mexico",
+        "local": "200 123 4567",
+        "international": "+52 200 123 4567"
+    },
+    "MY": {
+        "label": "Malaysia",
+        "local": "03-2385 6789",
+        "international": "+60 3-2385 6789"
+    },
+    "MZ": {
+        "label": "Mozambique",
+        "local": "21 123 456",
+        "international": "+258 21 123 456"
+    },
+    "NA": {
+        "label": "Namibia",
+        "local": "061 221 234",
+        "international": "+264 61 221 234"
+    },
+    "NC": {
+        "label": "New Caledonia",
+        "local": "20.12.34",
+        "international": "+687 20.12.34"
+    },
+    "NE": {
+        "label": "Niger",
+        "local": "20 20 12 34",
+        "international": "+227 20 20 12 34"
+    },
+    "NF": {
+        "label": "NF",
+        "local": "10 6609",
+        "international": "+672 10 6609"
+    },
+    "NG": {
+        "label": "Nigeria",
+        "local": "01 804 0123",
+        "international": "+234 1 804 0123"
+    },
+    "NI": {
+        "label": "Nicaragua",
+        "local": "2123 4567",
+        "international": "+505 2123 4567"
+    },
+    "NL": {
+        "label": "Netherlands",
+        "local": "010 123 4567",
+        "international": "+31 10 123 4567"
+    },
+    "NO": {
+        "label": "Norway",
+        "local": "21 23 45 67",
+        "international": "+47 21 23 45 67"
+    },
+    "NP": {
+        "label": "Nepal",
+        "local": "01-4567890",
+        "international": "+977 1-4567890"
+    },
+    "NR": {
+        "label": "Nauru",
+        "local": "444 1234",
+        "international": "+674 444 1234"
+    },
+    "NU": {
+        "label": "Niue",
+        "local": "7012",
+        "international": "+683 7012"
+    },
+    "NZ": {
+        "label": "New Zealand",
+        "local": "03-234 5678",
+        "international": "+64 3-234 5678"
+    },
+    "OM": {
+        "label": "Oman",
+        "local": "23 123456",
+        "international": "+968 23 123456"
+    },
+    "PA": {
+        "label": "Panama",
+        "local": "200-1234",
+        "international": "+507 200-1234"
+    },
+    "PE": {
+        "label": "Peru",
+        "local": "(01) 1234567",
+        "international": "+51 1 1234567"
+    },
+    "PF": {
+        "label": "French Polynesia",
+        "local": "40 41 23 45",
+        "international": "+689 40 41 23 45"
+    },
+    "PG": {
+        "label": "Papua New Guinea",
+        "local": "312 3456",
+        "international": "+675 312 3456"
+    },
+    "PH": {
+        "label": "Philippines",
+        "local": "(02) 123 4567",
+        "international": "+63 2 123 4567"
+    },
+    "PK": {
+        "label": "Pakistan",
+        "local": "(021) 23456789",
+        "international": "+92 21 23456789"
+    },
+    "PL": {
+        "label": "Poland",
+        "local": "12 345 67 89",
+        "international": "+48 12 345 67 89"
+    },
+    "PM": {
+        "label": "Saint Pierre and Miquelon",
+        "local": "043 01 23",
+        "international": "+508 43 01 23"
+    },
+    "PR": {
+        "label": "Puerto Rico",
+        "local": "(787) 234-5678",
+        "international": "+1 787-234-5678"
+    },
+    "PS": {
+        "label": "Palestine",
+        "local": "02 223 4567",
+        "international": "+970 2 223 4567"
+    },
+    "PT": {
+        "label": "Portugal",
+        "local": "21 234 5678",
+        "international": "+351 21 234 5678"
+    },
+    "PW": {
+        "label": "Palau",
+        "local": "277 1234",
+        "international": "+680 277 1234"
+    },
+    "PY": {
+        "label": "Paraguay",
+        "local": "(021) 234 5678",
+        "international": "+595 21 234 5678"
+    },
+    "QA": {
+        "label": "Qatar",
+        "local": "4412 3456",
+        "international": "+974 4412 3456"
+    },
+    "RE": {
+        "label": "Reunion",
+        "local": "0262 16 12 34",
+        "international": "+262 262 16 12 34"
+    },
+    "RO": {
+        "label": "Romania",
+        "local": "021 123 4567",
+        "international": "+40 21 123 4567"
+    },
+    "RS": {
+        "label": "Serbia",
+        "local": "010 234567",
+        "international": "+381 10 234567"
+    },
+    "RU": {
+        "label": "Russia",
+        "local": "8 (301) 123-45-67",
+        "international": "+7 301 123-45-67"
+    },
+    "RW": {
+        "label": "Rwanda",
+        "local": "250 123 456",
+        "international": "+250 250 123 456"
+    },
+    "SA": {
+        "label": "Saudi Arabia",
+        "local": "011 234 5678",
+        "international": "+966 11 234 5678"
+    },
+    "SB": {
+        "label": "Solomon Islands",
+        "local": "40123",
+        "international": "+677 40123"
+    },
+    "SC": {
+        "label": "Seychelles",
+        "local": "4 217 123",
+        "international": "+248 4 217 123"
+    },
+    "SD": {
+        "label": "Sudan",
+        "local": "015 312 3456",
+        "international": "+249 15 312 3456"
+    },
+    "SE": {
+        "label": "Sweden",
+        "local": "08-12 34 56",
+        "international": "+46 8 12 34 56"
+    },
+    "SG": {
+        "label": "Singapore",
+        "local": "6123 4567",
+        "international": "+65 6123 4567"
+    },
+    "SH": {
+        "label": "Saint Helena",
+        "local": "22158",
+        "international": "+290 22158"
+    },
+    "SI": {
+        "label": "Slovenia",
+        "local": "(01) 234 56 78",
+        "international": "+386 1 234 56 78"
+    },
+    "SJ": {
+        "label": "Svalbard and Jan Mayen",
+        "local": "79 12 34 56",
+        "international": "+47 79 12 34 56"
+    },
+    "SK": {
+        "label": "Slovakia",
+        "local": "02\/212 345 67",
+        "international": "+421 2\/212 345 67"
+    },
+    "SL": {
+        "label": "Sierra Leone",
+        "local": "(022) 221234",
+        "international": "+232 22 221234"
+    },
+    "SM": {
+        "label": "San Marino",
+        "local": "0549 886377",
+        "international": "+378 0549 886377"
+    },
+    "SN": {
+        "label": "Senegal",
+        "local": "30 101 23 45",
+        "international": "+221 30 101 23 45"
+    },
+    "SO": {
+        "label": "Somalia",
+        "local": "4 012345",
+        "international": "+252 4 012345"
+    },
+    "SR": {
+        "label": "Suriname",
+        "local": "211-234",
+        "international": "+597 211-234"
+    },
+    "SS": {
+        "label": "South Sudan",
+        "local": "0181 234 567",
+        "international": "+211 181 234 567"
+    },
+    "ST": {
+        "label": "Sao Tome and Principe",
+        "local": "222 1234",
+        "international": "+239 222 1234"
+    },
+    "SV": {
+        "label": "El Salvador",
+        "local": "2123 4567",
+        "international": "+503 2123 4567"
+    },
+    "SX": {
+        "label": "Sint Maarten",
+        "local": "(721) 542-5678",
+        "international": "+1 721-542-5678"
+    },
+    "SY": {
+        "label": "Syria",
+        "local": "011 234 5678",
+        "international": "+963 11 234 5678"
+    },
+    "SZ": {
+        "label": "Swaziland",
+        "local": "2217 1234",
+        "international": "+268 2217 1234"
+    },
+    "TA": {
+        "label": "TA",
+        "local": "8999",
+        "international": "+290 8999"
+    },
+    "TC": {
+        "label": "Turks and Caicos Islands",
+        "local": "(649) 712-1234",
+        "international": "+1 649-712-1234"
+    },
+    "TD": {
+        "label": "Chad",
+        "local": "22 50 12 34",
+        "international": "+235 22 50 12 34"
+    },
+    "TG": {
+        "label": "Togo",
+        "local": "22 21 23 45",
+        "international": "+228 22 21 23 45"
+    },
+    "TH": {
+        "label": "Thailand",
+        "local": "02 123 4567",
+        "international": "+66 2 123 4567"
+    },
+    "TJ": {
+        "label": "Tajikistan",
+        "local": "372 12 3456",
+        "international": "+992 372 12 3456"
+    },
+    "TK": {
+        "label": "Tokelau",
+        "local": "3101",
+        "international": "+690 3101"
+    },
+    "TL": {
+        "label": "East Timor",
+        "local": "211 2345",
+        "international": "+670 211 2345"
+    },
+    "TM": {
+        "label": "Turkmenistan",
+        "local": "(8 12) 34-56-78",
+        "international": "+993 12 34-56-78"
+    },
+    "TN": {
+        "label": "Tunisia",
+        "local": "30 010 123",
+        "international": "+216 30 010 123"
+    },
+    "TO": {
+        "label": "Tonga",
+        "local": "20-123",
+        "international": "+676 20-123"
+    },
+    "TR": {
+        "label": "Turkey",
+        "local": "(0212) 345 67 89",
+        "international": "+90 212 345 67 89"
+    },
+    "TT": {
+        "label": "Trinidad and Tobago",
+        "local": "(868) 221-1234",
+        "international": "+1 868-221-1234"
+    },
+    "TV": {
+        "label": "Tuvalu",
+        "local": "20 123",
+        "international": "+688 20 123"
+    },
+    "TW": {
+        "label": "Taiwan",
+        "local": "02 2123 4567",
+        "international": "+886 2 2123 4567"
+    },
+    "TZ": {
+        "label": "Tanzania",
+        "local": "022 234 5678",
+        "international": "+255 22 234 5678"
+    },
+    "UA": {
+        "label": "Ukraine",
+        "local": "03112 34567",
+        "international": "+380 3112 34567"
+    },
+    "UG": {
+        "label": "Uganda",
+        "local": "031 2345678",
+        "international": "+256 31 2345678"
+    },
+    "US": {
+        "label": "United States",
+        "local": "(201) 555-0123",
+        "international": "+1 201-555-0123"
+    },
+    "UY": {
+        "label": "Uruguay",
+        "local": "2123 1234",
+        "international": "+598 2123 1234"
+    },
+    "UZ": {
+        "label": "Uzbekistan",
+        "local": "8 66 905 01 23",
+        "international": "+998 66 905 01 23"
+    },
+    "VA": {
+        "label": "Vatican",
+        "local": "06 6981 2345",
+        "international": "+39 06 6981 2345"
+    },
+    "VC": {
+        "label": "Saint Vincent and the Grenadines",
+        "local": "(784) 266-1234",
+        "international": "+1 784-266-1234"
+    },
+    "VE": {
+        "label": "Venezuela",
+        "local": "0212-1234567",
+        "international": "+58 212-1234567"
+    },
+    "VG": {
+        "label": "British Virgin Islands",
+        "local": "(284) 229-1234",
+        "international": "+1 284-229-1234"
+    },
+    "VI": {
+        "label": "U.S. Virgin Islands",
+        "local": "(340) 642-1234",
+        "international": "+1 340-642-1234"
+    },
+    "VN": {
+        "label": "Vietnam",
+        "local": "0210 1234 567",
+        "international": "+84 210 1234 567"
+    },
+    "VU": {
+        "label": "Vanuatu",
+        "local": "22123",
+        "international": "+678 22123"
+    },
+    "WF": {
+        "label": "Wallis and Futuna",
+        "local": "50 12 34",
+        "international": "+681 50 12 34"
+    },
+    "WS": {
+        "label": "Samoa",
+        "local": "22123",
+        "international": "+685 22123"
+    },
+    "XK": {
+        "label": "Kosovo",
+        "local": "028 012 345",
+        "international": "+383 28 012 345"
+    },
+    "YE": {
+        "label": "Yemen",
+        "local": "01 234 567",
+        "international": "+967 1 234 567"
+    },
+    "YT": {
+        "label": "Mayotte",
+        "local": "0269 60 12 34",
+        "international": "+262 269 60 12 34"
+    },
+    "ZA": {
+        "label": "South Africa",
+        "local": "010 123 4567",
+        "international": "+27 10 123 4567"
+    },
+    "ZM": {
+        "label": "Zambia",
+        "local": "0211 234 567",
+        "international": "+260 211 234 567"
+    },
+    "ZW": {
+        "label": "Zimbabwe",
+        "local": "013 12345",
+        "international": "+263 13 12345"
+    }
+}
