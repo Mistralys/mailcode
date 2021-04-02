@@ -18,5 +18,26 @@ namespace Mailcode;
  */
 class Mailcode_Exception extends \AppUtils\BaseException
 {
-    
+    /**
+     * @var Mailcode_Collection|null
+     */
+    private $collection = null;
+
+    public function setCollection(Mailcode_Collection $collection) : void
+    {
+        $this->collection = $collection;
+    }
+
+    /**
+     * @return Mailcode_Collection|null
+     */
+    public function getCollection(): Mailcode_Collection
+    {
+        return $this->collection;
+    }
+
+    public function hasCollection() : bool
+    {
+        return isset($this->collection);
+    }
 }
