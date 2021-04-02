@@ -31,7 +31,7 @@ class Mailcode_Factory_CommandSets_Set_Set extends Mailcode_Factory_CommandSets_
         
         $params = $variableName.' = '.$value;
         
-        $cmd = Mailcode::create()->getCommands()->createCommand(
+        $cmd = $this->commands->createCommand(
             'SetVariable',
             '', // type
             $params,

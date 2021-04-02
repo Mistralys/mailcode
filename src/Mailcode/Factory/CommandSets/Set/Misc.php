@@ -28,7 +28,7 @@ class Mailcode_Factory_CommandSets_Set_Misc extends Mailcode_Factory_CommandSets
      */
     public function comment(string $comments) : Mailcode_Commands_Command_Comment
     {
-        $cmd = Mailcode::create()->getCommands()->createCommand(
+        $cmd = $this->commands->createCommand(
             'Comment',
             '', // type
             $this->instantiator->quoteString($comments),
@@ -62,7 +62,7 @@ class Mailcode_Factory_CommandSets_Set_Misc extends Mailcode_Factory_CommandSets
         $sourceVariable = '$'.ltrim($sourceVariable, '$');
         $loopVariable = '$'.ltrim($loopVariable, '$');
         
-        $cmd = Mailcode::create()->getCommands()->createCommand(
+        $cmd = $this->commands->createCommand(
             'For', 
             '', 
             sprintf(
@@ -98,7 +98,7 @@ class Mailcode_Factory_CommandSets_Set_Misc extends Mailcode_Factory_CommandSets
      */
     public function break() : Mailcode_Commands_Command_Break
     {
-        $cmd = Mailcode::create()->getCommands()->createCommand(
+        $cmd = $this->commands->createCommand(
             'Break',
             '',
             '',
@@ -145,7 +145,7 @@ class Mailcode_Factory_CommandSets_Set_Misc extends Mailcode_Factory_CommandSets
 
         $source .= '}';
 
-        $cmd = Mailcode::create()->getCommands()->createCommand(
+        $cmd = $this->commands->createCommand(
             'Mono',
             '',
             $params,
@@ -164,7 +164,7 @@ class Mailcode_Factory_CommandSets_Set_Misc extends Mailcode_Factory_CommandSets
 
     public function code(string $language) : Mailcode_Commands_Command_Code
     {
-        $cmd = Mailcode::create()->getCommands()->createCommand(
+        $cmd = $this->commands->createCommand(
             'Code',
             '',
             sprintf(
