@@ -91,6 +91,19 @@ The amount of hashes determines the target length of the number. This example wi
 {showsnippet: $snippet_name}
 ```
 
+### Phone numbers in URLs
+
+The `{showphone}` command can convert a phone number in a country-specific or international
+formatted style to the E164 format required for `tel:` URLs.
+
+Whenever you wish to add a phone link, use this:
+
+```html
+<a href="tel:{showphone: $PHONE "US" urlencode:}">{showvar: $PHONE}</a>
+```
+
+This will convert the phone number to the expected format.
+
 ### Set a variable
 
 With a string value:
@@ -972,5 +985,5 @@ In the subfolder `tools` are a few utilities meant to be used in a browser. To u
 these, simply run a `composer install` in the package's folder, and point your 
 browser there.
 
-- `translator.php` - Translate a text with Mailcode commands to one of the supported syntaxes, like Apache Velocity.
+- `translator.php` - Translate a text with Mailcode commands to a supported syntax.
 - `extractPhoneCountries.php` - Extracts a countries list for the `showphone` command.
