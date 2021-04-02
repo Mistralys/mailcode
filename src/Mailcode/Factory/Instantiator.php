@@ -268,7 +268,36 @@ class Mailcode_Factory_Instantiator
             $command
         );
     }
-    
+
+    /**
+     * Configures the command's URL encoding or decoding, depending
+     * on the selected mode.
+     *
+     * @param Mailcode_Commands_Command $cmd
+     * @param string $urlEncoding
+     * @throws Mailcode_Exception
+     *
+     * @see Mailcode_Factory::URL_ENCODING_NONE
+     * @see Mailcode_Factory::URL_ENCODING_ENCODE
+     * @see Mailcode_Factory::URL_ENCODING_DECODE
+     */
+    public function setEncoding(Mailcode_Commands_Command $cmd, string $urlEncoding) : void
+    {
+        // First off, reset the encoding
+        $cmd->setURLEncoding(false);
+        $cmd->setURLDecoding(false);
+
+        if ($urlEncoding === Mailcode_Factory::URL_ENCODING_ENCODE) {
+            $cmd->setURLEncoding();
+            return;
+        }
+
+        if ($urlEncoding === Mailcode_Factory::URL_ENCODING_DECODE) {
+            $cmd->setURLDecoding();
+            return;
+        }
+    }
+
     /**
      * Quotes a string literal: adds the quotes, and escapes any quotes already present in it.
      *
