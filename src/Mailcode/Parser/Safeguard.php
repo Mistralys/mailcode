@@ -466,7 +466,7 @@ class Mailcode_Parser_Safeguard
             return;
         }
         
-        throw new Mailcode_Exception(
+        $exception = new Mailcode_Exception(
             'Cannot safeguard invalid commands',
             sprintf(
                 'The collection contains invalid commands. Safeguarding is only allowed with valid commands.'.
@@ -475,6 +475,10 @@ class Mailcode_Parser_Safeguard
             ),
             self::ERROR_INVALID_COMMANDS
         );
+
+        $exception->setCollection($this->getCollection());
+
+        throw $exception;
     }
     
    /**
