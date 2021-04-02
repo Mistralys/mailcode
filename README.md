@@ -312,7 +312,7 @@ to an specific preprocessor language depends on the translator. In general,
 the comments are converted to the target language.
 
 ```
-{comment: "This is a quoted comment."}
+{comment: "This is a comment."}
 ```
 
   > NOTE: Comments can contain special characters, except other Mailcode commands
@@ -421,6 +421,8 @@ Additionally, the following punctuation characters may be used:
 The Mailcode_Date_FormatInfo class can be used to access information on the available date formats when using the ShowDate command. It is available globally via a factory method:
 
 ```php
+use Mailcode\Mailcode_Factory;
+
 $dateInfo = Mailcode_Factory::createDateInfo();
 ```
 
@@ -429,6 +431,9 @@ $dateInfo = Mailcode_Factory::createDateInfo();
 The ShowDate command uses `Y/m/d` as default date format. The format info class can be used to overwrite this:
 
 ```php
+use Mailcode\Mailcode_Factory;
+
+$dateInfo = Mailcode_Factory::createDateInfo();
 $dateInfo->setDefaultFormat('d.m.Y');
 ```
 
@@ -442,6 +447,9 @@ To make it possible to integrate mailcode in existing documentation, the format 
 Displaying a simple text-based list of allowed characters:
 
 ```php
+use Mailcode\Mailcode_Factory;
+
+$dateInfo = Mailcode_Factory::createDateInfo();
 $characters = $dateInfo->getCharactersList();
 
 foreach($characters as $character)
@@ -462,7 +470,11 @@ foreach($characters as $character)
 Use the `validateFormat()` method to validate a date format string, and retrieve a validation message manually. The same method is used by the ShowDate command, but can be used separately for specific needs.
 
 ```php
+use Mailcode\Mailcode_Factory;
+
 $formatString = "d.m.Y H:i";
+
+$dateInfo = Mailcode_Factory::createDateInfo();
 $result = $dateInfo->validateFormat($formatString);
 
 if($result->isValid())
@@ -490,6 +502,10 @@ When texts containing commands need to be filtered, or otherwise parsed in a way
 Assuming the text to filter, possibly containing commands, is stored in `$text`:
 
 ```php
+use Mailcode\Mailcode;
+
+$text = '(commands here)';
+
 // create the safeguard instance for the text
 $safeguard = Mailcode::create()->createSafeguard($text);
 
@@ -521,6 +537,9 @@ like changing the case or applying url encoding.
 Still, the delimiter string can be adjusted as needed:
 
 ```php
+use \Mailcode\Mailcode;
+
+$text = '(Text with mailcode commands)';
 $safeguard = Mailcode::create()->createSafeguard($text);
 
 $safeguard->setDelimiter('__');
@@ -530,13 +549,22 @@ This would for example make the delimiters look like `__0000000001__`.
 
 ### Placeholder consistency check
 
-When calling `makeWhole()`, the safeguarder will make sure that all placeholders that were initially replaced in the target string are still there. If they are not, an exception will be thrown.
+When calling `makeWhole()`, the safeguarder will make sure that all placeholders 
+that were initially replaced in the target string are still there. If they are 
+not, an exception will be thrown.
 
 ### Accessing placeholder information
 
-The placeholders used in a string can be easily retrieved. Just be sure to call `getPlaceholders()` after the initial configuration (setting the delimiters for example).
+The placeholders used in a string can be easily retrieved. Just be sure to call 
+`getPlaceholders()` after the initial configuration (setting the delimiters for 
+example).
 
 ```php
+use \Mailcode\Mailcode;
+
+$text = '(Mailcode commands here)';
+$safeguard = Mailcode::create()->createSafeguard($text);
+
 $placeholders = $safeguard->getPlaceholders();
 
 foreach($placeholders as $placeholder)
@@ -554,6 +582,9 @@ By default, when using the safeguard's `makeWhole` method, all command placehold
 Creating a formatting instance, using a safeguard:
 
 ```php
+use \Mailcode\Mailcode;
+
+$text = '(Mailcode commands here)';
 $safeguard = Mailcode::create()->createSafeguard($text);
 
 $formatting = $safeguard->createFormatting($safeguard->makeSafe());
@@ -573,6 +604,12 @@ While it is not possible to select several replacers, they can be freely combine
 The methods to add formatters reflect their type:
 
 ```php
+use \Mailcode\Mailcode;
+
+$text = '(Mailcode commands here)';
+$safeguard = Mailcode::create()->createSafeguard($text);
+$formatting = $safeguard->createFormatting($safeguard->makeSafe());
+
 $formatting->replaceWithHTMLHighlighting();
 $formatting->formatWithMarkedVariables();
 ```
@@ -582,6 +619,12 @@ $formatting->formatWithMarkedVariables();
 The HTML syntax highlighter will add highlighting to all commands in an intelligent way. Commands will not be highlighted if they are used in HTML tag attributes or nested in tags where adding the highlighting markup would break the HTML structure.
 
 ```php
+use \Mailcode\Mailcode;
+
+$text = '(Mailcode commands here)';
+$safeguard = Mailcode::create()->createSafeguard($text);
+$formatting = $safeguard->createFormatting($safeguard->makeSafe());
+
 // choose to replace commands with syntax highlighted commands
 $formatting->replaceWithHTMLHighlighting();
 
@@ -595,6 +638,12 @@ This will add the highlighting markup, but the necessary CSS styles must also be
 By default, commands will not be highlighted within the `<style>` and `<script>` tags. Additional tags can easily be added to this list to customize it for your needs:
 
 ```php
+use \Mailcode\Mailcode;
+
+$text = '(Mailcode commands here)';
+$safeguard = Mailcode::create()->createSafeguard($text);
+$formatting = $safeguard->createFormatting($safeguard->makeSafe());
+
 // Get the formatter instance
 $formatter = $formatting->replaceWithHTMLHighlighting();
 
@@ -629,7 +678,7 @@ There are two way to do this:
 
 Simply ensure that the stylesheet file `css/highlight.css` of the package is loaded. This requires knowing the exact URL to the package's vendor folder.
 
-```php
+```html
 <link rel="stylesheet" media="all" src="/vendor/mistralys/mailcode/css/highlight.css">
 ```
 
@@ -640,36 +689,58 @@ The Styler utility class has a number of methods all around the CSS.
 Creating/getting the styler instance: 
 
 ```php
-$styler = $mailcode->createStyler();
+use Mailcode\Mailcode;
+
+$styler = Mailcode::create()->createStyler();
 ```
 
 Getting the raw CSS code without the `<style>` tag, for example to use in a compiled stylesheet file:
 
 ```php
+use Mailcode\Mailcode;
+
+$styler = Mailcode::create()->createStyler();
+
 $css = $styler->getCSS();
 ```
 
 Retrieving the CSS including the `<style>` tag, for example to add it inline in a page:
 
 ```php
+use Mailcode\Mailcode;
+
+$styler = Mailcode::create()->createStyler();
+
 $styleTag = $styler->getStyleTag();
 ```
 
 Retrieving the absolute path on disk to the stylesheet file:
 
 ```php
+use Mailcode\Mailcode;
+
+$styler = Mailcode::create()->createStyler();
+
 $path = $styler->getStylesheetPath();
 ```
 
 Retrieving the `<link>` tag programmatically, using the URL to access the `vendor` folder:
 
 ```php
+use Mailcode\Mailcode;
+
+$styler = Mailcode::create()->createStyler();
+
 $linkTag = $styler->getStylesheetTag('/url/to/vendor/folder');
 ```
 
 Retrieving the URL to the stylesheet file, using the URL to access the `vendor` folder:
 
 ```php
+use Mailcode\Mailcode;
+
+$styler = Mailcode::create()->createStyler();
+
 $stylesheetURL = $styler->getStylesheetURL('/url/to/vendor/folder');
 ```
 
@@ -678,6 +749,10 @@ $stylesheetURL = $styler->getStylesheetURL('/url/to/vendor/folder');
 The "MarkVariables" highlighter allows highlighting (not syntax highlighting) all variable type commands, even once they have been processed by the mail preprocessor. This is handy when testing, to quickly identify all places in an HTML document where variables are used.
 
 ```php
+use Mailcode\Mailcode;
+
+$htmlString = '(HTML with Mailcode commands here)';
+
 $safeguard = Mailcode::create()->createSafeguard($htmlString);
 $formatting = $safeguard->createFormatting($safeguard->makeSafe());
 
@@ -694,6 +769,14 @@ NOTE: This can be combined with any of the other formatters, like the syntax hig
 The necessary style tag can be retrieved using the `getStyleTag` method:
 
 ```php
+use Mailcode\Mailcode;
+
+$htmlString = '(HTML with Mailcode commands here)';
+
+$safeguard = Mailcode::create()->createSafeguard($htmlString);
+$formatting = $safeguard->createFormatting($safeguard->makeSafe());
+$formatter = $formatting->formatWithMarkedVariables();
+
 $styles = $formatter->getStyleTag();
 ```
 
@@ -706,6 +789,14 @@ For HTML mailings, or cases where the styles cannot be easily injected, the inli
 Simply enable the inline mode:
 
 ```php
+use Mailcode\Mailcode;
+
+$htmlString = '(HTML with Mailcode commands here)';
+
+$safeguard = Mailcode::create()->createSafeguard($htmlString);
+$formatting = $safeguard->createFormatting($safeguard->makeSafe());
+$formatter = $formatting->formatWithMarkedVariables();
+
 $formatter->makeInline();
 ```
 
@@ -717,6 +808,10 @@ The translator class makes it easy to convert documents with mailcode to other s
 ### Translating whole strings
 
 ```php
+use Mailcode\Mailcode;
+
+$string = '(Text with Mailcode commands here)';
+
 // create the safeguarder instance for the subject string
 $safeguard = Mailcode::create()->createSafeguard($string);
 
@@ -730,11 +825,14 @@ $convertedString = $apache->translateSafeguard($safeguard);
 ### Translating single commands
 
 ```php
+use Mailcode\Mailcode;
+use Mailcode\Mailcode_Factory;
+
 // create the translator
 $apache = Mailcode::create()->createTranslator()->createSyntax('ApacheVelocity');
 
 // create a command
-$command = Mailcode_Factory::set()->setVariable('VAR.NAME', '8');
+$command = Mailcode_Factory::set()->var('VAR.NAME', '8');
 
 // convert it to an apache velocity command string
 $apacheString = $apache->translateCommand($command);
@@ -751,6 +849,7 @@ The following tools have to be enabled in the Velocity templates:
   * [DateTool](https://velocity.apache.org/tools/devel/apidocs/org/apache/velocity/tools/generic/DateTool.html)
   * [EscapeTool](https://velocity.apache.org/tools/devel/apidocs/org/apache/velocity/tools/generic/EscapeTool.html)
   * [StringUtils](http://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/StringUtils.html)
+  * [LibPhoneNumber](https://github.com/google/libphonenumber) (see below for details) 
   * Map command for lists (custom command, see below)
 
 These tools can be added to the context of templates like this:
@@ -761,7 +860,8 @@ context.add("esc", new EscapeTool());
 context.put("StringUtils", new StringUtils());
 ```
 
-NOTE: The names are case sensitive. There is a mix of cases here - they have to stay this way to be backwards compatible.
+  > NOTE: The names are case sensitive. There is a mix of cases here - they have 
+    to stay this way to be backwards compatible.
 
 Commands that require these tools:
 
@@ -770,8 +870,36 @@ Commands that require these tools:
   - If Empty / If Not Empty (StringUtils)
   - ElseIf Empty / ElseIf Not Empty (StringUtils)
   - List contains / List not contains (Map command)
+  - ShowPhone (LibPhoneNumber)
 
 If these tools are not available, these commands will throw errors if they are used in a template.
+
+#### LibPhoneNumber
+
+This library is required for converting phone numbers to the E164 format, to create `tel:` URLs 
+for clickable phone number links. The library is used to convert the localized phone number 
+syntax to E164.
+
+The `showphone` command expects the tool to be available in the `$phone` variable. The 
+following is an example implementation for making this available in a Velocity template:
+
+```java
+private static final PhoneNumberUtil PHONE_NUMBER_UTIL = PhoneNumberUtil.getInstance();
+
+public String e164(String phoneNumber, String country) {
+    try {
+        return PHONE_NUMBER_UTIL.format(PHONE_NUMBER_UTIL.parse(phoneNumber, country), PhoneNumberUtil.PhoneNumberFormat.E164);
+    } catch (Exception e) {
+        return phoneNumber;
+    }
+}
+```
+
+Its usage is expected to look like this:
+
+```
+${phone.e164($PHONE.NUMBER, 'FR')}
+```
 
 #### Map command for lists
 
@@ -779,13 +907,13 @@ The commands `list-contains` and `list-not-contains` depend on a custom command 
 
 This basically provides the following Velocity command, assuming that `$PRODUCTS` is a list of records:
 
-```
+```javascript
 #if($map.hasElement($PRODUCTS.list(), "NAME", "(?s)Value") )
 ```
 
 The matching java code then looks like this:
 
-```
+```javascript
 return list.stream().anyMatch(map -> map.get("NAME").matches("(?s)Value"));
 ```
 
@@ -804,7 +932,9 @@ If the variable source data does not match this format, the date commands will f
 To change this, the internal format can be specified on a per-command basis, using translation parameters:
 
 ```php
-$var = Mailcode_Factory::showDate('ORDER.DATE');
+use \Mailcode\Mailcode_Factory;
+
+$var = Mailcode_Factory::show()->date('ORDER.DATE');
 $var->setTranslationParam('internal_format', 'yyyy-MM-dd');
 ```
 
@@ -815,6 +945,11 @@ The translator will automatically use the specified format instead.
 To adjust the format of dates in a safeguarded string, the shortest way is to set the translation parameter for relevant date variables.
 
 ```php
+use \Mailcode\Mailcode;
+
+$sourceString = '(Mailcode commands here)';
+$internalFormat = 'yyyy-MM-dd';
+
 // Create the translator and the safeguard
 $mailcode = Mailcode::create();
 $syntax = $mailcode->createTranslator()->createSyntax('ApacheVelocity');
@@ -830,3 +965,12 @@ foreach($dateCommands as $dateCommand)
 // Translate the string
 $result = $syntax->translateSafeguard($safeguard);
 ```
+
+## Browser-enabled tools
+
+In the subfolder `tools` are a few utilities meant to be used in a browser. To use
+these, simply run a `composer install` in the package's folder, and point your 
+browser there.
+
+- `translator.php` - Translate a text with Mailcode commands to one of the supported syntaxes, like Apache Velocity.
+- `extractPhoneCountries.php` - Extracts a countries list for the `showphone` command.
