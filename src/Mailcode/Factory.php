@@ -23,7 +23,11 @@ class Mailcode_Factory
     const ERROR_INVALID_COMMAND_CREATED = 50001;
     const ERROR_UNEXPECTED_COMMAND_TYPE = 50002;
 
-   /**
+    const URL_ENCODING_NONE = 'none';
+    const URL_ENCODING_ENCODE = 'encode';
+    const URL_ENCODING_DECODE = 'decode';
+
+    /**
     * @var Mailcode_Factory_CommandSets
     */
     private static $commandSets;
