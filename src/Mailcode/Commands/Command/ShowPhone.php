@@ -36,7 +36,7 @@ class Mailcode_Commands_Command_ShowPhone extends Mailcode_Commands_ShowBase
      * List of supported countries in the libphonenumber package.
      * NOTE: This can be extracted automatically using the provided PHP script.
      *
-     * @var array<string,string>
+     * @var array<string,Mailcode_Commands_Command_ShowPhone_Number>
      *
      * @see /tools/extractPhoneCountries.php
      */
@@ -105,9 +105,9 @@ class Mailcode_Commands_Command_ShowPhone extends Mailcode_Commands_ShowBase
 
     /**
      * Retrieves the list of countries supported for phone number conversions,
-     * as an associative array with uppercase country code => country name pairs.
+     * as an associative array with uppercase country code => number class pairs.
      *
-     * @return Mailcode_Commands_Command_ShowPhone_Number[]
+     * @return array<string,Mailcode_Commands_Command_ShowPhone_Number>
      * @throws FileHelper_Exception
      */
     public static function getSupportedCountries() : array
@@ -122,6 +122,8 @@ class Mailcode_Commands_Command_ShowPhone extends Mailcode_Commands_ShowBase
 
         foreach($data as $code => $def)
         {
+            $code = strval($code);
+
             self::$supportedCountries[$code] = new Mailcode_Commands_Command_ShowPhone_Number(
                 $code,
                 strval($def['label']),
