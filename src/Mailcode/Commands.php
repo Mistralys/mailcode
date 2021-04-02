@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use AppUtils\FileHelper;
+
 /**
  * Mailcode commands repository: factory for command instances,
  * and for fetching command information.
@@ -22,9 +24,7 @@ namespace Mailcode;
 class Mailcode_Commands
 {
     const ERROR_COMMAND_NAME_DOES_NOT_EXIST = 45901;
-    
     const ERROR_COMMAND_DOES_NOT_EXIST = 45902;
-    
     const ERROR_INVALID_DUMMY_COMMAND_TYPE = 45903;
     
    /**
@@ -33,7 +33,7 @@ class Mailcode_Commands
     private $commands = array();
     
    /**
-    * @var string[]Mailcode_Commands_Command
+    * @var array<string,Mailcode_Commands_Command>
     */
     private static $dummyCommands = array();
     
@@ -47,20 +47,21 @@ class Mailcode_Commands
         static $ids = array();
         
         if(empty($ids)) {
-            $ids = \AppUtils\FileHelper::createFileFinder(__DIR__.'/Commands/Command')
+            $ids = FileHelper::createFileFinder(__DIR__.'/Commands/Command')
             ->getPHPClassNames();
         }
         
         return $ids;
     }
-    
-   /**
-    * Retrieves a list of all available commands, sorted by label.
-    * 
-    * NOTE: These instances are only used for information purposes.
-    * 
-    * @return Mailcode_Commands_Command[]
-    */
+
+    /**
+     * Retrieves a list of all available commands, sorted by label.
+     *
+     * NOTE: These instances are only used for information purposes.
+     *
+     * @return Mailcode_Commands_Command[]
+     * @throws Mailcode_Exception
+     */
     public function getAll()
     {
         if(!empty($this->commands)) {
@@ -216,25 +217,28 @@ class Mailcode_Commands
         
         return $type;
     }
-    
-   /**
-    * Retrieves the dummy command of the specified type, which
-    * is used to retrieve information on the command's capabilities.
-    *  
-    * @param string $id
-    * @return Mailcode_Commands_Command
-    */
+
+    /**
+     * Retrieves the dummy command of the specified type, which
+     * is used to retrieve information on the command's capabilities.
+     *
+     * @param string $id
+     * @return Mailcode_Commands_Command
+     * @throws Mailcode_Exception
+     */
     private function getDummyCommand(string $id) : Mailcode_Commands_Command
     {
-        if(!isset(self::$dummyCommands[$id]))
-        {
-            $class = 'Mailcode\Mailcode_Commands_Command_'.$id;
-            self::$dummyCommands[$id] = new $class('__dummy');
-        }
-        
-        if(self::$dummyCommands[$id] instanceof Mailcode_Commands_Command)
-        {
+        if(isset(self::$dummyCommands[$id])) {
             return self::$dummyCommands[$id];
+        }
+
+        $class = 'Mailcode\Mailcode_Commands_Command_'.$id;
+        $cmd = new $class('__dummy');
+
+        if($cmd instanceof Mailcode_Commands_Command)
+        {
+            self::$dummyCommands[$id] = $cmd;
+            return $cmd;
         }
         
         throw new Mailcode_Exception(
