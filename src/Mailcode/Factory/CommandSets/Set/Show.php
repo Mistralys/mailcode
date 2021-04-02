@@ -24,7 +24,7 @@ class Mailcode_Factory_CommandSets_Set_Show extends Mailcode_Factory_CommandSets
     {
         $variableName = $this->instantiator->filterVariableName($variableName);
         
-        $cmd = Mailcode::create()->getCommands()->createCommand(
+        $cmd = $this->commands->createCommand(
             'ShowVariable',
             '',
             $variableName,
@@ -54,7 +54,7 @@ class Mailcode_Factory_CommandSets_Set_Show extends Mailcode_Factory_CommandSets
             );
         }
         
-        $cmd = Mailcode::create()->getCommands()->createCommand(
+        $cmd = $this->commands->createCommand(
             'ShowDate',
             '',
             $variableName.$format,
@@ -88,7 +88,7 @@ class Mailcode_Factory_CommandSets_Set_Show extends Mailcode_Factory_CommandSets
             );
         }
 
-        $cmd = Mailcode::create()->getCommands()->createCommand(
+        $cmd = $this->commands->createCommand(
             'ShowNumber',
             '',
             $variableName.$format,
@@ -108,12 +108,53 @@ class Mailcode_Factory_CommandSets_Set_Show extends Mailcode_Factory_CommandSets
 
         throw $this->instantiator->exceptionUnexpectedType('ShowNumber', $cmd);
     }
-    
+
+    /**
+     * Creates a `showphone` command.
+     *
+     * @param string $variableName The name of the variable, with or without $ sign.
+     * @param string $sourceFormat Two-letter country code, case insensitive.
+     * @param string $urlEncoding The URL encoding mode, if any.
+     * @return Mailcode_Commands_Command_ShowPhone
+     * @throws Mailcode_Exception
+     * @throws Mailcode_Factory_Exception
+     */
+    public function phone(string $variableName, string $sourceFormat, string $urlEncoding=Mailcode_Factory::URL_ENCODING_NONE) : Mailcode_Commands_Command_ShowPhone
+    {
+        $variableName = $this->instantiator->filterVariableName($variableName);
+
+        $params = sprintf(
+            '%s "%s"',
+            $variableName,
+            strtoupper($sourceFormat)
+        );
+
+        $cmd = $this->commands->createCommand(
+            'ShowPhone',
+            '',
+            $params,
+            sprintf(
+                '{showphone: %s}',
+                $params
+            )
+        );
+
+        $this->instantiator->checkCommand($cmd);
+        $this->instantiator->setEncoding($cmd, $urlEncoding);
+
+        if($cmd instanceof Mailcode_Commands_Command_ShowPhone)
+        {
+            return $cmd;
+        }
+
+        throw $this->instantiator->exceptionUnexpectedType('ShowPhone', $cmd);
+    }
+
     public function snippet(string $snippetName) : Mailcode_Commands_Command_ShowSnippet
     {
         $snippetName = $this->instantiator->filterVariableName($snippetName);
         
-        $cmd = Mailcode::create()->getCommands()->createCommand(
+        $cmd = $this->commands->createCommand(
             'ShowSnippet',
             '',
             $snippetName,
