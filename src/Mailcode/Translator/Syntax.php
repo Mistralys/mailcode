@@ -80,14 +80,16 @@ class Mailcode_Translator_Syntax
         
         return $translator;
     }
-    
-   /**
-    * Translates all safeguarded commands in the subject string to the 
-    * target syntax in one go.
-    * 
-    * @param Mailcode_Parser_Safeguard $safeguard
-    * @return string
-    */
+
+    /**
+     * Translates all safeguarded commands in the subject string to the
+     * target syntax in one go.
+     *
+     * @param Mailcode_Parser_Safeguard $safeguard
+     * @return string
+     * @throws Mailcode_Exception
+     * @throws Mailcode_Translator_Exception
+     */
     public function translateSafeguard(Mailcode_Parser_Safeguard $safeguard) : string
     {
         $subject = $safeguard->makeSafe();
