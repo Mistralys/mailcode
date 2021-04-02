@@ -6,50 +6,23 @@
  * @package Mailcode
  * @subpackage Tools
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
+ *
+ * @see https://countrycode.org/countryCode/downloadCountryCodes
  */
 
 declare(strict_types=1);
 
+use AppUtils\CSVHelper;
 use AppUtils\FileHelper;
-use AppUtils\FileHelper_Exception;
+use libphonenumber\PhoneNumberFormat;
+use libphonenumber\PhoneNumberUtil;
 
 require_once 'prepend.php';
 
-$xmlURL = 'https://raw.githubusercontent.com/google/libphonenumber/master/resources/PhoneNumberMetadata.xml';
+$outputFile = '../src/Mailcode/Commands/Command/ShowPhone/numbers.json';
+$countries = generateList();
 
-$cacheFile = 'libphone.xml';
-$cacheExpiry = 60 * 60; // 1 hour
-
-if(!file_exists($cacheFile) || (filemtime($cacheFile) + $cacheExpiry) < time())
-{
-    try
-    {
-        $xml = FileHelper::downloadFile($xmlURL);
-        FileHelper::saveFile($cacheFile, $xml);
-    }
-    catch (FileHelper_Exception $e)
-    {
-        die('Unable to download the current libphonenumber XML from <a href="'.$xmlURL.'">'.$xmlURL.'</a>');
-    }
-}
-else
-{
-    $xml = FileHelper::readContents($cacheFile);
-}
-
-preg_match_all('/<!-- (\w+) \(([A-Z]+)\) -->/si', $xml, $result, PREG_PATTERN_ORDER);
-
-$lines = array();
-foreach($result[1] as $idx => $country)
-{
-    $lines[] = sprintf(
-        "    '%s' => '%s'",
-        $result[2][$idx],
-        $country
-    );
-}
-
-$code = 'array('.PHP_EOL.implode(",".PHP_EOL, $lines).PHP_EOL.');';
+FileHelper::saveAsJSON($countries, $outputFile, true);
 
 ?><!DOCTYPE html>
 <html lang="en">
@@ -63,24 +36,82 @@ $code = 'array('.PHP_EOL.implode(",".PHP_EOL, $lines).PHP_EOL.');';
             BODY{
                 padding:2em 0;
             }
+            TEXTAREA{
+                font-family: monospace;
+            }
         </style>
     </head>
     <body>
         <div class="container">
             <h1>Phone number countries extraction</h1>
             <p>
-                This downloads Google's official LibPhoneNumber countries XML,
-                and extracts a list of countries from it, for use in the <code>{showphone}</code>
+                This uses Google's <a href="https://github.com/google/libphonenumber">libphonenumber</a>
+                library (via its PHP port
+                <a href="https://github.com/giggsey/libphonenumber-for-php">giggsey/libphonenumber-for-php</a>).
+                It generates a list of all supported countries for use in the <code>{showphone}</code>
                 command class, to validate the source country phone format parameter.
             </p>
             <p>
-                Target class: <code>Mailcode_Commands_Command_ShowPhone</code>
+                Target class: <code>Mailcode_Commands_Command_ShowPhone</code><br>
+                Target data file: <code><?php echo str_replace('../', '/', $outputFile) ?></code>
             </p>
             <p>
-                It is meant to be pasted into the class' <code>$supportedCountries</code>
-                property.
+                The command reads the file to access the countries.
             </p>
-            <textarea rows="20" class="form-control"><?php echo $code ?></textarea>
+            <p>
+                <strong>Extracted JSON data:</strong>
+            </p>
+            <textarea rows="20" class="form-control"><?php echo json_encode($countries, JSON_PRETTY_PRINT) ?></textarea>
         </div>
     </body>
 </html>
+
+<?php
+
+function generateList() : array
+{
+    $labels = extractLabels();
+    $phoneNumberUtil = PhoneNumberUtil::getInstance();
+    $regions = $phoneNumberUtil->getSupportedRegions();
+
+    $data = array();
+    foreach ($regions as $code)
+    {
+        $meta = $phoneNumberUtil->getMetadataForRegion($code);
+        if (!$meta) {
+            die('No metadata for ' . $code);
+        }
+
+        $exampleNumber = $phoneNumberUtil->getExampleNumber($code);
+        $local = $phoneNumberUtil->formatInOriginalFormat($exampleNumber, $code);
+        $international = $phoneNumberUtil->format($exampleNumber, PhoneNumberFormat::INTERNATIONAL);
+
+        $label = $code;
+        if (isset($labels[$code])) {
+            $label = $labels[$code];
+        }
+
+        $data[$code] = array(
+            'label' => $label,
+            'local' => $local,
+            'international' => $international
+        );
+    }
+
+    ksort($data);
+
+    return $data;
+}
+
+function extractLabels() : array
+{
+    $lines = CSVHelper::parseFile('countrycodes.csv');
+
+    $result = array();
+
+    foreach ($lines as $line) {
+        $result[$line['ISO2']] = $line['Country Name'];
+    }
+
+    return $result;
+}
