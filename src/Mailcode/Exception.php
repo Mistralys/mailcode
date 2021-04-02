@@ -31,7 +31,7 @@ class Mailcode_Exception extends \AppUtils\BaseException
     /**
      * @return Mailcode_Collection|null
      */
-    public function getCollection(): Mailcode_Collection
+    public function getCollection(): ?Mailcode_Collection
     {
         return $this->collection;
     }
