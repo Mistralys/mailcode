@@ -61,22 +61,14 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ShowDate extends Mailcode_Transl
             $internalFormat = self::DEFAULT_INTERNAL_FORMAT;
         }
 
-        if($command->isURLEncoded())
-        {
-            return sprintf(
-                '${esc.url($date.format("%s", $date.toDate("%s", $%s)))}',
-                $javaFormat,
-                $internalFormat,
-                $varName
-            );
-        }
-
-        return sprintf(
-            '${date.format("%s", $date.toDate("%s", $%s))}',
+        $statement = sprintf(
+            'date.format("%s", $date.toDate("%s", $%s))',
             $javaFormat,
             $internalFormat,
             $varName
         );
+
+        return $this->addURLEncoding($command, $statement);
     }
 
     private function translateFormat(string $formatString) : string

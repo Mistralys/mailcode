@@ -34,25 +34,6 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ShowSnippet extends Mailcode_Tra
             $varName
         );
 
-        if($command->isURLEncoded())
-        {
-            return sprintf(
-                '${esc.url($%s)}',
-                $statement
-            );
-        }
-
-        if($command->isURLDecoded())
-        {
-            return sprintf(
-                '${esc.unurl($%s)}',
-                $statement
-            );
-        }
-
-        return sprintf(
-            '${%s}',
-            $statement
-        );
+        return $this->addURLEncoding($command, $statement);
     }
 }

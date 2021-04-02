@@ -37,17 +37,6 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ShowNumber extends Mailcode_Tran
             $formatInfo->getThousandsSeparator()
         );
 
-        if($command->isURLEncoded())
-        {
-            return sprintf(
-                '${esc.url($%s)}',
-                $statement
-            );
-        }
-
-        return sprintf(
-            '${%s}',
-            $statement
-        );
+        return $this->addURLEncoding($command, $statement);
     }
 }

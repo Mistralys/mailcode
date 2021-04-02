@@ -24,26 +24,6 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ShowVariable extends Mailcode_Tr
     {
         $varName = ltrim($command->getVariableName(), '$');
 
-        // Automatically URL escape the variable if it's in an URL.
-        if($command->isURLEncoded())
-        {
-            return sprintf(
-                '${esc.url($%s)}',
-                $varName
-            );
-        }
-
-        if($command->isURLDecoded())
-        {
-            return sprintf(
-                '${esc.unurl($%s)}',
-                $varName
-            );
-        }
-
-        return sprintf(
-            '${%s}',
-            $varName
-        );
+        return $this->addURLEncoding($command, $varName);
     }
 }
