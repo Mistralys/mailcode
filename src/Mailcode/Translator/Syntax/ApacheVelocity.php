@@ -80,4 +80,28 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
 
         return $string;
     }
+
+    protected function addURLEncoding(Mailcode_Commands_Command $command, string $statement) : string
+    {
+        if($command->isURLEncoded())
+        {
+            return sprintf(
+                '${esc.url($%s)}',
+                $statement
+            );
+        }
+
+        if($command->isURLDecoded())
+        {
+            return sprintf(
+                '${esc.unurl($%s)}',
+                $statement
+            );
+        }
+
+        return sprintf(
+            '${%s}',
+            $statement
+        );
+    }
 }
