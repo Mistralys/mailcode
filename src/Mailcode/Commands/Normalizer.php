@@ -67,11 +67,6 @@ class Mailcode_Commands_Normalizer
     
     private function addParams(Mailcode_Commands_Command $command) : void
     {
-        if(!$command->requiresParameters())
-        {
-            return;
-        }
-
         if($command->hasFreeformParameters())
         {
             $params = $command->getParams()->getStatementString();
