@@ -56,4 +56,30 @@ final class Mailcode_MonoTests extends MailcodeTestCase
 
         $this->assertTrue($cmd->isMultiline());
     }
+
+    public function test_normalize() : void
+    {
+        $tests = array(
+            array(
+                'label' => 'Parameterless',
+                'command' => Mailcode_Factory::misc()->mono(),
+                'expected' => '{mono}'
+            ),
+            array(
+                'label' => 'Multiline',
+                'command' => Mailcode_Factory::misc()->mono(true),
+                'expected' => '{mono: multiline:}'
+            ),
+            array(
+                'label' => 'Multiline, with class',
+                'command' => Mailcode_Factory::misc()->mono(true, array('class1', 'class2')),
+                'expected' => '{mono: multiline: "class1 class2"}'
+            )
+        );
+
+        foreach($tests as $test)
+        {
+            $this->assertEquals($test['expected'], $test['command']->getNormalized(), $test['label']);
+        }
+    }
 }
