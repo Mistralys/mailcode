@@ -11,21 +11,21 @@ final class Translator_Velocity_IfBiggerThanTests extends VelocityTestCase
                 'label' => 'Integer value',
                 'mailcode' => Mailcode_Factory::if()->biggerThan('FOO.BAR', '100'),
                 'expected' => <<<'EOD'
-#if($number.toNumber('#.####', $FOO.BAR.replace(',', '.'), 'en_US') > 100)
+#if($price.toNumber($FOO.BAR) > 100)
 EOD
             ),
             array(
                 'label' => 'Value with comma',
                 'mailcode' => Mailcode_Factory::if()->biggerThan('FOO.BAR', '45,12'),
                 'expected' => <<<'EOD'
-#if($number.toNumber('#.####', $FOO.BAR.replace(',', '.'), 'en_US') > 45.12)
+#if($price.toNumber($FOO.BAR) > 45.12)
 EOD
             ),
             array(
                 'label' => 'Value with dot',
                 'mailcode' => Mailcode_Factory::if()->biggerThan('FOO.BAR', '45.12'),
                 'expected' => <<<'EOD'
-#if($number.toNumber('#.####', $FOO.BAR.replace(',', '.'), 'en_US') > 45.12)
+#if($price.toNumber($FOO.BAR) > 45.12)
 EOD
             )
         );

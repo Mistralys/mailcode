@@ -11,21 +11,21 @@ final class Translator_Velocity_ElseIfEqualsNumberTests extends VelocityTestCase
                 'label' => 'Integer value',
                 'mailcode' => Mailcode_Factory::elseIf()->equalsNumber('FOO.BAR', '100'),
                 'expected' => <<<'EOD'
-#elseif($number.toNumber('#.####', $FOO.BAR.replace(',', '.'), 'en_US') == 100)
+#elseif($price.toNumber($FOO.BAR) == 100)
 EOD
             ),
             array(
                 'label' => 'Value with comma',
                 'mailcode' => Mailcode_Factory::elseIf()->equalsNumber('FOO.BAR', '45,12'),
                 'expected' => <<<'EOD'
-#elseif($number.toNumber('#.####', $FOO.BAR.replace(',', '.'), 'en_US') == 45.12)
+#elseif($price.toNumber($FOO.BAR) == 45.12)
 EOD
             ),
             array(
                 'label' => 'Value with dot',
                 'mailcode' => Mailcode_Factory::elseIf()->equalsNumber('FOO.BAR', '45.12'),
                 'expected' => <<<'EOD'
-#elseif($number.toNumber('#.####', $FOO.BAR.replace(',', '.'), 'en_US') == 45.12)
+#elseif($price.toNumber($FOO.BAR) == 45.12)
 EOD
             )
         );
