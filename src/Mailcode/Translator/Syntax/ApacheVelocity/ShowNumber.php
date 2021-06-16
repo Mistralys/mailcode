@@ -11,8 +11,6 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
-use AppUtils\ConvertHelper;
-
 /**
  * Translates the "ShowNumber" command to Apache Velocity.
  *
@@ -24,17 +22,9 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ShowNumber extends Mailcode_Tran
 {
     public function translate(Mailcode_Commands_Command_ShowNumber $command): string
     {
-        $template = "price.format(%s, %s, '%s', '%s')";
-
-        $varName = ltrim($command->getVariableName(), '$');
-        $formatInfo = $command->getFormatInfo();
-
-        $statement = sprintf(
-            $template,
-            '$'.$varName,
-            $formatInfo->getDecimals(),
-            $formatInfo->getDecimalsSeparator(),
-            $formatInfo->getThousandsSeparator()
+        $statement = $this->renderNumberFormat(
+            $command->getVariableName(),
+            $command->getFormatInfo()
         );
 
         return $this->addURLEncoding($command, $statement);

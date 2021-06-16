@@ -101,13 +101,9 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity_Base_AbstractIf extends
 
     protected function _translateNumberComparison(Mailcode_Variables_Variable $variable, float $value, string $comparator) : string
     {
-        $template = <<<'EOD'
-$number.toNumber('#.####', %1$s.replace(',', '.'), 'en_US') %2$s %3$s
-EOD;
-
         return sprintf(
-            $template,
-            $variable->getFullName(),
+            '%1$s %2$s %3$s',
+            $this->renderStringToNumber($variable->getFullName()),
             $comparator,
             $value
         );
