@@ -6,6 +6,8 @@ namespace Mailcode;
 
 interface Mailcode_Interfaces_Commands_ListPropertyVariable
 {
+    const VALIDATION_NAME = 'list_property_variable';
+
     const VALIDATION_NOT_A_LIST_PROPERTY = 77101;
 
     const ERROR_NO_LIST_VARIABLE_PRESENT = 77201;

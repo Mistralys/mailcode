@@ -33,9 +33,9 @@ class Mailcode_Commands_Command_ShowSnippet extends Mailcode_Commands_ShowBase
     protected function getValidations() : array
     {
         return array(
-            'variable',
-            'urlencode',
-            'urldecode'
+            Mailcode_Interfaces_Commands_Variable::VALIDATION_NAME,
+            Mailcode_Interfaces_Commands_URLEncode::VALIDATION_NAME,
+            Mailcode_Interfaces_Commands_URLDecode::VALIDATION_NAME
         );
     }
     

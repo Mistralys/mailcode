@@ -22,6 +22,8 @@ use AppUtils\OperationResult;
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  *
  * @property OperationResult $validationResult
+ *
+ * @see Mailcode_Interfaces_Commands_Validation_EmptyParams
  */
 trait Mailcode_Traits_Commands_Validation_EmptyParams
 {

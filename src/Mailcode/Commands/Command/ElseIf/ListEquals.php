@@ -33,7 +33,7 @@ class Mailcode_Commands_Command_ElseIf_ListEquals
     protected function getValidations(): array
     {
         $validations = parent::getValidations();
-        $validations[] = 'list_property_variable';
+        $validations[] = Mailcode_Interfaces_Commands_ListPropertyVariable::VALIDATION_NAME;
 
         return $validations;
     }

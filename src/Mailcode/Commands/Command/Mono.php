@@ -75,7 +75,7 @@ class Mailcode_Commands_Command_Mono
     protected function getValidations() : array
     {
         return array(
-            'multiline',
+            Mailcode_Interfaces_Commands_Multiline::VALIDATION_NAME,
             'class'
         );
     }

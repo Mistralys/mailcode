@@ -21,6 +21,8 @@ namespace Mailcode;
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  *
  * @property Mailcode_Parser_Statement_Validator $validator
+ *
+ * @see Mailcode_Interfaces_Commands_SearchTerm
  */
 trait Mailcode_Traits_Commands_Validation_SearchTerm
 {

@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use AppUtils\OperationResult;
+
 /**
  * Command validation drop-in: checks for the presence
  * of an operand token (any operand sign). Will accept 
@@ -22,7 +24,7 @@ namespace Mailcode;
  *
  * @see Mailcode_Interfaces_Commands_Operand
  *
- * @property \AppUtils\OperationResult $validationResult
+ * @property OperationResult $validationResult
  * @property Mailcode_Parser_Statement_Validator $validator
  */
 trait Mailcode_Traits_Commands_Validation_Operand

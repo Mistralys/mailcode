@@ -6,6 +6,8 @@ namespace Mailcode;
 
 interface Mailcode_Interfaces_Commands_Variable
 {
+    const VALIDATION_NAME = 'variable';
+
     public function getVariable() : Mailcode_Variables_Variable;
     public function getVariableName() : string;
     public function isInLoop() : bool;

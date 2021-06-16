@@ -13,7 +13,14 @@ namespace Mailcode;
 
 use AppUtils\OperationResult;
 
-abstract class Mailcode_Commands_Command implements Mailcode_Interfaces_Commands_Command
+abstract class Mailcode_Commands_Command
+    implements
+    Mailcode_Interfaces_Commands_Command,
+    Mailcode_Interfaces_Commands_Validation_EmptyParams,
+    Mailcode_Interfaces_Commands_Validation_ParamKeywords,
+    Mailcode_Interfaces_Commands_Validation_ParseParams,
+    Mailcode_Interfaces_Commands_Validation_TypeSupported,
+    Mailcode_Interfaces_Commands_Validation_TypeUnsupported
 {
     use Mailcode_Traits_Commands_Validation_EmptyParams;
     use Mailcode_Traits_Commands_Validation_ParamKeywords;
@@ -62,12 +69,12 @@ abstract class Mailcode_Commands_Command implements Mailcode_Interfaces_Commands
     protected $validationResult = null;
     
    /**
-    * @var \Mailcode\Mailcode
+    * @var Mailcode
     */
     protected $mailcode;
     
    /**
-    * @var \Mailcode\Mailcode_Parser_Statement
+    * @var Mailcode_Parser_Statement
     */
     protected $params;
 
@@ -75,11 +82,11 @@ abstract class Mailcode_Commands_Command implements Mailcode_Interfaces_Commands
     * @var string[] 
     */
     protected $validations = array(
-        'params_empty',
-        'params_keywords',
-        'params_parse',
-        'type_supported',
-        'type_unsupported'
+        Mailcode_Interfaces_Commands_Validation_EmptyParams::VALIDATION_NAME,
+        Mailcode_Interfaces_Commands_Validation_ParamKeywords::VALIDATION_NAME,
+        Mailcode_Interfaces_Commands_Validation_ParseParams::VALIDATION_NAME,
+        Mailcode_Interfaces_Commands_Validation_TypeSupported::VALIDATION_NAME,
+        Mailcode_Interfaces_Commands_Validation_TypeUnsupported::VALIDATION_NAME
     );
     
    /**

@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use AppUtils\OperationResult;
+
 /**
  * IF for variable comparisons.
  *
@@ -19,20 +21,22 @@ namespace Mailcode;
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * 
  * @property Mailcode_Parser_Statement $params
- * @property \AppUtils\OperationResult $validationResult
+ * @property OperationResult $validationResult
  */
 trait Mailcode_Traits_Commands_IfVariable
 {
     use Mailcode_Traits_Commands_Validation_Variable;
     use Mailcode_Traits_Commands_Validation_Value;
     use Mailcode_Traits_Commands_Validation_Operand;
+    use Mailcode_Traits_Commands_Validation_CaseSensitive;
     
     protected function getValidations() : array
     {
         return array(
-            'variable',
-            'operand',
-            'value'
+            Mailcode_Interfaces_Commands_Variable::VALIDATION_NAME,
+            Mailcode_Interfaces_Commands_Operand::VALIDATION_NAME,
+            Mailcode_Interfaces_Commands_Value::VALIDATION_NAME,
+            Mailcode_Interfaces_Commands_CaseSensitive::VALIDATION_NAME
         );
     }
     
