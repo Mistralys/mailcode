@@ -20,7 +20,7 @@ namespace Mailcode;
  */
 abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Translator_Command
 {
-   /**
+    /**
     * @var string[]
     */
     private $regexSpecialChars = array(
@@ -102,6 +102,29 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
         return sprintf(
             '${%s}',
             $statement
+        );
+    }
+
+    public function renderNumberFormat(string $varName, Mailcode_Number_Info $numberInfo) : string
+    {
+        $varName = ltrim($varName, '$');
+
+        return sprintf(
+            "price.format(%s, %s, '%s', '%s')",
+            '$'.$varName,
+            $numberInfo->getDecimals(),
+            $numberInfo->getDecimalsSeparator(),
+            $numberInfo->getThousandsSeparator()
+        );
+    }
+
+    public function renderStringToNumber(string $varName) : string
+    {
+        $varName = ltrim($varName, '$');
+
+        return sprintf(
+            '$price.toNumber(%s)',
+            '$'.$varName
         );
     }
 }
