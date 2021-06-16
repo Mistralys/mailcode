@@ -22,7 +22,7 @@ namespace Mailcode;
  *
  * @property Mailcode_Parser_Statement_Validator $validator
  *
- * @see Mailcode_Interfaces_Commands_RegexEnabled
+ * @see Mailcode_Interfaces_Commands_Validation_RegexEnabled
  */
 trait Mailcode_Traits_Commands_Validation_RegexEnabled
 {

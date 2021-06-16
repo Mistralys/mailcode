@@ -6,5 +6,5 @@ namespace Mailcode;
 
 interface Mailcode_Interfaces_Commands_Validation_ParamKeywords extends Mailcode_Interfaces_Commands_Command
 {
-    const VALIDATION_NAME = 'params_keywords';
+    const VALIDATION_NAME_KEYWORDS = 'params_keywords';
 }

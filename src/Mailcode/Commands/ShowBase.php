@@ -22,9 +22,9 @@ abstract class Mailcode_Commands_ShowBase
     extends Mailcode_Commands_Command
     implements
     Mailcode_Commands_Command_Type_Standalone,
-    Mailcode_Interfaces_Commands_Variable,
-    Mailcode_Interfaces_Commands_URLEncode,
-    Mailcode_Interfaces_Commands_URLDecode
+    Mailcode_Interfaces_Commands_Validation_Variable,
+    Mailcode_Interfaces_Commands_Validation_URLEncode,
+    Mailcode_Interfaces_Commands_Validation_URLDecode
 {
     use Mailcode_Traits_Commands_Validation_Variable;
     use Mailcode_Traits_Commands_Validation_URLEncode;

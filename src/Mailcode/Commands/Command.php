@@ -82,11 +82,11 @@ abstract class Mailcode_Commands_Command
     * @var string[] 
     */
     protected $validations = array(
-        Mailcode_Interfaces_Commands_Validation_EmptyParams::VALIDATION_NAME,
-        Mailcode_Interfaces_Commands_Validation_ParamKeywords::VALIDATION_NAME,
-        Mailcode_Interfaces_Commands_Validation_ParseParams::VALIDATION_NAME,
-        Mailcode_Interfaces_Commands_Validation_TypeSupported::VALIDATION_NAME,
-        Mailcode_Interfaces_Commands_Validation_TypeUnsupported::VALIDATION_NAME
+        Mailcode_Interfaces_Commands_Validation_EmptyParams::VALIDATION_NAME_EMPTY_PARAMS,
+        Mailcode_Interfaces_Commands_Validation_ParamKeywords::VALIDATION_NAME_KEYWORDS,
+        Mailcode_Interfaces_Commands_Validation_ParseParams::VALIDATION_NAME_PARSE_PARAMS,
+        Mailcode_Interfaces_Commands_Validation_TypeSupported::VALIDATION_NAME_TYPE_SUPPORTED,
+        Mailcode_Interfaces_Commands_Validation_TypeUnsupported::VALIDATION_NAME_TYPE_UNSUPPORTED
     );
     
    /**

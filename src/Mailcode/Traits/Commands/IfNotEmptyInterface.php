@@ -6,6 +6,6 @@ namespace Mailcode;
 
 interface Mailcode_Interfaces_Commands_IfNotEmpty
     extends
-    Mailcode_Interfaces_Commands_Variable
+    Mailcode_Interfaces_Commands_Validation_Variable
 {
 }

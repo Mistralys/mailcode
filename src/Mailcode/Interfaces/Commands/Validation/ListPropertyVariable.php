@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
-interface Mailcode_Interfaces_Commands_ListPropertyVariable
+interface Mailcode_Interfaces_Commands_Validation_ListPropertyVariable
 {
-    const VALIDATION_NAME = 'list_property_variable';
+    const VALIDATION_NAME_LIST_PROP_VARIABLE = 'list_property_variable';
 
     const VALIDATION_NOT_A_LIST_PROPERTY = 77101;
 

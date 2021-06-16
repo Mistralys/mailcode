@@ -22,7 +22,7 @@ namespace Mailcode;
  *
  * @property Mailcode_Parser_Statement_Validator $validator
  *
- * @see Mailcode_Interfaces_Commands_Multiline
+ * @see Mailcode_Interfaces_Commands_Validation_Multiline
  */
 trait Mailcode_Traits_Commands_Validation_Multiline
 {

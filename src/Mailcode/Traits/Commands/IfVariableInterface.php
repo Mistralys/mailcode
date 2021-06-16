@@ -6,8 +6,8 @@ namespace Mailcode;
 
 interface Mailcode_Interfaces_Commands_IfVariable
     extends
-    Mailcode_Interfaces_Commands_Operand,
-    Mailcode_Interfaces_Commands_Value,
-    Mailcode_Interfaces_Commands_Variable
+    Mailcode_Interfaces_Commands_Validation_Operand,
+    Mailcode_Interfaces_Commands_Validation_Value,
+    Mailcode_Interfaces_Commands_Validation_Variable
 {
 }

@@ -22,7 +22,7 @@ namespace Mailcode;
  *
  * @property Mailcode_Parser_Statement_Validator $validator
  *
- * @see Mailcode_Interfaces_Commands_CaseSensitive
+ * @see Mailcode_Interfaces_Commands_Validation_CaseSensitive
  */
 trait Mailcode_Traits_Commands_Validation_CaseSensitive
 {

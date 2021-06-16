@@ -6,5 +6,5 @@ namespace Mailcode;
 
 interface Mailcode_Interfaces_Commands_Validation_TypeUnsupported extends Mailcode_Interfaces_Commands_Command
 {
-    const VALIDATION_NAME = 'type_unsupported';
+    const VALIDATION_NAME_TYPE_UNSUPPORTED = 'type_unsupported';
 }

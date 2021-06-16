@@ -1,7 +1,7 @@
 <?php
 
 use Mailcode\Mailcode_Commands_CommonConstants;
-use Mailcode\Mailcode_Interfaces_Commands_ListPropertyVariable;
+use Mailcode\Mailcode_Interfaces_Commands_Validation_ListPropertyVariable;
 
 final class Mailcode_IfListNotContainsTests extends MailcodeTestCase
 {
@@ -30,7 +30,7 @@ final class Mailcode_IfListNotContainsTests extends MailcodeTestCase
                 'label' => 'Not a list property variable',
                 'string' => '{if list-not-contains: $FOO "Search"}{end}',
                 'valid' => false,
-                'code' => Mailcode_Interfaces_Commands_ListPropertyVariable::VALIDATION_NOT_A_LIST_PROPERTY
+                'code' => Mailcode_Interfaces_Commands_Validation_ListPropertyVariable::VALIDATION_NOT_A_LIST_PROPERTY
             ),
             array(
                 'label' => 'Wrong keyword (ignored)',

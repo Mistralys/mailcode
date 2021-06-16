@@ -12,14 +12,14 @@ use AppUtils\OperationResult;
  * variable uses the scheme `$LIST.PROPERTY`, and not a single
  * path variable like `$FOO`.
  *
- * @package Mailcode
- * @subpackage Validation
+ * @see Mailcode_Interfaces_Commands_Validation_ListPropertyVariable
+ *@subpackage Validation
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  *
  * @property Mailcode_Parser_Statement_Validator $validator
  * @property OperationResult $validationResult
  *
- * @see Mailcode_Interfaces_Commands_ListPropertyVariable
+ * @package Mailcode
  */
 trait Mailcode_Traits_Commands_Validation_ListPropertyVariable
 {
@@ -42,7 +42,7 @@ trait Mailcode_Traits_Commands_Validation_ListPropertyVariable
             $this->validationResult->makeError(
                 t('The variable %1$s is not a list property:', '<code>'.$var->getFullName().'</code>').' '.
                 t('Expected a name with a dot, like %1$s', '<code>$'.t('LIST.PROPERTY').'</code>'),
-                Mailcode_Interfaces_Commands_ListPropertyVariable::VALIDATION_NOT_A_LIST_PROPERTY
+                Mailcode_Interfaces_Commands_Validation_ListPropertyVariable::VALIDATION_NOT_A_LIST_PROPERTY
             );
 
             return;
@@ -65,7 +65,7 @@ trait Mailcode_Traits_Commands_Validation_ListPropertyVariable
      * @return Mailcode_Variables_Variable
      * @throws Mailcode_Exception
      *
-     * @see Mailcode_Interfaces_Commands_ListPropertyVariable::ERROR_NO_LIST_VARIABLE_PRESENT
+     * @see Mailcode_Interfaces_Commands_Validation_ListPropertyVariable::ERROR_NO_LIST_VARIABLE_PRESENT
      */
     public function getListVariable() : Mailcode_Variables_Variable
     {
@@ -77,7 +77,7 @@ trait Mailcode_Traits_Commands_Validation_ListPropertyVariable
         throw new Mailcode_Exception(
             'No list variable present.',
             '',
-            Mailcode_Interfaces_Commands_ListPropertyVariable::ERROR_NO_LIST_VARIABLE_PRESENT
+            Mailcode_Interfaces_Commands_Validation_ListPropertyVariable::ERROR_NO_LIST_VARIABLE_PRESENT
         );
     }
 

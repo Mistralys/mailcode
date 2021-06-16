@@ -22,7 +22,7 @@ use AppUtils\OperationResult;
  * @subpackage Validation
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  *
- * @see Mailcode_Interfaces_Commands_Operand
+ * @see Mailcode_Interfaces_Commands_Validation_Operand
  *
  * @property OperationResult $validationResult
  * @property Mailcode_Parser_Statement_Validator $validator

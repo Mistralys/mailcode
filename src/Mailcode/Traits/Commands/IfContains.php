@@ -38,8 +38,8 @@ trait Mailcode_Traits_Commands_IfContains
     protected function getValidations() : array
     {
         return array(
-            'variable',
-            'case_sensitive',
+            Mailcode_Interfaces_Commands_Validation_Variable::VALIDATION_NAME_VARIABLE,
+            Mailcode_Interfaces_Commands_Validation_CaseSensitive::VALIDATION_NAME_CASE_SENSITIVE,
             'search_terms'
         );
     }

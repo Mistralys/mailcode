@@ -2,9 +2,9 @@
 /**
  * File containing the {@see \Mailcode\Mailcode_Commands_Command_Mono} class.
  *
- * @package Mailcode
- * @subpackage Commands
  * @see \Mailcode\Mailcode_Commands_Command_Mono
+ *@subpackage Commands
+ * @package Mailcode
  */
 
 declare(strict_types=1);
@@ -24,7 +24,7 @@ class Mailcode_Commands_Command_Mono
     extends Mailcode_Commands_Command
     implements
         Mailcode_Commands_Command_Type_Opening,
-        Mailcode_Interfaces_Commands_Multiline,
+        Mailcode_Interfaces_Commands_Validation_Multiline,
         Mailcode_Interfaces_Commands_PreProcessing
 {
     use Mailcode_Traits_Commands_Validation_Multiline;
@@ -75,7 +75,7 @@ class Mailcode_Commands_Command_Mono
     protected function getValidations() : array
     {
         return array(
-            Mailcode_Interfaces_Commands_Multiline::VALIDATION_NAME,
+            Mailcode_Interfaces_Commands_Validation_Multiline::VALIDATION_NAME_MULTILINE,
             'class'
         );
     }

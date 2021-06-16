@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use AppUtils\OperationResult;
+
 /**
  * Mailcode command: opening IF NUMBER statement.
  *
@@ -19,7 +21,7 @@ namespace Mailcode;
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * 
  * @property Mailcode_Parser_Statement $params
- * @property \AppUtils\OperationResult $validationResult
+ * @property OperationResult $validationResult
  * @property Mailcode_Parser_Statement_Validator $validator
  */
 trait Mailcode_Traits_Commands_IfNumber
@@ -30,8 +32,8 @@ trait Mailcode_Traits_Commands_IfNumber
     protected function getValidations() : array
     {
         return array(
-            'variable',
-            'value',
+            Mailcode_Interfaces_Commands_Validation_Variable::VALIDATION_NAME_VARIABLE,
+            Mailcode_Interfaces_Commands_Validation_Value::VALIDATION_NAME_VALUE,
             'numeric_value'
         );
     }

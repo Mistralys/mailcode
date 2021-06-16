@@ -33,10 +33,10 @@ trait Mailcode_Traits_Commands_IfVariable
     protected function getValidations() : array
     {
         return array(
-            Mailcode_Interfaces_Commands_Variable::VALIDATION_NAME,
-            Mailcode_Interfaces_Commands_Operand::VALIDATION_NAME,
-            Mailcode_Interfaces_Commands_Value::VALIDATION_NAME,
-            Mailcode_Interfaces_Commands_CaseSensitive::VALIDATION_NAME
+            Mailcode_Interfaces_Commands_Validation_Variable::VALIDATION_NAME_VARIABLE,
+            Mailcode_Interfaces_Commands_Validation_Operand::VALIDATION_NAME_OPERAND,
+            Mailcode_Interfaces_Commands_Validation_Value::VALIDATION_NAME_VALUE,
+            Mailcode_Interfaces_Commands_Validation_CaseSensitive::VALIDATION_NAME_CASE_SENSITIVE
         );
     }
     

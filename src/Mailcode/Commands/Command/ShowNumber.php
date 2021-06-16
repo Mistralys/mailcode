@@ -50,9 +50,10 @@ class Mailcode_Commands_Command_ShowNumber extends Mailcode_Commands_ShowBase
     protected function getValidations() : array
     {
         return array(
-            'variable',
+            Mailcode_Interfaces_Commands_Validation_Variable::VALIDATION_NAME_VARIABLE,
             'check_format',
-            'urlencode'
+            Mailcode_Interfaces_Commands_Validation_URLEncode::VALIDATION_NAME_URLENCODE,
+            Mailcode_Interfaces_Commands_Validation_URLDecode::VALIDATION_NAME_URLDECODE
         );
     }
 

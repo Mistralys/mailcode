@@ -60,10 +60,11 @@ class Mailcode_Commands_Command_ShowPhone extends Mailcode_Commands_ShowBase
     protected function getValidations() : array
     {
         return array(
-            'variable',
+            Mailcode_Interfaces_Commands_Validation_Variable::VALIDATION_NAME_VARIABLE,
             'source_format',
             'country_code',
-            'urlencode'
+            Mailcode_Interfaces_Commands_Validation_URLEncode::VALIDATION_NAME_URLENCODE,
+            Mailcode_Interfaces_Commands_Validation_URLDecode::VALIDATION_NAME_URLDECODE
         );
     }
 

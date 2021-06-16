@@ -2,7 +2,7 @@
 
 use Mailcode\Mailcode_Commands_CommonConstants;
 use Mailcode\Mailcode_Factory;
-use Mailcode\Mailcode_Interfaces_Commands_ListPropertyVariable;
+use Mailcode\Mailcode_Interfaces_Commands_Validation_ListPropertyVariable;
 
 final class Mailcode_ElseIfListBeginsWithTests extends MailcodeTestCase
 {
@@ -31,7 +31,7 @@ final class Mailcode_ElseIfListBeginsWithTests extends MailcodeTestCase
                 'label' => 'Not a list property variable',
                 'string' => '{if: 1 == 1}{elseif list-begins-with: $FOO "Search"}{end}',
                 'valid' => false,
-                'code' => Mailcode_Interfaces_Commands_ListPropertyVariable::VALIDATION_NOT_A_LIST_PROPERTY
+                'code' => Mailcode_Interfaces_Commands_Validation_ListPropertyVariable::VALIDATION_NOT_A_LIST_PROPERTY
             ),
             array(
                 'label' => 'Wrong keyword (ignored)',

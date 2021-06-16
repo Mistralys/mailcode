@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use AppUtils\OperationResult;
+
 /**
  * Mailcode command: opening IF EMPTY statement.
  *
@@ -19,7 +21,7 @@ namespace Mailcode;
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  * 
  * @property Mailcode_Parser_Statement $params
- * @property \AppUtils\OperationResult $validationResult
+ * @property OperationResult $validationResult
  * @property Mailcode_Parser_Statement_Validator $validator
  */
 trait Mailcode_Traits_Commands_IfEmpty
@@ -29,7 +31,7 @@ trait Mailcode_Traits_Commands_IfEmpty
     protected function getValidations() : array
     {
         return array(
-            'variable'
+            Mailcode_Interfaces_Commands_Validation_Variable::VALIDATION_NAME_VARIABLE
         );
     }
 }

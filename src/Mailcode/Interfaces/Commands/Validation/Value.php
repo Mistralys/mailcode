@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
-interface Mailcode_Interfaces_Commands_Value
+interface Mailcode_Interfaces_Commands_Validation_Value
 {
-    const VALIDATION_NAME = 'value';
+    const VALIDATION_NAME_VALUE = 'value';
 
     public function getValue() : string;
 }

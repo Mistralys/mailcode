@@ -31,9 +31,9 @@ trait Mailcode_Traits_Commands_IfEndsOrBeginsWith
     protected function getValidations() : array
     {
         return array(
-            Mailcode_Interfaces_Commands_Variable::VALIDATION_NAME,
-            Mailcode_Interfaces_Commands_SearchTerm::VALIDATION_NAME,
-            Mailcode_Interfaces_Commands_CaseSensitive::VALIDATION_NAME
+            Mailcode_Interfaces_Commands_Validation_Variable::VALIDATION_NAME_VARIABLE,
+            Mailcode_Interfaces_Commands_Validation_SearchTerm::VALIDATION_NAME_SEARCH_TERM,
+            Mailcode_Interfaces_Commands_Validation_CaseSensitive::VALIDATION_NAME_CASE_SENSITIVE
         );
     }
 }

@@ -14,11 +14,11 @@ namespace Mailcode;
 /**
  * Translates the "Mono" command to Apache Velocity.
  *
- * @package Mailcode
- * @subpackage Translator
+ * @see Mailcode_Commands_Command_Mono
+ *@subpackage Translator
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  *
- * @see Mailcode_Commands_Command_Mono
+ * @package Mailcode
  */
 class Mailcode_Translator_Syntax_ApacheVelocity_Mono extends Mailcode_Translator_Syntax_ApacheVelocity implements Mailcode_Translator_Command_Mono
 {

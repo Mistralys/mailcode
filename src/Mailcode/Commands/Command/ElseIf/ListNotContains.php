@@ -2,9 +2,9 @@
 /**
  * File containing the {@see Mailcode_Commands_Command_ElseIf_ListNotContains} class.
  *
- * @package Mailcode
- * @subpackage Commands
  * @see Mailcode_Commands_Command_ElseIf_ListNotContains
+ * @subpackage Commands
+ * @package Mailcode
  */
 
 declare(strict_types=1);
@@ -25,8 +25,8 @@ class Mailcode_Commands_Command_ElseIf_ListNotContains
         Mailcode_Commands_Command_ElseIf_NotContains
     implements
         Mailcode_Interfaces_Commands_ListVariables,
-        Mailcode_Interfaces_Commands_ListPropertyVariable,
-        Mailcode_Interfaces_Commands_RegexEnabled
+        Mailcode_Interfaces_Commands_Validation_ListPropertyVariable,
+        Mailcode_Interfaces_Commands_Validation_RegexEnabled
 {
     use Mailcode_Traits_Commands_ListVariables;
     use Mailcode_Traits_Commands_Validation_ListPropertyVariable;
@@ -35,8 +35,8 @@ class Mailcode_Commands_Command_ElseIf_ListNotContains
     protected function getValidations(): array
     {
         $validations = parent::getValidations();
-        $validations[] = Mailcode_Interfaces_Commands_ListPropertyVariable::VALIDATION_NAME;
-        $validations[] = Mailcode_Interfaces_Commands_RegexEnabled::VALIDATION_NAME;
+        $validations[] = Mailcode_Interfaces_Commands_Validation_ListPropertyVariable::VALIDATION_NAME_LIST_PROP_VARIABLE;
+        $validations[] = Mailcode_Interfaces_Commands_Validation_RegexEnabled::VALIDATION_NAME_REGEX_ENABLED;
 
         return $validations;
     }

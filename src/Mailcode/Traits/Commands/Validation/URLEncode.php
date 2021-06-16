@@ -23,7 +23,7 @@ namespace Mailcode;
  * @property Mailcode_Parser_Statement_Validator $validator
  * @property Mailcode_Parser_Statement $params
  *
- * @see Mailcode_Interfaces_Commands_URLEncode
+ * @see Mailcode_Interfaces_Commands_Validation_URLEncode
  */
 trait Mailcode_Traits_Commands_Validation_URLEncode
 {
