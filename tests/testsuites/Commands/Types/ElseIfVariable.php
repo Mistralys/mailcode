@@ -50,8 +50,17 @@ final class Mailcode_ElseIfVariableTests extends MailcodeTestCase
         $this->runCollectionTests($tests);
     }
 
+    public function test_notCaseInsensitive() : void
+    {
+        $command = Mailcode_Factory::elseIf()->varEquals('FOOBAR', 'Some Text', true);
+
+        $this->assertFalse($command->isCaseInsensitive());
+    }
+
     public function test_caseInsensitive() : void
     {
         $command = Mailcode_Factory::elseIf()->varEquals('FOOBAR', 'Some Text', true, true);
+
+        $this->assertTrue($command->isCaseInsensitive());
     }
 }
