@@ -142,15 +142,21 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity_Base_AbstractIf extends
         return $params->getNormalized();
     }
     
-    protected function _translateVariable(Mailcode_Variables_Variable $variable, string $comparator, string $value) : string
+    protected function _translateVariable(Mailcode_Variables_Variable $variable, string $comparator, string $value, bool $insensitive=false) : string
     {
-        $test = strtolower(trim($value, '"'));
+        $booleanCheck = strtolower(trim($value, '"'));
         $fullName = $variable->getFullName();
 
-        if(in_array($test, array('true', 'false')))
+        if(in_array($booleanCheck, array('true', 'false')))
+        {
+            $insensitive = true;
+            $value = '"'.$booleanCheck.'"';
+        }
+
+        if($insensitive)
         {
             $fullName .= '.toLowerCase()';
-            $value = '"'.$test.'"';
+            $value = mb_strtolower($value);
         }
 
         return sprintf(

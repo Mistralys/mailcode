@@ -2,6 +2,7 @@
 
 use Mailcode\Mailcode_Commands_Command;
 use Mailcode\Mailcode_Commands_CommonConstants;
+use Mailcode\Mailcode_Factory;
 
 final class Mailcode_ElseIfVariableTests extends MailcodeTestCase
 {
@@ -37,9 +38,20 @@ final class Mailcode_ElseIfVariableTests extends MailcodeTestCase
                 'string' => '{if: 1 == 1}{elseif variable: $FOO == "Something"}{end}',
                 'valid' => true,
                 'code' => 0
+            ),
+            array(
+                'label' => 'Case insensitive',
+                'string' => '{if: 1 == 1}{elseif variable: $FOO == "Something" insensitive:}{end}',
+                'valid' => true,
+                'code' => 0
             )
         );
         
         $this->runCollectionTests($tests);
+    }
+
+    public function test_caseInsensitive() : void
+    {
+        $command = Mailcode_Factory::elseIf()->varEquals('FOOBAR', 'Some Text', true, true);
     }
 }

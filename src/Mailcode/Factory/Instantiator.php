@@ -51,8 +51,15 @@ class Mailcode_Factory_Instantiator
         throw $this->exceptionUnexpectedType('IfBase', $command);
     }
     
-    public function buildIfVar(string $ifType, string $variable, string $operand, string $value, bool $quoteValue=false) : Mailcode_Commands_IfBase
+    public function buildIfVar(string $ifType, string $variable, string $operand, string $value, bool $quoteValue=false, bool $insensitive=false) : Mailcode_Commands_IfBase
     {
+        $variable = $this->filterVariableName($variable);
+
+        if($insensitive)
+        {
+            $value = mb_strtolower($value);
+        }
+
         if($quoteValue)
         {
             $value = $this->quoteString($value);
@@ -60,11 +67,16 @@ class Mailcode_Factory_Instantiator
         
         $condition = sprintf(
             "%s %s %s",
-            $this->filterVariableName($variable),
+            $variable,
             $operand,
             $value
         );
-        
+
+        if($insensitive)
+        {
+            $condition .= ' '.Mailcode_Commands_Keywords::TYPE_INSENSITIVE;
+        }
+
         return $this->buildIf($ifType, $condition, 'variable');
     }
     

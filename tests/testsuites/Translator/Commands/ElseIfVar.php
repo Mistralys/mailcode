@@ -13,6 +13,11 @@ final class Translator_Velocity_ElseIfVarTests extends VelocityTestCase
                 'expected' => '#elseif($FOO.BAR == "Value")'
             ),
             array(
+                'label' => 'Case insensitive string',
+                'mailcode' => Mailcode_Factory::elseIf()->varEqualsString('FOO.BAR', 'Some Text', true),
+                'expected' => '#elseif($FOO.BAR.toLowerCase() == "some text")'
+            ),
+            array(
                 'label' => 'Boolean value',
                 'mailcode' => Mailcode_Factory::elseIf()->varEqualsString('FOO.BAR', 'true'),
                 'expected' => '#elseif($FOO.BAR.toLowerCase() == "true")'
