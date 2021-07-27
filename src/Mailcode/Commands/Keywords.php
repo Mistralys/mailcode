@@ -27,6 +27,7 @@ class Mailcode_Commands_Keywords
     const TYPE_URLENCODE = 'urlencode:';
     const TYPE_URLDECODE = 'urldecode:';
     const TYPE_MULTILINE = 'multiline:';
+    const TYPE_NOHTML = 'nohtml:';
 
     /**
      * @return string[]
@@ -39,7 +40,8 @@ class Mailcode_Commands_Keywords
             self::TYPE_URLDECODE,
             self::TYPE_URLENCODE,
             self::TYPE_REGEX,
-            self::TYPE_MULTILINE
+            self::TYPE_MULTILINE,
+            self::TYPE_NOHTML
         );
     }
 }

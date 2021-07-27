@@ -29,10 +29,20 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ShowSnippet extends Mailcode_Tra
     {
         $varName = ltrim($command->getVariableName(), '$');
 
-        $statement = sprintf(
-            '%s.replaceAll($esc.newline, "<br/>")',
-            $varName
-        );
+        if($command->isHTMLEnabled())
+        {
+            $statement = sprintf(
+                '%s.replaceAll($esc.newline, "<br/>")',
+                $varName
+            );
+        }
+        else
+        {
+            $statement = sprintf(
+                '%s',
+                $varName
+            );
+        }
 
         return $this->addURLEncoding($command, $statement);
     }

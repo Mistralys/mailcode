@@ -54,4 +54,9 @@ class Mailcode_Parser_Statement_Tokenizer_Token_Keyword extends Mailcode_Parser_
     {
         return $this->getKeyword() === Mailcode_Commands_Keywords::TYPE_URLDECODE;
     }
+
+    public function isNoHTML() : bool
+    {
+        return $this->getKeyword() === Mailcode_Commands_Keywords::TYPE_NOHTML;
+    }
 }

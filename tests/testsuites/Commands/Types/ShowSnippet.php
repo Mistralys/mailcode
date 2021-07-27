@@ -2,8 +2,10 @@
 
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands_Command;
+use Mailcode\Mailcode_Commands_Command_ShowSnippet;
 use Mailcode\Mailcode_Factory;
 use Mailcode\Mailcode_Commands_CommonConstants;
+use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Keyword;
 
 final class Mailcode_ShowSnippetTests extends MailcodeTestCase
 {
@@ -63,5 +65,34 @@ final class Mailcode_ShowSnippetTests extends MailcodeTestCase
         $this->assertTrue($cmd->isURLDecoded());
 
         $this->assertEquals('{showsnippet: $FOO urldecode:}', Mailcode_Factory::show()->snippet('$FOO')->setURLDecoding(true)->getNormalized());
+    }
+
+    /**
+     * Default behavior is to have HTML enabled.
+     */
+    public function test_defaultWithHTML() : void
+    {
+        $cmd = Mailcode_Factory::show()->snippet('snippetname');
+
+        $this->assertNull($cmd->getNoHTMLToken());
+        $this->assertTrue($cmd->isHTMLEnabled());
+    }
+
+    public function test_factory_noHTML() : void
+    {
+        $cmd = Mailcode_Factory::show()
+            ->snippet('snippetname')
+            ->setHTMLEnabled(false);
+
+        $this->assertInstanceOf(Mailcode_Parser_Statement_Tokenizer_Token_Keyword::class, $cmd->getNoHTMLToken());
+        $this->assertFalse($cmd->isHTMLEnabled());
+    }
+
+    public function test_parse_noHTML() : void
+    {
+        $cmd = Mailcode::create()->parseString('{showsnippet: $FOO nohtml:}')->getFirstCommand();
+
+        $this->assertInstanceOf(Mailcode_Commands_Command_ShowSnippet::class, $cmd);
+        $this->assertFalse($cmd->isHTMLEnabled());
     }
 }

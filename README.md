@@ -87,8 +87,17 @@ The amount of hashes determines the target length of the number. This example wi
 
 ### Display a text snippet
 
+Display a raw text snippet. Newlines are converted to HTML `<br>` 
+tags automatically.
+
 ```
 {showsnippet: $snippet_name}
+```
+
+To disable the  `<br>` tags, use the `nohtml:` keyword:
+
+```
+{showsnippet: $snippet_name nohtml:}
 ```
 
 ### Phone numbers in URLs
