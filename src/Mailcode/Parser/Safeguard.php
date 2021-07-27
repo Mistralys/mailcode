@@ -11,8 +11,6 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
-use AppUtils\ConvertHelper;
-
 /**
  * Command safeguarder: used to replace the mailcode commands
  * in a string with placeholders, to allow safe text transformation
