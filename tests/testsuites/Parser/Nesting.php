@@ -126,4 +126,33 @@ final class Parser_NestingTests extends MailcodeTestCase
         $this->assertContains($ifSecond, $else->getSiblingCommands());
         $this->assertSame($ifFirst, $end->getOpeningCommand());
     }
+
+    /**
+     * Test attempting to reproduce a bug where the space
+     * between two commands gets stripped out during the
+     * safeguarding.
+     */
+    public function test_spaceBug() : void
+    {
+        $string = '<p>Dear %1$s %2$s,</p><p>Thank you for your patronage.</p>';
+
+        $safeguard = Mailcode::create()->createSafeguard(sprintf(
+            $string,
+            '{showvar: $CUSTOMER.FIRST_NAME}',
+            '{showvar: $CUSTOMER.LAST_NAME}'
+        ));
+
+        $placeholders = $safeguard->getPlaceholderStrings();
+
+        $this->assertCount(2, $placeholders);
+
+        $this->assertSame(
+            sprintf(
+                $string,
+                $placeholders[0],
+                $placeholders[1]
+            ),
+            $safeguard->makeSafePartial()
+        );
+    }
 }
