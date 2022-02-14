@@ -27,10 +27,10 @@ class Mailcode_Commands_Command_Code
     use Mailcode_Traits_Commands_ProtectedContent;
     use Mailcode_Traits_Commands_Type_Opening;
 
-    const ERROR_LANG_TOKEN_MISSING = 73101;
+    public const ERROR_LANG_TOKEN_MISSING = 73101;
 
-    const VALIDATION_LANGUAGE_NOT_SPECIFIED = 72901;
-    const VALIDATION_UNKNOWN_LANGUAGE = 72902;
+    public const VALIDATION_LANGUAGE_NOT_SPECIFIED = 72901;
+    public const VALIDATION_UNKNOWN_LANGUAGE = 72902;
 
     /**
      * @var Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral|NULL

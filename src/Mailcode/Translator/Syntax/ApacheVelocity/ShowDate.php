@@ -22,13 +22,13 @@ use AppUtils\ConvertHelper;
  */
 class Mailcode_Translator_Syntax_ApacheVelocity_ShowDate extends Mailcode_Translator_Syntax_ApacheVelocity implements Mailcode_Translator_Command_ShowDate
 {
-    const ERROR_UNKNOWN_DATE_FORMAT_CHARACTER = 55501;
+    public const ERROR_UNKNOWN_DATE_FORMAT_CHARACTER = 55501;
 
    /**
     * The date format used in the date variable. This is used to convert
     * the native date to the format specified in the variable command.
     */
-    const DEFAULT_INTERNAL_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
+    public const DEFAULT_INTERNAL_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
 
    /**
     * @var string[]string

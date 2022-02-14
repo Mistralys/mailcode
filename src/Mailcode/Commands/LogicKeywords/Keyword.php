@@ -23,11 +23,11 @@ use AppUtils\OperationResult;
  */
 class Mailcode_Commands_LogicKeywords_Keyword extends OperationResult
 {
-    const ERROR_CANNOT_GET_INVALID_COMMAND = 60601;
-    const ERROR_CANNOT_OVERWRITE_PARAMETERS = 60602;
+    public const ERROR_CANNOT_GET_INVALID_COMMAND = 60601;
+    public const ERROR_CANNOT_OVERWRITE_PARAMETERS = 60602;
     
-    const VALIDATION_NO_COMMAND_CREATED = 61101;
-    const VALIDATION_INVALID_COMMAND_CREATED = 61102;
+    public const VALIDATION_NO_COMMAND_CREATED = 61101;
+    public const VALIDATION_INVALID_COMMAND_CREATED = 61102;
     
    /**
     * @var Mailcode_Commands_LogicKeywords

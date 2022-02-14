@@ -23,8 +23,8 @@ use AppUtils\FileHelper_Exception;
  */
 class Mailcode_Commands_Command_ShowPhone extends Mailcode_Commands_ShowBase
 {
-    const VALIDATION_SOURCE_FORMAT_MISSING = 84001;
-    const VALIDATION_INVALID_COUNTRY = 84002;
+    public const VALIDATION_SOURCE_FORMAT_MISSING = 84001;
+    public const VALIDATION_INVALID_COUNTRY = 84002;
 
     /**
      * Two-letter country code, uppercase.

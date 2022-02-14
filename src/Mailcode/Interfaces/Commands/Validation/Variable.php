@@ -6,7 +6,7 @@ namespace Mailcode;
 
 interface Mailcode_Interfaces_Commands_Validation_Variable
 {
-    const VALIDATION_NAME_VARIABLE = 'variable';
+    public const VALIDATION_NAME_VARIABLE = 'variable';
 
     public function getVariable() : Mailcode_Variables_Variable;
     public function getVariableName() : string;

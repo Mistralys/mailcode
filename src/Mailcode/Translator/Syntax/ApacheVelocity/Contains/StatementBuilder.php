@@ -6,7 +6,7 @@ namespace Mailcode;
 
 class Mailcode_Translator_Syntax_ApacheVelocity_Contains_StatementBuilder
 {
-    const ERROR_INVALID_LIST_VARIABLE_NAME = 76701;
+    public const ERROR_INVALID_LIST_VARIABLE_NAME = 76701;
 
     /**
      * @var Mailcode_Variables_Variable

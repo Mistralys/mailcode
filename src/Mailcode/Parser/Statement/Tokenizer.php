@@ -21,8 +21,8 @@ namespace Mailcode;
  */
 class Mailcode_Parser_Statement_Tokenizer
 {
-    const ERROR_TOKENIZE_METHOD_MISSING = 49801;
-    const ERROR_INVALID_TOKEN_CREATED = 49802;
+    public const ERROR_TOKENIZE_METHOD_MISSING = 49801;
+    public const ERROR_INVALID_TOKEN_CREATED = 49802;
     
     /**
      * @var string[]

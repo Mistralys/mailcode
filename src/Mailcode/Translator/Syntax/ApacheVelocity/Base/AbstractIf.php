@@ -20,8 +20,8 @@ namespace Mailcode;
  */
 abstract class Mailcode_Translator_Syntax_ApacheVelocity_Base_AbstractIf extends Mailcode_Translator_Syntax_ApacheVelocity
 {
-    const ERROR_CANNOT_GET_KEYWORD_SIGN = 60801;
-    const ERROR_INVALID_KEYWORD_COMMAND_TYPE = 60802;
+    public const ERROR_CANNOT_GET_KEYWORD_SIGN = 60801;
+    public const ERROR_INVALID_KEYWORD_COMMAND_TYPE = 60802;
     
     abstract protected function getCommandTemplate() : string;
 

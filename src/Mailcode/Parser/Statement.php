@@ -23,8 +23,8 @@ use AppUtils\OperationResult;
  */
 class Mailcode_Parser_Statement
 {
-    const VALIDATION_EMPTY = 48801;
-    const VALIDATION_UNQUOTED_STRING_LITERALS = 48802;
+    public const VALIDATION_EMPTY = 48801;
+    public const VALIDATION_UNQUOTED_STRING_LITERALS = 48802;
     
    /**
     * @var string

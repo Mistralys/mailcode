@@ -23,7 +23,7 @@ namespace Mailcode;
  */
 class Mailcode_Parser_Safeguard_Placeholder
 {
-    const ERROR_PLACEHOLDER_TOO_LONG = 47901;
+    public const ERROR_PLACEHOLDER_TOO_LONG = 47901;
     
    /**
     * @var int

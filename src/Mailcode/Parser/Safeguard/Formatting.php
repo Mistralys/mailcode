@@ -28,9 +28,9 @@ use function AppUtils\parseVariable;
  */
 class Mailcode_Parser_Safeguard_Formatting
 {
-    const ERROR_UNKNOWN_FORMATTER = 65901;
-    const ERROR_TOO_MANY_REPLACERS = 65902;
-    const ERROR_NO_FORMATTERS_ADDED = 65903;
+    public const ERROR_UNKNOWN_FORMATTER = 65901;
+    public const ERROR_TOO_MANY_REPLACERS = 65902;
+    public const ERROR_NO_FORMATTERS_ADDED = 65903;
     
    /**
     * @var Mailcode_Parser_Safeguard

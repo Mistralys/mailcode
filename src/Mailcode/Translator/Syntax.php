@@ -21,7 +21,7 @@ namespace Mailcode;
  */
 class Mailcode_Translator_Syntax
 {
-    const ERROR_UNKNOWN_COMMAND_TYPE = 50401;
+    public const ERROR_UNKNOWN_COMMAND_TYPE = 50401;
     
    /**
     * @var string

@@ -22,7 +22,7 @@ use AppUtils\FileHelper;
  */
 class Mailcode_Translator
 {
-    const ERROR_INVALID_SYNTAX_NAME = 73001;
+    public const ERROR_INVALID_SYNTAX_NAME = 73001;
 
     /**
      * Creates an instance of the specified syntax.

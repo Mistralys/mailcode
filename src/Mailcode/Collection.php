@@ -22,8 +22,8 @@ use AppUtils\OperationResult;
  */
 class Mailcode_Collection
 {
-    const ERROR_CANNOT_RETRIEVE_FIRST_ERROR = 52301;
-    const ERROR_CANNOT_MODIFY_FINALIZED = 52302;
+    public const ERROR_CANNOT_RETRIEVE_FIRST_ERROR = 52301;
+    public const ERROR_CANNOT_MODIFY_FINALIZED = 52302;
     
    /**
     * @var Mailcode_Commands_Command[]

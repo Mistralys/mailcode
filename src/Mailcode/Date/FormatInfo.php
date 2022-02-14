@@ -24,12 +24,12 @@ use AppUtils\OperationResult;
  */
 class Mailcode_Date_FormatInfo
 {
-    const VALIDATION_INVALID_FORMAT_CHARACTER = 55801;
-    const VALIDATION_EMPTY_FORMAT_STRING = 55802;
+    public const VALIDATION_INVALID_FORMAT_CHARACTER = 55801;
+    public const VALIDATION_EMPTY_FORMAT_STRING = 55802;
     
-    const CHARTYPE_DATE = 'date';
-    const CHARTYPE_TIME = 'time';
-    const CHARTYPE_PUNCTUATION = 'punctuation';
+    public const CHARTYPE_DATE = 'date';
+    public const CHARTYPE_TIME = 'time';
+    public const CHARTYPE_PUNCTUATION = 'punctuation';
     
    /**
     * @var string

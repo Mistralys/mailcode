@@ -22,7 +22,7 @@ use AppUtils\FileHelper;
  */
 class Mailcode_Styler
 {
-    const ERROR_CSS_FILE_NOT_FOUND = 60901;
+    public const ERROR_CSS_FILE_NOT_FOUND = 60901;
     
    /**
     * @var string

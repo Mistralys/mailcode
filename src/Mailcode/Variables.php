@@ -20,7 +20,7 @@ namespace Mailcode;
  */
 class Mailcode_Variables
 {
-    const REGEX_VARIABLE_NAME = '/\$\s*([A-Z0-9_]+)\s*\.\s*([A-Z0-9_]+)|\$\s*([A-Z0-9_]+)/six';
+    public const REGEX_VARIABLE_NAME = '/\$\s*([A-Z0-9_]+)\s*\.\s*([A-Z0-9_]+)|\$\s*([A-Z0-9_]+)/six';
     
    /**
     * @var Mailcode_Variables_Collection_Regular

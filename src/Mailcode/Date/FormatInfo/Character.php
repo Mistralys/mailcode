@@ -21,7 +21,7 @@ namespace Mailcode;
  */
 class Mailcode_Date_FormatInfo_Character
 {
-    const ERROR_UNHANDLED_CHARTYPE = 55601;
+    public const ERROR_UNHANDLED_CHARTYPE = 55601;
     
    /**
     * @var string

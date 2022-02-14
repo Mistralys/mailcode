@@ -20,7 +20,7 @@ namespace Mailcode;
  */
 class Mailcode_Commands_Command_ShowVariable extends Mailcode_Commands_ShowBase
 {
-    const VALIDATION_TOO_MANY_PARAMETERS = 69701;
+    public const VALIDATION_TOO_MANY_PARAMETERS = 69701;
 
     public function getName() : string
     {

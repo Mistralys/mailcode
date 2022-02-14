@@ -20,7 +20,7 @@ namespace Mailcode;
  */
 class Mailcode_Parser_Statement_Validator_Type_Keyword extends Mailcode_Parser_Statement_Validator_TokenType
 {
-    const ERROR_NO_KEYWORD_TOKEN_FOUND = 62701;
+    public const ERROR_NO_KEYWORD_TOKEN_FOUND = 62701;
     
    /**
     * The name of the keyword, with ":" appended.

@@ -20,7 +20,7 @@ namespace Mailcode;
  */
 class Mailcode_Parser_Statement_Validator_Type_StringLiteral extends Mailcode_Parser_Statement_Validator_TokenType
 {
-    const ERROR_NO_STRING_TOKEN_FOUND = 62601;
+    public const ERROR_NO_STRING_TOKEN_FOUND = 62601;
     
     protected function getTokenClass() : string
     {

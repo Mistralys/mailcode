@@ -6,7 +6,7 @@ namespace Mailcode;
 
 interface Mailcode_Interfaces_Commands_Validation_URLDecode
 {
-    const VALIDATION_NAME_URLDECODE = 'urldecode';
+    public const VALIDATION_NAME_URLDECODE = 'urldecode';
 
     public function getURLDecodeToken() : ?Mailcode_Parser_Statement_Tokenizer_Token_Keyword;
 

@@ -22,9 +22,9 @@ use AppUtils\ConvertHelper;
  */
 class Mailcode_Parser
 {
-    const ERROR_NOT_A_COMMAND = 73301;
+    public const ERROR_NOT_A_COMMAND = 73301;
 
-    const COMMAND_REGEX_PARTS = array( 
+    public const COMMAND_REGEX_PARTS = array( 
         '{\s*([a-z]+)\s*}',
         '{\s*([a-z]+)\s*:([^}]*)}',
         '{\s*([a-z]+)\s+([a-z-]+)\s*:([^}]*)}'

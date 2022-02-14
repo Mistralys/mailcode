@@ -20,7 +20,7 @@ namespace Mailcode;
  */
 abstract class Mailcode_Parser_Statement_Validator_TokenType extends Mailcode_Parser_Statement_Validator_Type
 {
-    const VALIDATION_ERROR_COMMAND_WITHOUT_PARAMETERS = 62401;
+    public const VALIDATION_ERROR_COMMAND_WITHOUT_PARAMETERS = 62401;
     
    /**
     * @var integer

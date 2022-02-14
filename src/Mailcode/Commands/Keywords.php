@@ -21,13 +21,13 @@ namespace Mailcode;
  */
 class Mailcode_Commands_Keywords
 {
-    const TYPE_IN = 'in:';
-    const TYPE_INSENSITIVE = 'insensitive:';
-    const TYPE_REGEX = 'regex:';
-    const TYPE_URLENCODE = 'urlencode:';
-    const TYPE_URLDECODE = 'urldecode:';
-    const TYPE_MULTILINE = 'multiline:';
-    const TYPE_NOHTML = 'nohtml:';
+    public const TYPE_IN = 'in:';
+    public const TYPE_INSENSITIVE = 'insensitive:';
+    public const TYPE_REGEX = 'regex:';
+    public const TYPE_URLENCODE = 'urlencode:';
+    public const TYPE_URLDECODE = 'urldecode:';
+    public const TYPE_MULTILINE = 'multiline:';
+    public const TYPE_NOHTML = 'nohtml:';
 
     /**
      * @return string[]

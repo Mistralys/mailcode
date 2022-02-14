@@ -6,7 +6,7 @@ namespace Mailcode;
 
 interface Mailcode_Interfaces_Commands_Validation_NoHTML
 {
-    const VALIDATION_NAME_NOHTML = 'nohtml';
+    public const VALIDATION_NAME_NOHTML = 'nohtml';
 
     public function setHTMLEnabled(bool $enabled=true);
 

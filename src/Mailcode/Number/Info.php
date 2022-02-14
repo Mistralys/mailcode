@@ -9,9 +9,9 @@ use AppUtils\OperationResult;
 
 class Mailcode_Number_Info extends OperationResult
 {
-    const ERROR_VALIDATION_METHOD_MISSING = 72301;
+    public const ERROR_VALIDATION_METHOD_MISSING = 72301;
 
-    const DEFAULT_FORMAT = "1000.00";
+    public const DEFAULT_FORMAT = "1000.00";
 
     /**
      * @var string

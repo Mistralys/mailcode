@@ -25,11 +25,11 @@ use AppUtils\OperationResult;
  */
 class Mailcode_Commands_LogicKeywords extends OperationResult
 {
-    const ERROR_CANNOT_APPEND_INVALID_KEYWORD = 60501;
-    const ERROR_KEYWORD_MATCHED_STRING_NOT_FOUND = 60502;
+    public const ERROR_CANNOT_APPEND_INVALID_KEYWORD = 60501;
+    public const ERROR_KEYWORD_MATCHED_STRING_NOT_FOUND = 60502;
     
-    const VALIDATION_CANNOT_MIX_LOGIC_KEYWORDS = 60701;
-    const VALIDATION_INVALID_SUB_COMMAND = 60702;
+    public const VALIDATION_CANNOT_MIX_LOGIC_KEYWORDS = 60701;
+    public const VALIDATION_INVALID_SUB_COMMAND = 60702;
     
    /**
     * @var string

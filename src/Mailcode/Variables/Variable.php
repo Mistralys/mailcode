@@ -25,12 +25,12 @@ use AppUtils\OperationResult;
  */
 class Mailcode_Variables_Variable
 {
-    const ERROR_MISSING_VALIDATION_METHOD = 48601;
+    public const ERROR_MISSING_VALIDATION_METHOD = 48601;
     
-    const VALIDATION_ERROR_PATH_NUMERIC = 48201;
-    const VALIDATION_ERROR_NAME_NUMERIC = 48202;
-    const VALIDATION_ERROR_PATH_UNDERSCORE = 48203;
-    const VALIDATION_ERROR_NAME_UNDERSCORE = 48204;
+    public const VALIDATION_ERROR_PATH_NUMERIC = 48201;
+    public const VALIDATION_ERROR_NAME_NUMERIC = 48202;
+    public const VALIDATION_ERROR_PATH_UNDERSCORE = 48203;
+    public const VALIDATION_ERROR_NAME_UNDERSCORE = 48204;
     
    /**
     * @var string

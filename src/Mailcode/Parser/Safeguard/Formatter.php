@@ -25,7 +25,7 @@ use function AppUtils\parseVariable;
  */
 abstract class Mailcode_Parser_Safeguard_Formatter
 {
-    const ERROR_INVALID_LOCATION_INSTANCE = 65601;
+    public const ERROR_INVALID_LOCATION_INSTANCE = 65601;
     
    /**
     * @var Mailcode_Parser_Safeguard_Formatting

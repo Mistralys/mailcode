@@ -22,7 +22,7 @@ namespace Mailcode;
  */
 abstract class Mailcode_Parser_Safeguard_Formatter_Location
 {
-    const ERROR_PLACEHOLDER_NOT_FOUND = 66001;
+    public const ERROR_PLACEHOLDER_NOT_FOUND = 66001;
     
    /**
     * @var Mailcode_Parser_Safeguard_Formatter

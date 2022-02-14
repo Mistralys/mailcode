@@ -6,7 +6,7 @@ namespace Mailcode;
 
 interface Mailcode_Interfaces_Commands_Validation_RegexEnabled
 {
-    const VALIDATION_NAME_REGEX_ENABLED = 'regex_enabled';
+    public const VALIDATION_NAME_REGEX_ENABLED = 'regex_enabled';
 
     public function isRegexEnabled() : bool;
     public function getRegexToken() : ?Mailcode_Parser_Statement_Tokenizer_Token_Keyword;

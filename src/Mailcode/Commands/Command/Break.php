@@ -20,7 +20,7 @@ namespace Mailcode;
  */
 class Mailcode_Commands_Command_Break extends Mailcode_Commands_Command implements Mailcode_Commands_Command_Type_Standalone
 {
-    const VALIDATION_NO_PARENT_FOR = 75701;
+    public const VALIDATION_NO_PARENT_FOR = 75701;
 
     public function getName() : string
     {

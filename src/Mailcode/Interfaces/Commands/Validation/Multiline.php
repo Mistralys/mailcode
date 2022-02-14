@@ -6,7 +6,7 @@ namespace Mailcode;
 
 interface Mailcode_Interfaces_Commands_Validation_Multiline
 {
-    const VALIDATION_NAME_MULTILINE = 'multiline';
+    public const VALIDATION_NAME_MULTILINE = 'multiline';
 
     public function isMultiline() : bool;
     public function getMultilineToken() : ?Mailcode_Parser_Statement_Tokenizer_Token_Keyword;

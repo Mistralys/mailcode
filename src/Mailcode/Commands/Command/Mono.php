@@ -30,7 +30,7 @@ class Mailcode_Commands_Command_Mono
     use Mailcode_Traits_Commands_Validation_Multiline;
     use Mailcode_Traits_Commands_Type_Opening;
 
-    const ERROR_INVALID_CSS_CLASS_NAME = 82201;
+    public const ERROR_INVALID_CSS_CLASS_NAME = 82201;
 
     /**
      * @var string[]

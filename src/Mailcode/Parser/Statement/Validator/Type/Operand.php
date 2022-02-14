@@ -20,7 +20,7 @@ namespace Mailcode;
  */
 class Mailcode_Parser_Statement_Validator_Type_Operand extends Mailcode_Parser_Statement_Validator_TokenType
 {
-    const ERROR_NO_OPERAND_TOKEN_FOUND = 62901;
+    public const ERROR_NO_OPERAND_TOKEN_FOUND = 62901;
     
    /**
     * @var string

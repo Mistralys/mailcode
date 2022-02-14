@@ -23,8 +23,8 @@ use function AppUtils\parseVariable;
  */
 class Mailcode_StringContainer
 {
-    const ERROR_INVALID_CALLABLE = 65701;
-    const ERROR_UPDATE_CALLED_DURING_UPDATE_OPERATION = 65702;
+    public const ERROR_INVALID_CALLABLE = 65701;
+    public const ERROR_UPDATE_CALLED_DURING_UPDATE_OPERATION = 65702;
     
    /**
     * @var string

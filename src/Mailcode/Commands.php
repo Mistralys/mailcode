@@ -23,9 +23,9 @@ use AppUtils\FileHelper;
  */
 class Mailcode_Commands
 {
-    const ERROR_COMMAND_NAME_DOES_NOT_EXIST = 45901;
-    const ERROR_COMMAND_DOES_NOT_EXIST = 45902;
-    const ERROR_INVALID_DUMMY_COMMAND_TYPE = 45903;
+    public const ERROR_COMMAND_NAME_DOES_NOT_EXIST = 45901;
+    public const ERROR_COMMAND_DOES_NOT_EXIST = 45902;
+    public const ERROR_INVALID_DUMMY_COMMAND_TYPE = 45903;
     
    /**
     * @var Mailcode_Commands_Command[]

@@ -22,7 +22,7 @@ namespace Mailcode;
  */
 class Mailcode_Parser_Safeguard_Formatter_Type_HTMLHighlighting_Location extends Mailcode_Parser_Safeguard_Formatter_Location
 {
-    const COMMAND_MARKER = '__MAILCODE_COMMAND__';
+    public const COMMAND_MARKER = '__MAILCODE_COMMAND__';
     
    /**
     * @var boolean

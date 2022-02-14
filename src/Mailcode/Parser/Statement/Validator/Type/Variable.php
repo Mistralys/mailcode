@@ -20,7 +20,7 @@ namespace Mailcode;
  */
 class Mailcode_Parser_Statement_Validator_Type_Variable extends Mailcode_Parser_Statement_Validator_TokenType
 {
-    const ERROR_NO_VARIABLE_TOKEN_FOUND = 62601;
+    public const ERROR_NO_VARIABLE_TOKEN_FOUND = 62601;
     
     protected function getTokenClass() : string
     {

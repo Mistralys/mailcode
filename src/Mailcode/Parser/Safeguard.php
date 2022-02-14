@@ -49,8 +49,8 @@ namespace Mailcode;
  */
 class Mailcode_Parser_Safeguard
 {
-    const ERROR_INVALID_COMMANDS = 47801;
-    const ERROR_PLACEHOLDER_NOT_FOUND = 47804;
+    public const ERROR_INVALID_COMMANDS = 47801;
+    public const ERROR_PLACEHOLDER_NOT_FOUND = 47804;
 
    /**
     * @var Mailcode_Parser

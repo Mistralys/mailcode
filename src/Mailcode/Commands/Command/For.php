@@ -23,14 +23,14 @@ class Mailcode_Commands_Command_For extends Mailcode_Commands_Command implements
     use Mailcode_Traits_Commands_ListVariables;
     use Mailcode_Traits_Commands_Type_Opening;
 
-    const ERROR_SOURCE_VARIABLE_NOT_AVAILABLE = 64101;
-    const ERROR_LOOP_VARIABLE_NOT_AVAILABLE = 64102;
+    public const ERROR_SOURCE_VARIABLE_NOT_AVAILABLE = 64101;
+    public const ERROR_LOOP_VARIABLE_NOT_AVAILABLE = 64102;
     
-    const VALIDATION_INVALID_FOR_STATEMENT = 49701;
-    const VALIDATION_WRONG_KEYWORD = 49702;
-    const VALIDATION_VARIABLE_NAME_IS_THE_SAME = 49703;
-    const VALIDATION_VARIABLE_NAME_WITH_DOT = 49704;
-    const VALIDATION_LOOP_VARIABLE_NAME_WITH_DOT = 49705;
+    public const VALIDATION_INVALID_FOR_STATEMENT = 49701;
+    public const VALIDATION_WRONG_KEYWORD = 49702;
+    public const VALIDATION_VARIABLE_NAME_IS_THE_SAME = 49703;
+    public const VALIDATION_VARIABLE_NAME_WITH_DOT = 49704;
+    public const VALIDATION_LOOP_VARIABLE_NAME_WITH_DOT = 49705;
     
    /**
     * @var Mailcode_Parser_Statement_Tokenizer_Token_Variable|NULL

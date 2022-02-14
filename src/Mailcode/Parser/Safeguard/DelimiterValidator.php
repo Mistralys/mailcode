@@ -24,9 +24,9 @@ use stdClass;
  */
 class Mailcode_Parser_Safeguard_DelimiterValidator extends OperationResult
 {
-    const ERROR_EMPTY_DELIMITER = 73601;
-    const ERROR_DELIMITER_TOO_SHORT = 73602;
-    const ERROR_DELIMITER_URLENCODE_INCOMPATIBLE = 73603;
+    public const ERROR_EMPTY_DELIMITER = 73601;
+    public const ERROR_DELIMITER_TOO_SHORT = 73602;
+    public const ERROR_DELIMITER_URLENCODE_INCOMPATIBLE = 73603;
 
     /**
      * @var string

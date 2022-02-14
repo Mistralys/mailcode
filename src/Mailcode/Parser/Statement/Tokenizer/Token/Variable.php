@@ -20,7 +20,7 @@ namespace Mailcode;
  */
 class Mailcode_Parser_Statement_Tokenizer_Token_Variable extends Mailcode_Parser_Statement_Tokenizer_Token
 {
-    const ERROR_NOT_A_VARIABLE_INSTANCE = 49501;
+    public const ERROR_NOT_A_VARIABLE_INSTANCE = 49501;
     
     public function getVariable() : Mailcode_Variables_Variable
     {

@@ -30,15 +30,15 @@ class Mailcode_Parser_Safeguard_Formatter_Type_MarkVariables extends Mailcode_Pa
 {
     use Mailcode_Traits_Formatting_HTMLHighlighting;
     
-    const ERROR_INVALID_TAG_TEMPLATE = 66101;
-    const ERROR_CANNOT_FIND_STYLESHEET = 66102;
-    const ERROR_CANNOT_EXTRACT_STYLES = 66103;
+    public const ERROR_INVALID_TAG_TEMPLATE = 66101;
+    public const ERROR_CANNOT_FIND_STYLESHEET = 66102;
+    public const ERROR_CANNOT_EXTRACT_STYLES = 66103;
 
-    const TEMPLATE_MODE_CLASS = 'class';
-    const TEMPLATE_MODE_INLINE = 'inline';
-    const TEMPLATE_MODE_CUSTOM = 'custom';
+    public const TEMPLATE_MODE_CLASS = 'class';
+    public const TEMPLATE_MODE_INLINE = 'inline';
+    public const TEMPLATE_MODE_CUSTOM = 'custom';
 
-    const DEFAULT_CLASS_NAME = 'mailcode-marked-variable';
+    public const DEFAULT_CLASS_NAME = 'mailcode-marked-variable';
     
     /**
      * @var array<string,string>
