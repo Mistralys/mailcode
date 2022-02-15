@@ -303,4 +303,20 @@ height:45px;
         $this->assertTrue($collection->isValid(), $message);
         $this->assertSame(2, $collection->countCommands());    
     }
+
+    public function test_parseString_bracketsInStringLiterals() : void
+    {
+        $parser = Mailcode::create()->getParser();
+
+        $collection = $parser->parseString(
+            'Line with {if list-contains: $LIST.PROPERTY "[0-9]{3}" regex:}{end}.'
+        );
+
+        if(!$collection->isValid())
+        {
+            $this->assertTrue($collection->isValid(), $collection->getFirstError()->getMessage());
+        }
+
+        $this->assertSame(2, $collection->countCommands());
+    }
 }

@@ -62,10 +62,32 @@ final class Mailcode_IfListContainsTests extends MailcodeTestCase
                 'string' => '{if list-contains: "Foo" "Bar" insensitive: $FOO.PROP}{end}',
                 'valid' => true,
                 'code' => 0
+            ),
+            array(
+                'label' => 'Regex with brackets',
+                'string' => '{if list-contains: $LIST.PROPERTY "[0-9]{3}" regex:}{end}',
+                'valid' => true,
+                'code' => 0
             )
         );
         
         $this->runCollectionTests($tests);
+    }
+
+    public function test_bracketsInRegex() : void
+    {
+        $cmd = Mailcode_Factory::if()
+            ->listContains(
+                'LIST.PROP',
+                array("[0-9:]{3}"),
+                false,
+                true
+            );
+
+        $this->assertSame(
+            '{if list-contains: $LIST.PROP regex: "[0-9:]{3}"}',
+            $cmd->getNormalized()
+        );
     }
 
     public function test_getListVariable() : void

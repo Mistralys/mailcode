@@ -59,12 +59,27 @@ class Mailcode_Parser_Statement
     public function __construct(string $statement, bool $freeform=false, ?Mailcode_Commands_Command $sourceCommand=null)
     {
         $this->sourceCommand = $sourceCommand;
-        $this->statement = $statement;
+        $this->statement = $this->prepareStatement($statement);
         $this->result = new OperationResult($this);
         $this->tokenizer = new Mailcode_Parser_Statement_Tokenizer($this);
         $this->freeform = $freeform;
 
         $this->validate();
+    }
+
+    private function prepareStatement(string $statement) : string
+    {
+        return str_replace(
+            array(
+                Mailcode_Parser::LITERAL_BRACKET_LEFT_REPLACEMENT,
+                Mailcode_Parser::LITERAL_BRACKET_RIGHT_REPLACEMENT
+            ),
+            array(
+                '{',
+                '}'
+            ),
+            $statement
+        );
     }
 
     public function getSourceCommand() : ?Mailcode_Commands_Command

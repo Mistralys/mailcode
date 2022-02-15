@@ -92,8 +92,26 @@ class Mailcode_Parser
         return $collection;
     }
 
+    public const LITERAL_BRACKET_LEFT_REPLACEMENT = '﴾';
+    public const LITERAL_BRACKET_RIGHT_REPLACEMENT = '﴿';
+
     protected function prepareString(string $subject) : string
     {
+        preg_match_all('/"[^"]+"/U', $subject, $result, PREG_PATTERN_ORDER);
+
+        $matches = array_unique($result[0]);
+
+        if(!empty($matches))
+        {
+            foreach($matches as $match)
+            {
+                if(strpos($match, '{') !== false || strpos($match, '}') !== false)
+                {
+                    $subject = $this->replaceBrackets($subject, $match);
+                }
+            }
+        }
+
         if(!ConvertHelper::isStringHTML($subject))
         {
             return $subject;
@@ -102,7 +120,21 @@ class Mailcode_Parser
         // remove all <style> tags to avoid conflicts with CSS code
         return preg_replace('%<style\b[^>]*>(.*?)</style>%six', '', $subject);
     }
-    
+
+    private function replaceBrackets(string $subject, string $needle) : string
+    {
+        $replacement =  str_replace(
+            array('{', '}'),
+            array(
+                self::LITERAL_BRACKET_LEFT_REPLACEMENT,
+                self::LITERAL_BRACKET_RIGHT_REPLACEMENT
+            ),
+            $needle
+        );
+
+        return str_replace($needle, $replacement, $subject);
+    }
+
    /**
     * Processes a single match found in the string: creates the command,
     * and adds it to the collection if it's a valid command, or to the list
