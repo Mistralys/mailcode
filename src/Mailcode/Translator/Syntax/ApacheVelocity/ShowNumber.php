@@ -24,7 +24,8 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ShowNumber extends Mailcode_Tran
     {
         $statement = $this->renderNumberFormat(
             $command->getVariableName(),
-            $command->getFormatInfo()
+            $command->getFormatInfo(),
+            $command->isAbsolute()
         );
 
         return $this->addURLEncoding($command, $statement);

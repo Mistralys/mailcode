@@ -75,27 +75,19 @@ class Mailcode_Factory_CommandSets_Set_Show extends Mailcode_Factory_CommandSets
         throw $this->instantiator->exceptionUnexpectedType('ShowDate', $cmd);
     }
 
-    public function number(string $variableName, string $formatString="") : Mailcode_Commands_Command_ShowNumber
+    public function number(string $variableName, string $formatString="", bool $absolute=false) : Mailcode_Commands_Command_ShowNumber
     {
         $variableName = $this->instantiator->filterVariableName($variableName);
-
-        $format = '';
-        if(!empty($formatString))
-        {
-            $format = sprintf(
-                ' "%s"',
-                $formatString
-            );
-        }
+        $paramsString = $this->compileNumberParams($formatString, $absolute);
 
         $cmd = $this->commands->createCommand(
             'ShowNumber',
             '',
-            $variableName.$format,
+            $variableName.$paramsString,
             sprintf(
                 '{shownumber: %s%s}',
                 $variableName,
-                $format
+                $paramsString
             )
         );
 
@@ -107,6 +99,31 @@ class Mailcode_Factory_CommandSets_Set_Show extends Mailcode_Factory_CommandSets
         }
 
         throw $this->instantiator->exceptionUnexpectedType('ShowNumber', $cmd);
+    }
+
+    private function compileNumberParams(string $formatString="", bool $absolute=false) : string
+    {
+        $params = array();
+
+        if(!empty($formatString))
+        {
+            $params[] = sprintf(
+                ' "%s"',
+                $formatString
+            );
+        }
+
+        if($absolute)
+        {
+            $params[] = ' absolute:';
+        }
+
+        if(!empty($params))
+        {
+            return ' '.implode(' ', $params);
+        }
+
+        return '';
     }
 
     /**

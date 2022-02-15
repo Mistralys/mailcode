@@ -36,7 +36,12 @@ class Mailcode_Commands_Command_ShowNumber extends Mailcode_Commands_ShowBase
     * @var string
     */
     private $formatString = Mailcode_Number_Info::DEFAULT_FORMAT;
-    
+
+    /**
+     * @var Mailcode_Parser_Statement_Tokenizer_Token_Keyword|NULL
+     */
+    private $absoluteKeyword;
+
     public function getName() : string
     {
         return 'shownumber';
@@ -53,7 +58,8 @@ class Mailcode_Commands_Command_ShowNumber extends Mailcode_Commands_ShowBase
             Mailcode_Interfaces_Commands_Validation_Variable::VALIDATION_NAME_VARIABLE,
             'check_format',
             Mailcode_Interfaces_Commands_Validation_URLEncode::VALIDATION_NAME_URLENCODE,
-            Mailcode_Interfaces_Commands_Validation_URLDecode::VALIDATION_NAME_URLDECODE
+            Mailcode_Interfaces_Commands_Validation_URLDecode::VALIDATION_NAME_URLDECODE,
+            'absolute'
         );
     }
 
@@ -69,6 +75,20 @@ class Mailcode_Commands_Command_ShowNumber extends Mailcode_Commands_ShowBase
 
          $token = array_pop($tokens);
          $this->parseFormatString($token->getText());
+    }
+
+    protected function validateSyntax_absolute() : void
+    {
+        $keywords = $this->params->getInfo()->getKeywords();
+
+        foreach($keywords as $keyword)
+        {
+            if($keyword->getKeyword() === Mailcode_Commands_Keywords::TYPE_ABSOLUTE)
+            {
+                $this->absoluteKeyword = $keyword;
+                break;
+            }
+        }
     }
 
     private function parseFormatString(string $format) : void
@@ -95,6 +115,31 @@ class Mailcode_Commands_Command_ShowNumber extends Mailcode_Commands_ShowBase
     public function getFormatString() : string
     {
         return $this->formatString;
+    }
+
+    public function isAbsolute() : bool
+    {
+        return isset($this->absoluteKeyword);
+    }
+
+    public function setAbsolute(bool $absolute) : Mailcode_Commands_Command_ShowNumber
+    {
+        if($absolute === false && isset($this->absoluteKeyword))
+        {
+            $this->params->getInfo()->removeKeyword($this->absoluteKeyword->getKeyword());
+            $this->absoluteKeyword = null;
+        }
+
+        if($absolute === true && !isset($this->absoluteKeyword))
+        {
+             $this->params
+                 ->getInfo()
+                 ->addKeyword(Mailcode_Commands_Keywords::TYPE_ABSOLUTE);
+
+             $this->validateSyntax_absolute();
+        }
+
+        return $this;
     }
 
     /**
