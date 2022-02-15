@@ -32,7 +32,7 @@
 	{
 		"mistralys/application-utils" : "^1.1",
 		"mistralys/application-localization" : "^1.2",
-		"giggsey/libphonenumber-for-php": ">=8.12.20",
+		"giggsey/libphonenumber-for-php": "^8.12",
 		"ext-json": "*"
 	},
 	"require-dev" : 
