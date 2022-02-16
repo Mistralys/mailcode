@@ -71,8 +71,8 @@ class Mailcode_Parser_Statement
     {
         return str_replace(
             array(
-                Mailcode_Parser::LITERAL_BRACKET_LEFT_REPLACEMENT,
-                Mailcode_Parser::LITERAL_BRACKET_RIGHT_REPLACEMENT
+                Mailcode_Parser_StringPreProcessor::LITERAL_BRACKET_LEFT_REPLACEMENT,
+                Mailcode_Parser_StringPreProcessor::LITERAL_BRACKET_RIGHT_REPLACEMENT
             ),
             array(
                 '{',
