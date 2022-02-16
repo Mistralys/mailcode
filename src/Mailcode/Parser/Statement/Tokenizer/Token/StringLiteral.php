@@ -46,6 +46,6 @@ class Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral extends Mailcode_P
     {
         $quoteless = trim($this->matchedText, '"\'');
         
-        return $this->restoreQuotes($quoteless);
+        return $this->restoreQuotes($quoteless, false);
     }
 }
