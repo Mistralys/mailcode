@@ -11,8 +11,6 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
-use AppUtils\ConvertHelper;
-
 /**
  * Mailcode parser, capable of detecting commands in strings.
  * 
@@ -60,26 +58,26 @@ class Mailcode_Parser
     {
         return '/'.implode('|', self::COMMAND_REGEX_PARTS).'/sixU';
     }
-    
-   /**
-    * Parses a string to detect all commands within. Returns a
-    * collection instance that contains information on all the 
-    * commands.
-    * 
-    * @param string $string
-    * @return Mailcode_Collection A collection with all unique commands found.
-    */
+
+    /**
+     * Parses a string to detect all commands within. Returns a
+     * collection instance that contains information on all the
+     * commands.
+     *
+     * @param string $string
+     * @return Mailcode_Collection A collection with all unique commands found.
+     * @throws Mailcode_Exception
+     */
     public function parseString(string $string) : Mailcode_Collection
     {
-        $collection = new Mailcode_Collection();
-        
         $string = $this->prepareString($string);
-        
+
         $matches = array();
         preg_match_all(self::getRegex(), $string, $matches, PREG_PATTERN_ORDER);
         
         $total = count($matches[0]);
-        
+        $collection = new Mailcode_Collection();
+
         for($i=0; $i < $total; $i++)
         {
             $match = $this->parseMatch($matches, $i);
@@ -92,57 +90,20 @@ class Mailcode_Parser
         return $collection;
     }
 
-    public const LITERAL_BRACKET_LEFT_REPLACEMENT = '﴾';
-    public const LITERAL_BRACKET_RIGHT_REPLACEMENT = '﴿';
-
     protected function prepareString(string $subject) : string
     {
-        preg_match_all('/"[^"]+"/U', $subject, $result, PREG_PATTERN_ORDER);
-
-        $matches = array_unique($result[0]);
-
-        if(!empty($matches))
-        {
-            foreach($matches as $match)
-            {
-                if(strpos($match, '{') !== false || strpos($match, '}') !== false)
-                {
-                    $subject = $this->replaceBrackets($subject, $match);
-                }
-            }
-        }
-
-        if(!ConvertHelper::isStringHTML($subject))
-        {
-            return $subject;
-        }
-
-        // remove all <style> tags to avoid conflicts with CSS code
-        return preg_replace('%<style\b[^>]*>(.*?)</style>%six', '', $subject);
+        return (new Mailcode_Parser_StringPreProcessor($subject))->process();
     }
 
-    private function replaceBrackets(string $subject, string $needle) : string
-    {
-        $replacement =  str_replace(
-            array('{', '}'),
-            array(
-                self::LITERAL_BRACKET_LEFT_REPLACEMENT,
-                self::LITERAL_BRACKET_RIGHT_REPLACEMENT
-            ),
-            $needle
-        );
-
-        return str_replace($needle, $replacement, $subject);
-    }
-
-   /**
-    * Processes a single match found in the string: creates the command,
-    * and adds it to the collection if it's a valid command, or to the list
-    * of invalid commands otherwise.
-    * 
-    * @param Mailcode_Parser_Match $match
-    * @param Mailcode_Collection $collection
-    */
+    /**
+     * Processes a single match found in the string: creates the command,
+     * and adds it to the collection if it's a valid command, or to the list
+     * of invalid commands otherwise.
+     *
+     * @param Mailcode_Parser_Match $match
+     * @param Mailcode_Collection $collection
+     * @throws Mailcode_Exception
+     */
     protected function processMatch(Mailcode_Parser_Match $match, Mailcode_Collection $collection) : void
     {
         $name = $match->getName();
@@ -174,6 +135,11 @@ class Mailcode_Parser
         $collection->addCommand($cmd);
     }
 
+    /**
+     * @param Mailcode_Commands_Command $cmd
+     * @return void
+     * @throws Mailcode_Exception
+     */
     private function handleNesting(Mailcode_Commands_Command $cmd) : void
     {
         // Set the command's parent from the stack, if any is present.
@@ -193,6 +159,10 @@ class Mailcode_Parser
         }
     }
 
+    /**
+     * @return Mailcode_Commands_Command
+     * @throws Mailcode_Exception
+     */
     private function getStackLast() : Mailcode_Commands_Command
     {
         $cmd = $this->stack[array_key_last($this->stack)];
