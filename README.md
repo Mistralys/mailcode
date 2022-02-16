@@ -85,6 +85,15 @@ Zero-padding is specified by appending the required number length like this:
 
 The amount of hashes determines the target length of the number. This example will add a zero-padding of `2`, meaning a `5` will be shown as `05`.
 
+#### Absolute numbers
+
+When working with negative numbers, you can use the `absolute:` 
+keyword to ensure that the minus sign is not shown.
+
+```
+{shownumber: $ORDER.PRICE "1,000.00" absolute:}
+```
+
 ### Display a text snippet
 
 Display a raw text snippet. Newlines are converted to HTML `<br>` 
@@ -868,10 +877,11 @@ The Apache Velocity translator uses the formal reference notation for all comman
 
 The following tools have to be enabled in the Velocity templates:
 
-  * [DateTool](https://velocity.apache.org/tools/devel/apidocs/org/apache/velocity/tools/generic/DateTool.html)
-  * [EscapeTool](https://velocity.apache.org/tools/devel/apidocs/org/apache/velocity/tools/generic/EscapeTool.html)
-  * [StringUtils](http://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/StringUtils.html)
-  * [LibPhoneNumber](https://github.com/google/libphonenumber) (see below for details) 
+  * [DateTool][]
+  * [EscapeTool][]
+  * [StringUtils][]
+  * [LibPhoneNumber][] (see below for details) 
+  * PriceTool (custom tool, see below)
   * Map command for lists (custom command, see below)
 
 These tools can be added to the context of templates like this:
@@ -893,6 +903,7 @@ Commands that require these tools:
   - ElseIf Empty / ElseIf Not Empty (StringUtils)
   - List contains / List not contains (Map command)
   - ShowPhone (LibPhoneNumber)
+  - ShowNumber (PriceTool)
 
 If these tools are not available, these commands will throw errors if they are used in a template.
 
@@ -940,6 +951,28 @@ return list.stream().anyMatch(map -> map.get("NAME").matches("(?s)Value"));
 ```
 
 To use those commands, this has to be implemented in your Velocity engine.
+
+#### PriceTool utility
+
+The `shownumber` command relies on the price tool class to be present
+in the `$price` variable in templates. This class is a custom implementation
+used to convert numbers, so they can be formatted as prices. It is
+basically just a wrapper around Java functions for number formatting. to
+make the code in the template easier to read and maintain.
+
+> Due to copyright issues, the source code cannot be posted here.
+
+The generated command looks like this:
+
+```javascript
+${price.format($FOO.BAR, 2, ',', ' ')}
+```
+
+And the absolute number variant:
+
+```javascript
+${price.format(${price.abs($FOO.BAR)}, 2, ',', ' ')}
+```
 
 #### Configuring date formats
 
@@ -996,3 +1029,10 @@ browser there.
 
 - `translator.php` - Translate a text with Mailcode commands to a supported syntax.
 - `extractPhoneCountries.php` - Extracts a countries list for the `showphone` command.
+
+
+
+[DateTool]: https://velocity.apache.org/tools/devel/apidocs/org/apache/velocity/tools/generic/DateTool.html
+[EscapeTool]: https://velocity.apache.org/tools/devel/apidocs/org/apache/velocity/tools/generic/EscapeTool.html
+[StringUtils]: http://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/StringUtils.html
+[LibPhoneNumber]: https://github.com/google/libphonenumber  
