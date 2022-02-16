@@ -86,9 +86,16 @@ abstract class Mailcode_Parser_Statement_Tokenizer_Token implements Mailcode_Par
         return $this->matchedText;
     }
     
-    protected function restoreQuotes(string $subject) : string
+    protected function restoreQuotes(string $subject, bool $escaped=true) : string
     {
-        return str_replace('__QUOTE__', '\"', $subject);
+        $replace = '\"';
+
+        if(!$escaped)
+        {
+            $replace = '"';
+        }
+
+        return str_replace('__QUOTE__', $replace, $subject);
     }
 
     abstract public function getNormalized() : string;
