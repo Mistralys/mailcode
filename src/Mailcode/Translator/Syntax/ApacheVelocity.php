@@ -107,22 +107,20 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
 
     public function renderNumberFormat(string $varName, Mailcode_Number_Info $numberInfo, bool $absolute) : string
     {
-        $varName = ltrim($varName, '$');
+        $varName = '$'.ltrim($varName, '$');
 
-        $cmd = sprintf(
+        if($absolute)
+        {
+            $varName = sprintf('${price.abs(%s)}', $varName);
+        }
+
+        return sprintf(
             "price.format(%s, %s, '%s', '%s')",
-            '$'.$varName,
+            $varName,
             $numberInfo->getDecimals(),
             $numberInfo->getDecimalsSeparator(),
             $numberInfo->getThousandsSeparator()
         );
-
-        if($absolute)
-        {
-            $cmd .= ".replaceAll('-', '')";
-        }
-
-        return $cmd;
     }
 
     public function renderStringToNumber(string $varName) : string

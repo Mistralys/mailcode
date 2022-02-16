@@ -47,7 +47,7 @@ EOD
                 'mailcode' => Mailcode_Factory::show()
                     ->number('FOO.BAR', '1 000,00', true),
                 'expected' => <<<'EOD'
-${price.format($FOO.BAR, 2, ',', ' ').replaceAll('-', '')}
+${price.format(${price.abs($FOO.BAR)}, 2, ',', ' ')}
 EOD
             )
         );
