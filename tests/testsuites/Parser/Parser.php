@@ -5,6 +5,7 @@ use Mailcode\Mailcode_Collection_Error_Command;
 use Mailcode\Mailcode_Collection_Error_Message;
 use Mailcode\Mailcode_Commands_Command;
 use Mailcode\Mailcode_Parser;
+use Mailcode\Mailcode_Parser_StringPreProcessor;
 
 final class Parser_ParserTests extends MailcodeTestCase
 {
@@ -318,5 +319,80 @@ height:45px;
         }
 
         $this->assertSame(2, $collection->countCommands());
+    }
+
+    /**
+     * The parser must escape regex brackets in commands, so these
+     * do not break the detection of commands.
+     */
+    public function test_parseString_preProcess() : void
+    {
+        $commands = <<<'EOT'
+<a href="{shownumber: $GROSS_AMOUNT "1.000,00" absolute:}">
+    {if list-contains: $LIST.PROPERTY "[0-9]{3}" regex:}
+        {showphone: $PHONE.NUMBER "DE" urlencode:}
+        {showdate: $DATE "d.m.Y"}
+    {end}
+    {if contains: $VARNAME "With \"escaped\" quotes"}
+        Some text here.
+    {end}
+</a>
+EOT;
+        $expected = <<<'EOT'
+<a href="{shownumber: $GROSS_AMOUNT "1.000,00" absolute:}">
+    {if list-contains: $LIST.PROPERTY "[0-9]%1$s3%2$s" regex:}
+        {showphone: $PHONE.NUMBER "DE" urlencode:}
+        {showdate: $DATE "d.m.Y"}
+    {end}
+    {if contains: $VARNAME "With \"escaped\" quotes"}
+        Some text here.
+    {end}
+</a>
+EOT;
+
+        $expected = sprintf(
+            $expected,
+            Mailcode_Parser_StringPreProcessor::LITERAL_BRACKET_LEFT_REPLACEMENT,
+            Mailcode_Parser_StringPreProcessor::LITERAL_BRACKET_RIGHT_REPLACEMENT
+        );
+
+        $processor = new Mailcode_Parser_StringPreProcessor($commands);
+
+        $this->assertSame($expected, $processor->process());
+    }
+
+    /**
+     * Using regex brackets in string literals must not
+     * break the parsing of commands. All small details
+     * must be taken into account:
+     *
+     * - A command in an HTML attribute
+     * - A command with escaped quotes
+     * - A command with a regular string literal
+     */
+    public function test_parseString_stringLiterals() : void
+    {
+        $parser = Mailcode::create()->getParser();
+
+        $commands = <<<'EOT'
+<a href="{shownumber: $GROSS_AMOUNT "1.000,00" absolute:}">
+    {if list-contains: $LIST.PROPERTY "[0-9]{3}" regex:}
+        {showphone: $PHONE.NUMBER "DE" urlencode:}
+        {showdate: $DATE "d.m.Y"}
+    {end}
+    {if contains: $VARNAME "With \"escaped\" quotes"}
+        Some text here.
+    {end}
+</a>
+EOT;
+
+        $collection = $parser->parseString($commands);
+
+        if(!$collection->isValid())
+        {
+            $this->assertTrue($collection->isValid(), $collection->getFirstError()->getMessage());
+        }
+
+        $this->assertCount(7, $collection->getCommands());
     }
 }
