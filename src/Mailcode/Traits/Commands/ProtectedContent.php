@@ -42,12 +42,21 @@ trait Mailcode_Traits_Commands_ProtectedContent
             );
         }
 
-        $start = strpos($string, $open->getReplacementText()) + $open->getReplacementLength();
-        $end = strpos($string, $end->getReplacementText());
+        $startPosition = strpos($string, $open->getReplacementText()) + $open->getReplacementLength();
+        $endPosition = strpos($string, $end->getReplacementText());
 
-        $content = substr($string, $start, ($end-$start));
+        if($startPosition !== false && $endPosition !== false)
+        {
+            $content = substr($string, $startPosition, ($endPosition-$startPosition));
 
-        return $this->replaceContent($string, $content);
+            return $this->replaceContent($string, $content);
+        }
+
+        throw new Mailcode_Exception(
+            'Cannot find commands in subject string',
+            'The starting or end command placeholder replacement string could not be found.',
+            Mailcode_Interfaces_Commands_ProtectedContent::ERROR_REPLACEMENT_STRINGS_NOT_FOUND
+        );
     }
 
     protected function replaceContent(string $string, string $content) : string
