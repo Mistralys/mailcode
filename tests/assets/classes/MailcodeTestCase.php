@@ -1,7 +1,9 @@
 <?php
 
 use Mailcode\Mailcode;
+use Mailcode\Mailcode_Collection;
 use Mailcode\Mailcode_Exception;
+use Mailcode\Mailcode_Parser_Safeguard;
 use Mailcode\Mailcode_Variables_Collection;
 use PHPUnit\Framework\TestCase;
 
@@ -93,5 +95,27 @@ abstract class MailcodeTestCase extends TestCase
             '  -'.implode(PHP_EOL.'  -', $names).PHP_EOL.
             'Unique instances by command ('.count($uniqueNames).'):'.PHP_EOL.
             '  -'.implode(PHP_EOL.'  -', $uniqueNames).PHP_EOL.PHP_EOL;
+    }
+
+    protected function assertSafeguardValid(Mailcode_Parser_Safeguard $safeguard) : void
+    {
+        $this->assertCollectionValid($safeguard->getCollection());
+    }
+
+    protected function assertCollectionValid(Mailcode_Collection $collection) : void
+    {
+        $errors = $collection->getErrors();
+
+        $msg = array();
+
+        foreach ($errors as $error)
+        {
+            $msg[] = 'Mailcode error: '.$error->getMessage();
+        }
+
+        $this->assertTrue(
+            $collection->isValid(),
+            implode(PHP_EOL, $msg)
+        );
     }
 }
