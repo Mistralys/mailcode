@@ -124,6 +124,20 @@ class Mailcode_Parser_Safeguard_Formatting
         
         return $formatter;
     }
+
+    /**
+     * Adds a formatter that removes all Mailcode commands.
+     *
+     * @return Mailcode_Parser_Safeguard_Formatter_Type_Remove
+     */
+    public function replaceWithRemovedCommands() : Mailcode_Parser_Safeguard_Formatter_Type_Remove
+    {
+        $formatter = $this->createRemoveCommands();
+
+        $this->addFormatter($formatter);
+
+        return $formatter;
+    }
     
     public function replaceWithHTMLHighlighting() : Mailcode_Parser_Safeguard_Formatter_Type_HTMLHighlighting
     {
@@ -260,7 +274,12 @@ class Mailcode_Parser_Safeguard_Formatting
     {
         return new Mailcode_Parser_Safeguard_Formatter_Type_Placeholders($this);
     }
-    
+
+    public function createRemoveCommands() : Mailcode_Parser_Safeguard_Formatter_Type_Remove
+    {
+        return new Mailcode_Parser_Safeguard_Formatter_Type_Remove($this);
+    }
+
     public function createMarkVariables() : Mailcode_Parser_Safeguard_Formatter_Type_MarkVariables
     {
         return new Mailcode_Parser_Safeguard_Formatter_Type_MarkVariables($this);
