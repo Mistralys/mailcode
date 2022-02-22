@@ -99,7 +99,7 @@ class Mailcode_Translator_Syntax
             return $subject;
         }
         
-        $placeholders = $safeguard->getPlaceholders();
+        $placeholders = $safeguard->getPlaceholdersCollection()->getAll();
         
         $replaces = array();
         

@@ -17,9 +17,8 @@ final class Formatting_PartialTests extends MailcodeTestCase
         
         $safeguard = Mailcode::create()->createSafeguard($text);
         
-        $placeholders = $safeguard->getPlaceholders();
-        $placeholder = $placeholders[0];
-        
+        $placeholder = $safeguard->getPlaceholdersCollection()->getFirst();
+
         $safe = $safeguard->makeSafe();
         
         $edited = str_replace($placeholder->getReplacementText(), 'REPLACED', $safe);
@@ -38,9 +37,8 @@ final class Formatting_PartialTests extends MailcodeTestCase
         
         $safeguard = Mailcode::create()->createSafeguard($text);
         
-        $placeholders = $safeguard->getPlaceholders();
-        $placeholder = $placeholders[0];
-        
+        $placeholder = $safeguard->getPlaceholdersCollection()->getFirst();
+
         $safe = $safeguard->makeSafe();
         
         $edited = str_replace($placeholder->getReplacementText(), 'REPLACED', $safe);

@@ -61,7 +61,7 @@ class Mailcode_Parser_Safeguard_URLAnalyzer
             return;
         }
 
-        $placeholders = $this->safeguard->getPlaceholders();
+        $placeholders = $this->safeguard->getPlaceholdersCollection()->getAll();
 
         foreach($placeholders as $placeholder)
         {

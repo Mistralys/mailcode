@@ -251,7 +251,7 @@ final class Parser_SafeguardTests extends MailcodeTestCase
         // Need to call this to trigger the automatic URL search
         $safeguard->makeSafe();
 
-        $placeholders = $safeguard->getPlaceholders();
+        $placeholders = $safeguard->getPlaceholdersCollection()->getAll();
 
         $this->assertCount(2, $placeholders);
 
@@ -292,7 +292,7 @@ final class Parser_SafeguardTests extends MailcodeTestCase
         // Need to call this to trigger the automatic URL search
         $safeguard->makeSafe();
 
-        $placeholders = $safeguard->getPlaceholders();
+        $placeholders = $safeguard->getPlaceholdersCollection()->getAll();
 
         $this->assertCount(1, $placeholders);
 
@@ -309,7 +309,7 @@ final class Parser_SafeguardTests extends MailcodeTestCase
         // Need to call this to trigger the automatic URL search
         $safeguard->makeSafe();
 
-        $placeholders = $safeguard->getPlaceholders();
+        $placeholders = $safeguard->getPlaceholdersCollection()->getAll();
 
         $this->assertCount(1, $placeholders);
 
@@ -344,7 +344,7 @@ EOD;
         Mailcode_Parser_Safeguard::resetCounter();
 
         $safeguard = Mailcode::create()->createSafeguard($markup);
-        $placeholders = $safeguard->getPlaceholders();
+        $placeholders = $safeguard->getPlaceholdersCollection()->getAll();
         $stack = array();
 
         foreach($placeholders as $placeholder)
@@ -496,7 +496,7 @@ EOD;
 
         $safeguard = Mailcode::create()->createSafeguard($text);
 
-        $placeholders = $safeguard->getPlaceholderStrings();
+        $placeholders = $safeguard->getPlaceholdersCollection()->getStrings();
 
         foreach($placeholders as $placeholder)
         {

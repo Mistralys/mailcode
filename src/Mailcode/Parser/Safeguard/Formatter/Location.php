@@ -85,7 +85,7 @@ abstract class Mailcode_Parser_Safeguard_Formatter_Location
     */
     public function isWithinCommand(int $position) : bool
     {
-        $placeholders = $this->formatter->getSafeguard()->getPlaceholders();
+        $placeholders = $this->formatter->getSafeguard()->getPlaceholdersCollection()->getAll();
         
         $placeholderID = $this->placeholder->getID();
         

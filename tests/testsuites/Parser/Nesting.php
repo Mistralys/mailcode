@@ -142,7 +142,7 @@ final class Parser_NestingTests extends MailcodeTestCase
             '{showvar: $CUSTOMER.LAST_NAME}'
         ));
 
-        $placeholders = $safeguard->getPlaceholderStrings();
+        $placeholders = $safeguard->getPlaceholdersCollection()->getStrings();
 
         $this->assertCount(2, $placeholders);
 
