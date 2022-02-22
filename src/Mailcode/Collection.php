@@ -392,6 +392,7 @@ class Mailcode_Collection
         $this->finalized = true;
 
         $this->validateNesting();
+        $this->pruneProtectedContentCommands();
     }
 
     public function isFinalized() : bool
@@ -409,5 +410,34 @@ class Mailcode_Collection
                 $this->addInvalidCommand($command);
             }
         }
+    }
+
+    /**
+     * Any commands that are nested in protected content
+     * commands must be removed from the collection.
+     * These commands are not interpreted (or interpreted
+     * independently, depending on the command), and thus
+     * must not be treated as members of the collection.
+     *
+     * @return void
+     */
+    private function pruneProtectedContentCommands() : void
+    {
+        if(!$this->isValid())
+        {
+            return;
+        }
+
+        $keep = array();
+
+        foreach($this->commands as $command)
+        {
+            if(!$command->hasContentParent())
+            {
+                $keep[] = $command;
+            }
+        }
+
+        $this->commands = $keep;
     }
 }
