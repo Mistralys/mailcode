@@ -168,7 +168,6 @@ class Mailcode_Commands_Command_Code
      */
     public function getSyntax() : Mailcode_Translator_Syntax
     {
-        $translator = new Mailcode_Translator();
-        return $translator->createSyntax($this->getSyntaxName());
+        return (new Mailcode_Translator())->createSyntax($this->getSyntaxName());
     }
 }
