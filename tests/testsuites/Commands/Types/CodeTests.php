@@ -1,13 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
+namespace testsuites\Commands\Types;
+
 use Mailcode\Mailcode_Commands_Command;
 use Mailcode\Mailcode_Commands_Command_Code;
 use Mailcode\Mailcode_Factory;
 use Mailcode\Mailcode_Interfaces_Commands_ProtectedContent;
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Exception;
+use MailcodeTestCase;
 
-final class Mailcode_CodeTests extends MailcodeTestCase
+final class CodeTests extends MailcodeTestCase
 {
     public function test_validation() : void
     {
@@ -120,7 +125,7 @@ EOT;
         $safeguard = Mailcode::create()->createSafeguard($string);
         $safe = $safeguard->makeSafe();
 
-        $placeholders = $safeguard->getPlaceholders();
+        $placeholders = $safeguard->getPlaceholdersCollection()->getAll();
         $found = false;
 
         foreach($placeholders as $placeholder)
@@ -140,27 +145,41 @@ EOT;
         $this->assertEquals($whole, $safeguard->makeWhole($safe));
     }
 
-    public function test_stripCode_nestingError() : void
+    public function test_code_nestedCommands() : void
     {
         $string = <<<'EOD'
+{showvar: $FOO}
 {code: "ApacheVelocity"}
-    Some code here
-    {showvar: $FOO}
+Some code here and a variable {showvar: $FOO}
 {end}
+EOD;
+        $expectedContent = 'Some code here and a variable {showvar: $FOO}';
+
+        $expectedSafe = <<<'EOD'
+{showvar: $FOO}
+{code: "ApacheVelocity"}Some code here and a variable {showvar: $FOO}{end}
 EOD;
 
         $safeguard = Mailcode::create()->createSafeguard($string);
+        $collection = $safeguard->getPlaceholdersCollection();
+        $this->assertCount(3, $collection->getAll());
 
-        try
-        {
-            $safeguard->makeSafe();
-        }
-        catch (Mailcode_Exception $e)
-        {
-            $this->assertEquals(Mailcode_Interfaces_Commands_ProtectedContent::ERROR_INVALID_NESTING_NO_END, $e->getCode());
-            return;
-        }
+        $safe = $safeguard->makeSafe();
 
-        $this->fail('No exception triggered.');
+        $command = $collection
+            ->getByIndex(1)
+            ->getCommand();
+
+        if ($command instanceof Mailcode_Commands_Command_Code)
+        {
+            $content = $command->getContent();
+
+            $this->assertSame($expectedContent, $content);
+            $this->assertSame($expectedSafe, $safeguard->makeWhole($safe));
+        }
+        else
+        {
+            $this->fail('Not a code command.');
+        }
     }
 }

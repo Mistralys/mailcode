@@ -596,7 +596,7 @@ use \Mailcode\Mailcode;
 $text = '(Mailcode commands here)';
 $safeguard = Mailcode::create()->createSafeguard($text);
 
-$placeholders = $safeguard->getPlaceholders();
+$placeholders = $safeguard->getPlaceholdersCollection()->getAll();
 
 foreach($placeholders as $placeholder)
 {
