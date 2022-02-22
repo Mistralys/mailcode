@@ -13,6 +13,7 @@ namespace Mailcode;
 
 use AppUtils\ConvertHelper;
 use AppUtils\FileHelper;
+use AppUtils\FileHelper_Exception;
 
 /**
  * Variable marker: Surrounds all show variable commands with markup 
@@ -154,7 +155,7 @@ class Mailcode_Parser_Safeguard_Formatter_Type_MarkVariables extends Mailcode_Pa
      *
      * @return string
      * @throws Mailcode_Exception
-     * @throws \AppUtils\FileHelper_Exception
+     * @throws FileHelper_Exception
      * @see Mailcode_Parser_Safeguard_Formatter_Type_MarkVariables::getStyleTag()
      */
     public function getCSS() : string
@@ -168,7 +169,7 @@ class Mailcode_Parser_Safeguard_Formatter_Type_MarkVariables extends Mailcode_Pa
      *
      * @return string
      * @throws Mailcode_Exception
-     * @throws \AppUtils\FileHelper_Exception
+     * @throws FileHelper_Exception
      * @see Mailcode_Parser_Safeguard_Formatter_Type_MarkVariables::getCSS()
      */
     public function getStyleTag() : string
@@ -206,5 +207,10 @@ class Mailcode_Parser_Safeguard_Formatter_Type_MarkVariables extends Mailcode_Pa
             self::ERROR_CANNOT_FIND_STYLESHEET
 
         );
+    }
+
+    public function processesContent() : bool
+    {
+        return false;
     }
 }

@@ -53,5 +53,10 @@ class Mailcode_Parser_Safeguard_Formatter_Type_SingleLines extends Mailcode_Pars
     {
         return $this->eolLength;
     }
+
+    public function processesContent() : bool
+    {
+        return false;
+    }
 }
 
