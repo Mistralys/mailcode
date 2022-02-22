@@ -163,6 +163,19 @@ abstract class Mailcode_Commands_Command
         return $this->parent;
     }
 
+    /**
+     * Whether this command has a parent command that is
+     * a protected content command, which means it is nested
+     * in a content block of a command.
+     *
+     * @return bool
+     * @see Mailcode_Interfaces_Commands_ProtectedContent
+     */
+    public function hasContentParent() : bool
+    {
+        return isset($this->parent) && $this->parent instanceof Mailcode_Interfaces_Commands_ProtectedContent && $this->parent->getClosingCommand() !== $this;
+    }
+
     public function getID() : string
     {
         // account for commands with types: If_Variable should still return If.
