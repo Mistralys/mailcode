@@ -106,7 +106,7 @@ abstract class Mailcode_Parser_Safeguard_Formatter
     */
     protected function resolveLocations() : array
     {
-        $placeholders = $this->formatting->getSafeguard()->getPlaceholders();
+        $placeholders = $this->formatting->getSafeguard()->getPlaceholdersCollection()->getAll();
         
         $result = array();
         
@@ -162,4 +162,15 @@ abstract class Mailcode_Parser_Safeguard_Formatter
     {
         return $this->log;
     }
+
+    /**
+     * Whether this formatter processes the content of
+     * commands that can contain text and/or commands.
+     * If it does, the formatter's content processing
+     * methods will be executed.
+     *
+     * @return bool
+     */
+    abstract public function processesContent() : bool;
+
 }
