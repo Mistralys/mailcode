@@ -51,6 +51,8 @@ class Mailcode_Parser_Safeguard
 {
     public const ERROR_INVALID_COMMANDS = 47801;
     public const ERROR_PLACEHOLDER_NOT_FOUND = 47804;
+    public const ERROR_NO_PLACEHOLDER_FOR_COMMAND = 47805;
+    public const ERROR_NO_FIRST_PLACEHOLDER = 47806;
 
    /**
     * @var Mailcode_Parser
@@ -79,7 +81,7 @@ class Mailcode_Parser_Safeguard
     private static $counter = 0;
     
    /**
-    * @var Mailcode_Parser_Safeguard_Placeholder[]
+    * @var Mailcode_Parser_Safeguard_PlaceholderCollection|NULL
     */
     protected $placeholders;
     
@@ -88,11 +90,6 @@ class Mailcode_Parser_Safeguard
     */
     protected $delimiter = '999';
     
-   /**
-    * @var string[]|NULL
-    */
-    protected $placeholderStrings;
-
     public function __construct(Mailcode_Parser $parser, string $subject)
     {
         $this->parser = $parser;
@@ -174,7 +171,7 @@ class Mailcode_Parser_Safeguard
     */
     public function makeSafePartial() : string
     {
-        $placeholders = $this->getPlaceholders();
+        $placeholders = $this->getPlaceholdersCollection()->getAll();
         $string = $this->originalString;
         
         foreach($placeholders as $placeholder)
@@ -204,17 +201,18 @@ class Mailcode_Parser_Safeguard
      */
     private function protectContents(string $string) : string
     {
-        $placeholders = $this->getPlaceholders();
-        $total = count($placeholders);
+        $placeholders = $this->getPlaceholdersCollection()->getAll();
 
-        for($i=0; $i < $total; $i++)
+        foreach ($placeholders as $placeholder)
         {
-            $placeholder = $placeholders[$i];
             $command = $placeholder->getCommand();
 
             if($command instanceof Mailcode_Interfaces_Commands_ProtectedContent)
             {
-                $string = $command->protectContent($string, $placeholder, $placeholders[$i+1]);
+                $closing = $command->getClosingCommand();
+                $closingPlaceholder = $this->getPlaceholdersCollection()->getByCommand($closing);
+
+                $string = $command->protectContent($string, $placeholder, $closingPlaceholder);
             }
         }
 
@@ -257,7 +255,7 @@ class Mailcode_Parser_Safeguard
     
    /**
     * Creates a formatting handler, which can be used to specify
-    * which formattings to use for the commands in the subject string.
+    * which formatting to use for the commands in the subject string.
     * 
     * @param Mailcode_StringContainer|string $subject
     * @return Mailcode_Parser_Safeguard_Formatting
@@ -271,34 +269,48 @@ class Mailcode_Parser_Safeguard
         
         return new Mailcode_Parser_Safeguard_Formatting($this, $subject);
     }
-    
-   /**
+
+    /**
+     * Retrieves all placeholders that have to be added to
+     * the subject text.
+     *
+     * @return Mailcode_Parser_Safeguard_Placeholder[]
+     *
+     * @deprecated Use the placeholder collection instead {@see Mailcode_Parser_Safeguard::getPlaceholdersCollection()}.
+     */
+    public function getPlaceholders() : array
+    {
+        return $this->getPlaceholdersCollection()->getAll();
+    }
+
+    /**
     * Retrieves all placeholders that have to be added to
     * the subject text.
     * 
-    * @return \Mailcode\Mailcode_Parser_Safeguard_Placeholder[]
+    * @return Mailcode_Parser_Safeguard_PlaceholderCollection
     */
-    public function getPlaceholders()
+    public function getPlaceholdersCollection() : Mailcode_Parser_Safeguard_PlaceholderCollection
     {
         if(isset($this->placeholders))
         {
             return $this->placeholders;
         }
         
-        $this->placeholders = array();
+        $placeholders = array();
+        $commands = $this->getCollection()->getCommands();
         
-        $cmds = $this->getCollection()->getCommands();
-        
-        foreach($cmds as $command)
+        foreach($commands as $command)
         {
             self::$counter++;
             
-            $this->placeholders[] = new Mailcode_Parser_Safeguard_Placeholder(
+            $placeholders[] = new Mailcode_Parser_Safeguard_Placeholder(
                 self::$counter,
                 $command,
                 $this
             );
         }
+
+        $this->placeholders = new Mailcode_Parser_Safeguard_PlaceholderCollection($placeholders);
 
         return $this->placeholders;
     }
@@ -338,7 +350,7 @@ class Mailcode_Parser_Safeguard
 
     private function restoreContents(string $string) : string
     {
-        $placeholders = $this->getPlaceholders();
+        $placeholders = $this->getPlaceholdersCollection()->getAll();
 
         foreach ($placeholders as $placeholder)
         {
@@ -483,31 +495,17 @@ class Mailcode_Parser_Safeguard
     * Retrieves a list of all placeholder IDs used in the text.
     * 
     * @return string[]
+    *
+    * @deprecated Use the placeholder collection instead {@see Mailcode_Parser_Safeguard::getPlaceholdersCollection()}.
     */
     public function getPlaceholderStrings() : array
     {
-        if(is_array($this->placeholderStrings))
-        {
-            return $this->placeholderStrings;
-        }
-        
-        $placeholders = $this->getPlaceholders();
-        
-        $this->placeholderStrings = array();
-        
-        foreach($placeholders as $placeholder)
-        {
-            $this->placeholderStrings[] = $placeholder->getReplacementText();
-        }
-        
-        return $this->placeholderStrings;
+        return $this->getPlaceholdersCollection()->getStrings();
     }
     
     public function isPlaceholder(string $subject) : bool
     {
-        $ids = $this->getPlaceholderStrings();
-        
-        return in_array($subject, $ids, true);
+        return $this->getPlaceholdersCollection()->isStringPlaceholder($subject);
     }
     
    /**
@@ -516,27 +514,12 @@ class Mailcode_Parser_Safeguard
     * @param int $id
     * @throws Mailcode_Exception If the placeholder was not found.
     * @return Mailcode_Parser_Safeguard_Placeholder
+    *
+    * @deprecated Use the placeholder collection instead {@see Mailcode_Parser_Safeguard::getPlaceholdersCollection()}.
     */
     public function getPlaceholderByID(int $id) : Mailcode_Parser_Safeguard_Placeholder
     {
-        $placeholders = $this->getPlaceholders();
-        
-        foreach($placeholders as $placeholder)
-        {
-            if($placeholder->getID() === $id)
-            {
-                return $placeholder;
-            }
-        }
-        
-        throw new Mailcode_Exception(
-            'No such safeguard placeholder.',
-            sprintf(
-                'The placeholder ID [%s] is not present in the safeguard instance.',
-                $id
-            ),
-            self::ERROR_PLACEHOLDER_NOT_FOUND
-        );
+        return $this->getPlaceholdersCollection()->getByID($id);
     }
     
    /**
@@ -545,33 +528,16 @@ class Mailcode_Parser_Safeguard
     * @param string $string
     * @throws Mailcode_Exception
     * @return Mailcode_Parser_Safeguard_Placeholder
+    *
+    * @deprecated Use the placeholder collection instead {@see Mailcode_Parser_Safeguard::getPlaceholdersCollection()}.
     */
     public function getPlaceholderByString(string $string) : Mailcode_Parser_Safeguard_Placeholder
     {
-        $placeholders = $this->getPlaceholders();
-        
-        foreach($placeholders as $placeholder)
-        {
-            if($placeholder->getReplacementText() === $string)
-            {
-                return $placeholder;
-            }
-        }
-        
-        throw new Mailcode_Exception(
-            'No such safeguard placeholder.',
-            sprintf(
-                'The placeholder replacement string [%s] is not present in the safeguard instance.',
-                $string
-            ),
-            self::ERROR_PLACEHOLDER_NOT_FOUND
-        );
+        return $this->getPlaceholdersCollection()->getByString($string);
     }
     
     public function hasPlaceholders() : bool
     {
-        $placeholders = $this->getPlaceholders();
-        
-        return !empty($placeholders);
+        return $this->getPlaceholdersCollection()->hasPlaceholders();
     }
 }
