@@ -32,9 +32,51 @@ abstract class Mailcode_Parser_Safeguard_Formatter_ReplacerType extends Mailcode
         foreach($locations as $location)
         {
             $location->replaceWith($this->resolveReplacement($location));
-            
+
             $this->log = array_merge($this->log, $location->getLog());
         }
+
+        $this->replaceContents();
+    }
+
+    private function replaceContents() : void
+    {
+        if(!$this->processesContent())
+        {
+            return;
+        }
+
+        $locations = $this->resolveLocations();
+
+        foreach($locations as $location)
+        {
+            $command = $location->getPlaceholder()->getCommand();
+
+            if($command instanceof Mailcode_Interfaces_Commands_ProtectedContent)
+            {
+                $this->processContentLocation($command, $location);
+            }
+        }
+    }
+
+    /**
+     * @param Mailcode_Interfaces_Commands_ProtectedContent $command
+     * @param Mailcode_Parser_Safeguard_Formatter_Location $location
+     * @return void
+     */
+    private function processContentLocation(Mailcode_Interfaces_Commands_ProtectedContent $command, Mailcode_Parser_Safeguard_Formatter_Location $location) : void
+    {
+        $replaceWith = $this->resolveContentReplacement($command, $location);
+
+        if ($replaceWith === null)
+        {
+            return;
+        }
+
+        $this->subject->replaceSubstrings(
+            $command->getContentPlaceholder(),
+            $replaceWith
+        );
     }
     
    /**
@@ -53,7 +95,9 @@ abstract class Mailcode_Parser_Safeguard_Formatter_ReplacerType extends Mailcode
 
         return $location->getPlaceholder()->getNormalizedText();
     }
-    
+
     abstract public function getReplaceString(Mailcode_Parser_Safeguard_Formatter_Location $location) : string;
+
+    abstract public function resolveContentReplacement(Mailcode_Interfaces_Commands_ProtectedContent $command, Mailcode_Parser_Safeguard_Formatter_Location $location) : ?string;
 }
     
