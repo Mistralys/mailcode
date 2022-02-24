@@ -4,73 +4,71 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+/**
+ * @see Mailcode_Interfaces_Commands_ProtectedContent
+ */
 trait Mailcode_Traits_Commands_ProtectedContent
 {
     /**
-     * @var int
-     */
-    protected static $protectedCounter = 0;
-
-    /**
      * @var string
      */
-    protected $protectedContent = '';
-
-    /**
-     * @var string
-     */
-    protected $protectedPlaceholder = '';
+    protected string $content = '';
 
     public function getContent() : string
     {
-        return $this->protectedContent;
+        return $this->content;
     }
 
-    public function getContentPlaceholder() : string
+    public function getContentTrimmed() : string
     {
-        return $this->protectedPlaceholder;
+        return trim($this->content);
     }
 
-    public function protectContent(string $string, Mailcode_Parser_Safeguard_Placeholder $open, Mailcode_Parser_Safeguard_Placeholder $end) : string
+    protected ?Mailcode_Parser_Statement_Tokenizer_Token_Number $contentIDToken = null;
+
+    public function getContentIDToken() : ?Mailcode_Parser_Statement_Tokenizer_Token_Number
     {
-        if(!$end->getCommand() instanceof Mailcode_Commands_Command_End)
+        return $this->contentIDToken;
+    }
+
+    protected function validateSyntax_content_id() : void
+    {
+        $contentIDToken = $this->params->getInfo()->getTokenByIndex(0);
+
+        if($contentIDToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_Number)
         {
-            throw new Mailcode_Exception(
-                'Invalid commands nesting',
-                'The code command was not closed with an end command.',
-                Mailcode_Interfaces_Commands_ProtectedContent::ERROR_INVALID_NESTING_NO_END
-            );
+            $this->contentIDToken = $contentIDToken;
+            $this->loadContent();
+            return;
         }
 
-        $startPosition = strpos($string, $open->getReplacementText()) + $open->getReplacementLength();
-        $endPosition = strpos($string, $end->getReplacementText());
-
-        if($startPosition !== false && $endPosition !== false)
-        {
-            $content = substr($string, $startPosition, ($endPosition-$startPosition));
-
-            return $this->replaceContent($string, $content);
-        }
-
-        throw new Mailcode_Exception(
-            'Cannot find commands in subject string',
-            'The starting or end command placeholder replacement string could not be found.',
-            Mailcode_Interfaces_Commands_ProtectedContent::ERROR_REPLACEMENT_STRINGS_NOT_FOUND
+        $this->validationResult->makeError(
+            t('The content ID parameter is missing.'),
+            Mailcode_Interfaces_Commands_ProtectedContent::VALIDATION_ERROR_CONTENT_ID_MISSING
         );
     }
 
-    protected function replaceContent(string $string, string $content) : string
+    public function getContentID() : int
     {
-        self::$protectedCounter++;
+        if(isset($this->contentIDToken))
+        {
+            return (int)$this->contentIDToken->getValue();
+        }
 
-        $this->protectedContent = trim($content);
-        $this->protectedPlaceholder = '__|CT'.self::$protectedCounter.'TC|__';
-
-        return str_replace($content, $this->protectedPlaceholder, $string);
+        return 0;
     }
 
-    public function restoreContent(string $string) : string
+    private function loadContent() : void
     {
-        return str_replace($this->protectedPlaceholder, $this->protectedContent, $string);
+        $contentID = $this->getContentID();
+
+        $this->content = Mailcode_Parser_PreParser::getContent($contentID);
+
+        Mailcode_Parser_PreParser::clearContent($contentID);
+    }
+
+    public function getNormalized() : string
+    {
+        return (new Mailcode_Commands_Normalizer_ProtectedContent($this))->normalize();
     }
 }
