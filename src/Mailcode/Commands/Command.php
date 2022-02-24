@@ -432,9 +432,7 @@ abstract class Mailcode_Commands_Command
     
     public function getNormalized() : string
     {
-        $normalizer = new Mailcode_Commands_Normalizer($this);
-        
-        return $normalizer->normalize();
+        return (new Mailcode_Commands_Normalizer($this))->normalize();
     }
 
     public function getSupportedTypes() : array
