@@ -23,12 +23,12 @@ class Mailcode_Commands_Normalizer
     /**
      * @var Mailcode_Commands_Command
      */
-    protected $command;
+    protected Mailcode_Commands_Command $command;
     
     /**
      * @var string[]
      */
-    protected $parts = array();
+    protected array $parts = array();
     
     public function __construct(Mailcode_Commands_Command $command)
     {
@@ -41,13 +41,13 @@ class Mailcode_Commands_Normalizer
         {
             return '';
         }
-        
+
         $this->parts = array();
         
         $this->parts[] = '{'.$this->command->getName();
         
         $this->addType();
-        $this->addParams($this->command);
+        $this->addParams();
         $this->addLogicKeywords();
         
         $this->parts[] = '}';
@@ -65,16 +65,9 @@ class Mailcode_Commands_Normalizer
         $this->parts[] = ' '.$this->command->getType();
     }
     
-    private function addParams(Mailcode_Commands_Command $command) : void
+    private function addParams() : void
     {
-        if($command->hasFreeformParameters())
-        {
-            $params = $command->getParams()->getStatementString();
-        }
-        else
-        {
-            $params = $command->getParams()->getNormalized();
-        }
+        $params = $this->getParamsString();
         
         if(empty($params))
         {
@@ -84,7 +77,29 @@ class Mailcode_Commands_Normalizer
         $this->parts[] = ': ';
         $this->parts[] = $params;
     }
-    
+
+    protected function getParamsStatement() : ?Mailcode_Parser_Statement
+    {
+        return $this->command->getParams();
+    }
+
+    protected function getParamsString() : string
+    {
+        $params = $this->getParamsStatement();
+
+        if($params === null)
+        {
+            return '';
+        }
+
+        if($this->command->hasFreeformParameters())
+        {
+            return $params->getStatementString();
+        }
+
+        return $params->getNormalized();
+    }
+
     private function addLogicKeywords() : void
     {
         if(!$this->command->supportsLogicKeywords())
@@ -99,7 +114,7 @@ class Mailcode_Commands_Normalizer
             $this->parts[] = ' ';
             $this->parts[] = $keyword->getKeywordString(); // e.g. "if variable"
             
-            $this->addParams($keyword->getCommand());
+            $this->addParams();
         }
     }
 }
