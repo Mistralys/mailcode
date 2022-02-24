@@ -13,6 +13,23 @@ final class PreParserTests extends MailcodeTestCase
 {
     // region: _Tests
 
+    public function test_emptyContent() : void
+    {
+        $subject = <<<'EOT'
+{code: "ApacheVelocity"}{code}
+EOT;
+
+        $expected = <<<'EOT'
+{code: 1 "ApacheVelocity"}
+EOT;
+
+        $parser = $this->parseString($subject);
+
+        $this->assertPreParserValid($parser);
+        $this->assertSame(1, $parser->countCommands());
+        $this->assertSame($expected, $parser->getString());
+    }
+
     /**
      * The pre parser must replace content commands with
      * standalone versions of the command, which the main
@@ -103,6 +120,7 @@ EOT;
         $parser = $this->parseString($subject);
 
         $this->assertPreParserValid($parser);
+        $this->assertNotEmpty($parser->getCommands());
         $this->assertSame(1, $parser->countCommands());
         $this->assertSame($expected, $parser->getString());
     }
@@ -221,6 +239,57 @@ EOT;
             Mailcode_Commands_CommonConstants::VALIDATION_UNESCAPED_NESTED_COMMAND,
             $parser->getCollection()
         );
+    }
+
+    /**
+     * Commands must be in the same order as they were
+     * found in the document, and their stored content
+     * must match as well.
+     */
+    public function test_severalCommands() : void
+    {
+        $subject = <<<'EOT'
+{code: "ApacheVelocity"}Content #1{code}
+{showurl: "TrackingID"}Content #2{showurl}
+{code: "Mailcode"}Content #3{code}
+EOT;
+
+        $parser = $this->parseString($subject, true);
+
+        $this->assertPreParserValid($parser);
+
+        $this->assertSame(3, $parser->countCommands());
+        $this->assertSame(3, Mailcode_Parser_PreParser::getContentCounter());
+
+        $commands = $parser->getCommands();
+
+        $counter = 0;
+        foreach ($commands as $command)
+        {
+            $counter++;
+
+            echo $command->getReplacementCommand().PHP_EOL;
+
+            $this->assertSame($counter, $command->getContentID());
+            $this->assertSame('Content #'.$counter, $command->getContent());
+        }
+    }
+
+    public function test_storeContent() : void
+    {
+        $this->assertSame(0, Mailcode_Parser_PreParser::getContentCounter());
+
+        for($i=1; $i <= 10; $i++)
+        {
+            $content = 'Content #'.$i;
+
+            Mailcode_Parser_PreParser::storeContent($content);
+            $this->assertSame($content, Mailcode_Parser_PreParser::getContent($i));
+
+            Mailcode_Parser_PreParser::clearContent($i);
+        }
+
+        $this->assertSame(10, Mailcode_Parser_PreParser::getContentCounter());
     }
 
     // endregion
