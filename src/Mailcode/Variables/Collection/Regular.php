@@ -23,7 +23,7 @@ class Mailcode_Variables_Collection_Regular extends Mailcode_Variables_Collectio
    /**
     * @var Mailcode_Variables_Collection_Invalid
     */
-    protected $invalid;
+    protected Mailcode_Variables_Collection_Invalid $invalid;
 
     protected function init() : void
     {
@@ -54,7 +54,7 @@ class Mailcode_Variables_Collection_Regular extends Mailcode_Variables_Collectio
     */
     public function hasInvalid() : bool
     {
-        return isset($this->invalid) && $this->invalid->hasVariables();
+        return $this->invalid->hasVariables();
     }
     
    /**

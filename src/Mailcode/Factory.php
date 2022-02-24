@@ -28,9 +28,9 @@ class Mailcode_Factory
     public const URL_ENCODING_DECODE = 'decode';
 
     /**
-    * @var Mailcode_Factory_CommandSets
+    * @var Mailcode_Factory_CommandSets|NULL
     */
-    private static $commandSets;
+    private static ?Mailcode_Factory_CommandSets $commandSets = null;
 
     /**
      * Returns the command set for `show` commands.
@@ -39,7 +39,7 @@ class Mailcode_Factory
      */
     public static function show() : Mailcode_Factory_CommandSets_Set_Show
     {
-        return self::$commandSets->show();
+        return self::getSets()->show();
     }
 
     /**
@@ -49,7 +49,7 @@ class Mailcode_Factory
      */
     public static function set() : Mailcode_Factory_CommandSets_Set_Set
     {
-        return self::$commandSets->set();
+        return self::getSets()->set();
     }
 
     /**
@@ -59,7 +59,7 @@ class Mailcode_Factory
      */
     public static function if() : Mailcode_Factory_CommandSets_Set_If
     {
-        return self::$commandSets->if();
+        return self::getSets()->if();
     }
 
     /**
@@ -69,7 +69,7 @@ class Mailcode_Factory
      */
     public static function elseIf() : Mailcode_Factory_CommandSets_Set_ElseIf
     {
-        return self::$commandSets->elseIf();
+        return self::getSets()->elseIf();
     }
 
     /**
@@ -79,7 +79,7 @@ class Mailcode_Factory
      */
     public static function misc() : Mailcode_Factory_CommandSets_Set_Misc
     {
-        return self::$commandSets->misc();
+        return self::getSets()->misc();
     }
 
     /**
@@ -115,13 +115,13 @@ class Mailcode_Factory
         return Mailcode_Date_FormatInfo::getInstance();
     }
 
-    public static function init() : void
+    protected static function getSets() : Mailcode_Factory_CommandSets
     {
         if(!isset(self::$commandSets))
         {
             self::$commandSets = new Mailcode_Factory_CommandSets();
         }
+
+        return self::$commandSets;
     }
 }
-
-Mailcode_Factory::init();

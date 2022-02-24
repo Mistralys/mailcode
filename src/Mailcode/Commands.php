@@ -26,6 +26,7 @@ class Mailcode_Commands
     public const ERROR_COMMAND_NAME_DOES_NOT_EXIST = 45901;
     public const ERROR_COMMAND_DOES_NOT_EXIST = 45902;
     public const ERROR_INVALID_DUMMY_COMMAND_TYPE = 45903;
+    public const ERROR_INVALID_COMMAND_CLASS = 45904;
     
    /**
     * @var Mailcode_Commands_Command[]
@@ -179,7 +180,21 @@ class Mailcode_Commands
             );
         }
         
-        return new $class($type, $params, $matchedString);
+        $command = new $class($type, $params, $matchedString);
+
+        if($command instanceof Mailcode_Commands_Command)
+        {
+            return $command;
+        }
+
+        throw new Mailcode_Exception(
+            'Invalid command class',
+            sprintf(
+                'The class [%s] does not extend the base command class.',
+                $class
+            ),
+            self::ERROR_INVALID_COMMAND_CLASS
+        );
     }
     
     protected function resolveClassName(string $id, string $type) : string

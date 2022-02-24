@@ -8,7 +8,7 @@ interface Mailcode_Interfaces_Commands_Validation_NoHTML
 {
     public const VALIDATION_NAME_NOHTML = 'nohtml';
 
-    public function setHTMLEnabled(bool $enabled=true);
+    public function setHTMLEnabled(bool $enabled=true) : self;
 
     public function isHTMLEnabled() : bool;
 

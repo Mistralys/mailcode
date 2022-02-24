@@ -35,9 +35,22 @@ namespace Mailcode;
 class Mailcode_Commands_Normalizer_ProtectedContent extends Mailcode_Commands_Normalizer
 {
     public const ERROR_CONTENT_ID_TOKEN_MISSING = 101601;
+    public const ERROR_INVALID_COMMAND_INSTANCE = 101602;
 
-    public function __construct(Mailcode_Interfaces_Commands_ProtectedContent $command)
+    public function __construct(Mailcode_Commands_Command $command)
     {
+        if(!$command instanceof Mailcode_Interfaces_Commands_ProtectedContent)
+        {
+            throw new Mailcode_Exception(
+                'Invalid command',
+                sprintf(
+                    'The specified command is not a protected content command: [%s].',
+                    get_class($command)
+                ),
+                self::ERROR_INVALID_COMMAND_INSTANCE
+            );
+        }
+
         parent::__construct($command);
     }
 
@@ -49,9 +62,9 @@ class Mailcode_Commands_Normalizer_ProtectedContent extends Mailcode_Commands_No
             '{'.$this->command->getName().'}';
     }
 
-    protected function getParamsStatement() : ?Mailcode_Parser_Statement
+    protected function getParamsStatement(Mailcode_Commands_Command $command) : ?Mailcode_Parser_Statement
     {
-        $params = $this->command->getParams();
+        $params = $command->getParams();
 
         if($params === null)
         {

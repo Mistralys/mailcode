@@ -1,19 +1,25 @@
 <?php
+/**
+ * File containing global functions.
+ *
+ * @package Mailcode
+ * @subpackage Core
+ */
 
 namespace Mailcode;
 
 /**
- * Translation function used to translate some of the internal
- * strings: if the localization is installed, it will use this
- * to do the translation.
- * 
+ * Translation function used to translate internal strings:
+ * if the localization is installed, it will use this to do
+ * the translation.
+ *
+ * @param string $subject
+ * @param mixed ...$args
  * @return string
  */
-function t()
+function t(string $subject, ...$args) : string
 {
-    $args = func_get_args();
-    
-    return call_user_func_array('\AppLocalize\t', $args);
+    return \AppLocalize\t($subject, ...$args);
 }
 
 /**

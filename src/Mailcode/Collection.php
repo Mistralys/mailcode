@@ -24,31 +24,17 @@ class Mailcode_Collection
 {
     public const ERROR_CANNOT_RETRIEVE_FIRST_ERROR = 52301;
     public const ERROR_CANNOT_MODIFY_FINALIZED = 52302;
+    public const ERROR_NO_VALIDATION_RESULT_AVAILABLE = 52303;
     
    /**
     * @var Mailcode_Commands_Command[]
     */
-    protected $commands = array();
+    protected array $commands = array();
     
-    /**
-     * @var Mailcode_Collection_Error[]
-     */
-    protected $errors = array();
-    
-   /**
-    * @var OperationResult|NULL
-    */
-    protected $validationResult;
-
     /**
      * @var bool
      */
-    private $finalized = false;
-
-    /**
-     * @var bool
-     */
-    private $validating = false;
+    private bool $finalized = false;
 
     /**
      * Adds a command to the collection.
@@ -97,23 +83,6 @@ class Mailcode_Collection
         return count($this->commands);
     }
 
-    public function addErrorMessage(string $matchedText, string $message, int $code) : void
-    {
-        $this->errors[] = new Mailcode_Collection_Error_Message(
-            $matchedText,
-            $code,
-            $message
-        );
-    }
-    
-    public function addInvalidCommand(Mailcode_Commands_Command $command) : void
-    {
-        // Remove the command in case it was already added
-        $this->removeCommand($command);
-
-        $this->errors[] = new Mailcode_Collection_Error_Command($command);
-    }
-
     public function removeCommand(Mailcode_Commands_Command $command) : void
     {
         $keep = array();
@@ -130,56 +99,12 @@ class Mailcode_Collection
     }
     
    /**
-    * @return Mailcode_Collection_Error[]
-    */
-    public function getErrors()
-    {
-        $result = $this->getValidationResult();
-        
-        $errors = $this->errors;
-        
-        if(!$result->isValid())
-        {
-            $errors[] = new Mailcode_Collection_Error_Message(
-                '',
-                $result->getCode(),
-                $result->getErrorMessage()
-            );
-        }
-        
-        return $errors;
-    }
-    
-    public function getFirstError() : Mailcode_Collection_Error
-    {
-        $errors = $this->getErrors();
-        
-        if(!empty($errors))
-        {
-            return array_shift($errors);
-        }
-        
-        throw new Mailcode_Exception(
-            'Cannot retrieve first error: no errors detected',
-            null,
-            self::ERROR_CANNOT_RETRIEVE_FIRST_ERROR
-        );
-    }
-    
-    public function isValid() : bool
-    {
-        $errors = $this->getErrors();
-        
-        return empty($errors);
-    }
-    
-   /**
     * Retrieves all commands that were detected, in the exact order
     * they were found.
     * 
     * @return Mailcode_Commands_Command[]
     */
-    public function getCommands()
+    public function getCommands() : array
     {
         $this->validate();
 
@@ -254,6 +179,23 @@ class Mailcode_Collection
         return $collection;
     }
 
+    // region: Validation
+
+    /**
+     * @var Mailcode_Collection_Error[]
+     */
+    protected array $errors = array();
+
+    /**
+     * @var OperationResult|NULL
+     */
+    protected ?OperationResult $validationResult = null;
+
+    /**
+     * @var bool
+     */
+    private bool $validating = false;
+
     /**
      * Whether the collection has been validated yet. This is used
      * primarily in the test suites.
@@ -269,7 +211,16 @@ class Mailcode_Collection
     {
         $this->validate();
 
-        return $this->validationResult;
+        if(isset($this->validationResult))
+        {
+            return $this->validationResult;
+        }
+
+        throw new Mailcode_Exception(
+            'No validation result stored.',
+            '',
+            self::ERROR_NO_VALIDATION_RESULT_AVAILABLE
+        );
     }
 
     private function validate() : void
@@ -305,6 +256,83 @@ class Mailcode_Collection
         return false;
     }
 
+    public function addErrorMessage(string $matchedText, string $message, int $code) : void
+    {
+        $this->errors[] = new Mailcode_Collection_Error_Message(
+            $matchedText,
+            $code,
+            $message
+        );
+    }
+
+    public function addInvalidCommand(Mailcode_Commands_Command $command) : void
+    {
+        // Remove the command in case it was already added
+        $this->removeCommand($command);
+
+        $this->errors[] = new Mailcode_Collection_Error_Command($command);
+    }
+
+    /**
+     * @return Mailcode_Collection_Error[]
+     */
+    public function getErrors() : array
+    {
+        $result = $this->getValidationResult();
+
+        $errors = $this->errors;
+
+        if(!$result->isValid())
+        {
+            $errors[] = new Mailcode_Collection_Error_Message(
+                '',
+                $result->getCode(),
+                $result->getErrorMessage()
+            );
+        }
+
+        return $errors;
+    }
+
+    public function getFirstError() : Mailcode_Collection_Error
+    {
+        $errors = $this->getErrors();
+
+        if(!empty($errors))
+        {
+            return array_shift($errors);
+        }
+
+        throw new Mailcode_Exception(
+            'Cannot retrieve first error: no errors detected',
+            null,
+            self::ERROR_CANNOT_RETRIEVE_FIRST_ERROR
+        );
+    }
+
+    public function isValid() : bool
+    {
+        $errors = $this->getErrors();
+
+        return empty($errors);
+    }
+
+    private function validateNesting() : void
+    {
+        foreach($this->commands as $command)
+        {
+            $command->validateNesting();
+
+            if(!$command->isValid()) {
+                $this->addInvalidCommand($command);
+            }
+        }
+    }
+
+    // endregion
+
+    // region: Getting filtered commands
+
     /**
      * Retrieves only ShowXXX commands in the collection, if any.
      * Includes ShowVariable, ShowDate, ShowNumber, ShowSnippet.
@@ -313,7 +341,7 @@ class Mailcode_Collection
      */
     public function getShowCommands(): array
     {
-        return $this->getCommandsByClass(Mailcode_Commands_ShowBase::class);
+        return Mailcode_Collection_TypeFilter::getShowCommands($this->commands);
     }
 
     /**
@@ -325,7 +353,7 @@ class Mailcode_Collection
      */
     public function getListVariableCommands() : array
     {
-        return $this->getCommandsByClass(Mailcode_Interfaces_Commands_ListVariables::class);
+        return Mailcode_Collection_TypeFilter::getListVariableCommands($this->commands);
     }
 
     /**
@@ -335,15 +363,15 @@ class Mailcode_Collection
     */
     public function getShowVariableCommands(): array
     {
-        return $this->getCommandsByClass(Mailcode_Commands_Command_ShowVariable::class);
+        return Mailcode_Collection_TypeFilter::getShowVariableCommands($this->commands);
     }
 
     /**
      * @return Mailcode_Commands_Command_For[]
      */
-    public function getForCommands()
+    public function getForCommands() : array
     {
-        return $this->getCommandsByClass(Mailcode_Commands_Command_For::class);
+        return Mailcode_Collection_TypeFilter::getForCommands($this->commands);
     }
 
    /**
@@ -353,28 +381,21 @@ class Mailcode_Collection
     */
     public function getShowDateCommands() : array
     {
-        return $this->getCommandsByClass(Mailcode_Commands_Command_ShowDate::class);
+        return Mailcode_Collection_TypeFilter::getShowDateCommands($this->commands);
     }
 
     /**
-     * @param string $className
-     * @return Mailcode_Commands_Command[]
+     * Retrieves only if commands in the collection, if any.
+     *
+     * @return Mailcode_Commands_Command_If[]
      */
-    public function getCommandsByClass(string $className) : array
+    public function getIfCommands() : array
     {
-        $result = array();
-
-        foreach($this->commands as $command)
-        {
-            if($command instanceof $className)
-            {
-                $result[] = $command;
-            }
-        }
-
-        return $result;
+        return Mailcode_Collection_TypeFilter::getIfCommands($this->commands);
     }
-    
+
+    // endregion
+
     public function getFirstCommand() : ?Mailcode_Commands_Command
     {
         $commands = $this->getCommands();
@@ -398,18 +419,6 @@ class Mailcode_Collection
     public function isFinalized() : bool
     {
         return $this->finalized;
-    }
-
-    private function validateNesting() : void
-    {
-        foreach($this->commands as $command)
-        {
-            $command->validateNesting();
-
-            if(!$command->isValid()) {
-                $this->addInvalidCommand($command);
-            }
-        }
     }
 
     /**

@@ -117,6 +117,9 @@ class Mailcode_PreParser_CommandDef
         $this->contentID = Mailcode_Parser_PreParser::storeContent($content);
     }
 
+    /**
+     * @return array{openingCommand:string,params:string,closingCommand:string,content:string,contentID:int,replacementCommand:string,startPosition:int,length:int}
+     */
     public function toArray() : array
     {
         return array(

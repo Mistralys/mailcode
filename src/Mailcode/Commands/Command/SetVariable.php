@@ -76,7 +76,7 @@ class Mailcode_Commands_Command_SetVariable extends Mailcode_Commands_Command im
 
     protected function validateSyntax_variable() : void
     {
-        $val = $this->validator->createVariable()->setIndex(0);
+        $val = $this->getValidator()->createVariable()->setIndex(0);
         
         if($val->isValid())
         {
@@ -93,7 +93,11 @@ class Mailcode_Commands_Command_SetVariable extends Mailcode_Commands_Command im
     
     protected function validateSyntax_operand() : void
     {
-        $tokens = $this->params->getInfo()->createPruner()->limitToOperands()->getTokens();
+        $tokens = $this->requireParams()
+            ->getInfo()
+            ->createPruner()
+            ->limitToOperands()
+            ->getTokens();
 
         foreach($tokens as $token)
         {
@@ -154,14 +158,14 @@ class Mailcode_Commands_Command_SetVariable extends Mailcode_Commands_Command im
     */
     public function getAssignmentTokens() : array
     {
-        $params = $this->params->getInfo()->getTokens();
+        $params = $this->requireParams()->getInfo()->getTokens();
         
         array_shift($params); // variable
         
         $eq = array_shift($params); // equals sign
         
         // in case the equals sign was omitted.
-        if(!$eq instanceof Mailcode_Parser_Statement_Tokenizer_Token_Operand)
+        if($eq !== null && !$eq instanceof Mailcode_Parser_Statement_Tokenizer_Token_Operand)
         {
             array_unshift($params, $eq);
         }

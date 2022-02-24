@@ -22,11 +22,12 @@ namespace Mailcode;
 class Mailcode_Translator_Syntax
 {
     public const ERROR_UNKNOWN_COMMAND_TYPE = 50401;
+    public const ERROR_INVALID_COMMAND_INSTANCE = 50402;
     
    /**
     * @var string
     */
-    protected $typeID;
+    protected string $typeID;
     
     public function __construct(string $typeID)
     {
@@ -51,15 +52,13 @@ class Mailcode_Translator_Syntax
     */
     public function translateCommand(Mailcode_Commands_Command $command) : string
     {
-        $translator = $this->createTranslator($command);
-        
-        return $translator->translate($command);
+        return $this->createTranslator($command)->translate($command);
     }
     
     public function createTranslator(Mailcode_Commands_Command $command) : Mailcode_Translator_Command
     {
         $class = sprintf(
-            'Mailcode\Mailcode_Translator_Syntax_%s_%s',
+            Mailcode_Translator_Syntax::class.'_%s_%s',
             $this->getTypeID(),
             $command->getID()
         );
@@ -77,8 +76,20 @@ class Mailcode_Translator_Syntax
         }
         
         $translator = new $class($command);
-        
-        return $translator;
+
+        if($translator instanceof Mailcode_Translator_Command)
+        {
+            return $translator;
+        }
+
+        throw new Mailcode_Translator_Exception(
+            'Invalid translator command instance.',
+            sprintf(
+                'The class [%s] does not extend the base translator command class.',
+                get_class($translator)
+            ),
+            self::ERROR_INVALID_COMMAND_INSTANCE
+        );
     }
 
     /**

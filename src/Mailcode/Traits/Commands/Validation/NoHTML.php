@@ -55,7 +55,7 @@ trait Mailcode_Traits_Commands_Validation_NoHTML
      * @return $this
      * @throws Mailcode_Exception
      */
-    public function setHTMLEnabled(bool $enabled=true)
+    public function setHTMLEnabled(bool $enabled=true) : self
     {
         $this->params->getInfo()->setKeywordEnabled(Mailcode_Commands_Keywords::TYPE_NOHTML, !$enabled);
 

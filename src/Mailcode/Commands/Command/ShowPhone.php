@@ -119,21 +119,51 @@ class Mailcode_Commands_Command_ShowPhone extends Mailcode_Commands_ShowBase
 
         self::$countriesLoaded = true;
 
-        $data = FileHelper::parseJSONFile(__DIR__.'/ShowPhone/numbers.json');
+        $data = self::loadData();
 
         foreach($data as $code => $def)
         {
-            $code = strval($code);
+            $code = (string)$code;
 
             self::$supportedCountries[$code] = new Mailcode_Commands_Command_ShowPhone_Number(
                 $code,
-                strval($def['label']),
-                strval($def['local']),
-                strval($def['international'])
+                $def['label'],
+                $def['local'],
+                $def['international']
             );
         }
 
         return self::$supportedCountries;
+    }
+
+    /**
+     * @return array<string,array{label:string,local:string,international:string}>
+     * @throws FileHelper_Exception
+     */
+    private static function loadData() : array
+    {
+        $data = FileHelper::parseJSONFile(__DIR__.'/ShowPhone/numbers.json');
+        $result = array();
+
+        foreach($data as $idx => $def)
+        {
+            if(!is_array($def) || !is_string($idx))
+            {
+                continue;
+            }
+
+            $label = $def['label'] ?? '';
+            $local = $def['local'] ?? '';
+            $int = $def['international'] ?? '';
+
+            $result[$idx] = array(
+                'label' => (string)$label,
+                'local' => (string)$local,
+                'international' => (string)$int
+            );
+        }
+
+        return $result;
     }
 
     /**

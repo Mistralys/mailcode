@@ -90,6 +90,9 @@ class Mailcode_Commands_Command_Code
     public const SYNTAX_APACHE_VELOCITY = 'ApacheVelocity';
     public const SYNTAX_MAILCODE = 'Mailcode';
 
+    /**
+     * @return string[]
+     */
     public static function getSupportedSyntaxes() : array
     {
         return array(
@@ -127,7 +130,9 @@ class Mailcode_Commands_Command_Code
      */
     protected function validateSyntax_token() : void
     {
-        $lang = $this->params->getInfo()->getStringLiteralByIndex(1);
+        $lang = $this->requireParams()
+            ->getInfo()
+            ->getStringLiteralByIndex(1);
 
         if($lang)
         {

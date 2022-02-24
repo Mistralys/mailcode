@@ -21,29 +21,29 @@ namespace Mailcode;
 class Mailcode_Factory_CommandSets
 {
     /**
-     * @var Mailcode_Factory_CommandSets_Set_If
+     * @var Mailcode_Factory_CommandSets_Set_If|NULL
      */
-    private $if;
+    private ?Mailcode_Factory_CommandSets_Set_If $if = null;
     
     /**
-     * @var Mailcode_Factory_CommandSets_Set_Show
+     * @var Mailcode_Factory_CommandSets_Set_Show|NULL
      */
-    private $show;
+    private ?Mailcode_Factory_CommandSets_Set_Show $show = null;
     
     /**
-     * @var Mailcode_Factory_CommandSets_Set_Misc
+     * @var Mailcode_Factory_CommandSets_Set_Misc|NULL
      */
-    private $misc;
+    private ?Mailcode_Factory_CommandSets_Set_Misc $misc = null;
     
    /**
-    * @var Mailcode_Factory_CommandSets_Set_Set
+    * @var Mailcode_Factory_CommandSets_Set_Set|NULL
     */
-    private $set;
+    private ?Mailcode_Factory_CommandSets_Set_Set $set = null;
     
    /**
-    * @var Mailcode_Factory_CommandSets_Set_ElseIf
+    * @var Mailcode_Factory_CommandSets_Set_ElseIf|NULL
     */
-    private $elseIf;
+    private ?Mailcode_Factory_CommandSets_Set_ElseIf $elseIf = null;
     
     public function if() : Mailcode_Factory_CommandSets_Set_If
     {

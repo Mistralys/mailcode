@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Mailcode;
 
 /**
- * Mailcode parser, capable of detecting commands in strings.
+ * Mailcode parser, capable of detecting Mailcode commands in strings.
  * 
  * @package Mailcode
  * @subpackage Parser
@@ -28,20 +28,13 @@ class Mailcode_Parser
         '{\s*([a-z]+)\s+([a-z-]+)\s*:([^}]*)}'
     );
     
-   /**
-    * @var Mailcode
-    */
-    protected $mailcode;
-    
-   /**
-    * @var Mailcode_Commands
-    */
-    protected $commands;
+    protected Mailcode $mailcode;
+    protected Mailcode_Commands $commands;
 
     /**
      * @var Mailcode_Commands_Command_Type_Opening[]
      */
-    protected $stack = array();
+    protected array $stack = array();
 
     public function __construct(Mailcode $mailcode)
     {
@@ -194,7 +187,7 @@ class Mailcode_Parser
     * Parses a single regex match: determines which named group
     * matches, and retrieves the according information.
     * 
-    * @param array[] $matches The regex results array.
+    * @param array<int,array<int,string>>$matches The regex results array.
     * @param int $index The matched index.
     * @return Mailcode_Parser_Match
     */

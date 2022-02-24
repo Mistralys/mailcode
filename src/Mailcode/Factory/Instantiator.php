@@ -260,7 +260,7 @@ class Mailcode_Factory_Instantiator
     
     public function filterVariableName(string $name) : string
     {
-        $name = preg_replace('/\s/', '', $name);
+        $name = (string)preg_replace('/\s/', '', $name);
         
         return '$'.ltrim($name, '$');
     }

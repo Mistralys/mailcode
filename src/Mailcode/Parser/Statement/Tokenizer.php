@@ -23,11 +23,12 @@ class Mailcode_Parser_Statement_Tokenizer
 {
     public const ERROR_TOKENIZE_METHOD_MISSING = 49801;
     public const ERROR_INVALID_TOKEN_CREATED = 49802;
+    public const ERROR_INVALID_TOKEN_CLASS = 49803;
     
     /**
      * @var string[]
      */
-    protected $tokenCategories = array(
+    protected array $tokenCategories = array(
         'Variables',
         'NormalizeQuotes',
         'EscapedQuotes',
@@ -41,27 +42,27 @@ class Mailcode_Parser_Statement_Tokenizer
    /**
     * @var Mailcode_Parser_Statement
     */
-    protected $statement;
+    protected Mailcode_Parser_Statement $statement;
     
    /**
     * @var string
     */
-    protected $tokenized;
+    protected string $tokenized = '';
     
     /**
      * @var Mailcode_Parser_Statement_Tokenizer_Token[]
      */
-    protected $tokensOrdered = array();
+    protected array $tokensOrdered = array();
     
    /**
     * @var string[]
     */
-    protected static $ids = array();
+    protected static array $ids = array();
 
     /**
      * @var callable[]
      */
-    protected $changeHandlers = array();
+    protected array $changeHandlers = array();
 
     public function __construct(Mailcode_Parser_Statement $statement)
     {
@@ -81,7 +82,7 @@ class Mailcode_Parser_Statement_Tokenizer
     * 
     * @return Mailcode_Parser_Statement_Tokenizer_Token[]
     */
-    public function getTokens()
+    public function getTokens() : array
     {
         return $this->tokensOrdered;
     }
@@ -108,7 +109,7 @@ class Mailcode_Parser_Statement_Tokenizer
     * 
     * @return Mailcode_Parser_Statement_Tokenizer_Token_Unknown[]
     */
-    public function getUnknown()
+    public function getUnknown() : array
     {
         $result = array();
         
@@ -143,7 +144,7 @@ class Mailcode_Parser_Statement_Tokenizer
         {
             $string = $token->getNormalized();
             
-            if($string != '')
+            if($string !== '')
             {
                 $parts[] = $string;
             }
@@ -218,9 +219,23 @@ class Mailcode_Parser_Statement_Tokenizer
     {
         $tokenID = $this->generateID();
 
-        $class = '\Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_'.$type;
+        $class = Mailcode_Parser_Statement_Tokenizer_Token::class.'_'.$type;
 
-        return new $class($tokenID, $matchedText, $subject, $this->getSourceCommand());
+        $token = new $class($tokenID, $matchedText, $subject, $this->getSourceCommand());
+
+        if($token instanceof Mailcode_Parser_Statement_Tokenizer_Token)
+        {
+            return $token;
+        }
+
+        throw new Mailcode_Exception(
+            'Invalid token class',
+            sprintf(
+                'The class [%s] does not extend the base token class.',
+                get_class($token)
+            ),
+            self::ERROR_INVALID_TOKEN_CLASS
+        );
     }
 
     public function appendKeyword(string $name) : Mailcode_Parser_Statement_Tokenizer_Token_Keyword
@@ -315,12 +330,9 @@ class Mailcode_Parser_Statement_Tokenizer
     /**
      * @param callable $callback
      */
-    public function onTokensChanged($callback) : void
+    public function onTokensChanged(callable $callback) : void
     {
-        if(is_callable($callback))
-        {
-            $this->changeHandlers[] = $callback;
-        }
+        $this->changeHandlers[] = $callback;
     }
 
     protected function triggerTokensChanged() : void

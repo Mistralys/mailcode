@@ -30,7 +30,7 @@ class Mailcode_Parser_StringPreProcessor
     /**
      * @var string
      */
-    private $subject;
+    private string $subject;
 
     public function __construct(string $subject)
     {
@@ -67,7 +67,7 @@ class Mailcode_Parser_StringPreProcessor
             return;
         }
 
-        $this->subject = preg_replace(
+        $this->subject = (string)preg_replace(
             '%<style\b[^>]*>(.*?)</style>%six',
             '',
             $this->subject

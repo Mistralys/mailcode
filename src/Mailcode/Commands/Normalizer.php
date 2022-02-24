@@ -47,7 +47,7 @@ class Mailcode_Commands_Normalizer
         $this->parts[] = '{'.$this->command->getName();
         
         $this->addType();
-        $this->addParams();
+        $this->addParams($this->command);
         $this->addLogicKeywords();
         
         $this->parts[] = '}';
@@ -65,9 +65,9 @@ class Mailcode_Commands_Normalizer
         $this->parts[] = ' '.$this->command->getType();
     }
     
-    private function addParams() : void
+    private function addParams(Mailcode_Commands_Command $command) : void
     {
-        $params = $this->getParamsString();
+        $params = $this->getParamsString($command);
         
         if(empty($params))
         {
@@ -78,21 +78,21 @@ class Mailcode_Commands_Normalizer
         $this->parts[] = $params;
     }
 
-    protected function getParamsStatement() : ?Mailcode_Parser_Statement
+    protected function getParamsStatement(Mailcode_Commands_Command $command) : ?Mailcode_Parser_Statement
     {
-        return $this->command->getParams();
+        return $command->getParams();
     }
 
-    protected function getParamsString() : string
+    protected function getParamsString(Mailcode_Commands_Command $command) : string
     {
-        $params = $this->getParamsStatement();
+        $params = $this->getParamsStatement($command);
 
         if($params === null)
         {
             return '';
         }
 
-        if($this->command->hasFreeformParameters())
+        if($command->hasFreeformParameters())
         {
             return $params->getStatementString();
         }
@@ -114,7 +114,7 @@ class Mailcode_Commands_Normalizer
             $this->parts[] = ' ';
             $this->parts[] = $keyword->getKeywordString(); // e.g. "if variable"
             
-            $this->addParams();
+            $this->addParams($keyword->getCommand());
         }
     }
 }

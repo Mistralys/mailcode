@@ -118,14 +118,6 @@ $code
 And more here.
 EOT;
 
-        // The content is trimmed automatically to be safe,
-        // so the resulting string must be trimmed.
-        $whole = <<<EOT
-Some text here,
-{code: %s "ApacheVelocity"}
-And more here.
-EOT;
-
         $safeguard = Mailcode::create()->createSafeguard($string);
         $this->assertSafeguardValid($safeguard);
 
@@ -148,9 +140,7 @@ EOT;
 
         $this->assertTrue($found);
 
-        $wholeFinal = sprintf($whole, Mailcode_Parser_PreParser::getContentCounter());
-
-        $this->assertEquals($wholeFinal, $safeguard->makeWhole($safe));
+        $this->assertEquals($string, $safeguard->makeWhole($safe));
     }
 
     /**
@@ -170,11 +160,6 @@ Some code here and a variable {showvar: $FOO}
 
 EOD;
 
-        $expectedSafe = <<<'EOD'
-{showvar: $FOO}
-{code: %s "Mailcode"}
-EOD;
-
         $safeguard = Mailcode::create()->createSafeguard($string);
 
         $this->assertSafeguardValid($safeguard);
@@ -192,17 +177,8 @@ EOD;
         {
             $content = $command->getContent();
 
-            // Insert the content counter into the expected command
-            $expectedSafeFinal = sprintf(
-                $expectedSafe,
-                Mailcode_Parser_PreParser::getContentCounter()
-            );
-
             $this->assertSame($expectedContent, $content);
-            $this->assertSame(
-                $expectedSafeFinal,
-                $safeguard->makeWhole($safe)
-            );
+            $this->assertSame($string, $safeguard->makeWhole($safe));
         }
         else
         {

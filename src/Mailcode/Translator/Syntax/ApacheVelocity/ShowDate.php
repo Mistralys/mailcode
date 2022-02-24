@@ -50,16 +50,23 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ShowDate extends Mailcode_Transl
         ' ' => ' '
     );
 
-    public function translate(Mailcode_Commands_Command_ShowDate $command): string
+    public function getInternalFormat(Mailcode_Commands_Command_ShowDate $command) : string
     {
         $internalFormat = $command->getTranslationParam('internal_format');
+
+        if(is_string($internalFormat) && !empty($internalFormat))
+        {
+            return $internalFormat;
+        }
+
+        return self::DEFAULT_INTERNAL_FORMAT;
+    }
+
+    public function translate(Mailcode_Commands_Command_ShowDate $command): string
+    {
+        $internalFormat = $this->getInternalFormat($command);
         $varName = ltrim($command->getVariableName(), '$');
         $javaFormat = $this->translateFormat($command->getFormatString());
-
-        if(empty($internalFormat))
-        {
-            $internalFormat = self::DEFAULT_INTERNAL_FORMAT;
-        }
 
         $statement = sprintf(
             'date.format("%s", $date.toDate("%s", $%s))',

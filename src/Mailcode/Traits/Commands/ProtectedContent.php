@@ -33,7 +33,9 @@ trait Mailcode_Traits_Commands_ProtectedContent
 
     protected function validateSyntax_content_id() : void
     {
-        $contentIDToken = $this->params->getInfo()->getTokenByIndex(0);
+        $contentIDToken = $this->requireParams()
+            ->getInfo()
+            ->getTokenByIndex(0);
 
         if($contentIDToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_Number)
         {

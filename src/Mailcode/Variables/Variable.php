@@ -35,27 +35,27 @@ class Mailcode_Variables_Variable
    /**
     * @var string
     */
-    protected $path;
+    protected string $path;
     
    /**
     * @var string
     */
-    protected $name;
+    protected string $name;
     
    /**
     * @var string
     */
-    protected $matchedText;
+    protected string $matchedText;
     
    /**
     * @var string
     */
-    protected $hash = '';
+    protected string $hash = '';
     
    /**
-    * @var OperationResult
+    * @var OperationResult|NULL
     */
-    protected $validationResult = null;
+    protected ?OperationResult $validationResult = null;
     
    /**
     * @var array<string>
@@ -70,7 +70,7 @@ class Mailcode_Variables_Variable
     /**
      * @var Mailcode_Commands_Command|null
      */
-    private $command;
+    private ?Mailcode_Commands_Command $command;
 
     public function __construct(string $path, string $name, string $matchedText, ?Mailcode_Commands_Command $sourceCommand=null)
     {
@@ -150,22 +150,26 @@ class Mailcode_Variables_Variable
     {
         return $this->getValidationResult()->isValid();
     }
-    
+
+    /**
+     * @return OperationResult
+     * @throws Mailcode_Exception
+     */
     public function getValidationResult() : OperationResult
     {
         if(isset($this->validationResult))
         {
             return $this->validationResult;
         }
-        
-        $this->validationResult = new OperationResult($this);
-        
-        $this->validate();
-        
-        return $this->validationResult;
+
+        $result = new OperationResult($this);
+        $this->validationResult = $result;
+        $this->validate($result);
+
+        return $result;
     }
 
-    protected function validate() : void
+    protected function validate(OperationResult $result) : void
     {
         foreach($this->validations as $validation)
         {
@@ -185,11 +189,12 @@ class Mailcode_Variables_Variable
             }
             
             $this->$method();
-            
-            if(!$this->validationResult->isValid())
+
+            /*
+            if(!$result->isValid())
             {
                 return;
-            }
+            }*/
         }
     }
     
@@ -220,7 +225,7 @@ class Mailcode_Variables_Variable
             return;
         }
         
-        $this->validationResult->makeError(
+        $this->getValidationResult()->makeError(
             t(
                 'The %1$s in variable %2$s must begin with a letter.',
                 $value,
@@ -241,12 +246,12 @@ class Mailcode_Variables_Variable
         $length = strlen($value);
         
         // trimming underscores does not change the length: no underscores at start or end of string.
-        if(strlen(trim($value, '_')) == $length)
+        if(strlen(trim($value, '_')) === $length)
         {
             return;
         }
         
-        $this->validationResult->makeError(
+        $this->getValidationResult()->makeError(
             t(
                 'The %1$s in variable %2$s may not start or end with an underscore.',
                 $value,

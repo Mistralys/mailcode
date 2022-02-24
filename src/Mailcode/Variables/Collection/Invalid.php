@@ -22,6 +22,8 @@ use AppUtils\OperationResult;
  */
 class Mailcode_Variables_Collection_Invalid extends Mailcode_Variables_Collection
 {
+    public const ERROR_NO_FIRST_ERROR_AVAILABLE = 101701;
+
     public function add(Mailcode_Variables_Variable $variable) : Mailcode_Variables_Collection
     {
         if($variable->isValid())
@@ -34,6 +36,17 @@ class Mailcode_Variables_Collection_Invalid extends Mailcode_Variables_Collectio
     
     public function getFirstError() : OperationResult
     {
-        return $this->getFirst()->getValidationResult();
+        $first = $this->getFirst();
+
+        if($first)
+        {
+            return $first->getValidationResult();
+        }
+
+        throw new Mailcode_Exception(
+            'Cannot get first error, no errors present.',
+            '',
+            self::ERROR_NO_FIRST_ERROR_AVAILABLE
+        );
     }
 }

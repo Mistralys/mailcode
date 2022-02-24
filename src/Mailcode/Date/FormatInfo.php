@@ -178,7 +178,7 @@ class Mailcode_Date_FormatInfo
    /**
     * Retrieves the characters list, grouped by type label.
     * 
-    * @return array<string, array>
+    * @return array<string,array<int,Mailcode_Date_FormatInfo_Character>>
     */
     public function getCharactersGrouped() : array
     {

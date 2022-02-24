@@ -49,7 +49,7 @@ final class Parser_NestingTests extends MailcodeTestCase
         $parser = Mailcode::create()->getParser();
         $collection = $parser->parseString($string)->getCollection();
         $showCommands = $collection->getShowVariableCommands();
-        $ifCommands = $collection->getCommandsByClass(Mailcode_Commands_Command_If::class);
+        $ifCommands = $collection->getIfCommands();
         $forCommands = $collection->getForCommands();
 
         $for = array_pop($forCommands);

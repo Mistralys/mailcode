@@ -82,7 +82,7 @@ class Mailcode_Commands_Command_Mono
 
     protected function validateSyntax_class(): void
     {
-        $literals = $this->params->getInfo()->getStringLiterals();
+        $literals = $this->requireParams()->getInfo()->getStringLiterals();
 
         if(empty($literals)) {
             return;

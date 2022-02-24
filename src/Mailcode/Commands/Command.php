@@ -34,6 +34,8 @@ abstract class Mailcode_Commands_Command
     public const ERROR_MISSING_TYPE_INTERFACE = 46004;
     public const ERROR_LOGIC_COMMANDS_NOT_SUPPORTED = 46005;
     public const ERROR_URL_ENCODING_NOT_SUPPORTED = 46006;
+    public const ERROR_NO_PARAMETERS_AVAILABLE = 46007;
+    public const ERROR_VALIDATOR_INSTANCE_NOT_SET = 46008;
     
     public const VALIDATION_MISSING_PARAMETERS = 48301;
     public const VALIDATION_ADDONS_NOT_SUPPORTED = 48302;
@@ -46,42 +48,42 @@ abstract class Mailcode_Commands_Command
    /**
     * @var string
     */
-    protected $type = '';
+    protected string $type = '';
 
    /**
     * @var string
     */
-    protected $paramsString = '';
+    protected string $paramsString = '';
     
    /**
     * @var string
     */
-    protected $matchedText = '';
+    protected string $matchedText = '';
 
    /**
     * @var string
     */
-    protected $hash = '';
+    protected string $hash = '';
     
    /**
     * @var OperationResult
     */
-    protected $validationResult = null;
+    protected OperationResult $validationResult;
     
    /**
     * @var Mailcode
     */
-    protected $mailcode;
+    protected Mailcode $mailcode;
     
    /**
-    * @var Mailcode_Parser_Statement
+    * @var Mailcode_Parser_Statement|NULL
     */
-    protected $params;
+    protected ?Mailcode_Parser_Statement $params = null;
 
    /**
     * @var string[] 
     */
-    protected $validations = array(
+    protected array $validations = array(
         Mailcode_Interfaces_Commands_Validation_EmptyParams::VALIDATION_NAME_EMPTY_PARAMS,
         Mailcode_Interfaces_Commands_Validation_ParamKeywords::VALIDATION_NAME_KEYWORDS,
         Mailcode_Interfaces_Commands_Validation_ParseParams::VALIDATION_NAME_PARSE_PARAMS,
@@ -92,38 +94,38 @@ abstract class Mailcode_Commands_Command
    /**
     * @var string
     */
-    protected $comment = '';
+    protected string $comment = '';
     
    /**
     * @var Mailcode_Commands_LogicKeywords|NULL
     */
-    protected $logicKeywords;
+    protected ?Mailcode_Commands_LogicKeywords $logicKeywords = null;
     
    /**
-    * @var Mailcode_Parser_Statement_Validator
+    * @var Mailcode_Parser_Statement_Validator|NULL
     */
-    protected $validator;
+    protected ?Mailcode_Parser_Statement_Validator $validator = null;
     
    /**
     * @var boolean
     */
-    private $validated = false;
+    private bool $validated = false;
 
     /**
      * Collection of parameters for the translation backend.
      * @var array<string,mixed>
      */
-    protected $translationParams = array();
+    protected array $translationParams = array();
 
     /**
      * @var Mailcode_Commands_Command|NULL
      */
-    protected $parent = null;
+    protected ?Mailcode_Commands_Command $parent = null;
 
     /**
      * @var bool
      */
-    private $nestingValidated = false;
+    private bool $nestingValidated = false;
 
     public function __construct(string $type='', string $paramsString='', string $matchedText='')
     {
@@ -173,7 +175,7 @@ abstract class Mailcode_Commands_Command
      */
     public function hasContentParent() : bool
     {
-        return isset($this->parent) && $this->parent instanceof Mailcode_Interfaces_Commands_ProtectedContent && $this->parent->getClosingCommand() !== $this;
+        return isset($this->parent) && $this->parent instanceof Mailcode_Interfaces_Commands_ProtectedContent;
     }
 
     public function getID() : string
@@ -246,16 +248,7 @@ abstract class Mailcode_Commands_Command
     
     public function getValidationResult() :  OperationResult
     {
-        if(isset($this->validationResult)) 
-        {
-            return $this->validationResult;
-        }
-        
-        throw new Mailcode_Exception(
-            'No validation result available',
-            'The command has no validation error, the validation result cannot be accessed.',
-            self::ERROR_NO_VALIDATION_RESULT_AVAILABLE
-        );
+        return $this->validationResult;
     }
     
     protected function validateSyntax() : void
@@ -381,6 +374,20 @@ abstract class Mailcode_Commands_Command
     {
         return $this->params;
     }
+
+    public function requireParams() : Mailcode_Parser_Statement
+    {
+        if(isset($this->params))
+        {
+            return $this->params;
+        }
+
+        throw new Mailcode_Exception(
+            'No parameters available.',
+            'The command has no parameters.',
+            self::ERROR_NO_PARAMETERS_AVAILABLE
+        );
+    }
     
     abstract public function getName() : string;
     
@@ -452,7 +459,7 @@ abstract class Mailcode_Commands_Command
     
     public function getLogicKeywords() : Mailcode_Commands_LogicKeywords
     {
-        if($this->supportsLogicKeywords() && isset($this->logicKeywords))
+        if(isset($this->logicKeywords) && $this->supportsLogicKeywords())
         {
             return $this->logicKeywords;
         }
@@ -484,7 +491,9 @@ abstract class Mailcode_Commands_Command
     {
         $this->requireURLEncoding();
 
-        $this->params->getInfo()->setKeywordEnabled(Mailcode_Commands_Keywords::TYPE_URLENCODE, $encoding);
+        $this->requireParams()
+            ->getInfo()
+            ->setKeywordEnabled(Mailcode_Commands_Keywords::TYPE_URLENCODE, $encoding);
 
         return $this;
     }
@@ -493,7 +502,9 @@ abstract class Mailcode_Commands_Command
     {
         $this->requireURLEncoding();
 
-        $this->params->getInfo()->setKeywordEnabled(Mailcode_Commands_Keywords::TYPE_URLDECODE, $decode);
+        $this->requireParams()
+            ->getInfo()
+            ->setKeywordEnabled(Mailcode_Commands_Keywords::TYPE_URLDECODE, $decode);
 
         return $this;
     }
@@ -516,11 +527,25 @@ abstract class Mailcode_Commands_Command
 
     public function isURLEncoded() : bool
     {
-        return $this->params->getInfo()->hasKeyword(Mailcode_Commands_Keywords::TYPE_URLENCODE);
+        return $this->requireParams()->getInfo()->hasKeyword(Mailcode_Commands_Keywords::TYPE_URLENCODE);
     }
 
     public function isURLDecoded() : bool
     {
-        return $this->params->getInfo()->hasKeyword(Mailcode_Commands_Keywords::TYPE_URLDECODE);
+        return $this->requireParams()->getInfo()->hasKeyword(Mailcode_Commands_Keywords::TYPE_URLDECODE);
+    }
+
+    protected function getValidator() : Mailcode_Parser_Statement_Validator
+    {
+        if(isset($this->validator))
+        {
+            return $this->validator;
+        }
+
+        throw new Mailcode_Exception(
+            'No validator available',
+            'The validator instance has not been set.',
+            self::ERROR_VALIDATOR_INSTANCE_NOT_SET
+        );
     }
 }

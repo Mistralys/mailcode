@@ -121,7 +121,7 @@ class Mailcode_Commands_LogicKeywords extends OperationResult
         
         foreach($this->keywords as $keyword)
         {
-            $kParams = array_shift($params);
+            $kParams = (string)array_shift($params);
             
             $keyword->setParamsString($kParams);
             

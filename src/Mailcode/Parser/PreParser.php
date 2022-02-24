@@ -233,6 +233,9 @@ class Mailcode_Parser_PreParser
         return $this->subject;
     }
 
+    /**
+     * @return Mailcode_PreParser_CommandDef[]
+     */
     public function getCommands() : array
     {
         return $this->commands;
@@ -308,9 +311,9 @@ class Mailcode_Parser_PreParser
 
         foreach ($matches[0] as $idx => $matchedText)
         {
-            $result[$idx] = array(
-                'matchedText' => $matchedText,
-                'parameters' => trim($matches[1][$idx])
+            $result[(int)$idx] = array(
+                'matchedText' => (string)$matchedText,
+                'parameters' => trim((string)$matches[1][$idx])
             );
         }
 
@@ -319,6 +322,10 @@ class Mailcode_Parser_PreParser
         return $result;
     }
 
+    /**
+     * @param array<int,array<int,string>> $matches
+     * @return void
+     */
     private function debugOpeningCommands(array $matches) : void
     {
         if($this->debug === false)
@@ -330,6 +337,10 @@ class Mailcode_Parser_PreParser
         print_r($matches);
     }
 
+    /**
+     * @param string $name
+     * @return array<int,string>
+     */
     private function detectClosingCommands(string $name) : array
     {
         preg_match_all('/{\s*'.$name.'\s*}/sixU', $this->subject, $matches);

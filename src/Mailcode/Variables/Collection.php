@@ -23,7 +23,7 @@ abstract class Mailcode_Variables_Collection
    /**
     * @var Mailcode_Variables_Variable[]
     */
-    protected $variables = array();
+    protected array $variables = array();
     
     public function __construct()
     {

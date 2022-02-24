@@ -29,7 +29,6 @@ EOD;
         $this->assertCount(4, $collection->getShowCommands());
         $this->assertCount(1, $collection->getShowVariableCommands());
         $this->assertCount(1, $collection->getShowDateCommands());
-        $this->assertCount(1, $collection->getCommandsByClass(Mailcode_Commands_Command_ShowSnippet::class));
     }
 
     public function test_merge() : void
