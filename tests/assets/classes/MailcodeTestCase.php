@@ -2,6 +2,7 @@
 
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Collection;
+use Mailcode\Mailcode_Commands_CommonConstants;
 use Mailcode\Mailcode_Exception;
 use Mailcode\Mailcode_Parser_Safeguard;
 use Mailcode\Mailcode_Variables_Collection;
@@ -116,6 +117,17 @@ abstract class MailcodeTestCase extends TestCase
         $this->assertTrue(
             $collection->isValid(),
             implode(PHP_EOL, $msg)
+        );
+    }
+
+    protected function assertCollectionHasErrorCode(int $code, Mailcode_Collection $collection) : void
+    {
+        $this->assertTrue(
+            $collection->hasErrorCode($code),
+            sprintf(
+                'Collection does not have error code [%s].',
+                $code
+            )
         );
     }
 }
