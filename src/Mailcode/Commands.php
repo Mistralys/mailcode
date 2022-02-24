@@ -247,4 +247,27 @@ class Mailcode_Commands
             self::ERROR_INVALID_DUMMY_COMMAND_TYPE
         );
     }
+
+    /**
+     * Retrieves all commands that can contain content
+     * that is not parsed by the main parsing process.
+     *
+     * @return Mailcode_Interfaces_Commands_ProtectedContent[]
+     * @throws Mailcode_Exception
+     */
+    public function getContentCommands() : array
+    {
+        $result = array();
+        $commands = $this->getAll();
+
+        foreach($commands as $command)
+        {
+            if($command instanceof Mailcode_Interfaces_Commands_ProtectedContent)
+            {
+                $result[] = $command;
+            }
+        }
+
+        return $result;
+    }
 }
