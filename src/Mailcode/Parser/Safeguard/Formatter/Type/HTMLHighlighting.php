@@ -28,14 +28,4 @@ class Mailcode_Parser_Safeguard_Formatter_Type_HTMLHighlighting extends Mailcode
     {
         // nothing to do here
     }
-
-    public function resolveContentReplacement(Mailcode_Interfaces_Commands_ProtectedContent $command, Mailcode_Parser_Safeguard_Formatter_Location $location) : string
-    {
-        return htmlspecialchars($command->getContent());
-    }
-
-    public function processesContent() : bool
-    {
-        return true;
-    }
 }

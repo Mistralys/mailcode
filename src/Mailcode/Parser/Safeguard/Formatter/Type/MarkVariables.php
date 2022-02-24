@@ -208,9 +208,4 @@ class Mailcode_Parser_Safeguard_Formatter_Type_MarkVariables extends Mailcode_Pa
 
         );
     }
-
-    public function processesContent() : bool
-    {
-        return false;
-    }
 }

@@ -28,14 +28,4 @@ class Mailcode_Parser_Safeguard_Formatter_Type_Normalized extends Mailcode_Parse
     {
         return $location->getPlaceholder()->getCommand()->getNormalized();
     }
-
-    public function resolveContentReplacement(Mailcode_Interfaces_Commands_ProtectedContent $command, Mailcode_Parser_Safeguard_Formatter_Location $location) : ?string
-    {
-        return null;
-    }
-
-    public function processesContent() : bool
-    {
-        return false;
-    }
 }

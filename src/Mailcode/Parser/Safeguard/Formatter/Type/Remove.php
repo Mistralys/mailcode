@@ -11,8 +11,6 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
-use testsuites\Formatting\RemoveFormatterTests;
-
 /**
  * Default formatter: Only replaces commands with their normalized strings.
  *
@@ -29,15 +27,5 @@ class Mailcode_Parser_Safeguard_Formatter_Type_Remove extends Mailcode_Parser_Sa
     public function getReplaceString(Mailcode_Parser_Safeguard_Formatter_Location $location): string
     {
         return '';
-    }
-
-    public function resolveContentReplacement(Mailcode_Interfaces_Commands_ProtectedContent $command, Mailcode_Parser_Safeguard_Formatter_Location $location) : string
-    {
-        return '';
-    }
-
-    public function processesContent() : bool
-    {
-        return true;
     }
 }
