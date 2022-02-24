@@ -34,7 +34,7 @@
 		"mistralys/application-localization" : "^1.2",
 		"giggsey/libphonenumber-for-php": "^8.12",
 		"ext-json": "*",
-		"php": ">=7.3"
+		"php": ">=7.4"
 	},
 	"require-dev" : 
 	{
