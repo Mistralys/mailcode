@@ -1,5 +1,7 @@
 docs/cache/
 docs/config/cache/
+docs/phpdoc/build/api
+docs/phpdoc/build/cache
 vendor
 docs/phpstan/output.txt
 .idea/
@@ -9,3 +11,4 @@ tests/assets/files/test-highlight-output.html
 tests/assets/files/test-highlight-marked-variables.html
 tests/assets/files/test-highlight-output-raw.html
 docs/config/resultCache.php
+docs/phpdoc/phpDocumentor.phar
