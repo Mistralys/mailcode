@@ -35,7 +35,7 @@ class Mailcode_Commands_Command_Mono
     /**
      * @var string[]
      */
-    protected $classes = array();
+    protected array $classes = array();
 
     public function getName() : string
     {
@@ -108,7 +108,7 @@ class Mailcode_Commands_Command_Mono
 
         if($this->isClassNameValid($className))
         {
-            if(!in_array($className, $this->classes)) {
+            if(!in_array($className, $this->classes, true)) {
                 $this->classes[] = $className;
             }
 
@@ -128,7 +128,7 @@ class Mailcode_Commands_Command_Mono
 
     public function isClassNameValid(string $className) : bool
     {
-        $result = preg_match('/\A[a-z_][a-z0-9_][-_a-z0-9]+\Z/si', $className);
+        $result = preg_match('/\A[a-z_][a-z0-9_][-_a-z0-9]+\Z/i', $className);
 
         return $result !== false && $result > 0;
     }
