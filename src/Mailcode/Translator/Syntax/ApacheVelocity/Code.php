@@ -20,16 +20,20 @@ namespace Mailcode;
  */
 class Mailcode_Translator_Syntax_ApacheVelocity_Code extends Mailcode_Translator_Syntax_ApacheVelocity implements Mailcode_Translator_Command_Code
 {
-    public function translate(Mailcode_Commands_Command_Code $command): string
-    {
-        $syntax = $command->getSyntaxName();
-
-        return <<<EOD
+    private string $template = <<<'EOD'
 #**
- Wrapper IF for the code command to insert native $syntax commands.
+ Wrapper IF for the code command to insert native %1$s commands.
  This is needed for technical Mailcode reasons. 
 *#
-#if(true)
+#if(true)%2$s#{end}
 EOD;
+
+    public function translate(Mailcode_Commands_Command_Code $command): string
+    {
+        return sprintf(
+            $this->template,
+            $command->getSyntaxName(),
+            $command->getContentTrimmed()
+        );
     }
 }
