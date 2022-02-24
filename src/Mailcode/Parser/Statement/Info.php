@@ -268,10 +268,15 @@ class Mailcode_Parser_Statement_Info
     }
 
     /**
-     * Called whenever the tokens collection in the tokenizer has changed.
+     * Called whenever the token collection in the tokenizer has changed.
      */
     public function handleTokensChanged() : void
     {
         $this->tokens = $this->tokenizer->getTokens();
+    }
+
+    public function removeToken(Mailcode_Parser_Statement_Tokenizer_Token $token) : void
+    {
+        $this->tokenizer->removeToken($token);
     }
 }
