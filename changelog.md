@@ -5,7 +5,11 @@
 - Safeguard: The `getPlaceholderXXX` methods are now deprecated.
 - Parser: Added a pre-parser for protected content commands.
 - Parser: Protected content commands may now contain any text, including Mailcode commands.
+- Parser: Added `copy()` to the parameter statement class.
 - Formatting: Added a replacer to remove all Mailcode commands from a string.
+- Commands: Added `Mailcode_Commands::getContentCommands()`.
+- Commands: Added `Mailcode_Commands_Command_Code::getSupportedSyntaxes()`.
+- Factory: Added the `$content` parameter for code commands.
 
 **Breaking changes**
 
@@ -13,6 +17,7 @@
 - Parser: `parseString()` now returns an instance of `Mailcode_Parser_ParseResult` instead of a collection.
 - Commands: Removed `Mailcode_Commands_Command_Code::getSyntax()`.
 - Commands: The `{code}` command must now be closed with `{code}` instead of `{end}`.
+- Factory: The `misc::code()` method now requires the content to be specified.
 
 **Deprecated methods** 
 
