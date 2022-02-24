@@ -57,38 +57,38 @@ class Mailcode_Parser_Safeguard
    /**
     * @var Mailcode_Parser
     */
-    protected $parser;
+    protected Mailcode_Parser $parser;
     
    /**
     * @var Mailcode_Collection
     */
-    protected $commands;
+    protected Mailcode_Collection $commands;
     
    /**
     * @var string
     */
-    protected $originalString;
+    protected string $originalString;
     
    /**
     * @var Mailcode_Collection
     */
-    protected $collection;
+    protected Mailcode_Collection $collection;
     
    /**
     * Counter for the placeholders, global for all placeholders.
     * @var integer
     */
-    private static $counter = 0;
+    private static int $counter = 0;
     
    /**
     * @var Mailcode_Parser_Safeguard_PlaceholderCollection|NULL
     */
-    protected $placeholders;
+    protected ?Mailcode_Parser_Safeguard_PlaceholderCollection $placeholders = null;
     
    /**
     * @var string
     */
-    protected $delimiter = '999';
+    protected string $delimiter = '999';
     
     public function __construct(Mailcode_Parser $parser, string $subject)
     {
@@ -179,42 +179,7 @@ class Mailcode_Parser_Safeguard
             $string = $this->makePlaceholderSafe($string, $placeholder);
         }
 
-        $string = $this->protectContents($string);
-
         $this->analyzeURLs($string);
-
-        return $string;
-    }
-
-    /**
-     * Goes through all placeholders in the specified string, and
-     * checks if there are any commands whose content must be protected,
-     * like the `code` command.
-     *
-     * It automatically calls the protectContent method of the command,
-     * which replaces the command with a separate placeholder text.
-     *
-     * @param string $string
-     * @return string
-     * @see Mailcode_Interfaces_Commands_ProtectedContent
-     * @see Mailcode_Traits_Commands_ProtectedContent
-     */
-    private function protectContents(string $string) : string
-    {
-        $placeholders = $this->getPlaceholdersCollection()->getAll();
-
-        foreach ($placeholders as $placeholder)
-        {
-            $command = $placeholder->getCommand();
-
-            if($command instanceof Mailcode_Interfaces_Commands_ProtectedContent)
-            {
-                $closing = $command->getClosingCommand();
-                $closingPlaceholder = $this->getPlaceholdersCollection()->getByCommand($closing);
-
-                $string = $command->protectContent($string, $placeholder, $closingPlaceholder);
-            }
-        }
 
         return $string;
     }
@@ -345,26 +310,9 @@ class Mailcode_Parser_Safeguard
             $formatting->replaceWithNormalized();
         }
         
-        return $this->restoreContents($formatting->toString());
+        return $formatting->toString();
     }
 
-    private function restoreContents(string $string) : string
-    {
-        $placeholders = $this->getPlaceholdersCollection()->getAll();
-
-        foreach ($placeholders as $placeholder)
-        {
-            $command = $placeholder->getCommand();
-
-            if($command instanceof Mailcode_Interfaces_Commands_ProtectedContent)
-            {
-                $string = $command->restoreContent($string);
-            }
-        }
-
-        return $string;
-    }
-    
    /**
     * Makes the string whole again after transforming or filtering it,
     * by replacing the command placeholders with the original commands.
@@ -443,7 +391,7 @@ class Mailcode_Parser_Safeguard
     }
     
    /**
-    * Retrieves the commands collection contained in the string.
+    * Retrieves the command collection contained in the string.
     * 
     * @return Mailcode_Collection
     */
@@ -453,8 +401,14 @@ class Mailcode_Parser_Safeguard
         {
             return $this->collection;
         }
-        
-        $this->collection = $this->parser->parseString($this->originalString);
+
+        $result = $this->parser->parseString($this->originalString);
+
+        $this->collection = $result->getCollection();
+
+        // Overwrite the string, since the pre-parser may
+        // have modified it.
+        $this->originalString = $result->getPreParser()->getString();
         
         return $this->collection;
     }
