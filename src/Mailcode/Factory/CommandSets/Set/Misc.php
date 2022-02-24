@@ -162,17 +162,21 @@ class Mailcode_Factory_CommandSets_Set_Misc extends Mailcode_Factory_CommandSets
         throw $this->instantiator->exceptionUnexpectedType('Mono', $cmd);
     }
 
-    public function code(string $language) : Mailcode_Commands_Command_Code
+    public function code(string $language, string $content) : Mailcode_Commands_Command_Code
     {
+        $contentID = Mailcode_Parser_PreParser::storeContent($content);
+
         $cmd = $this->commands->createCommand(
             'Code',
             '',
             sprintf(
-                '"%s"',
+                '%s "%s"',
+                $contentID,
                 $language
             ),
             sprintf(
-                '{code: "%s"}',
+                '{code: %s "%s"}',
+                $contentID,
                 $language
             )
         );
