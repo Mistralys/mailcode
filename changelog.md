@@ -1,13 +1,22 @@
-### v2.2.0 - New commands 
+### v3.0.0 - PHP 7.4 and new commands 
 
 - Added this changelog file.
 - Safeguard: Added the placeholder collection class to consolidate placeholders access.
 - Safeguard: The `getPlaceholderXXX` methods are now deprecated.
-- Parser: Commands that capture their content now support nested commands.
-- Commands: Code: The command may now contain Mailcode commands, provided that their syntax is valid.
+- Parser: Added a pre-parser for protected content commands.
+- Parser: Protected content commands may now contain any text, including Mailcode commands.
 - Formatting: Added a replacer to remove all Mailcode commands from a string.
 
-**Warning:** The following methods have been marked as deprecated,
+**Breaking changes**
+
+- PHP requirement increased to PHP v7.4.
+- Parser: `parseString()` now returns an instance of `Mailcode_Parser_ParseResult` instead of a collection.
+- Commands: Removed `Mailcode_Commands_Command_Code::getSyntax()`.
+- Commands: The `{code}` command must now be closed with `{code}` instead of `{end}`.
+
+**Deprecated methods** 
+
+The following methods have been marked as deprecated,
 and will be removed in a future update:
 
 ```
