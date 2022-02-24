@@ -29,32 +29,32 @@ class Mailcode_Parser_Statement
    /**
     * @var string
     */
-    protected $statement;
+    protected string $statement;
     
    /**
     * @var OperationResult
     */
-    protected $result;
+    protected OperationResult $result;
     
    /**
     * @var Mailcode_Parser_Statement_Tokenizer
     */
-    protected $tokenizer;
+    protected Mailcode_Parser_Statement_Tokenizer $tokenizer;
     
    /**
     * @var Mailcode_Parser_Statement_Info|NULL
     */
-    protected $info;
+    protected ?Mailcode_Parser_Statement_Info $info = null;
 
     /**
      * @var bool
      */
-    protected $freeform = false;
+    protected bool $freeform = false;
 
     /**
      * @var Mailcode_Commands_Command|null
      */
-    private $sourceCommand;
+    private ?Mailcode_Commands_Command $sourceCommand = null;
 
     public function __construct(string $statement, bool $freeform=false, ?Mailcode_Commands_Command $sourceCommand=null)
     {
@@ -147,5 +147,20 @@ class Mailcode_Parser_Statement
     public function getNormalized() : string
     {
         return $this->tokenizer->getNormalized();
+    }
+
+    /**
+     * Creates a copy of the parameters, with the exact
+     * same parameters and source command, if any.
+     *
+     * @return Mailcode_Parser_Statement
+     */
+    public function copy() : Mailcode_Parser_Statement
+    {
+        return new Mailcode_Parser_Statement(
+            $this->statement,
+            $this->freeform,
+            $this->sourceCommand
+        );
     }
 }
