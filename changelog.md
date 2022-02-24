@@ -10,6 +10,7 @@
 - Commands: Added `Mailcode_Commands::getContentCommands()`.
 - Commands: Added `Mailcode_Commands_Command_Code::getSupportedSyntaxes()`.
 - Factory: Added the `$content` parameter for code commands.
+- Code quality: Increased PHPStan analysis level to `9`.
 
 **Breaking changes**
 
