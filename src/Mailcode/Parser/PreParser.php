@@ -53,6 +53,7 @@ class Mailcode_Parser_PreParser
     private Mailcode_Collection $collection;
     private static int $contentCounter = 0;
     private bool $debug = false;
+    private bool $parsed = false;
 
     /**
      * @var Mailcode_PreParser_CommandDef[]
@@ -151,14 +152,22 @@ class Mailcode_Parser_PreParser
      */
     public function parse() : self
     {
+        if($this->parsed)
+        {
+            return $this;
+        }
+
+        $this->parsed = true;
         $this->subject = self::safeguardBrackets($this->subject);
 
-        $names = $this->getContentCommandNames();
+        $this->detectCommands();
 
-        foreach($names as $name)
+        foreach($this->commands as $commandDef)
         {
-            $this->collapseContentCommand($name);
+            $this->processCommand($commandDef);
         }
+
+        $this->validateCommandContents();
 
         $this->subject = self::restoreBrackets($this->subject);
 
@@ -225,6 +234,8 @@ class Mailcode_Parser_PreParser
 
     public function countCommands() : int
     {
+        $this->parse();
+
         return count($this->commands);
     }
 
@@ -238,19 +249,9 @@ class Mailcode_Parser_PreParser
      */
     public function getCommands() : array
     {
+        $this->parse();
+
         return $this->commands;
-    }
-
-    private function collapseContentCommand(string $name) : void
-    {
-        $this->commands = $this->detectCommands($name);
-
-        foreach($this->commands as $commandDef)
-        {
-            $this->processCommand($commandDef);
-        }
-
-        $this->validateCommandContents();
     }
 
     private function validateCommandContents() : void
@@ -264,48 +265,82 @@ class Mailcode_Parser_PreParser
         }
     }
 
-    /**
-     * @return Mailcode_PreParser_CommandDef[]
-     */
-    private function detectCommands(string $name) : array
+    private function detectCommands() : void
     {
-        $openingCommands = $this->detectOpeningCommands($name);
+        $openingCommands = $this->detectOpeningCommands();
 
         if(empty($openingCommands))
         {
-            return array();
+            return;
         }
 
-        $closingCommands = $this->detectClosingCommands($name);
+        $closingCommands = $this->detectClosingCommands();
 
-        if(count($closingCommands) !== count($openingCommands))
+        if(!$this->validateCommandsList($openingCommands, $closingCommands))
         {
-            $this->addClosingError($name);
-            return array();
+            return;
         }
-
-        $result = array();
 
         foreach($openingCommands as $idx => $def)
         {
-            $result[] = new Mailcode_PreParser_CommandDef(
-                $name,
+            $this->commands[] = new Mailcode_PreParser_CommandDef(
+                $def['name'],
                 $def['matchedText'],
                 $def['parameters'],
-                $closingCommands[$idx]
+                $closingCommands[$idx]['matchedText']
             );
         }
-
-        return $result;
     }
 
     /**
-     * @param string $name
-     * @return array<int,array{matchedText:string,parameters:string}>
+     * @param array<int,array{matchedText:string,name:string,parameters:string}> $openingCommands
+     * @param array<int,array{name:string,matchedText:string}> $closingCommands
+     * @return bool
      */
-    private function detectOpeningCommands(string $name) : array
+    private function validateCommandsList(array $openingCommands, array $closingCommands) : bool
     {
-        preg_match_all('/{\s*'.$name.'\s*:([^}]+)}/sixU', $this->subject, $matches);
+        $opening = count($openingCommands);
+        $closing = count($closingCommands);
+        $max = $opening;
+        if($closing > $max) {
+            $max = $closing;
+        }
+
+        for($i=0; $i < $max; $i++)
+        {
+            if(!isset($openingCommands[$i]))
+            {
+                // command closed that was never opened
+                return false;
+            }
+
+            if(!isset($closingCommands[$i]))
+            {
+                // command opened that was never closed
+                return false;
+            }
+
+            if($openingCommands[$i]['name'] !== $closingCommands[$i]['name'])
+            {
+                // command closed does not match opening
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @return array<int,array{matchedText:string,name:string,parameters:string}>
+     */
+    private function detectOpeningCommands() : array
+    {
+        $regex = sprintf(
+            '/{\s*(%s)\s*:([^}]+)}/sixU',
+            implode('|', $this->getContentCommandNames())
+        );
+
+        preg_match_all($regex, $this->subject, $matches);
 
         $result = array();
 
@@ -313,7 +348,8 @@ class Mailcode_Parser_PreParser
         {
             $result[(int)$idx] = array(
                 'matchedText' => (string)$matchedText,
-                'parameters' => trim((string)$matches[1][$idx])
+                'name' => trim((string)$matches[1][$idx]),
+                'parameters' => trim((string)$matches[2][$idx])
             );
         }
 
@@ -338,14 +374,28 @@ class Mailcode_Parser_PreParser
     }
 
     /**
-     * @param string $name
-     * @return array<int,string>
+     * @return array<int,array{name:string,matchedText:string}>
      */
-    private function detectClosingCommands(string $name) : array
+    private function detectClosingCommands() : array
     {
-        preg_match_all('/{\s*'.$name.'\s*}/sixU', $this->subject, $matches);
+        $regex = sprintf(
+            '/{\s*(%s)\s*}/sixU',
+            implode('|', $this->getContentCommandNames())
+        );
 
-        return $matches[0];
+        preg_match_all($regex, $this->subject, $matches);
+
+        $result = array();
+
+        foreach($matches[0] as $idx => $matchedText)
+        {
+            $result[] = array(
+                'name' => (string)$matches[1][$idx],
+                'matchedText' => $matchedText
+            );
+        }
+
+        return $result;
     }
 
     private function addClosingError(string $name) : void
@@ -353,10 +403,7 @@ class Mailcode_Parser_PreParser
         $this->collection->addErrorMessage(
             '',
             (string)sb()
-                ->t(
-                    'Incorrectly closed %1$s command:',
-                    sb()->code($name)
-                )
+                ->t('Incorrectly closed content command:')
                 ->t(
                     'Please ensure that each of the commands has a matching %1$s closing tag.',
                     sb()->code('{'.$name.'}')
