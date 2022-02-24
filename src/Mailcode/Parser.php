@@ -65,18 +65,28 @@ class Mailcode_Parser
      * commands.
      *
      * @param string $string
-     * @return Mailcode_Collection A collection with all unique commands found.
+     * @return Mailcode_Parser_ParseResult A collection with all unique commands found.
      * @throws Mailcode_Exception
      */
-    public function parseString(string $string) : Mailcode_Collection
+    public function parseString(string $string) : Mailcode_Parser_ParseResult
     {
-        $string = $this->prepareString($string);
+        $collection = new Mailcode_Collection();
+
+        $preParser = $this->preParse($string, $collection);
+
+        $result = new Mailcode_Parser_ParseResult($collection, $preParser);
+
+        if(!$collection->isValid())
+        {
+            return $result;
+        }
+
+        $string = $this->prepareString($preParser->getString());
 
         $matches = array();
         preg_match_all(self::getRegex(), $string, $matches, PREG_PATTERN_ORDER);
         
         $total = count($matches[0]);
-        $collection = new Mailcode_Collection();
 
         for($i=0; $i < $total; $i++)
         {
@@ -87,7 +97,12 @@ class Mailcode_Parser
 
         $collection->finalize();
 
-        return $collection;
+        return $result;
+    }
+
+    private function preParse(string $subject, Mailcode_Collection $collection) : Mailcode_Parser_PreParser
+    {
+        return (new Mailcode_Parser_PreParser($subject, $collection))->parse();
     }
 
     protected function prepareString(string $subject) : string
