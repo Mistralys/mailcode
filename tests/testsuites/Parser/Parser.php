@@ -18,9 +18,7 @@ final class Parser_ParserTests extends MailcodeTestCase
     
     public function test_parseString_withoutCommands()
     {
-        $parser = Mailcode::create()->getParser();
-        
-        $collection = $parser->parseString("Some text without commands");
+        $collection = Mailcode::create()->parseString("Some text without commands");
         
         $this->assertSame(0, $collection->countCommands());
         $this->assertFalse($collection->hasCommands());
@@ -28,9 +26,7 @@ final class Parser_ParserTests extends MailcodeTestCase
 
     public function test_parseString_withSingleCommand()
     {
-        $parser = Mailcode::create()->getParser();
-        
-        $collection = $parser->parseString(
+        $collection = Mailcode::create()->parseString(
             "Line with {showvar: \$CUSTOMER.NAME}"
         );
         
@@ -40,9 +36,7 @@ final class Parser_ParserTests extends MailcodeTestCase
     
     public function test_parseString_caseInsensitive()
     {
-        $parser = Mailcode::create()->getParser();
-        
-        $collection = $parser->parseString(
+        $collection = Mailcode::create()->parseString(
             "Line with {ShowVar: \$CUSTOMER.NAME}"
         );
         
@@ -52,9 +46,7 @@ final class Parser_ParserTests extends MailcodeTestCase
     
     public function test_parseString_freeSpacing()
     {
-        $parser = Mailcode::create()->getParser();
-        
-        $collection = $parser->parseString(
+        $collection = Mailcode::create()->parseString(
             "Line with 
 
             {
@@ -81,9 +73,7 @@ final class Parser_ParserTests extends MailcodeTestCase
     */
     public function test_parseString_htmlSpaces()
     {
-        $parser = Mailcode::create()->getParser();
-        
-        $collection = $parser->parseString(
+        $collection = Mailcode::create()->parseString(
             "Line with
             
             {if variable: &#160; \$CUSTOMER.NAME &nbsp; == \" &nbsp; &#160; \" }
@@ -102,9 +92,7 @@ final class Parser_ParserTests extends MailcodeTestCase
 
     public function test_parseString_withSeveralCommands()
     {
-        $parser = Mailcode::create()->getParser();
-        
-        $collection = $parser->parseString(
+        $collection = Mailcode::create()->parseString(
             "Line with {showvar: \$CUSTOMER.NAME}
             and another one further {showvar: \$ADDRESS.LINE1} down."
         );
@@ -114,9 +102,7 @@ final class Parser_ParserTests extends MailcodeTestCase
 
     public function test_parseString_withDuplicateCommands()
     {
-        $parser = Mailcode::create()->getParser();
-        
-        $collection = $parser->parseString(
+        $collection = Mailcode::create()->parseString(
             "Line with {showvar: \$CUSTOMER.NAME}
             and another one further {showvar: \$ADDRESS.LINE1} down.
             The third line has a duplicate: {showvar: \$CUSTOMER.NAME}.
@@ -131,9 +117,7 @@ final class Parser_ParserTests extends MailcodeTestCase
     
     public function test_parseString_unknownCommandName()
     {
-        $parser = Mailcode::create()->getParser();
-        
-        $collection = $parser->parseString(
+        $collection = Mailcode::create()->parseString(
             "Line with {foo: \$CUSTOMER.NAME} {showvar: \$ADDRESS.LINE1}"
         );
         
@@ -151,9 +135,7 @@ final class Parser_ParserTests extends MailcodeTestCase
     
     public function test_parseString_typeNotSupported()
     {
-        $parser = Mailcode::create()->getParser();
-        
-        $collection = $parser->parseString(
+        $collection = Mailcode::create()->parseString(
             "Line with {showvar foo: \$CUSTOMER.NAME}"
         );
         
@@ -168,9 +150,7 @@ final class Parser_ParserTests extends MailcodeTestCase
     
     public function test_parseString_invalidVariableName()
     {
-        $parser = Mailcode::create()->getParser();
-        
-        $collection = $parser->parseString(
+        $collection = Mailcode::create()->parseString(
             "Line with {showvar: \$FOO.8AR}"
         );
         
@@ -184,9 +164,7 @@ final class Parser_ParserTests extends MailcodeTestCase
 
     public function test_parseString_invalidVariablePath()
     {
-        $parser = Mailcode::create()->getParser();
-        
-        $collection = $parser->parseString(
+        $collection = Mailcode::create()->parseString(
             "Line with {showvar: \$3OO.BAR}"
         );
         
@@ -200,9 +178,7 @@ final class Parser_ParserTests extends MailcodeTestCase
     
     public function test_parseString_noVariable()
     {
-        $parser = Mailcode::create()->getParser();
-        
-        $collection = $parser->parseString(
+        $collection = Mailcode::create()->parseString(
             "Line with {showvar: FOO.BAR}"
         );
         
@@ -267,9 +243,7 @@ height:45px;
     
     public function test_parseNumbersInStringLiterals()
     {
-        $parser = Mailcode::create()->getParser();
-        
-        $collection = $parser->parseString(
+        $collection = Mailcode::create()->parseString(
             'Line with {setvar: $FOOBAR = "44578,45"}'
         );
         
@@ -278,9 +252,7 @@ height:45px;
     
     public function test_quotesInComments()
     {
-        $parser = Mailcode::create()->getParser();
-        
-        $collection = $parser->parseString(
+        $collection = Mailcode::create()->parseString(
             'Line with {comment: He said, "Foo me!" :D }'
         );
         
@@ -289,9 +261,7 @@ height:45px;
     
     public function test_htmlEntities()
     {
-        $parser = Mailcode::create()->getParser();
-        
-        $collection = $parser->parseString(
+        $collection = Mailcode::create()->parseString(
             '{if: 6 &gt; 2}Here{end}'
         );
         
@@ -307,9 +277,7 @@ height:45px;
 
     public function test_parseString_bracketsInStringLiterals() : void
     {
-        $parser = Mailcode::create()->getParser();
-
-        $collection = $parser->parseString(
+        $collection = Mailcode::create()->parseString(
             'Line with {if list-contains: $LIST.PROPERTY "[0-9]{3}" regex:}{end}.'
         );
 
@@ -372,8 +340,6 @@ EOT;
      */
     public function test_parseString_stringLiterals() : void
     {
-        $parser = Mailcode::create()->getParser();
-
         $commands = <<<'EOT'
 <a href="{shownumber: $GROSS_AMOUNT "1.000,00" absolute:}">
     {if list-contains: $LIST.PROPERTY "[0-9]{3}" regex:}
@@ -386,7 +352,7 @@ EOT;
 </a>
 EOT;
 
-        $collection = $parser->parseString($commands);
+        $collection = Mailcode::create()->parseString($commands);
 
         if(!$collection->isValid())
         {

@@ -80,7 +80,11 @@ final class Mailcode_ShowDateTests extends MailcodeTestCase
             {end}
         {end}';
 
-        $collection = Mailcode::create()->getParser()->parseString($string);
+        $collection = Mailcode::create()
+            ->getParser()
+            ->parseString($string)
+            ->getCollection();
+
         $showCommands = $collection->getShowDateCommands();
         $forCommands = $collection->getForCommands();
 

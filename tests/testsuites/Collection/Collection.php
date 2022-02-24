@@ -78,8 +78,6 @@ EOD;
 
         $collection = Mailcode::create()->parseString($string);
 
-        $this->assertFalse($collection->hasBeenValidated());
-        $collection->getCommands();
         $this->assertTrue($collection->hasBeenValidated());
     }
 }

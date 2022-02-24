@@ -40,8 +40,11 @@ final class Mailcode_Commands_NormalizeTests extends MailcodeTestCase
         {
             $result = $parser->parseString($test['string']);
            
-            $command = $result->getFirstCommand();
-            
+            $command = $result
+                ->getCollection()
+                ->getFirstCommand();
+
+            $this->assertNotNull($command);
             $this->assertEquals($test['expected'], $command->getNormalized(), $test['label']);
         }
     }
@@ -72,8 +75,11 @@ final class Mailcode_Commands_NormalizeTests extends MailcodeTestCase
         {
             $result = $parser->parseString($test['string']);
             
-            $command = $result->getFirstCommand();
-            
+            $command = $result
+                ->getCollection()
+                ->getFirstCommand();
+
+            $this->assertNotNull($command);
             $this->assertEquals($test['expected'], $command->getNormalized(), $test['label']);
         }
     }

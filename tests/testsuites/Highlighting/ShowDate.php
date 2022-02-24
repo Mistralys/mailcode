@@ -43,8 +43,11 @@ final class Mailcode_Highlighting_ShowDateTests extends MailcodeTestCase
         {
             $result = $parser->parseString($test['string']);
             
-            $command = $result->getFirstCommand();
-            
+            $command = $result
+                ->getCollection()
+                ->getFirstCommand();
+
+            $this->assertNotNull($command);
             $this->assertEquals($test['expected'], $command->getHighlighted(), $test['label']);
         }
     }

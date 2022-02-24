@@ -10,6 +10,7 @@ use Mailcode\Mailcode_Factory;
 use Mailcode\Mailcode_Interfaces_Commands_ProtectedContent;
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Exception;
+use Mailcode\Mailcode_Parser_PreParser;
 use MailcodeTestCase;
 
 final class CodeTests extends MailcodeTestCase
@@ -19,31 +20,31 @@ final class CodeTests extends MailcodeTestCase
         $tests = array(
             array(
                 'label' => 'Without parameters',
-                'string' => '{code}{end}',
+                'string' => '{code}{code}',
                 'valid' => false,
                 'code' => Mailcode_Commands_Command::VALIDATION_MISSING_PARAMETERS
             ),
             array(
                 'label' => 'Empty parameters',
-                'string' => '{code: }{end}',
+                'string' => '{code: }{code}',
                 'valid' => false,
-                'code' => Mailcode_Commands_Command::VALIDATION_MISSING_PARAMETERS
+                'code' => Mailcode_Commands_Command_Code::VALIDATION_LANGUAGE_NOT_SPECIFIED
             ),
             array(
                 'label' => 'With a variable',
-                'string' => '{code: $FOO.BAR}{end}',
+                'string' => '{code: $FOO.BAR}{code}',
                 'valid' => false,
                 'code' => Mailcode_Commands_Command_Code::VALIDATION_LANGUAGE_NOT_SPECIFIED
             ),
             array(
                 'label' => 'With invalid syntax name',
-                'string' => '{code: "Unknown syntax"}{end}',
+                'string' => '{code: "Unknown syntax"}{code}',
                 'valid' => false,
                 'code' => Mailcode_Commands_Command_Code::VALIDATION_UNKNOWN_LANGUAGE
             ),
             array(
                 'label' => 'With valid syntax',
-                'string' => '{code: "ApacheVelocity"}{end}',
+                'string' => sprintf('{code: "%s"}{code}', Mailcode_Commands_Command_Code::SYNTAX_APACHE_VELOCITY),
                 'valid' => true,
                 'code' => 0
             )
@@ -54,10 +55,13 @@ final class CodeTests extends MailcodeTestCase
     
     public function test_getSyntaxName() : void
     {
-        $cmd = Mailcode_Factory::misc()->code('ApacheVelocity');
-        
-        $this->assertEquals('ApacheVelocity', $cmd->getSyntaxName());
-        $this->assertEquals('ApacheVelocity', $cmd->getSyntax()->getTypeID());
+        $syntaxes = Mailcode_Commands_Command_Code::getSupportedSyntaxes();
+
+        foreach($syntaxes as $syntax)
+        {
+            $cmd = Mailcode_Factory::misc()->code($syntax, 'dummy content');
+            $this->assertEquals($syntax, $cmd->getSyntaxName());
+        }
     }
     
    /**
@@ -66,7 +70,7 @@ final class CodeTests extends MailcodeTestCase
     */
     public function test_getSyntax_exception() : void
     {
-        $cmd = $cmd = Mailcode::create()->getCommands()->createCommand(
+        $cmd = Mailcode::create()->getCommands()->createCommand(
             'Code',
             '',
             'params',
@@ -110,7 +114,7 @@ EOD;
 Some text here,
 {code: "ApacheVelocity"}
 $code
-{end}
+{code}
 And more here.
 EOT;
 
@@ -118,11 +122,13 @@ EOT;
         // so the resulting string must be trimmed.
         $whole = <<<EOT
 Some text here,
-{code: "ApacheVelocity"}$code{end}
+{code: %s "ApacheVelocity"}
 And more here.
 EOT;
 
         $safeguard = Mailcode::create()->createSafeguard($string);
+        $this->assertSafeguardValid($safeguard);
+
         $safe = $safeguard->makeSafe();
 
         $placeholders = $safeguard->getPlaceholdersCollection()->getAll();
@@ -135,34 +141,46 @@ EOT;
             {
                 // The stored content of the command must
                 // be the exact code we inserted between the commands.
-                $this->assertEquals($command->getContent(), $code);
+                $this->assertEquals($command->getContentTrimmed(), $code);
                 $found = true;
             }
         }
 
         $this->assertTrue($found);
 
-        $this->assertEquals($whole, $safeguard->makeWhole($safe));
+        $wholeFinal = sprintf($whole, Mailcode_Parser_PreParser::getContentCounter());
+
+        $this->assertEquals($wholeFinal, $safeguard->makeWhole($safe));
     }
 
+    /**
+     * Nesting Mailcode commands makes no real sense
+     */
     public function test_code_nestedCommands() : void
     {
         $string = <<<'EOD'
 {showvar: $FOO}
-{code: "ApacheVelocity"}
+{code: "Mailcode"}
 Some code here and a variable {showvar: $FOO}
-{end}
+{code}
 EOD;
-        $expectedContent = 'Some code here and a variable {showvar: $FOO}';
+        $expectedContent = <<<'EOD'
+
+Some code here and a variable {showvar: $FOO}
+
+EOD;
 
         $expectedSafe = <<<'EOD'
 {showvar: $FOO}
-{code: "ApacheVelocity"}Some code here and a variable {showvar: $FOO}{end}
+{code: %s "Mailcode"}
 EOD;
 
         $safeguard = Mailcode::create()->createSafeguard($string);
+
+        $this->assertSafeguardValid($safeguard);
+
         $collection = $safeguard->getPlaceholdersCollection();
-        $this->assertCount(3, $collection->getAll());
+        $this->assertCount(2, $collection->getAll());
 
         $safe = $safeguard->makeSafe();
 
@@ -174,12 +192,51 @@ EOD;
         {
             $content = $command->getContent();
 
+            // Insert the content counter into the expected command
+            $expectedSafeFinal = sprintf(
+                $expectedSafe,
+                Mailcode_Parser_PreParser::getContentCounter()
+            );
+
             $this->assertSame($expectedContent, $content);
-            $this->assertSame($expectedSafe, $safeguard->makeWhole($safe));
+            $this->assertSame(
+                $expectedSafeFinal,
+                $safeguard->makeWhole($safe)
+            );
         }
         else
         {
             $this->fail('Not a code command.');
         }
+    }
+
+    /**
+     * When normalizing a protected content command,
+     * it must be restored to the original command
+     * string instead of the inline version that the
+     * pre-parser created for the main parser.
+     */
+    public function test_normalize() : void
+    {
+        $subject = <<<'EOD'
+{code: "Mailcode"}
+Some code here and a variable {showvar: $FOO}.
+{code}
+EOD;
+        $expected = <<<'EOD'
+{code: "Mailcode"}
+Some code here and a variable {showvar: $FOO}.
+{code}
+EOD;
+
+        $collection = Mailcode::create()->parseString($subject);
+
+        $this->assertCollectionValid($collection);
+
+        $command = $collection->getFirstCommand();
+
+        $this->assertNotNull($command);
+        $this->assertInstanceOf(Mailcode_Commands_Command_Code::class, $command);
+        $this->assertSame($expected, $command->getNormalized());
     }
 }

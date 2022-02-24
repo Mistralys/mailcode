@@ -5,13 +5,13 @@ use Mailcode\Mailcode_Translator;
 
 final class Translator_Velocity_CodeTests extends VelocityTestCase
 {
-    public function test_translateCommand()
+    public function test_translateCommand() : void
     {
         $string = <<<'EOD'
 Text before
 {code: "ApacheVelocity"}
 (Velocity statements)
-{end}
+{code}
 Text after
 EOD;
 

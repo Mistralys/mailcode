@@ -54,7 +54,7 @@ EOT;
 {code: "ApacheVelocity"}
     Some content of the command.
     {showvar: $SUB.COMMAND}
-{end}
+{code}
 EOT;
 
         $safeguard = Mailcode::create()->createSafeguard($subject);
