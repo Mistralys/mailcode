@@ -108,11 +108,6 @@ class Mailcode_Translator_Syntax
             $command = $placeholder->getCommand();
 
             $replaces[$placeholder->getReplacementText()] = $this->translateCommand($command);
-
-            if($command instanceof Mailcode_Interfaces_Commands_ProtectedContent)
-            {
-                $replaces[$command->getContentPlaceholder()] = $command->getContent();
-            }
         }
             
         return str_replace(array_keys($replaces), array_values($replaces), $subject);
