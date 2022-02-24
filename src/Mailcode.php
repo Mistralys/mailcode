@@ -63,7 +63,9 @@ class Mailcode
     */
     public function parseString(string $string) : Mailcode_Collection
     {
-        return $this->getParser()->parseString($string);
+        return $this->getParser()
+            ->parseString($string)
+            ->getCollection();
     }
     
    /**
@@ -157,8 +159,8 @@ class Mailcode
     }
 
     /**
-     * Creates a new pre processor instance for the specified content
-     * string, to replace all pre process enabled commands with their
+     * Creates a new pre-processor instance for the specified content
+     * string, to replace all pre-process enabled commands with their
      * corresponding contents.
      *
      * @param string $subject
