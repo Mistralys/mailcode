@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
-interface Mailcode_Interfaces_Commands_ProtectedContent extends Mailcode_Commands_Command_Type_Opening
+/**
+ * @see Mailcode_Traits_Commands_ProtectedContent
+ */
+interface Mailcode_Interfaces_Commands_ProtectedContent extends Mailcode_Commands_Command_Type_Standalone
 {
-    public const ERROR_INVALID_NESTING_NO_END = 73201;
-    public const ERROR_REPLACEMENT_STRINGS_NOT_FOUND = 73202;
+    public const VALIDATION_NAME_CONTENT_ID = 'content_id';
 
+    public const VALIDATION_ERROR_CONTENT_ID_MISSING = 101501;
+
+    public function getContentID() : int;
+    public function getContentIDToken() : ?Mailcode_Parser_Statement_Tokenizer_Token_Number;
     public function getContent() : string;
-    public function getContentPlaceholder() : string;
-    public function protectContent(string $string, Mailcode_Parser_Safeguard_Placeholder $open, Mailcode_Parser_Safeguard_Placeholder $end) : string;
-    public function restoreContent(string $string) : string;
+    public function getContentTrimmed() : string;
 }
