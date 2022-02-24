@@ -1,9 +1,23 @@
 <?php
+/**
+ * File containing the class {@see \Mailcode\Mailcode_Interfaces_Commands_ListVariables}
+ *
+ * @package Mailcode
+ * @subpackage Commands
+ * @see \Mailcode\Mailcode_Interfaces_Commands_ListVariables
+ */
 
 declare(strict_types=1);
 
 namespace Mailcode;
 
+/**
+ * Interface for list variable commands.
+ *
+ * @package Mailcode
+ * @subpackage Commands
+ * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
+ */
 interface Mailcode_Interfaces_Commands_ListVariables extends Mailcode_Interfaces_Commands_Command
 {
     /**
