@@ -1,9 +1,23 @@
 <?php
+/**
+ * File containing the interface {@see \Mailcode\Mailcode_Interfaces_Commands_Validation_Multiline}.
+ *
+ * @package Mailcode
+ * @subpackage Validation
+ * @see \Mailcode\Mailcode_Interfaces_Commands_Validation_Multiline
+ */
 
 declare(strict_types=1);
 
 namespace Mailcode;
 
+/**
+ * @package Mailcode
+ * @subpackage Validation
+ * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
+ *
+ * @see Mailcode_Traits_Commands_Validation_Multiline
+ */
 interface Mailcode_Interfaces_Commands_Validation_Multiline
 {
     public const VALIDATION_NAME_MULTILINE = 'multiline';

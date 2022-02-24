@@ -1,9 +1,23 @@
 <?php
+/**
+ * File containing the interface {@see \Mailcode\Mailcode_Interfaces_Commands_Validation_Variable}.
+ *
+ * @package Mailcode
+ * @subpackage Validation
+ * @see \Mailcode\Mailcode_Interfaces_Commands_Validation_Variable
+ */
 
 declare(strict_types=1);
 
 namespace Mailcode;
 
+/**
+ * @package Mailcode
+ * @subpackage Validation
+ * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
+ *
+ * @see Mailcode_Traits_Commands_Validation_Variable
+ */
 interface Mailcode_Interfaces_Commands_Validation_Variable
 {
     public const VALIDATION_NAME_VARIABLE = 'variable';
