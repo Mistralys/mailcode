@@ -18,7 +18,7 @@ namespace Mailcode;
  *
  * @see Mailcode_Traits_Commands_Validation_Multiline
  */
-interface Mailcode_Interfaces_Commands_Validation_Multiline
+interface Mailcode_Interfaces_Commands_Validation_Multiline extends Mailcode_Interfaces_Commands_Command
 {
     public const VALIDATION_NAME_MULTILINE = 'multiline';
 

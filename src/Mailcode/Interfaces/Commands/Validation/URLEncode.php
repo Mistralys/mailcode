@@ -18,7 +18,7 @@ namespace Mailcode;
  *
  * @see Mailcode_Traits_Commands_Validation_URLEncode
  */
-interface Mailcode_Interfaces_Commands_Validation_URLEncode
+interface Mailcode_Interfaces_Commands_Validation_URLEncode extends Mailcode_Interfaces_Commands_Command
 {
     public const VALIDATION_NAME_URLENCODE = 'urlencode';
 

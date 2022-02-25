@@ -18,7 +18,7 @@ namespace Mailcode;
  *
  * @see Mailcode_Traits_Commands_Validation_Value
  */
-interface Mailcode_Interfaces_Commands_Validation_Value
+interface Mailcode_Interfaces_Commands_Validation_Value extends Mailcode_Interfaces_Commands_Command
 {
     public const VALIDATION_NAME_VALUE = 'value';
 

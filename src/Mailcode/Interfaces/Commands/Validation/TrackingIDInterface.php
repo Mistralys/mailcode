@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Mailcode\Interfaces\Commands\Validation;
 
+use Mailcode\Mailcode_Interfaces_Commands_Command;
 use Mailcode\Traits\Commands\Validation\TrackingIDTrait;
 
 /**
@@ -20,7 +21,7 @@ use Mailcode\Traits\Commands\Validation\TrackingIDTrait;
  *
  * @see TrackingIDTrait
  */
-interface TrackingIDInterface
+interface TrackingIDInterface extends Mailcode_Interfaces_Commands_Command
 {
     public const VALIDATION_NAME_TRACKING_ID = 'tracking_id';
 

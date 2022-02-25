@@ -18,7 +18,7 @@ namespace Mailcode;
  *
  * @see Mailcode_Traits_Commands_Validation_SearchTerm
  */
-interface Mailcode_Interfaces_Commands_Validation_SearchTerm
+interface Mailcode_Interfaces_Commands_Validation_SearchTerm extends Mailcode_Interfaces_Commands_Command
 {
     public const VALIDATION_NAME_SEARCH_TERM = 'search_term';
 
