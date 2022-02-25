@@ -3,7 +3,7 @@
  * File containing the {@see Mailcode_Factory_Exception} class.
  *
  * @package Mailcode
- * @subpackage Utilities
+ * @subpackage Factory
  * @see Mailcode_Factory_Exception
  */
 
@@ -15,7 +15,7 @@ namespace Mailcode;
  * Factory-specific exception.
  *
  * @package Mailcode
- * @subpackage Utilities
+ * @subpackage Factory
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
 class Mailcode_Factory_Exception extends Mailcode_Exception

@@ -1,4 +1,11 @@
 <?php
+/**
+ * File containing the class {@see \Mailcode\Mailcode_Traits_Commands_Validation_ListPropertyVariable}.
+ *
+ * @package Mailcode
+ * @subpackage Validation
+ * @see \Mailcode\Mailcode_Traits_Commands_Validation_ListPropertyVariable
+ */
 
 declare(strict_types=1);
 
@@ -12,14 +19,14 @@ use AppUtils\OperationResult;
  * variable uses the scheme `$LIST.PROPERTY`, and not a single
  * path variable like `$FOO`.
  *
- * @see Mailcode_Interfaces_Commands_Validation_ListPropertyVariable
- *@subpackage Validation
+ * @package Mailcode
+ * @subpackage Validation
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
+ *
+ * @see Mailcode_Interfaces_Commands_Validation_ListPropertyVariable
  *
  * @property Mailcode_Parser_Statement_Validator $validator
  * @property OperationResult $validationResult
- *
- * @package Mailcode
  */
 trait Mailcode_Traits_Commands_Validation_ListPropertyVariable
 {

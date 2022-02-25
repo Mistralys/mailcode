@@ -1,4 +1,11 @@
 <?php
+/**
+ * File containing the interface {@see \Mailcode\Mailcode_Interfaces_Commands_Command}.
+ *
+ * @package Mailcode
+ * @subpackage Commands
+ * @see \Mailcode\Mailcode_Interfaces_Commands_Command
+ */
 
 declare(strict_types=1);
 

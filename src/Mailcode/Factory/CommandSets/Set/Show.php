@@ -3,7 +3,7 @@
  * File containing the {@see Mailcode_Factory_CommandSets_Set_Show} class.
  *
  * @package Mailcode
- * @subpackage Utilities
+ * @subpackage Factory
  * @see Mailcode_Factory_CommandSets_Set_Show
  */
 
@@ -11,11 +11,13 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use Mailcode\Parser\PreParser;
+
 /**
  * Command set used to create showxxx commands.
  *
  * @package Mailcode
- * @subpackage Utilities
+ * @subpackage Factory
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
 class Mailcode_Factory_CommandSets_Set_Show extends Mailcode_Factory_CommandSets_Set
@@ -186,5 +188,56 @@ class Mailcode_Factory_CommandSets_Set_Show extends Mailcode_Factory_CommandSets
         }
         
         throw $this->instantiator->exceptionUnexpectedType('ShowSnippet', $cmd);
+    }
+
+    /**
+     * @param string $url The target URL. Can contain Mailcode.
+     * @param string|null $trackingID If not set, an auto-generated tracking ID will be used.
+     * @param array<string,string> $queryParams
+     * @return Mailcode_Commands_Command_ShowURL
+     * @throws Mailcode_Exception
+     * @throws Mailcode_Factory_Exception
+     */
+    public function url(string $url, ?string $trackingID=null, array $queryParams=array()) : Mailcode_Commands_Command_ShowURL
+    {
+        $contentID = PreParser::storeContent($url);
+
+        $params = array();
+        $params[] = (string)$contentID;
+
+        if($trackingID !== null)
+        {
+            $params[] = sprintf('"%s"', $trackingID);
+        }
+
+        if(!empty($queryParams))
+        {
+            foreach($queryParams as $name => $value)
+            {
+                $params[] = sprintf(
+                    '"%s=%s"',
+                    $name,
+                    $value
+                );
+            }
+        }
+
+        $paramsString = implode(' ', $params);
+
+        $cmd = $this->commands->createCommand(
+            'ShowURL',
+            '',
+            $paramsString,
+            '{showurl: '.$paramsString.'}'
+        );
+
+        $this->instantiator->checkCommand($cmd);
+
+        if($cmd instanceof Mailcode_Commands_Command_ShowURL)
+        {
+            return $cmd;
+        }
+
+        throw $this->instantiator->exceptionUnexpectedType('ShowURL', $cmd);
     }
 }

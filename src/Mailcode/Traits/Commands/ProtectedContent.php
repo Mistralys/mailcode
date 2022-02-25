@@ -1,4 +1,11 @@
 <?php
+/**
+ * File containing the trait {@see \Mailcode\Mailcode_Traits_Commands_ProtectedContent}.
+ *
+ * @package Mailcode
+ * @subpackage Commands
+ * @see \Mailcode\Mailcode_Traits_Commands_ProtectedContent
+ */
 
 declare(strict_types=1);
 
@@ -7,6 +14,10 @@ namespace Mailcode;
 use Mailcode\Parser\PreParser;
 
 /**
+ * @package Mailcode
+ * @subpackage Commands
+ * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
+ *
  * @see Mailcode_Interfaces_Commands_ProtectedContent
  */
 trait Mailcode_Traits_Commands_ProtectedContent

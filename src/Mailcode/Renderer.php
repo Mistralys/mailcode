@@ -1,10 +1,10 @@
 <?php
 /**
- * File containing the {@see Mailcode_Renderer} class.
+ * File containing the {@see \Mailcode\Mailcode_Renderer} class.
  *
  * @package Mailcode
- * @subpackage Utilities
- * @see Mailcode_Renderer
+ * @subpackage Renderer
+ * @see \Mailcode\Mailcode_Renderer
  */
 
 declare(strict_types=1);
@@ -16,7 +16,7 @@ namespace Mailcode;
  * either in plain text or highlighted.
  *
  * @package Mailcode
- * @subpackage Utilities
+ * @subpackage Renderer
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
 class Mailcode_Renderer
@@ -24,7 +24,7 @@ class Mailcode_Renderer
    /**
     * @var boolean
     */
-    protected $highlighted = false;
+    protected bool $highlighted = false;
     
    /**
     * Sets whether to output highlighted commands instead of the default plain text.

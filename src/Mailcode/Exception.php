@@ -1,13 +1,15 @@
 <?php
 /**
- * File containing the {@see Mailcode_Exception} class.
+ * File containing the {@see \Mailcode\Mailcode_Exception} class.
  *
  * @package Mailcode
  * @subpackage Core
- * @see Mailcode_Exception
+ * @see \Mailcode\Mailcode_Exception
  */
 
 namespace Mailcode;
+
+use AppUtils\BaseException;
 
 /**
  * Mailcode exception.
@@ -16,12 +18,12 @@ namespace Mailcode;
  * @subpackage Core
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Mailcode_Exception extends \AppUtils\BaseException
+class Mailcode_Exception extends BaseException
 {
     /**
      * @var Mailcode_Collection|null
      */
-    private $collection = null;
+    private ?Mailcode_Collection $collection = null;
 
     public function setCollection(Mailcode_Collection $collection) : void
     {

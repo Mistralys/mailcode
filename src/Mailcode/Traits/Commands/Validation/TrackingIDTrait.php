@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Mailcode\Traits\Commands\Validation;
 
+use Mailcode\Commands\Command\ShowURL\AutoTrackingID;
 use Mailcode\Interfaces\Commands\Validation\TrackingIDInterface;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
 use Mailcode\Mailcode_Parser_Statement_Validator;
@@ -35,9 +36,12 @@ trait TrackingIDTrait
     protected string $trackingID = '';
     private ?Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral $trackingIDToken = null;
 
+    /**
+     * @return string
+     */
     public function getTrackingID() : string
     {
-        return $this->trackingID;
+        return $this->trackingID ?? AutoTrackingID::generate($this);
     }
 
     public function hasTrackingID() : bool
@@ -53,19 +57,23 @@ trait TrackingIDTrait
      */
     protected function validateSyntax_tracking_id() : void
     {
-        $trackingID = $this->requireParams()
+        $literals = $this->requireParams()
             ->getInfo()
-            ->getStringLiteralByIndex(0);
+            ->getStringLiterals();
 
-        if($trackingID instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral)
+        if(empty($literals))
         {
-            $id = $trackingID->getText();
+            return;
+        }
 
-            if(strpos($id, '=') === false)
-            {
-                $this->trackingID = $id;
-                $this->trackingIDToken = $trackingID;
-            }
+        $trackingID = array_shift($literals);
+
+        $id = $trackingID->getText();
+
+        if(strpos($id, '=') === false)
+        {
+            $this->trackingID = $id;
+            $this->trackingIDToken = $trackingID;
         }
     }
 }

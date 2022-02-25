@@ -127,8 +127,15 @@ abstract class Mailcode_Commands_Command
      */
     private bool $nestingValidated = false;
 
+    private static int $instanceCounter = 0;
+
+    private int $instanceID;
+
     public function __construct(string $type='', string $paramsString='', string $matchedText='')
     {
+        self::$instanceCounter++;
+
+        $this->instanceID = self::$instanceCounter;
         $this->type = $type;
         $this->paramsString = html_entity_decode($paramsString);
         $this->matchedText = $matchedText;
@@ -136,6 +143,14 @@ abstract class Mailcode_Commands_Command
         $this->validationResult = new OperationResult($this);
         
         $this->init();
+    }
+
+    /**
+     * @return int
+     */
+    public function getInstanceID() : int
+    {
+        return $this->instanceID;
     }
     
     protected function init() : void

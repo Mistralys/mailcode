@@ -1,4 +1,11 @@
 <?php
+/**
+ * File containing the interface {@see \Mailcode\Interfaces\Commands\Validation\TrackingIDInterface}.
+ *
+ * @package Mailcode
+ * @subpackage Validation
+ * @see \Mailcode\Interfaces\Commands\Validation\TrackingIDInterface
+ */
 
 declare(strict_types=1);
 
@@ -17,6 +24,14 @@ interface TrackingIDInterface
 {
     public const VALIDATION_NAME_TRACKING_ID = 'tracking_id';
 
+    /**
+     * Retrieves the tracking ID for the URL. If no tracking
+     * ID has been specifically set, returns an automatically
+     * generated one.
+     *
+     * @return string
+     */
     public function getTrackingID() : string;
+
     public function hasTrackingID() : bool;
 }

@@ -3,7 +3,7 @@
  * File containing the {@see Mailcode_Factory_Instantiator} class.
  *
  * @package Mailcode
- * @subpackage Utilities
+ * @subpackage Factory
  * @see Mailcode_Factory_Instantiator
  */
 
@@ -15,7 +15,7 @@ namespace Mailcode;
  * Factory utility used to create commands.
  *
  * @package Mailcode
- * @subpackage Utilities
+ * @subpackage Factory
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
 class Mailcode_Factory_Instantiator

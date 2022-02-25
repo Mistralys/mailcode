@@ -1,10 +1,10 @@
 <?php
 /**
- * File containing the {@see Mailcode} class.
+ * File containing the {@see \Mailcode\Mailcode_Styler} class.
  *
  * @package Mailcode
- * @subpackage Core
- * @see Mailcode
+ * @subpackage Utilities
+ * @see \Mailcode\Mailcode_Styler
  */
 
 declare(strict_types=1);
@@ -14,10 +14,11 @@ namespace Mailcode;
 use AppUtils\FileHelper;
 
 /**
- * Generat
+ * Utility used to access the styles necessary to correctly
+ * display commands highlighted for HTML.
  *
  * @package Mailcode
- * @subpackage Core
+ * @subpackage Utilities
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
 class Mailcode_Styler
@@ -27,12 +28,12 @@ class Mailcode_Styler
    /**
     * @var string
     */
-    private $path;
+    private string $path;
     
    /**
     * @var string
     */
-    private $fileName = 'highlight.css';
+    private string $fileName = 'highlight.css';
     
     public function __construct()
     {

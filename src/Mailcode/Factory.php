@@ -1,10 +1,10 @@
 <?php
 /**
- * File containing the {@see Mailcode_Factory} class.
+ * File containing the {@see \Mailcode\Mailcode_Factory} class.
  *
  * @package Mailcode
- * @subpackage Utilities
- * @see Mailcode_Factory
+ * @subpackage Factory
+ * @see \Mailcode\Mailcode_Factory
  */
 
 declare(strict_types=1);
@@ -15,7 +15,7 @@ namespace Mailcode;
  * Factory utility used to create commands.
  *
  * @package Mailcode
- * @subpackage Utilities
+ * @subpackage Factory
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
 class Mailcode_Factory

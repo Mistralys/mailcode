@@ -1,10 +1,10 @@
 <?php
 /**
- * File containing the {@see Mailcode_Translator} class.
+ * File containing the {@see \Mailcode\Mailcode_Translator} class.
  *
  * @package Mailcode
  * @subpackage Translator
- * @see Mailcode_Translator
+ * @see \Mailcode\Mailcode_Translator
  */
 
 declare(strict_types=1);

@@ -1,10 +1,10 @@
 <?php
 /**
- * File containing the {@see Mailcode_Variables} class.
+ * File containing the {@see \Mailcode\Mailcode_Variables} class.
  *
  * @package Mailcode
  * @subpackage Variables
- * @see Mailcode_Variables
+ * @see \Mailcode\Mailcode_Variables
  */
 
 declare(strict_types=1);
@@ -25,7 +25,7 @@ class Mailcode_Variables
    /**
     * @var Mailcode_Variables_Collection_Regular
     */
-    protected $collection;
+    protected Mailcode_Variables_Collection_Regular $collection;
 
     /**
      * Parses the specified string to find all variable names contained within, if any.

@@ -1,10 +1,10 @@
 <?php
 /**
- * File containing the {@see Mailcode_Commands} class.
+ * File containing the {@see \Mailcode\Mailcode_Commands} class.
  *
  * @package Mailcode
  * @subpackage Commands
- * @see Mailcode_Commands
+ * @see \Mailcode\Mailcode_Commands
  */
 
 declare(strict_types=1);
@@ -31,12 +31,12 @@ class Mailcode_Commands
    /**
     * @var Mailcode_Commands_Command[]
     */
-    private $commands = array();
+    private array $commands = array();
     
    /**
     * @var array<string,Mailcode_Commands_Command>
     */
-    private static $dummyCommands = array();
+    private static array $dummyCommands = array();
     
    /**
     * Retrieves a list of all available command IDs.
@@ -63,7 +63,7 @@ class Mailcode_Commands
      * @return Mailcode_Commands_Command[]
      * @throws Mailcode_Exception
      */
-    public function getAll()
+    public function getAll() : array
     {
         if(!empty($this->commands)) {
             return $this->commands;
@@ -78,7 +78,7 @@ class Mailcode_Commands
             $result[] = $this->getDummyCommand($id);
         }
         
-        usort($result, function(Mailcode_Commands_Command $a, Mailcode_Commands_Command $b) 
+        usort($result, static function(Mailcode_Commands_Command $a, Mailcode_Commands_Command $b)
         {
             return strnatcasecmp($a->getLabel(), $b->getLabel());
         });
