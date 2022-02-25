@@ -57,7 +57,11 @@ trait Mailcode_Traits_Commands_ProtectedContent
             return (int)$this->contentIDToken->getValue();
         }
 
-        return 0;
+        throw new Mailcode_Exception(
+            'No content ID set',
+            '',
+            Mailcode_Interfaces_Commands_ProtectedContent::ERROR_NO_CONTENT_ID_TOKEN
+        );
     }
 
     private function loadContent() : void
