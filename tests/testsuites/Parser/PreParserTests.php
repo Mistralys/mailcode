@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace testsuites\Parser;
 
-use Mailcode\Mailcode;
 use Mailcode\Mailcode_Collection;
 use Mailcode\Mailcode_Commands_CommonConstants;
 use Mailcode\Parser\PreParser;
