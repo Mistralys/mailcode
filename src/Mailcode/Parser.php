@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use Mailcode\Parser\ParseResult;
 use Mailcode\Parser\PreParser;
 
 /**
@@ -60,16 +61,16 @@ class Mailcode_Parser
      * commands.
      *
      * @param string $string
-     * @return Mailcode_Parser_ParseResult A collection with all unique commands found.
+     * @return ParseResult A collection with all unique commands found.
      * @throws Mailcode_Exception
      */
-    public function parseString(string $string) : Mailcode_Parser_ParseResult
+    public function parseString(string $string) : ParseResult
     {
         $collection = new Mailcode_Collection();
 
         $preParser = $this->preParse($string, $collection);
 
-        $result = new Mailcode_Parser_ParseResult($collection, $preParser);
+        $result = new ParseResult($collection, $preParser);
 
         if(!$collection->isValid())
         {

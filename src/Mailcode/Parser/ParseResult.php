@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Mailcode;
+namespace Mailcode\Parser;
 
-use Mailcode\Parser\PreParser;
+use Mailcode\Mailcode_Collection;
 
-class Mailcode_Parser_ParseResult
+class ParseResult
 {
     private Mailcode_Collection $collection;
     private PreParser $preParser;
