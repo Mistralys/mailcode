@@ -1,15 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Collection;
-use Mailcode\Mailcode_Commands_CommonConstants;
 use Mailcode\Mailcode_Exception;
 use Mailcode\Mailcode_Parser_Safeguard;
 use Mailcode\Mailcode_Variables_Collection;
 use PHPUnit\Framework\TestCase;
+use function AppUtils\sb;
 
 abstract class MailcodeTestCase extends TestCase
 {
+    protected function setUp() : void
+    {
+        Mailcode::setDebugging(false);
+    }
+
+    protected function enableDebug() : void
+    {
+        Mailcode::setDebugging(true);
+    }
+
     protected function runCollectionTests(array $tests) : void
     {
         foreach($tests as $test)
@@ -122,12 +134,20 @@ abstract class MailcodeTestCase extends TestCase
 
     protected function assertCollectionHasErrorCode(int $code, Mailcode_Collection $collection) : void
     {
+        if($collection->hasErrorCode($code))
+        {
+            $this->addToAssertionCount(1);
+            return;
+        }
+
+        $message = sb()
+            ->sf('Collection is invalid, but does not have error code [%s].', $code)
+            ->eol()
+            ->sf('Available error codes: [%s].', implode(', ', $collection->getErrorCodes()));
+
         $this->assertTrue(
             $collection->hasErrorCode($code),
-            sprintf(
-                'Collection does not have error code [%s].',
-                $code
-            )
+            (string)$message
         );
     }
 }
