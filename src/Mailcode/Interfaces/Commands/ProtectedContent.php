@@ -13,6 +13,8 @@ interface Mailcode_Interfaces_Commands_ProtectedContent extends Mailcode_Command
 
     public const VALIDATION_ERROR_CONTENT_ID_MISSING = 101501;
 
+    public const ERROR_NO_CONTENT_ID_TOKEN = 101801;
+
     public function getContentID() : int;
     public function getContentIDToken() : ?Mailcode_Parser_Statement_Tokenizer_Token_Number;
     public function getContent() : string;
