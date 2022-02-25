@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use Mailcode\Parser\PreParser;
 use function AppUtils\sb;
 
 class Mailcode_PreParser_CommandDef
@@ -102,7 +103,7 @@ class Mailcode_PreParser_CommandDef
 
     public function getContent() : string
     {
-        return Mailcode_Parser_PreParser::getContent($this->getContentID());
+        return PreParser::getContent($this->getContentID());
     }
 
     public function extractContent(string $subject) : void
@@ -114,7 +115,7 @@ class Mailcode_PreParser_CommandDef
 
         // Extract the content, and store it
         $content = substr($subject, $posContent, $posEnd - $posContent);
-        $this->contentID = Mailcode_Parser_PreParser::storeContent($content);
+        $this->contentID = PreParser::storeContent($content);
     }
 
     /**
@@ -134,7 +135,7 @@ class Mailcode_PreParser_CommandDef
         );
     }
 
-    public function validateContent(Mailcode_Parser_PreParser $parser, Mailcode_Collection $collection) : bool
+    public function validateContent(PreParser $parser, Mailcode_Collection $collection) : bool
     {
         $commands = $parser->getCommands();
         $content = $this->getContent();

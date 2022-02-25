@@ -11,7 +11,7 @@ use Mailcode\Mailcode_Factory;
 use Mailcode\Mailcode_Interfaces_Commands_ProtectedContent;
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Exception;
-use Mailcode\Mailcode_Parser_PreParser;
+use Mailcode\Parser\PreParser;
 use MailcodeTestCase;
 
 final class CodeTests extends MailcodeTestCase

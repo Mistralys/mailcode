@@ -7,7 +7,7 @@ namespace testsuites\Parser;
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Collection;
 use Mailcode\Mailcode_Commands_CommonConstants;
-use Mailcode\Mailcode_Parser_PreParser;
+use Mailcode\Parser\PreParser;
 use MailcodeTestCase;
 
 final class PreParserTests extends MailcodeTestCase
@@ -191,7 +191,7 @@ EOT;
 
         $this->preParseString($subject);
 
-        $this->assertSame($expected, Mailcode_Parser_PreParser::getContent(1));
+        $this->assertSame($expected, PreParser::getContent(1));
     }
 
     /**
@@ -200,9 +200,9 @@ EOT;
      */
     public function test_getContentException() : void
     {
-        $this->expectExceptionCode(Mailcode_Parser_PreParser::ERROR_CONTENT_ID_NOT_FOUND);
+        $this->expectExceptionCode(PreParser::ERROR_CONTENT_ID_NOT_FOUND);
 
-        Mailcode_Parser_PreParser::getContent(999);
+        PreParser::getContent(999);
     }
 
     /**
@@ -215,12 +215,12 @@ EOT;
 
         $this->preParseString($subject);
 
-        Mailcode_Parser_PreParser::getContent(1);
-        Mailcode_Parser_PreParser::clearContent(1);
+        PreParser::getContent(1);
+        PreParser::clearContent(1);
 
-        $this->expectExceptionCode(Mailcode_Parser_PreParser::ERROR_CONTENT_ID_NOT_FOUND);
+        $this->expectExceptionCode(PreParser::ERROR_CONTENT_ID_NOT_FOUND);
 
-        Mailcode_Parser_PreParser::getContent(1);
+        PreParser::getContent(1);
     }
 
     /**
@@ -248,7 +248,7 @@ EOT;
 
         $this->assertPreParserValid($parser);
 
-        $this->assertSame($expected, Mailcode_Parser_PreParser::getContent(1));
+        $this->assertSame($expected, PreParser::getContent(1));
     }
 
     /**
@@ -291,7 +291,7 @@ EOT;
         $this->assertPreParserValid($parser);
 
         $this->assertSame(3, $parser->countCommands());
-        $this->assertSame(3, Mailcode_Parser_PreParser::getContentCounter());
+        $this->assertSame(3, PreParser::getContentCounter());
 
         $commands = $parser->getCommands();
 
@@ -307,19 +307,19 @@ EOT;
 
     public function test_storeContent() : void
     {
-        $this->assertSame(0, Mailcode_Parser_PreParser::getContentCounter());
+        $this->assertSame(0, PreParser::getContentCounter());
 
         for($i=1; $i <= 10; $i++)
         {
             $content = 'Content #'.$i;
 
-            Mailcode_Parser_PreParser::storeContent($content);
-            $this->assertSame($content, Mailcode_Parser_PreParser::getContent($i));
+            PreParser::storeContent($content);
+            $this->assertSame($content, PreParser::getContent($i));
 
-            Mailcode_Parser_PreParser::clearContent($i);
+            PreParser::clearContent($i);
         }
 
-        $this->assertSame(10, Mailcode_Parser_PreParser::getContentCounter());
+        $this->assertSame(10, PreParser::getContentCounter());
     }
 
     // endregion
@@ -330,16 +330,16 @@ EOT;
     {
         parent::setUp();
 
-        Mailcode_Parser_PreParser::reset();
+        PreParser::reset();
     }
 
-    private function preParseString(string $subject) : Mailcode_Parser_PreParser
+    private function preParseString(string $subject) : PreParser
     {
-        return (new Mailcode_Parser_PreParser($subject, new Mailcode_Collection()))
+        return (new PreParser($subject, new Mailcode_Collection()))
             ->parse();
     }
 
-    private function assertPreParserValid(Mailcode_Parser_PreParser $parser) : void
+    private function assertPreParserValid(PreParser $parser) : void
     {
         $this->assertCollectionValid($parser->getCollection());
         $this->assertTrue($parser->isValid());

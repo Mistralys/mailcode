@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use Mailcode\Parser\PreParser;
+
 /**
  * Mailcode parser, capable of detecting Mailcode commands in strings.
  * 
@@ -93,9 +95,9 @@ class Mailcode_Parser
         return $result;
     }
 
-    private function preParse(string $subject, Mailcode_Collection $collection) : Mailcode_Parser_PreParser
+    private function preParse(string $subject, Mailcode_Collection $collection) : PreParser
     {
-        return (new Mailcode_Parser_PreParser($subject, $collection))->parse();
+        return (new PreParser($subject, $collection))->parse();
     }
 
     protected function prepareString(string $subject) : string

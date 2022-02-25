@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use Mailcode\Parser\PreParser;
+
 class Mailcode_Parser_ParseResult
 {
     private Mailcode_Collection $collection;
-    private Mailcode_Parser_PreParser $preParser;
+    private PreParser $preParser;
 
-    public function __construct(Mailcode_Collection $collection, Mailcode_Parser_PreParser $preParser)
+    public function __construct(Mailcode_Collection $collection, PreParser $preParser)
     {
         $this->collection = $collection;
         $this->preParser = $preParser;
@@ -24,9 +26,9 @@ class Mailcode_Parser_ParseResult
     }
 
     /**
-     * @return Mailcode_Parser_PreParser
+     * @return PreParser
      */
-    public function getPreParser() : Mailcode_Parser_PreParser
+    public function getPreParser() : PreParser
     {
         return $this->preParser;
     }

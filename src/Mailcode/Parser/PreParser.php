@@ -9,10 +9,17 @@
 
 declare(strict_types=1);
 
-namespace Mailcode;
+namespace Mailcode\Parser;
 
+use Mailcode\Mailcode;
+use Mailcode\Mailcode_Collection;
+use Mailcode\Mailcode_Commands_CommonConstants;
+use Mailcode\Mailcode_Exception;
+use Mailcode\Mailcode_Parser_Exception;
+use Mailcode\Mailcode_PreParser_CommandDef;
 use Mailcode\Parser\PreParser\Debugger;
 use function AppUtils\sb;
+use function Mailcode\t;
 
 /**
  * Does a first parsing pass of the subject string, to
@@ -46,7 +53,7 @@ use function AppUtils\sb;
  * @subpackage Parser
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Mailcode_Parser_PreParser
+class PreParser
 {
     public const ERROR_CONTENT_ID_NOT_FOUND = 101401;
 
@@ -105,7 +112,7 @@ class Mailcode_Parser_PreParser
      * @return string
      *
      * @throws Mailcode_Parser_Exception
-     * @see Mailcode_Parser_PreParser::ERROR_CONTENT_ID_NOT_FOUND
+     * @see PreParser::ERROR_CONTENT_ID_NOT_FOUND
      */
     public static function getContent(int $id) : string
     {
@@ -414,7 +421,7 @@ class Mailcode_Parser_PreParser
 
     /**
      * Stores the content of the command. The command will retrieve
-     * it using {@see Mailcode_Parser_PreParser::getContent()} when
+     * it using {@see PreParser::getContent()} when
      * it is created by the main parser.
      *
      * @param string $content

@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use Mailcode\Parser\PreParser;
+
 /**
  * Factory utility used to create commands.
  *
@@ -164,7 +166,7 @@ class Mailcode_Factory_CommandSets_Set_Misc extends Mailcode_Factory_CommandSets
 
     public function code(string $language, string $content) : Mailcode_Commands_Command_Code
     {
-        $contentID = Mailcode_Parser_PreParser::storeContent($content);
+        $contentID = PreParser::storeContent($content);
 
         $cmd = $this->commands->createCommand(
             'Code',

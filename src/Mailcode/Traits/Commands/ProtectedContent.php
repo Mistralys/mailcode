@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use Mailcode\Parser\PreParser;
+
 /**
  * @see Mailcode_Interfaces_Commands_ProtectedContent
  */
@@ -68,9 +70,9 @@ trait Mailcode_Traits_Commands_ProtectedContent
     {
         $contentID = $this->getContentID();
 
-        $this->content = Mailcode_Parser_PreParser::getContent($contentID);
+        $this->content = PreParser::getContent($contentID);
 
-        Mailcode_Parser_PreParser::clearContent($contentID);
+        PreParser::clearContent($contentID);
     }
 
     public function getNormalized() : string
