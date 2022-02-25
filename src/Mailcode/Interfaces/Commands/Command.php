@@ -28,6 +28,8 @@ interface Mailcode_Interfaces_Commands_Command
 
     public function getParent(): ?Mailcode_Commands_Command;
 
+    public function getInstanceID() : int;
+
     /**
      * @return string The ID of the command = the name of the command class file.
      */
