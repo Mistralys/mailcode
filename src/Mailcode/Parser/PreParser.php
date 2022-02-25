@@ -437,10 +437,10 @@ class PreParser
     }
 
     /**
-     * @param $matchedText
+     * @param string $matchedText
      * @return false
      */
-    private function addErrorClosedNeverOpened($matchedText) : bool
+    private function addErrorClosedNeverOpened(string $matchedText) : bool
     {
         $this->collection->addErrorMessage(
             $matchedText,
