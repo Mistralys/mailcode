@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace testsuites\Parser;
 
+use Mailcode\Mailcode;
 use Mailcode\Mailcode_Collection;
 use Mailcode\Mailcode_Commands_CommonConstants;
 use Mailcode\Mailcode_Parser_PreParser;
@@ -23,7 +24,7 @@ EOT;
 {code: 1 "ApacheVelocity"}
 EOT;
 
-        $parser = $this->parseString($subject);
+        $parser = $this->preParseString($subject);
 
         $this->assertPreParserValid($parser);
         $this->assertSame(1, $parser->countCommands());
@@ -58,7 +59,7 @@ A text before the command.
 And after the command as well.
 EOT;
 
-        $parser = $this->parseString($subject);
+        $parser = $this->preParseString($subject);
 
         $this->assertPreParserValid($parser);
         $this->assertSame(1, $parser->countCommands());
@@ -92,7 +93,7 @@ EOT;
 {code: 1 "ApacheVelocity"}
 EOT;
 
-        $parser = $this->parseString($subject);
+        $parser = $this->preParseString($subject);
 
         $this->assertPreParserValid($parser);
         $this->assertSame(1, $parser->countCommands());
@@ -117,7 +118,7 @@ EOT;
 {code: 1 "ApacheVelocity"}
 EOT;
 
-        $parser = $this->parseString($subject);
+        $parser = $this->preParseString($subject);
 
         $this->assertPreParserValid($parser);
         $this->assertNotEmpty($parser->getCommands());
@@ -129,21 +130,52 @@ EOT;
      * A mismatch between opening and closing content
      * commands must add an error to the collection.
      */
-    public function test_missingClosingCommand() : void
+    public function test_validation_missingClosingCommand() : void
     {
         $subject = <<<'EOT'
-A text before the command.
 {code: "ApacheVelocity"}
 Some content here.
 {end}
-And after the command as well.
 EOT;
 
-        $parser = $this->parseString($subject);
+        $parser = $this->preParseString($subject);
 
         $this->assertFalse($parser->isValid());
         $this->assertCollectionHasErrorCode(
             Mailcode_Commands_CommonConstants::VALIDATION_MISSING_CONTENT_CLOSING_TAG,
+            $parser->getCollection()
+        );
+    }
+
+    public function test_validation_mismatchedClosingCommand() : void
+    {
+        $subject = <<<'EOT'
+{code: "ApacheVelocity"}
+Some content here.
+{showurl}
+EOT;
+
+        $parser = $this->preParseString($subject);
+
+        $this->assertFalse($parser->isValid());
+        $this->assertCollectionHasErrorCode(
+            Mailcode_Commands_CommonConstants::VALIDATION_CONTENT_CLOSING_MISMATCHED_TAG,
+            $parser->getCollection()
+        );
+    }
+
+    public function test_validation_commandNeverOpened() : void
+    {
+        $subject = <<<'EOT'
+Some content here.
+{code}
+EOT;
+
+        $parser = $this->preParseString($subject);
+
+        $this->assertFalse($parser->isValid());
+        $this->assertCollectionHasErrorCode(
+            Mailcode_Commands_CommonConstants::VALIDATION_MISSING_CONTENT_OPENING_TAG,
             $parser->getCollection()
         );
     }
@@ -157,7 +189,7 @@ EOT;
         $subject = '{code: "ApacheVelocity"}Some content here.{code}';
         $expected = 'Some content here.';
 
-        $this->parseString($subject);
+        $this->preParseString($subject);
 
         $this->assertSame($expected, Mailcode_Parser_PreParser::getContent(1));
     }
@@ -181,7 +213,7 @@ EOT;
     {
         $subject = '{code: "ApacheVelocity"}Some content here.{code}';
 
-        $this->parseString($subject);
+        $this->preParseString($subject);
 
         Mailcode_Parser_PreParser::getContent(1);
         Mailcode_Parser_PreParser::clearContent(1);
@@ -212,7 +244,7 @@ Some text here.
 
 EOT;
 
-        $parser = $this->parseString($subject);
+        $parser = $this->preParseString($subject);
 
         $this->assertPreParserValid($parser);
 
@@ -233,7 +265,7 @@ EOT;
 {code}
 EOT;
 
-        $parser = $this->parseString($subject);
+        $parser = $this->preParseString($subject);
 
         $this->assertCollectionHasErrorCode(
             Mailcode_Commands_CommonConstants::VALIDATION_UNESCAPED_NESTED_COMMAND,
@@ -254,7 +286,7 @@ EOT;
 {code: "Mailcode"}Content #3{code}
 EOT;
 
-        $parser = $this->parseString($subject, true);
+        $parser = $this->preParseString($subject);
 
         $this->assertPreParserValid($parser);
 
@@ -267,8 +299,6 @@ EOT;
         foreach ($commands as $command)
         {
             $counter++;
-
-            echo $command->getReplacementCommand().PHP_EOL;
 
             $this->assertSame($counter, $command->getContentID());
             $this->assertSame('Content #'.$counter, $command->getContent());
@@ -303,12 +333,9 @@ EOT;
         Mailcode_Parser_PreParser::reset();
     }
 
-    private function parseString(string $subject, bool $debug=false) : Mailcode_Parser_PreParser
+    private function preParseString(string $subject) : Mailcode_Parser_PreParser
     {
-        $collection = new Mailcode_Collection();
-
-        return (new Mailcode_Parser_PreParser($subject, $collection))
-            ->enableDebug($debug)
+        return (new Mailcode_Parser_PreParser($subject, new Mailcode_Collection()))
             ->parse();
     }
 

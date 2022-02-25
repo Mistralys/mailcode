@@ -6,6 +6,7 @@ namespace testsuites\Commands\Types;
 
 use Mailcode\Mailcode_Commands_Command;
 use Mailcode\Mailcode_Commands_Command_Code;
+use Mailcode\Mailcode_Commands_CommonConstants;
 use Mailcode\Mailcode_Factory;
 use Mailcode\Mailcode_Interfaces_Commands_ProtectedContent;
 use Mailcode\Mailcode;
@@ -22,7 +23,7 @@ final class CodeTests extends MailcodeTestCase
                 'label' => 'Without parameters',
                 'string' => '{code}{code}',
                 'valid' => false,
-                'code' => Mailcode_Commands_Command::VALIDATION_MISSING_PARAMETERS
+                'code' => Mailcode_Commands_CommonConstants::VALIDATION_MISSING_CONTENT_OPENING_TAG
             ),
             array(
                 'label' => 'Empty parameters',
@@ -214,5 +215,42 @@ EOD;
         $this->assertNotNull($command);
         $this->assertInstanceOf(Mailcode_Commands_Command_Code::class, $command);
         $this->assertSame($expected, $command->getNormalized());
+    }
+
+    public function test_getContent() : void
+    {
+        $subject = <<<'EOD'
+{code: "Mailcode"}
+Some code here and a variable {showvar: $FOO}.
+{code}
+EOD;
+        $expected = <<<'EOD'
+Some code here and a variable {showvar: $FOO}.
+EOD;
+
+        $collection = Mailcode::create()->parseString($subject);
+
+        $this->assertCollectionValid($collection);
+
+        $command = $collection->getFirstCommand();
+
+        $this->assertNotNull($command);
+        $this->assertInstanceOf(Mailcode_Commands_Command_Code::class, $command);
+        $this->assertSame($expected, $command->getContentTrimmed());
+    }
+
+    public function test_getContentEmptyCommand() : void
+    {
+        $subject = <<<'EOD'
+{code: "Mailcode"}{code}
+EOD;
+
+        $collection = Mailcode::create()->parseString($subject);
+        $this->assertCollectionValid($collection);
+        $command = $collection->getFirstCommand();
+
+        $this->assertNotNull($command);
+        $this->assertInstanceOf(Mailcode_Commands_Command_Code::class, $command);
+        $this->assertSame('', $command->getContentTrimmed());
     }
 }

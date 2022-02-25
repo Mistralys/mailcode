@@ -8,11 +8,6 @@ use Mailcode\Mailcode_Commands_Command;
 
 final class Mailcode_CommandsTests extends MailcodeTestCase
 {
-    protected function setUp() : void
-    {
-        
-    }
-    
     public function test_createParser()
     {
         $commands = Mailcode::create()->getCommands();
