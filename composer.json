@@ -23,7 +23,8 @@
         ],
 		"classmap" : 
 		[
-			"src/"
+			"src/",
+			"tests/assets"
 		]
 	},
 	"minimum-stability" : "dev",
@@ -33,6 +34,7 @@
 		"mistralys/application-utils" : "^1.1",
 		"mistralys/application-localization" : "^1.2",
 		"giggsey/libphonenumber-for-php": "^8.12",
+		"monolog/monolog" : ">=2.3.5",
 		"ext-json": "*",
 		"php": ">=7.4"
 	},
