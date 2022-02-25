@@ -42,9 +42,9 @@ class AutoTrackingID
      * return the same ID.
      *
      * @param TrackingIDInterface $command
-     * @return mixed|string
+     * @return string
      */
-    public static function generate(TrackingIDInterface $command)
+    public static function generate(TrackingIDInterface $command) : string
     {
         $instanceID = $command->getInstanceID();
 
