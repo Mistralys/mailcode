@@ -9,13 +9,17 @@
 - Formatting: Added a replacer to remove all Mailcode commands from a string.
 - Commands: Added `Mailcode_Commands::getContentCommands()`.
 - Commands: Added `Mailcode_Commands_Command_Code::getSupportedSyntaxes()`.
+- Commands: Added the new `showurl` command.
 - Factory: Added the `$content` parameter for code commands.
+- Debugging: Added support for debugging with a monolog logger.
+- Collection: Added `getErrorCodes()`.
 - Code quality: Increased PHPStan analysis level to `9`.
+- Code quality: Newly added classes now use namespaces in preparation for future changes.
 
 **Breaking changes**
 
 - PHP requirement increased to PHP v7.4.
-- Parser: `parseString()` now returns an instance of `Mailcode_Parser_ParseResult` instead of a collection.
+- Parser: `parseString()` now returns an instance of `ParseResult` instead of a collection.
 - Commands: Removed `Mailcode_Commands_Command_Code::getSyntax()`.
 - Commands: The `{code}` command must now be closed with `{code}` instead of `{end}`.
 - Factory: The `misc::code()` method now requires the content to be specified.
