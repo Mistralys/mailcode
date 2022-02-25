@@ -449,4 +449,20 @@ class Mailcode_Collection
 
         $this->commands = $keep;
     }
+
+    /**
+     * @return int[]
+     */
+    public function getErrorCodes() : array
+    {
+        $errors = $this->getErrors();
+        $result = array();
+
+        foreach($errors as $error)
+        {
+            $result[] = $error->getCode();
+        }
+
+        return $result;
+    }
 }

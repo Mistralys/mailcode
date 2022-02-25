@@ -1,155 +1,115 @@
 <?php
 
+declare(strict_types=1);
+
+namespace testsuites\Validator;
+
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands_Keywords;
-use Mailcode\Mailcode_Exception;
-use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Variable;
-use Mailcode\Mailcode_Parser_Statement_Tokenizer_ValueInterface;
 use Mailcode\Mailcode_Parser_Statement_Validator;
-use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
-use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Keyword;
 use Mailcode\Mailcode_Parser_Statement_Validator_Type_Keyword;
 use Mailcode\Mailcode_Parser_Statement_Validator_Type_Operand;
 use Mailcode\Mailcode_Parser_Statement_Validator_Type_Value;
 use Mailcode\Mailcode_Parser_Statement_Validator_Type_Variable;
 use Mailcode\Mailcode_Parser_Statement_Validator_Type_StringLiteral;
-use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Operand;
+use MailcodeTestCase;
 
-final class Validator_ValidatorTests extends MailcodeTestCase
+final class ValidationTests extends MailcodeTestCase
 {
-   /**
-    * @var Mailcode
-    */
-    static private $mailcode;
-    
-    protected function setUp() : void
-    {
-        if(!isset(self::$mailcode))
-        {
-            self::$mailcode = Mailcode::create();
-        }
-    }
-    
-    private function createValidator(string $statementString) : Mailcode_Parser_Statement_Validator
-    {
-        $statement = self::$mailcode->getParser()->createStatement($statementString);
-        
-        return new Mailcode_Parser_Statement_Validator($statement);
-    }
+    // region: _Tests
 
-    public function test_variable()
+    public function test_variable() : void
     {
         $validator = $this->createValidator('$VAR');
         
         $val = $validator->createVariable();
         
         $this->assertTrue($val->isValid(), 'Variable should be present');
-        $this->assertInstanceOf(Mailcode_Parser_Statement_Tokenizer_Token_Variable::class, $val->getToken(), 'Token should be present');
+
+        // No exception = token is present
+        $val->getToken();
+        $this->addToAssertionCount(1);
     }
     
-    public function test_variable_missing()
+    public function test_variable_missing() : void
     {
         $validator = $this->createValidator('"String"');
         
         $val = $validator->createVariable();
         
         $this->assertFalse($val->isValid());
-        
-        try
-        {
-            $val->getToken();
-        }
-        catch (Mailcode_Exception $e)
-        {
-            if($e->getCode() === Mailcode_Parser_Statement_Validator_Type_Variable::ERROR_NO_VARIABLE_TOKEN_FOUND)
-            {
-                $this->addToAssertionCount(1);
-                return;
-            }
-        }
-        
-        $this->fail('No exception triggered');
+
+        $this->expectExceptionCode(Mailcode_Parser_Statement_Validator_Type_Variable::ERROR_NO_VARIABLE_TOKEN_FOUND);
+
+        $val->getToken();
     }
     
-    public function test_string()
+    public function test_string() : void
     {
         $validator = $this->createValidator('"Foobar"');
         
         $val = $validator->createStringLiteral();
         
         $this->assertTrue($val->isValid(), 'String literal should be present');
-        $this->assertInstanceOf(Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral::class, $val->getToken(), 'Token should be present');
+
+        // No exception = token is present
+        $val->getToken();
+        $this->addToAssertionCount(1);
     }
     
-    public function test_string_missing()
+    public function test_string_missing() : void
     {
         $validator = $this->createValidator('$VAR');
         
         $val = $validator->createStringLiteral();
         
         $this->assertFalse($val->isValid());
-        
-        try
-        {
-            $val->getToken();
-        }
-        catch (Mailcode_Exception $e)
-        {
-            if($e->getCode() === Mailcode_Parser_Statement_Validator_Type_StringLiteral::ERROR_NO_STRING_TOKEN_FOUND)
-            {
-                $this->addToAssertionCount(1);
-                return;
-            }
-        }
-        
-        $this->fail('No exception triggered');
+
+        $this->expectExceptionCode(Mailcode_Parser_Statement_Validator_Type_StringLiteral::ERROR_NO_STRING_TOKEN_FOUND);
+
+        $val->getToken();
     }
     
-    public function test_keyword()
+    public function test_keyword() : void
     {
         $validator = $this->createValidator(Mailcode_Commands_Keywords::TYPE_INSENSITIVE);
         
         $val = $validator->createKeyword(Mailcode_Commands_Keywords::TYPE_INSENSITIVE);
         
         $this->assertTrue($val->isValid(), 'Keyword should be present');
-        $this->assertInstanceOf(Mailcode_Parser_Statement_Tokenizer_Token_Keyword::class, $val->getToken(), 'Token should be present');
+
+        // No exception = token is present
+        $val->getToken();
+        $this->addToAssertionCount(1);
     }
 
-    public function test_keyword_hyphen()
+    public function test_keyword_hyphen() : void
     {
         $validator = $this->createValidator(Mailcode_Commands_Keywords::TYPE_INSENSITIVE);
         
         $val = $validator->createKeyword(Mailcode_Commands_Keywords::TYPE_INSENSITIVE);
         
         $this->assertTrue($val->isValid(), 'Keyword should be present');
-        $this->assertInstanceOf(Mailcode_Parser_Statement_Tokenizer_Token_Keyword::class, $val->getToken(), 'Token should be present');
+
+        // No exception = token is present
+        $val->getToken();
+        $this->addToAssertionCount(1);
     }
     
-    public function test_keyword_missing()
+    public function test_keyword_missing() : void
     {
         $validator = $this->createValidator('$VAR');
         
         $val = $validator->createKeyword(Mailcode_Commands_Keywords::TYPE_INSENSITIVE);
         
         $this->assertFalse($val->isValid());
-        
-        try
-        {
-            $val->getToken();
-        }
-        catch (Mailcode_Exception $e)
-        {
-            if($e->getCode() === Mailcode_Parser_Statement_Validator_Type_Keyword::ERROR_NO_KEYWORD_TOKEN_FOUND)
-            {
-                $this->addToAssertionCount(1);
-                return;
-            }
-        }
-        
-        $this->fail('No exception triggered');
+
+        $this->expectExceptionCode(Mailcode_Parser_Statement_Validator_Type_Keyword::ERROR_NO_KEYWORD_TOKEN_FOUND);
+
+        $val->getToken();
     }
     
-    public function test_multi()
+    public function test_multi() : void
     {
         $statement = self::$mailcode->getParser()->createStatement(' $VAR "Some text" insensitive: ');
         
@@ -164,7 +124,7 @@ final class Validator_ValidatorTests extends MailcodeTestCase
         $this->assertTrue($key->isValid(), 'Keyword should be present');
     }
     
-    public function test_index()
+    public function test_index() : void
     {
         $statement = self::$mailcode->getParser()->createStatement(' $VAR "Some text" insensitive: ');
         
@@ -179,61 +139,59 @@ final class Validator_ValidatorTests extends MailcodeTestCase
         $this->assertTrue($var2->isValid());
     }
     
-    public function test_value_string()
+    public function test_value_string() : void
     {
         $validator = $this->createValidator('"Value"');
         
         $val = $validator->createValue();
         
         $this->assertTrue($val->isValid(), 'Value should be present');
-        $this->assertInstanceOf(Mailcode_Parser_Statement_Tokenizer_ValueInterface::class, $val->getToken(), 'Token should be present');
+
+        // No exception = token is present
+        $val->getToken();
+        $this->addToAssertionCount(1);
     }
 
-    public function test_value_number()
+    public function test_value_number() : void
     {
         $validator = $this->createValidator('45');
         
         $val = $validator->createValue();
         
         $this->assertTrue($val->isValid(), 'Value should be present');
-        $this->assertInstanceOf(Mailcode_Parser_Statement_Tokenizer_ValueInterface::class, $val->getToken(), 'Token should be present');
+
+        // No exception = token is present
+        $val->getToken();
+        $this->addToAssertionCount(1);
     }
     
-    public function test_value_missing()
+    public function test_value_missing() : void
     {
         $validator = $this->createValidator(Mailcode_Commands_Keywords::TYPE_INSENSITIVE);
         
         $val = $validator->createValue();
         
         $this->assertFalse($val->isValid());
-        
-        try
-        {
-            $val->getToken();
-        }
-        catch (Mailcode_Exception $e)
-        {
-            if($e->getCode() === Mailcode_Parser_Statement_Validator_Type_Value::ERROR_NO_VALUE_TOKEN_FOUND)
-            {
-                $this->addToAssertionCount(1);
-                return;
-            }
-        }
-        
-        $this->fail('No exception triggered');
+
+        $this->expectExceptionCode(Mailcode_Parser_Statement_Validator_Type_Value::ERROR_NO_VALUE_TOKEN_FOUND);
+
+        $val->getToken();
     }
     
-    public function test_operand()
+    public function test_operand() : void
     {
         $validator = $this->createValidator('==');
         
         $val = $validator->createOperand();
         
         $this->assertTrue($val->isValid(), 'Operand should be present');
-        $this->assertInstanceOf(Mailcode_Parser_Statement_Tokenizer_Token_Operand::class, $val->getToken(), 'Token should be present');
+
+        // No exception = token is present
+        $val->getToken();
+        $this->addToAssertionCount(1);
     }
     
-    public function test_operand_sign()
+    public function test_operand_sign() : void
     {
         $validator = $this->createValidator('==');
         
@@ -245,29 +203,45 @@ final class Validator_ValidatorTests extends MailcodeTestCase
         
         $this->assertFalse($val->isValid(), 'Operand should not be present');
     }
-    
-    
-    public function test_operand_missing()
+
+    public function test_operand_missing() : void
     {
         $validator = $this->createValidator(Mailcode_Commands_Keywords::TYPE_INSENSITIVE);
         
         $val = $validator->createOperand();
         
         $this->assertFalse($val->isValid());
-        
-        try
-        {
-            $val->getToken();
-        }
-        catch (Mailcode_Exception $e)
-        {
-            if($e->getCode() === Mailcode_Parser_Statement_Validator_Type_Operand::ERROR_NO_OPERAND_TOKEN_FOUND)
-            {
-                $this->addToAssertionCount(1);
-                return;
-            }
-        }
-        
-        $this->fail('No exception triggered');
+
+        $this->expectExceptionCode(Mailcode_Parser_Statement_Validator_Type_Operand::ERROR_NO_OPERAND_TOKEN_FOUND);
+
+        $val->getToken();
     }
+
+    // endregion
+
+    // region: Support methods
+
+    /**
+     * @var Mailcode
+     */
+    static private Mailcode $mailcode;
+
+    protected function setUp() : void
+    {
+        parent::setUp();
+
+        if(!isset(self::$mailcode))
+        {
+            self::$mailcode = Mailcode::create();
+        }
+    }
+
+    private function createValidator(string $statementString) : Mailcode_Parser_Statement_Validator
+    {
+        $statement = self::$mailcode->getParser()->createStatement($statementString);
+
+        return new Mailcode_Parser_Statement_Validator($statement);
+    }
+
+    // endregion
 }
