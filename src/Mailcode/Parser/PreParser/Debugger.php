@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Mailcode\Parser\PreParser;
 
 use Mailcode\Mailcode;
-use Mailcode\Mailcode_PreParser_CommandDef;
+use Mailcode\Parser\PreParser\CommandDef;
 
 /**
  * Specialized debugger for the pre-parser, used to
@@ -81,7 +81,7 @@ class Debugger
         }
     }
 
-    public function debugCommandDef(Mailcode_PreParser_CommandDef $commandDef) : void
+    public function debugCommandDef(CommandDef $commandDef) : void
     {
         if(!Mailcode::isDebugEnabled())
         {

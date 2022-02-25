@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Mailcode;
+namespace Mailcode\Parser\PreParser;
 
+use Mailcode\Mailcode_Collection;
+use Mailcode\Mailcode_Commands_CommonConstants;
 use Mailcode\Parser\PreParser;
 use function AppUtils\sb;
 
-class Mailcode_PreParser_CommandDef
+class CommandDef
 {
     private string $name;
     private string $openingText;
@@ -154,7 +156,7 @@ class Mailcode_PreParser_CommandDef
         return true;
     }
 
-    private function addEscapeError(Mailcode_PreParser_CommandDef $command, Mailcode_Collection $collection) : void
+    private function addEscapeError(CommandDef $command, Mailcode_Collection $collection) : void
     {
         $collection->addErrorMessage(
             $command->getOpeningText(),

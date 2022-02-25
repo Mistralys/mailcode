@@ -16,7 +16,7 @@ use Mailcode\Mailcode_Collection;
 use Mailcode\Mailcode_Commands_CommonConstants;
 use Mailcode\Mailcode_Exception;
 use Mailcode\Mailcode_Parser_Exception;
-use Mailcode\Mailcode_PreParser_CommandDef;
+use Mailcode\Parser\PreParser\CommandDef;
 use Mailcode\Parser\PreParser\Debugger;
 use function AppUtils\sb;
 use function Mailcode\t;
@@ -63,7 +63,7 @@ class PreParser
     private bool $parsed = false;
 
     /**
-     * @var Mailcode_PreParser_CommandDef[]
+     * @var CommandDef[]
      */
     private array $commands = array();
 
@@ -249,7 +249,7 @@ class PreParser
     }
 
     /**
-     * @return Mailcode_PreParser_CommandDef[]
+     * @return CommandDef[]
      */
     public function getCommands() : array
     {
@@ -281,7 +281,7 @@ class PreParser
 
         foreach($openingCommands as $idx => $def)
         {
-            $this->commands[] = new Mailcode_PreParser_CommandDef(
+            $this->commands[] = new CommandDef(
                 $def['name'],
                 $def['matchedText'],
                 $def['parameters'],
@@ -404,7 +404,7 @@ class PreParser
         );
     }
 
-    private function processCommand(Mailcode_PreParser_CommandDef $commandDef) : void
+    private function processCommand(CommandDef $commandDef) : void
     {
         $commandDef->extractContent($this->subject);
 
