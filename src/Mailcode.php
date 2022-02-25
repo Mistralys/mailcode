@@ -15,7 +15,7 @@ use Psr\Log\LoggerInterface;
 
 /**
  * Main hub for the "Mailcode" syntax handling, which is used
- * to abstract the actual commands syntax used by the selected
+ * to abstract the actual command syntax used by the selected
  * mailing format.
  * 
  * Users only work with the mailcode commands to ensure that
@@ -199,6 +199,11 @@ class Mailcode
         return self::$debug;
     }
 
+    /**
+     * @param string $message
+     * @param array<string|int,mixed> $context
+     * @return void
+     */
     public static function debug(string $message, array $context=array()) : void
     {
         if(self::$debug && isset(self::$logger))

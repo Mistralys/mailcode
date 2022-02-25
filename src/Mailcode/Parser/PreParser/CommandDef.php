@@ -1,4 +1,11 @@
 <?php
+/**
+ * File containing the class {@see \Mailcode\Parser\PreParser\CommandDef}.
+ *
+ * @package Mailcode
+ * @subpackage Parser
+ * @see \Mailcode\Parser\PreParser\CommandDef
+ */
 
 declare(strict_types=1);
 
@@ -9,6 +16,21 @@ use Mailcode\Mailcode_Commands_CommonConstants;
 use Mailcode\Parser\PreParser;
 use function AppUtils\sb;
 
+/**
+ * Command definition for a protected content command
+ * detected by the pre-parser: Used to store all necessary
+ * information on the command.
+ *
+ * This class does the following things:
+ *
+ * - Extract and store the command's content
+ * - Determine the ID of the content
+ * - Generate the inline command for the main parser
+ *
+ * @package Mailcode
+ * @subpackage Parser
+ * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
+ */
 class CommandDef
 {
     private string $name;
