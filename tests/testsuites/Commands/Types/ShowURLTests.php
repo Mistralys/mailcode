@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace testsuites\Commands\Types;
 
+use Mailcode\Commands\Command\ShowURL\AutoTrackingID;
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands_Command_ShowURL;
 use MailcodeTestCase;
@@ -128,6 +129,17 @@ EOT;
         $command = $this->parseCommand($subject);
 
         $this->assertSame($subject, $command->getNormalized());
+    }
+
+    // endregion
+
+    // region: _Tests, tracking ID generation
+
+    public function test_resetCustomGenerator() : void
+    {
+        AutoTrackingID::resetGenerator();
+
+        $this->assertFalse(AutoTrackingID::hasCustomGenerator());
     }
 
     // endregion
