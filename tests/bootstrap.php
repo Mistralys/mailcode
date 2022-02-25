@@ -7,36 +7,30 @@
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
 
-    /**
-     * The tests root folder (this file's location)
-     * @var string
-     */
-    define('TESTS_ROOT', __DIR__ );
+use Mailcode\Mailcode;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 
-    $autoloader = realpath(TESTS_ROOT.'/../vendor/autoload.php');
-    
-    if($autoloader === false) 
-    {
-        die('ERROR: The autoloader is not present. Run composer install first.');
-    }
+/**
+ * The tests root folder (this file's location)
+ * @var string
+ */
+const TESTS_ROOT = __DIR__;
 
-   /**
-    * The composer autoloader
-    */
-    require_once $autoloader;
-    
-   /**
-    * The test case base class for the testsuites.
-    */
-    require_once TESTS_ROOT.'/assets/classes/MailcodeTestCase.php';
+$autoloader = dirname(TESTS_ROOT) . '/vendor/autoload.php';
 
-   
-   /**
-    * Test case base class for the factory tests.
-    */
-    require_once TESTS_ROOT.'/assets/classes/FactoryTestCase.php';
+if(!file_exists($autoloader))
+{
+    die('ERROR: The autoloader is not present. Please run composer install first.');
+}
 
-    /**
-     * Test case base class for the apache velocity tests.
-     */
-    require_once TESTS_ROOT.'/assets/classes/VelocityTestCase.php';
+/**
+* The composer autoloader
+*/
+require_once $autoloader;
+
+$logger = new Logger('mailcode-testsuites');
+
+$logger->pushHandler(new StreamHandler('php://stdout', Logger::DEBUG));
+
+Mailcode::setLogger($logger);
