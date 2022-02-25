@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use Mailcode\Parser\PreParser\Debugger;
 use function AppUtils\sb;
 
 /**
@@ -32,7 +33,7 @@ use function AppUtils\sb;
  * the same name as the command, for example:
  *
  * <pre>
- * {code: "ApacheVelocity}
+ * {code: "ApacheVelocity"}
  *     (Some velocity code here)
  * {code}
  * </pre>
@@ -52,7 +53,6 @@ class Mailcode_Parser_PreParser
     private string $subject;
     private Mailcode_Collection $collection;
     private static int $contentCounter = 0;
-    private bool $debug = false;
     private bool $parsed = false;
 
     /**
@@ -65,10 +65,13 @@ class Mailcode_Parser_PreParser
      */
     private static array $contents = array();
 
+    private Debugger $debugger;
+
     public function __construct(string $subject, Mailcode_Collection $collection)
     {
         $this->subject = $subject;
         $this->collection = $collection;
+        $this->debugger = new Debugger();
     }
 
     /**
@@ -82,12 +85,6 @@ class Mailcode_Parser_PreParser
     public function isValid() : bool
     {
         return $this->collection->isValid();
-    }
-
-    public function enableDebug(bool $enable) : self
-    {
-        $this->debug = $enable;
-        return $this;
     }
 
     /**
@@ -268,12 +265,6 @@ class Mailcode_Parser_PreParser
     private function detectCommands() : void
     {
         $openingCommands = $this->detectOpeningCommands();
-
-        if(empty($openingCommands))
-        {
-            return;
-        }
-
         $closingCommands = $this->detectClosingCommands();
 
         if(!$this->validateCommandsList($openingCommands, $closingCommands))
@@ -308,22 +299,29 @@ class Mailcode_Parser_PreParser
 
         for($i=0; $i < $max; $i++)
         {
+            // command closed that was never opened
             if(!isset($openingCommands[$i]))
             {
-                // command closed that was never opened
-                return false;
+                return $this->addErrorClosedNeverOpened($closingCommands[$i]['matchedText']);
             }
 
+            // command opened that was never closed
             if(!isset($closingCommands[$i]))
             {
-                // command opened that was never closed
-                return false;
+                return $this->addErrorNeverClosed(
+                    $openingCommands[$i]['matchedText'],
+                    $openingCommands[$i]['name']
+                );
             }
 
+            // command closed does not match opening
             if($openingCommands[$i]['name'] !== $closingCommands[$i]['name'])
             {
-                // command closed does not match opening
-                return false;
+                return $this->addErrorClosingMismatch(
+                    $openingCommands[$i]['name'],
+                    $openingCommands[$i]['matchedText'],
+                    $closingCommands[$i]['matchedText']
+                );
             }
         }
 
@@ -348,29 +346,14 @@ class Mailcode_Parser_PreParser
         {
             $result[(int)$idx] = array(
                 'matchedText' => (string)$matchedText,
-                'name' => trim((string)$matches[1][$idx]),
+                'name' => strtolower(trim((string)$matches[1][$idx])),
                 'parameters' => trim((string)$matches[2][$idx])
             );
         }
 
-        $this->debugOpeningCommands($matches);
+        $this->debugger->debugOpeningCommands($matches);
 
         return $result;
-    }
-
-    /**
-     * @param array<int,array<int,string>> $matches
-     * @return void
-     */
-    private function debugOpeningCommands(array $matches) : void
-    {
-        if($this->debug === false)
-        {
-            return;
-        }
-
-        echo 'Opening command matches:'.PHP_EOL;
-        print_r($matches);
     }
 
     /**
@@ -390,10 +373,12 @@ class Mailcode_Parser_PreParser
         foreach($matches[0] as $idx => $matchedText)
         {
             $result[] = array(
-                'name' => (string)$matches[1][$idx],
+                'name' => strtolower(trim((string)$matches[1][$idx])),
                 'matchedText' => $matchedText
             );
         }
+
+        $this->debugger->debugClosingCommands($result);
 
         return $result;
     }
@@ -416,7 +401,7 @@ class Mailcode_Parser_PreParser
     {
         $commandDef->extractContent($this->subject);
 
-        $this->debugCommandDef($commandDef);
+        $this->debugger->debugCommandDef($commandDef);
 
         // Replace the original command and content with the replacement command
         $this->subject = substr_replace(
@@ -425,15 +410,6 @@ class Mailcode_Parser_PreParser
             $commandDef->getStartPos(),
             $commandDef->getLength()
         );
-    }
-
-    private function debugCommandDef(Mailcode_PreParser_CommandDef $commandDef) : void
-    {
-        if($this->debug === true)
-        {
-            echo 'Command definition:'.PHP_EOL;
-            print_r($commandDef->toArray());
-        }
     }
 
     /**
@@ -451,5 +427,61 @@ class Mailcode_Parser_PreParser
         self::$contents[self::$contentCounter] = self::restoreBrackets($content);
 
         return self::$contentCounter;
+    }
+
+    /**
+     * @param $matchedText
+     * @return false
+     */
+    private function addErrorClosedNeverOpened($matchedText) : bool
+    {
+        $this->collection->addErrorMessage(
+            $matchedText,
+            t('The closing command has no matching opening command.'),
+            Mailcode_Commands_CommonConstants::VALIDATION_MISSING_CONTENT_OPENING_TAG
+        );
+        return false;
+    }
+
+    /**
+     * @param string $matchedText
+     * @param string $name
+     * @return false
+     */
+    private function addErrorNeverClosed(string $matchedText, string $name) : bool
+    {
+        $this->collection->addErrorMessage(
+            $matchedText,
+            t(
+                'The command is never closed with a matching %1$s command.',
+                sb()->code('{' . $name . '}')
+            ),
+            Mailcode_Commands_CommonConstants::VALIDATION_MISSING_CONTENT_CLOSING_TAG
+        );
+        return false;
+    }
+
+    /**
+     * @param string $name
+     * @param string $openingMatchedText
+     * @param string $closingMatchedText
+     * @return false
+     */
+    private function addErrorClosingMismatch(string $name, string $openingMatchedText, string $closingMatchedText) : bool
+    {
+        $this->collection->addErrorMessage(
+            $openingMatchedText,
+            (string)sb()
+                ->t(
+                    'The command %1$s can not be used to close this command.',
+                    sb()->code($closingMatchedText)
+                )
+                ->t(
+                    'It must be closed with a matching %1$s command.',
+                    sb()->code('{' . $name . '}')
+                ),
+            Mailcode_Commands_CommonConstants::VALIDATION_CONTENT_CLOSING_MISMATCHED_TAG
+        );
+        return false;
     }
 }
