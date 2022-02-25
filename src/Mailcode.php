@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use Psr\Log\LoggerInterface;
+
 /**
  * Main hub for the "Mailcode" syntax handling, which is used
  * to abstract the actual commands syntax used by the selected
@@ -169,5 +171,39 @@ class Mailcode
     public function createPreProcessor(string $subject) : Mailcode_PreProcessor
     {
         return new Mailcode_PreProcessor($subject);
+    }
+
+    /**
+     * @var LoggerInterface|NULL
+     */
+    private static ?LoggerInterface $logger = null;
+    private static bool $debug = false;
+
+    public static function setLogger(LoggerInterface $logger) : void
+    {
+        self::$logger = $logger;
+    }
+
+    public static function getLogger() : ?LoggerInterface
+    {
+        return self::$logger;
+    }
+
+    public static function setDebugging(bool $enabled=true) : void
+    {
+        self::$debug = $enabled;
+    }
+
+    public static function isDebugEnabled() : bool
+    {
+        return self::$debug;
+    }
+
+    public static function debug(string $message, array $context=array()) : void
+    {
+        if(self::$debug && isset(self::$logger))
+        {
+            self::$logger->debug($message, $context);
+        }
     }
 }
