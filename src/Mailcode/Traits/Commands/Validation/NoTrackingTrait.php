@@ -1,16 +1,21 @@
 <?php
 /**
- * File containing the {@see Mailcode_Traits_Commands_Validation_NoTracking} trait.
+ * File containing the {@see \Mailcode\Traits\Commands\Validation\NoTrackingTrait} trait.
  *
- * @see Mailcode_Traits_Commands_Validation_NoTracking
+ * @see \Mailcode\Traits\Commands\Validation\NoTrackingTrait
  * @subpackage Validation
  * @package Mailcode
  */
 
 declare(strict_types=1);
 
-namespace Mailcode;
+namespace Mailcode\Traits\Commands\Validation;
 
+use Mailcode\Interfaces\Commands\Validation\NoTrackingInterface;
+use Mailcode\Mailcode_Commands_Keywords;
+use Mailcode\Mailcode_Exception;
+use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Keyword;
+use Mailcode\Mailcode_Parser_Statement_Validator;
 use phpDocumentor\Descriptor\Interfaces\FunctionInterface;
 use phpDocumentor\Reflection\Utils;
 
@@ -19,15 +24,15 @@ use phpDocumentor\Reflection\Utils;
  * of the `no-tracking:` keyword in the command statement,
  * and sets the tracking enabled flag accordingly.
  *
- * @see Mailcode_Interfaces_Commands_Validation_NoTracking
- *@subpackage Validation
+ * @package Mailcode
+ * @subpackage Validation
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  *
- * @property Mailcode_Parser_Statement_Validator $validator
+ * @see NoTrackingInterface
  *
- * @package Mailcode
+ * @property Mailcode_Parser_Statement_Validator $validator
  */
-trait Mailcode_Traits_Commands_Validation_NoTracking
+trait NoTrackingTrait
 {
     /**
      * @var boolean

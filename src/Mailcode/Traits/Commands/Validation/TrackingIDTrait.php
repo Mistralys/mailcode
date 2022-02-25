@@ -1,15 +1,19 @@
 <?php
 /**
- * File containing the {@see Mailcode_Traits_Commands_Validation_TrackingID} trait.
+ * File containing the {@see \Mailcode\Traits\Commands\Validation\TrackingIDTrait} trait.
  *
- * @see Mailcode_Traits_Commands_Validation_TrackingID
- * @subpackage Validation
  * @package Mailcode
+ * @subpackage Validation
+ * @see \Mailcode\Traits\Commands\Validation\TrackingIDTrait
  */
 
 declare(strict_types=1);
 
-namespace Mailcode;
+namespace Mailcode\Traits\Commands\Validation;
+
+use Mailcode\Interfaces\Commands\Validation\TrackingIDInterface;
+use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
+use Mailcode\Mailcode_Parser_Statement_Validator;
 
 /**
  * Command validation drop-in: checks for the presence
@@ -22,11 +26,11 @@ namespace Mailcode;
  * @subpackage Validation
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  *
+ * @see TrackingIDInterface
  * @property Mailcode_Parser_Statement_Validator $validator
  *
- * @see Mailcode_Interfaces_Commands_Validation_TrackingID
  */
-trait Mailcode_Traits_Commands_Validation_TrackingID
+trait TrackingIDTrait
 {
     protected string $trackingID = '';
     private ?Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral $trackingIDToken = null;

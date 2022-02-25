@@ -1,17 +1,27 @@
 <?php
+/**
+ * File containing the interface {@see \Mailcode\Interfaces\Commands\Validation\QueryParamsInterface}.
+ *
+ * @package Mailcode
+ * @subpackage Validation
+ * @see \Mailcode\Interfaces\Commands\Validation\QueryParamsInterface
+ */
 
 declare(strict_types=1);
 
-namespace Mailcode;
+namespace Mailcode\Interfaces\Commands\Validation;
+
+use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
+use Mailcode\Traits\Commands\Validation\QueryParamsTrait;
 
 /**
  * @package Mailcode
  * @subpackage Validation
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  *
- * @see Mailcode_Traits_Commands_Validation_QueryParams
+ * @see QueryParamsTrait
  */
-interface Mailcode_Interfaces_Commands_Validation_QueryParams
+interface QueryParamsInterface
 {
     public const VALIDATION_NAME_QUERY_PARAMS = 'query_params';
 

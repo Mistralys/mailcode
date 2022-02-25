@@ -1,15 +1,18 @@
 <?php
 /**
- * File containing the {@see Mailcode_Traits_Commands_Validation_QueryParams} trait.
+ * File containing the {@see \Mailcode\Traits\Commands\Validation\QueryParamsTrait} trait.
  *
- * @see Mailcode_Traits_Commands_Validation_QueryParams
- * @subpackage Validation
  * @package Mailcode
+ * @subpackage Validation
+ * @see \Mailcode\Traits\Commands\Validation\QueryParamsTrait
  */
 
 declare(strict_types=1);
 
-namespace Mailcode;
+namespace Mailcode\Traits\Commands\Validation;
+
+use Mailcode\Interfaces\Commands\Validation\QueryParamsInterface;
+use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
 
 /**
  * Command validation drop-in: checks for the presence
@@ -20,9 +23,9 @@ namespace Mailcode;
  * @subpackage Validation
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  *
- * @see Mailcode_Interfaces_Commands_Validation_QueryParams
+ * @see QueryParamsInterface
  */
-trait Mailcode_Traits_Commands_Validation_QueryParams
+trait QueryParamsTrait
 {
     /**
      * @var array<string,string>

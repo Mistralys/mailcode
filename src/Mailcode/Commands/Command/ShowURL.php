@@ -11,6 +11,13 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use Mailcode\Interfaces\Commands\Validation\QueryParamsInterface;
+use Mailcode\Interfaces\Commands\Validation\TrackingIDInterface;
+use Mailcode\Interfaces\Commands\Validation\NoTrackingInterface;
+use Mailcode\Traits\Commands\Validation\QueryParamsTrait;
+use Mailcode\Traits\Commands\Validation\TrackingIDTrait;
+use Mailcode\Traits\Commands\Validation\NoTrackingTrait;
+
 /**
  * Mailcode command: `showurl` to format and display a URL
  * with or without tracking. The URL is specified as the
@@ -25,14 +32,14 @@ class Mailcode_Commands_Command_ShowURL
     extends Mailcode_Commands_Command
     implements
     Mailcode_Interfaces_Commands_ProtectedContent,
-    Mailcode_Interfaces_Commands_Validation_NoTracking,
-    Mailcode_Interfaces_Commands_Validation_TrackingID,
-    Mailcode_Interfaces_Commands_Validation_QueryParams
+    NoTrackingInterface,
+    TrackingIDInterface,
+    QueryParamsInterface
 {
     use Mailcode_Traits_Commands_ProtectedContent;
-    use Mailcode_Traits_Commands_Validation_NoTracking;
-    use Mailcode_Traits_Commands_Validation_TrackingID;
-    use Mailcode_Traits_Commands_Validation_QueryParams;
+    use NoTrackingTrait;
+    use TrackingIDTrait;
+    use QueryParamsTrait;
 
     public function getName() : string
     {
@@ -73,9 +80,9 @@ class Mailcode_Commands_Command_ShowURL
     {
         return array(
             Mailcode_Interfaces_Commands_ProtectedContent::VALIDATION_NAME_CONTENT_ID,
-            Mailcode_Interfaces_Commands_Validation_NoTracking::VALIDATION_NAME_NO_TRACKING,
-            Mailcode_Interfaces_Commands_Validation_TrackingID::VALIDATION_NAME_TRACKING_ID,
-            Mailcode_Interfaces_Commands_Validation_QueryParams::VALIDATION_NAME_QUERY_PARAMS
+            NoTrackingInterface::VALIDATION_NAME_NO_TRACKING,
+            TrackingIDInterface::VALIDATION_NAME_TRACKING_ID,
+            QueryParamsInterface::VALIDATION_NAME_QUERY_PARAMS
         );
     }
 
