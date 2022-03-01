@@ -1,6 +1,7 @@
 <?php
 
 use Mailcode\Mailcode;
+use Mailcode\Mailcode_Commands_Command;
 use Mailcode\Mailcode_Exception;
 use Mailcode\Mailcode_Translator;
 
@@ -39,5 +40,12 @@ abstract class VelocityTestCase extends MailcodeTestCase
             
             $this->assertEquals($expected, $result, $test['label']);
         }
+    }
+
+    protected function translateCommand(Mailcode_Commands_Command $command) : string
+    {
+        return $this->translator
+            ->createSyntax('ApacheVelocity')
+            ->translateCommand($command);
     }
 }
