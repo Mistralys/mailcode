@@ -14,7 +14,7 @@ namespace Mailcode;
 use AppUtils\ConvertHelper;
 
 /**
- * Mailcode command: opening CODE statement.
+ * Mailcode command: opening `mono` statement.
  *
  * @package Mailcode
  * @subpackage Commands
