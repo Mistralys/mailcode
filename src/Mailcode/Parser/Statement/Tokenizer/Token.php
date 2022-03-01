@@ -20,25 +20,14 @@ namespace Mailcode;
  */
 abstract class Mailcode_Parser_Statement_Tokenizer_Token implements Mailcode_Parser_Statement_Tokenizer_TypeInterface
 {
-   /**
-    * @var string
-    */
-    protected $tokenID;
-    
-   /**
-    * @var string
-    */
-    protected $matchedText;
-    
+    protected string $tokenID;
+    protected string $matchedText;
+    private ?Mailcode_Commands_Command $sourceCommand;
+
    /**
     * @var mixed
     */
     protected $subject;
-
-    /**
-     * @var Mailcode_Commands_Command|null
-     */
-    private $sourceCommand;
 
     /**
      * @param string $tokenID
@@ -52,6 +41,13 @@ abstract class Mailcode_Parser_Statement_Tokenizer_Token implements Mailcode_Par
         $this->matchedText = $matchedText;
         $this->subject = $subject;
         $this->sourceCommand = $sourceCommand;
+
+        $this->init();
+    }
+
+    protected function init() : void
+    {
+
     }
 
     /**
@@ -84,18 +80,6 @@ abstract class Mailcode_Parser_Statement_Tokenizer_Token implements Mailcode_Par
     public function getMatchedText() : string
     {
         return $this->matchedText;
-    }
-    
-    protected function restoreQuotes(string $subject, bool $escaped=true) : string
-    {
-        $replace = '\"';
-
-        if(!$escaped)
-        {
-            $replace = '"';
-        }
-
-        return str_replace('__QUOTE__', $replace, $subject);
     }
 
     abstract public function getNormalized() : string;
