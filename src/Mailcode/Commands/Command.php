@@ -12,6 +12,8 @@ declare(strict_types=1);
 namespace Mailcode;
 
 use AppUtils\OperationResult;
+use Mailcode\Commands\CommandException;
+use Mailcode\Commands\ParamsException;
 
 abstract class Mailcode_Commands_Command
     implements
@@ -29,7 +31,6 @@ abstract class Mailcode_Commands_Command
     use Mailcode_Traits_Commands_Validation_TypeUnsupported;
 
     public const ERROR_NON_DUMMY_OPERATION = 46001;
-    public const ERROR_NO_VALIDATION_RESULT_AVAILABLE = 46002;
     public const ERROR_MISSING_VALIDATION_METHOD = 46003;
     public const ERROR_MISSING_TYPE_INTERFACE = 46004;
     public const ERROR_LOGIC_COMMANDS_NOT_SUPPORTED = 46005;
@@ -228,7 +229,11 @@ abstract class Mailcode_Commands_Command
         
         return $this->hash;
     }
-    
+
+    /**
+     * @return void
+     * @throws CommandException
+     */
     protected function requireNonDummy() : void
     {
         if(!$this->isDummy())
@@ -236,7 +241,7 @@ abstract class Mailcode_Commands_Command
             return;
         }
         
-        throw new Mailcode_Exception(
+        throw new CommandException(
             'Operation not allowed with dummy commands',
             null,
             self::ERROR_NON_DUMMY_OPERATION
@@ -287,14 +292,19 @@ abstract class Mailcode_Commands_Command
     {
         return array_merge($this->validations, $this->getValidations());
     }
-    
+
+    /**
+     * @param string $validation
+     * @return bool
+     * @throws CommandException
+     */
     protected function validateSyntaxMethod(string $validation) : bool
     {
         $method = 'validateSyntax_'.$validation;
         
         if(!method_exists($this, $method))
         {
-            throw new Mailcode_Exception(
+            throw new CommandException(
                 'Missing validation method ['.$validation.']',
                 sprintf(
                     'The method [%s] is missing from class [%s].',
@@ -370,9 +380,8 @@ abstract class Mailcode_Commands_Command
         {
             return '';
         }
-        
-        $highlighter = new Mailcode_Commands_Highlighter($this);
-        return $highlighter->highlight();
+
+        return (new Mailcode_Commands_Highlighter($this))->highlight();
     }
     
     public function getParamsString() : string
@@ -390,6 +399,10 @@ abstract class Mailcode_Commands_Command
         return $this->params;
     }
 
+    /**
+     * @return Mailcode_Parser_Statement
+     * @throws ParamsException
+     */
     public function requireParams() : Mailcode_Parser_Statement
     {
         if(isset($this->params))
@@ -397,7 +410,7 @@ abstract class Mailcode_Commands_Command
             return $this->params;
         }
 
-        throw new Mailcode_Exception(
+        throw new ParamsException(
             'No parameters available.',
             'The command has no parameters.',
             self::ERROR_NO_PARAMETERS_AVAILABLE
@@ -409,18 +422,20 @@ abstract class Mailcode_Commands_Command
     abstract public function getLabel() : string;
     
     abstract public function requiresParameters() : bool;
-    
-    abstract public function supportsType() : bool;
 
-    abstract public function supportsURLEncoding() : bool;
+    abstract public function supportsType() : bool;
 
     abstract public function supportsLogicKeywords() : bool;
     
     abstract public function generatesContent() : bool;
 
     abstract public function getDefaultType() : string;
-    
-    public final function getCommandType() : string
+
+    /**
+     * @return string
+     * @throws ParamsException
+     */
+    final public function getCommandType() : string
     {
         if($this instanceof Mailcode_Commands_Command_Type_Closing)
         {
@@ -442,7 +457,7 @@ abstract class Mailcode_Commands_Command
             return 'Standalone';
         }
         
-        throw new Mailcode_Exception(
+        throw new ParamsException(
             'Invalid command type',
             sprintf(
                 'The command [%s] does not implement any of the type interfaces.',
@@ -471,7 +486,11 @@ abstract class Mailcode_Commands_Command
     {
         return $this->getNormalized();
     }
-    
+
+    /**
+     * @return Mailcode_Commands_LogicKeywords
+     * @throws ParamsException
+     */
     public function getLogicKeywords() : Mailcode_Commands_LogicKeywords
     {
         if(isset($this->logicKeywords) && $this->supportsLogicKeywords())
@@ -479,14 +498,19 @@ abstract class Mailcode_Commands_Command
             return $this->logicKeywords;
         }
         
-        throw new Mailcode_Exception(
+        throw new ParamsException(
             'Logic keywords are not supported',
             'Cannot retrieve the logic keywords instance: it is only available for commands supporting logic commands.',
             self::ERROR_LOGIC_COMMANDS_NOT_SUPPORTED
         );
     }
 
-    public function setTranslationParam(string $name, $value)
+    /**
+     * @param string $name
+     * @param mixed $value
+     * @return $this
+     */
+    public function setTranslationParam(string $name, $value) : self
     {
         $this->translationParams[$name] = $value;
         return $this;
@@ -494,60 +518,7 @@ abstract class Mailcode_Commands_Command
 
     public function getTranslationParam(string $name)
     {
-        if(isset($this->translationParams[$name]))
-        {
-            return $this->translationParams[$name];
-        }
-
-        return null;
-    }
-
-    public function setURLEncoding(bool $encoding=true)
-    {
-        $this->requireURLEncoding();
-
-        $this->requireParams()
-            ->getInfo()
-            ->setKeywordEnabled(Mailcode_Commands_Keywords::TYPE_URLENCODE, $encoding);
-
-        return $this;
-    }
-
-    public function setURLDecoding(bool $decode=true)
-    {
-        $this->requireURLEncoding();
-
-        $this->requireParams()
-            ->getInfo()
-            ->setKeywordEnabled(Mailcode_Commands_Keywords::TYPE_URLDECODE, $decode);
-
-        return $this;
-    }
-
-    protected function requireURLEncoding() : void
-    {
-        if($this->supportsURLEncoding()) {
-            return;
-        }
-
-        throw new Mailcode_Exception(
-            'Command does not support URL encoding.',
-            sprintf(
-                'The command [%s] cannot use URL encoding.',
-                get_class($this)
-            ),
-            self::ERROR_URL_ENCODING_NOT_SUPPORTED
-        );
-    }
-
-    public function isURLEncoded() : bool
-    {
-        return $this->requireParams()->getInfo()->hasKeyword(Mailcode_Commands_Keywords::TYPE_URLENCODE);
-    }
-
-    public function isURLDecoded() : bool
-    {
-        return $this->requireParams()->getInfo()->hasKeyword(Mailcode_Commands_Keywords::TYPE_URLDECODE);
+        return $this->translationParams[$name] ?? null;
     }
 
     protected function getValidator() : Mailcode_Parser_Statement_Validator
@@ -557,7 +528,7 @@ abstract class Mailcode_Commands_Command
             return $this->validator;
         }
 
-        throw new Mailcode_Exception(
+        throw new ParamsException(
             'No validator available',
             'The validator instance has not been set.',
             self::ERROR_VALIDATOR_INSTANCE_NOT_SET

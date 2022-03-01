@@ -1,10 +1,15 @@
 <?php
 
-use Mailcode\Mailcode_Factory;
+declare(strict_types=1);
 
-final class Mailcode_IfTests extends MailcodeTestCase
+namespace testsuites\Commands\Types;
+
+use Mailcode\Mailcode_Factory;
+use MailcodeTestCase;
+
+final class IfTests extends MailcodeTestCase
 {
-    public function test_validation_passthru()
+    public function test_validation_passthru() : void
     {
         $tests = array(
             array(
@@ -23,8 +28,8 @@ final class Mailcode_IfTests extends MailcodeTestCase
             ),
             array(
                 'label' => 'Escaping brackets',
-                'string' => '{if: $FOOBAR \{test\} }{end}',
-                'normalized' => '{if: $FOOBAR \{test\} }{end}',
+                'string' => '{if: $\{FOOBAR\} == "Value"}{end}',
+                'normalized' => '{if: $\{FOOBAR\} == "Value"}{end}',
                 'valid' => true,
                 'code' => 0
             )
@@ -37,7 +42,7 @@ final class Mailcode_IfTests extends MailcodeTestCase
     * Check for the issue where a zero in a command 
     * would be stripped out when normalized.
     */
-    public function test_normalize_zero()
+    public function test_normalize_zero() : void
     {
         $cmd = Mailcode_Factory::if()->if("0 == 1");
         

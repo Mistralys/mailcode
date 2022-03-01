@@ -1,22 +1,27 @@
 <?php
 
+namespace testsuites\Parser;
+
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Collection_Error_Command;
 use Mailcode\Mailcode_Collection_Error_Message;
 use Mailcode\Mailcode_Commands_Command;
+use Mailcode\Mailcode_Commands_Command_If_Contains;
 use Mailcode\Mailcode_Parser;
 use Mailcode\Mailcode_Parser_StringPreProcessor;
+use Mailcode\Parser\Statement\Tokenizer\SpecialChars;
+use MailcodeTestCase;
 
-final class Parser_ParserTests extends MailcodeTestCase
+final class ParserTests extends MailcodeTestCase
 {
-    public function test_createParser()
+    public function test_createParser() : void
     {
         $parser = Mailcode::create()->getParser();
         
         $this->assertInstanceOf(Mailcode_Parser::class, $parser);
     }
     
-    public function test_parseString_withoutCommands()
+    public function test_parseString_withoutCommands() : void
     {
         $collection = Mailcode::create()->parseString("Some text without commands");
         
@@ -24,7 +29,7 @@ final class Parser_ParserTests extends MailcodeTestCase
         $this->assertFalse($collection->hasCommands());
     }
 
-    public function test_parseString_withSingleCommand()
+    public function test_parseString_withSingleCommand() : void
     {
         $collection = Mailcode::create()->parseString(
             "Line with {showvar: \$CUSTOMER.NAME}"
@@ -34,7 +39,7 @@ final class Parser_ParserTests extends MailcodeTestCase
         $this->assertTrue($collection->hasCommands());
     }
     
-    public function test_parseString_caseInsensitive()
+    public function test_parseString_caseInsensitive() : void
     {
         $collection = Mailcode::create()->parseString(
             "Line with {ShowVar: \$CUSTOMER.NAME}"
@@ -44,7 +49,7 @@ final class Parser_ParserTests extends MailcodeTestCase
         $this->assertTrue($collection->hasCommands());
     }
     
-    public function test_parseString_freeSpacing()
+    public function test_parseString_freeSpacing() : void
     {
         $collection = Mailcode::create()->parseString(
             "Line with 
@@ -71,26 +76,29 @@ final class Parser_ParserTests extends MailcodeTestCase
     * will be preserved when used in string literals, but stripped
     * out otherwise. 
     */
-    public function test_parseString_htmlSpaces()
+    public function test_parseString_htmlSpaces() : void
     {
-        $collection = Mailcode::create()->parseString(
-            "Line with
+        $subject = <<<'EOT'
+Line with
             
-            {if variable: &#160; \$CUSTOMER.NAME &nbsp; == \" &nbsp; &#160; \" }
+            {if variable: &#160; $CUSTOMER.NAME &nbsp; == " &nbsp; &#160; " }{end}
+EOT;
 
-            "
-        );
-        
         $expected = '{if variable: $CUSTOMER.NAME == "     "}';
-        
-        $this->assertSame(1, $collection->countCommands());
+
+        $collection = Mailcode::create()->parseString($subject);
+
+        $this->assertCollectionValid($collection);
+        $this->assertSame(2, $collection->countCommands());
         $this->assertTrue($collection->hasCommands());
         
         $cmd = $collection->getFirstCommand();
+
+        $this->assertNotNull($cmd);
         $this->assertEquals($expected, $cmd->getNormalized());
     }
 
-    public function test_parseString_withSeveralCommands()
+    public function test_parseString_withSeveralCommands() : void
     {
         $collection = Mailcode::create()->parseString(
             "Line with {showvar: \$CUSTOMER.NAME}
@@ -100,7 +108,7 @@ final class Parser_ParserTests extends MailcodeTestCase
         $this->assertSame(2, $collection->countCommands());
     }
 
-    public function test_parseString_withDuplicateCommands()
+    public function test_parseString_withDuplicateCommands() : void
     {
         $collection = Mailcode::create()->parseString(
             "Line with {showvar: \$CUSTOMER.NAME}
@@ -115,7 +123,7 @@ final class Parser_ParserTests extends MailcodeTestCase
         $this->assertSame(3, count($hashed));
     }
     
-    public function test_parseString_unknownCommandName()
+    public function test_parseString_unknownCommandName() : void
     {
         $collection = Mailcode::create()->parseString(
             "Line with {foo: \$CUSTOMER.NAME} {showvar: \$ADDRESS.LINE1}"
@@ -133,7 +141,7 @@ final class Parser_ParserTests extends MailcodeTestCase
         $this->assertTrue($errors[0]->isUnknownCommand());
     }
     
-    public function test_parseString_typeNotSupported()
+    public function test_parseString_typeNotSupported() : void
     {
         $collection = Mailcode::create()->parseString(
             "Line with {showvar foo: \$CUSTOMER.NAME}"
@@ -148,7 +156,7 @@ final class Parser_ParserTests extends MailcodeTestCase
         $this->assertTrue($errors[0]->isTypeNotSupported());
     }
     
-    public function test_parseString_invalidVariableName()
+    public function test_parseString_invalidVariableName() : void
     {
         $collection = Mailcode::create()->parseString(
             "Line with {showvar: \$FOO.8AR}"
@@ -162,7 +170,7 @@ final class Parser_ParserTests extends MailcodeTestCase
         $this->assertSame(Mailcode_Commands_Command::VALIDATION_INVALID_PARAMS_STATEMENT, $errors[0]->getCode());
     }
 
-    public function test_parseString_invalidVariablePath()
+    public function test_parseString_invalidVariablePath() : void
     {
         $collection = Mailcode::create()->parseString(
             "Line with {showvar: \$3OO.BAR}"
@@ -176,7 +184,7 @@ final class Parser_ParserTests extends MailcodeTestCase
         $this->assertSame(Mailcode_Commands_Command::VALIDATION_INVALID_PARAMS_STATEMENT, $errors[0]->getCode());
     }
     
-    public function test_parseString_noVariable()
+    public function test_parseString_noVariable() : void
     {
         $collection = Mailcode::create()->parseString(
             "Line with {showvar: FOO.BAR}"
@@ -190,7 +198,7 @@ final class Parser_ParserTests extends MailcodeTestCase
         $this->assertSame(Mailcode_Commands_Command::VALIDATION_INVALID_PARAMS_STATEMENT, $errors[0]->getCode());
     }
     
-    public function test_parseHTML()
+    public function test_parseHTML() : void
     {
         $string = '
 <p>We need some text here, apparently.</p>
@@ -214,7 +222,7 @@ final class Parser_ParserTests extends MailcodeTestCase
         $this->addToAssertionCount(1);
     }
     
-    public function test_parseWithCSS()
+    public function test_parseWithCSS() : void
     {
         $subject = 
 '<style>
@@ -230,7 +238,7 @@ height:45px;
         $this->assertFalse($collection->hasCommands());
     }
     
-    public function test_parseWithCSS_variant2()
+    public function test_parseWithCSS_variant2() : void
     {
         $subject =
         '<style>#id{width:50%}</style>';
@@ -241,7 +249,7 @@ height:45px;
         $this->assertFalse($collection->hasCommands());
     }
     
-    public function test_parseNumbersInStringLiterals()
+    public function test_parseNumbersInStringLiterals() : void
     {
         $collection = Mailcode::create()->parseString(
             'Line with {setvar: $FOOBAR = "44578,45"}'
@@ -250,7 +258,7 @@ height:45px;
         $this->assertTrue($collection->isValid());
     }
     
-    public function test_quotesInComments()
+    public function test_quotesInComments() : void
     {
         $collection = Mailcode::create()->parseString(
             'Line with {comment: He said, "Foo me!" :D }'
@@ -259,7 +267,7 @@ height:45px;
         $this->assertTrue($collection->isValid());
     }
     
-    public function test_htmlEntities()
+    public function test_htmlEntities() : void
     {
         $collection = Mailcode::create()->parseString(
             '{if: 6 &gt; 2}Here{end}'
@@ -320,8 +328,8 @@ EOT;
 
         $expected = sprintf(
             $expected,
-            Mailcode_Parser_StringPreProcessor::LITERAL_BRACKET_LEFT_REPLACEMENT,
-            Mailcode_Parser_StringPreProcessor::LITERAL_BRACKET_RIGHT_REPLACEMENT
+            SpecialChars::PLACEHOLDER_BRACKET_OPEN,
+            SpecialChars::PLACEHOLDER_BRACKET_CLOSE
         );
 
         $processor = new Mailcode_Parser_StringPreProcessor($commands);
@@ -360,5 +368,22 @@ EOT;
         }
 
         $this->assertCount(7, $collection->getCommands());
+    }
+
+    public function test_parseString_stringLiteralsWithBrackets() : void
+    {
+        $commands = <<<'EOT'
+{if contains: $VARNAME "With literal \{brackets\}"}{end}
+EOT;
+
+        $command = $this->parseCommandStringValid($commands);
+
+        $this->assertInstanceOf(Mailcode_Commands_Command_If_Contains::class, $command);
+
+        $terms = $command->getSearchTerms();
+        $this->assertCount(1, $terms);
+        $this->assertSame('With literal {brackets}', $terms[0]->getText());
+        $this->assertSame('"With literal \{brackets\}"', $terms[0]->getMatchedText());
+        $this->assertSame('"With literal \{brackets\}"', $terms[0]->getNormalized());
     }
 }
