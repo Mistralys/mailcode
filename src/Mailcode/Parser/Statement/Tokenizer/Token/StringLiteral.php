@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use Mailcode\Parser\Statement\Tokenizer\SpecialChars;
+
 /**
  * Token representing a quoted string literal.
  *
@@ -20,13 +22,27 @@ namespace Mailcode;
  */
 class Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral extends Mailcode_Parser_Statement_Tokenizer_Token implements Mailcode_Parser_Statement_Tokenizer_ValueInterface
 {
-   /**
-    * Retrieves the text with the surrounding quotes.
+    private string $text;
+
+    protected function init() : void
+    {
+        $this->setText($this->stripQuotes($this->matchedText));
+    }
+
+    private function stripQuotes(string $text) : string
+    {
+        return trim($text, '"');
+    }
+
+    /**
+    * Retrieves the text with the surrounding quotes,
+    * and special characters escaped for Mailcode.
+    *
     * @return string
     */
     public function getNormalized() : string
     {
-        return $this->restoreQuotes($this->matchedText);
+        return '"'.SpecialChars::escape($this->text).'"';
     }
     
    /**
@@ -39,13 +55,21 @@ class Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral extends Mailcode_P
     }
     
    /**
-    * Retrieves the text without the surrounding quotes.
+    * Retrieves the text without the surrounding quotes,
+    * and special Mailcode characters not escaped.
+    *
     * @return string
     */
     public function getText() : string
     {
-        $quoteless = trim($this->matchedText, '"\'');
-        
-        return $this->restoreQuotes($quoteless, false);
+        return SpecialChars::decode($this->text);
+    }
+
+    public function setText(string $text) : self
+    {
+        $this->text = SpecialChars::escape($text);
+        $this->matchedText = '"'.$this->text.'"';
+
+        return $this;
     }
 }
