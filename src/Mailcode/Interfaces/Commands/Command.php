@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Mailcode;
 
 use AppUtils\OperationResult;
+use Mailcode\Commands\ParamsException;
 
 /**
  * Skeleton for all commands.
@@ -141,7 +142,7 @@ interface Mailcode_Interfaces_Commands_Command
      * @param mixed $value
      * @return $this
      */
-    public function setTranslationParam(string $name, $value);
+    public function setTranslationParam(string $name, $value) : self;
 
     /**
      * Retrieves a previously set translation parameter.
@@ -150,23 +151,4 @@ interface Mailcode_Interfaces_Commands_Command
      * @return mixed
      */
     public function getTranslationParam(string $name);
-
-    /**
-     * @param bool $encoding
-     * @return $this
-     */
-    public function setURLEncoding(bool $encoding = true);
-
-    /**
-     * Enables URL decoding for the command.
-     *
-     * @param bool $decode
-     * @return $this
-     * @throws Mailcode_Exception
-     */
-    public function setURLDecoding(bool $decode = true);
-
-    public function isURLEncoded(): bool;
-
-    public function isURLDecoded(): bool;
 }
