@@ -24,9 +24,5 @@ abstract class Mailcode_Translator_Command
 {
     abstract public function getLabel() : string;
 
-    public function getSyntaxName() : string
-    {
-        $parts = explode('_', get_class($this));
-        return array_pop($parts);
-    }
+    abstract public function getSyntaxName() : string;
 }
