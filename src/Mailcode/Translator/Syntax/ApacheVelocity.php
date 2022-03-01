@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use Mailcode\Interfaces\Commands\Validation\URLEncodingInterface;
+
 /**
  * Abstract base class for apache velocity command translation classes. 
  *
@@ -23,7 +25,7 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
     /**
     * @var string[]
     */
-    private $regexSpecialChars = array(
+    private array $regexSpecialChars = array(
         '?',
         '.',
         '[',
@@ -83,6 +85,11 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
 
     protected function addURLEncoding(Mailcode_Commands_Command $command, string $statement) : string
     {
+        if(!$command instanceof URLEncodingInterface)
+        {
+            return $statement;
+        }
+
         if($command->isURLEncoded())
         {
             return sprintf(
@@ -131,5 +138,18 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
             '$price.toNumber(%s)',
             '$'.$varName
         );
+    }
+
+    public function renderQuotedValue(string $value) : string
+    {
+        return sprintf(
+            '"%s"',
+            str_replace('"', '\"', $value)
+        );
+    }
+
+    public function getSyntaxName() : string
+    {
+        return 'ApacheVelocity';
     }
 }
