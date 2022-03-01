@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use Mailcode\Commands\ParamsException;
+
 /**
  * Command validation drop-in: checks for the presence
  * of a "urlencode:" keyword, to automatically set the
@@ -20,43 +22,27 @@ namespace Mailcode;
  * @subpackage Validation
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  *
- * @property Mailcode_Parser_Statement_Validator $validator
- * @property Mailcode_Parser_Statement $params
- *
  * @see Mailcode_Interfaces_Commands_Validation_URLEncode
  */
 trait Mailcode_Traits_Commands_Validation_URLEncode
 {
-    /**
-     * @var Mailcode_Parser_Statement_Tokenizer_Token_Keyword|NULL
-     */
-    protected $urlencodeToken;
-
-    protected function validateSyntax_urlencode() : void
+    public function getURLEncodeToken() : ?Mailcode_Parser_Statement_Tokenizer_Token_Keyword
     {
-        $keywords = $this->params->getInfo()->getKeywords();
+        return $this->getEncodingToken(Mailcode_Commands_Keywords::TYPE_URLENCODE);
+    }
 
-        foreach($keywords as $keyword)
-        {
-            if($keyword->isURLEncoded())
-            {
-                $this->urlencodeToken = $keyword;
-
-                $this->setURLEncoding(true);
-
-                break;
-            }
-        }
+    public function isURLEncoded() : bool
+    {
+        return $this->getURLEncodeToken() !== null;
     }
 
     /**
      * @param bool $encoding
      * @return $this
+     * @throws Mailcode_Exception
      */
-    abstract public function setURLEncoding(bool $encoding=true);
-
-    public function getURLEncodeToken() : ?Mailcode_Parser_Statement_Tokenizer_Token_Keyword
+    public function setURLEncoding(bool $encoding=true) : self
     {
-        return $this->urlencodeToken;
+        return $this->setEncodingEnabled(Mailcode_Commands_Keywords::TYPE_URLENCODE, $encoding);
     }
 }

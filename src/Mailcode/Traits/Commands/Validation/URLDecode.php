@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use Mailcode\Commands\ParamsException;
+
 /**
  * Command validation drop-in: checks for the presence
  * of a "urldecode:" keyword.
@@ -19,36 +21,27 @@ namespace Mailcode;
  * @subpackage Validation
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  *
- * @property Mailcode_Parser_Statement_Validator $validator
- * @property Mailcode_Parser_Statement $params
- *
  * @see Mailcode_Interfaces_Commands_Validation_URLDecode
  */
 trait Mailcode_Traits_Commands_Validation_URLDecode
 {
-    /**
-     * @var Mailcode_Parser_Statement_Tokenizer_Token_Keyword|NULL
-     */
-    protected $urldecodeToken;
-
-    protected function validateSyntax_urldecode() : void
-    {
-        $keywords = $this->params->getInfo()->getKeywords();
-
-        foreach($keywords as $keyword)
-        {
-            if($keyword->isURLDecode())
-            {
-                $this->urldecodeToken = $keyword;
-                break;
-            }
-        }
-    }
-
-    abstract public function setURLDecoding(bool $decode=true);
-
     public function getURLDecodeToken() : ?Mailcode_Parser_Statement_Tokenizer_Token_Keyword
     {
-        return $this->urldecodeToken;
+        return $this->getEncodingToken(Mailcode_Commands_Keywords::TYPE_URLDECODE);
+    }
+
+    /**
+     * @param bool $decode
+     * @return $this
+     * @throws Mailcode_Exception
+     */
+    public function setURLDecoding(bool $decode=true) : self
+    {
+        return $this->setEncodingEnabled(Mailcode_Commands_Keywords::TYPE_URLDECODE, $decode);
+    }
+
+    public function isURLDecoded() : bool
+    {
+        return $this->getURLDecodeToken() !== null;
     }
 }
