@@ -6,11 +6,16 @@
 - Parser: Added a pre-parser for protected content commands.
 - Parser: Protected content commands may now contain any text, including Mailcode commands.
 - Parser: Added `copy()` to the parameter statement class.
+- Parser: Added `Mailcode_Parser_Statement_Info_Keywords::getByName()`.
 - Formatting: Added a replacer to remove all Mailcode commands from a string.
 - Commands: Added `Mailcode_Commands::getContentCommands()`.
 - Commands: Added `Mailcode_Commands_Command_Code::getSupportedSyntaxes()`.
 - Commands: Added the new `showurl` command.
+- Commands: Added the new `showencoded` command.
+- Commands: Added IDN encoding to select show commands via `IDNEncodingInterface`.
+- Commands: Added the `URLEncodingInterface` interface (encoding and decoding).
 - Factory: Added the `$content` parameter for code commands.
+- Factory: Added `filterKeyword()` to the instantiator.
 - Debugging: Added support for debugging with a monolog logger.
 - Collection: Added `getErrorCodes()`.
 - Code quality: Increased PHPStan analysis level to `9`.
@@ -22,6 +27,8 @@
 - Parser: `parseString()` now returns an instance of `ParseResult` instead of a collection.
 - Commands: Removed `Mailcode_Commands_Command_Code::getSyntax()`.
 - Commands: The `{code}` command must now be closed with `{code}` instead of `{end}`.
+- Commands: `setURLEncoding()` and `setURLDecoding()` are now only available 
+  for commands that implement the `URLEncodingInterface` interface.
 - Factory: The `misc::code()` method now requires the content to be specified.
 
 **Deprecated methods** 
