@@ -22,10 +22,9 @@ use Mailcode\Parser\PreParser;
  */
 trait Mailcode_Traits_Commands_ProtectedContent
 {
-    /**
-     * @var string
-     */
     protected string $content = '';
+    private ?Mailcode_Collection $nestedMailcode = null;
+    protected ?Mailcode_Parser_Statement_Tokenizer_Token_Number $contentIDToken = null;
 
     public function getContent() : string
     {
@@ -36,8 +35,6 @@ trait Mailcode_Traits_Commands_ProtectedContent
     {
         return trim($this->content);
     }
-
-    protected ?Mailcode_Parser_Statement_Tokenizer_Token_Number $contentIDToken = null;
 
     public function getContentIDToken() : ?Mailcode_Parser_Statement_Tokenizer_Token_Number
     {
@@ -61,6 +58,47 @@ trait Mailcode_Traits_Commands_ProtectedContent
             t('The content ID parameter is missing.'),
             Mailcode_Interfaces_Commands_ProtectedContent::VALIDATION_ERROR_CONTENT_ID_MISSING
         );
+    }
+
+    public function getNestedMailcode() : Mailcode_Collection
+    {
+         if(isset($this->nestedMailcode))
+         {
+             return $this->nestedMailcode;
+         }
+
+         if($this->isMailcodeEnabled())
+         {
+             $collection = Mailcode::create()->parseString($this->getContent());
+         }
+         else
+         {
+             $collection = new Mailcode_Collection();
+         }
+
+         $this->nestedMailcode = $collection;
+
+         return $collection;
+    }
+
+    protected function validateSyntax_nested_mailcode() : void
+    {
+        $collection = $this->getNestedMailcode();
+
+        if($collection->isValid())
+        {
+            return;
+        }
+
+        $errors = $collection->getErrors();
+
+        foreach($errors as $error)
+        {
+            $this->getValidationResult()->makeError(
+                $error->getMessage(),
+                $error->getCode()
+            );
+        }
     }
 
     public function getContentID() : int
@@ -89,5 +127,24 @@ trait Mailcode_Traits_Commands_ProtectedContent
     public function getNormalized() : string
     {
         return (new Mailcode_Commands_Normalizer_ProtectedContent($this))->normalize();
+    }
+
+    public function getVariables() : Mailcode_Variables_Collection_Regular
+    {
+        $variables = parent::getVariables();
+
+        if($this->isMailcodeEnabled())
+        {
+            $nested = $this->getNestedMailcode()
+                ->getVariables()
+                ->getAll();
+
+            foreach($nested as $variable)
+            {
+                $variables->add($variable);
+            }
+        }
+
+        return $variables;
     }
 }
