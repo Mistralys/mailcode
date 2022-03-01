@@ -12,11 +12,14 @@ declare(strict_types=1);
 namespace Mailcode\Traits\Commands;
 
 use Mailcode\Interfaces\Commands\EncodableInterface;
+use Mailcode\Interfaces\Commands\Validation\IDNDecodeInterface;
 use Mailcode\Interfaces\Commands\Validation\IDNEncodeInterface;
 use Mailcode\Mailcode_Commands_Keywords;
 use Mailcode\Mailcode_Exception;
 use Mailcode\Mailcode_Interfaces_Commands_Validation_URLDecode;
 use Mailcode\Mailcode_Interfaces_Commands_Validation_URLEncode;
+use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token;
+use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Keyword;
 
 /**
  * Trait used to implement the encodable interface.
@@ -101,6 +104,11 @@ trait EncodableTrait
             $encodings[] = Mailcode_Commands_Keywords::TYPE_IDN_ENCODE;
         }
 
+        if($this instanceof IDNDecodeInterface)
+        {
+            $encodings[] = Mailcode_Commands_Keywords::TYPE_IDN_DECODE;
+        }
+
         if($this instanceof Mailcode_Interfaces_Commands_Validation_URLEncode)
         {
             $encodings[] = Mailcode_Commands_Keywords::TYPE_URLENCODE;
@@ -112,5 +120,13 @@ trait EncodableTrait
         }
 
         return $encodings;
+    }
+
+    public function getEncodingToken(string $keyword) : ?Mailcode_Parser_Statement_Tokenizer_Token_Keyword
+    {
+        return $this->requireParams()
+            ->getInfo()
+            ->getKeywordsCollection()
+            ->getByName($keyword);
     }
 }

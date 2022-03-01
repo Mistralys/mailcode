@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Mailcode\Interfaces\Commands;
 
 use Mailcode\Mailcode_Interfaces_Commands_Command;
+use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token;
+use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Keyword;
 
 interface EncodableInterface extends Mailcode_Interfaces_Commands_Command
 {
@@ -34,4 +36,6 @@ interface EncodableInterface extends Mailcode_Interfaces_Commands_Command
      * @return string[]
      */
     public function getActiveEncodings() : array;
+
+    public function getEncodingToken(string $keyword) : ?Mailcode_Parser_Statement_Tokenizer_Token_Keyword;
 }
