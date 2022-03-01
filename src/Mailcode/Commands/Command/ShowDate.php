@@ -45,9 +45,7 @@ class Mailcode_Commands_Command_ShowDate extends Mailcode_Commands_ShowBase
     {
         return array(
             Mailcode_Interfaces_Commands_Validation_Variable::VALIDATION_NAME_VARIABLE,
-            'check_format',
-            Mailcode_Interfaces_Commands_Validation_URLEncode::VALIDATION_NAME_URLENCODE,
-            Mailcode_Interfaces_Commands_Validation_URLDecode::VALIDATION_NAME_URLDECODE
+            'check_format'
         );
     }
 
