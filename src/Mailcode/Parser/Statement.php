@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Mailcode;
 
 use AppUtils\OperationResult;
+use Mailcode\Parser\Statement\Tokenizer\SpecialChars;
 
 /**
  * Mailcode statement parser: parses arbitrary statements
@@ -71,12 +72,12 @@ class Mailcode_Parser_Statement
     {
         return str_replace(
             array(
-                Mailcode_Parser_StringPreProcessor::LITERAL_BRACKET_LEFT_REPLACEMENT,
-                Mailcode_Parser_StringPreProcessor::LITERAL_BRACKET_RIGHT_REPLACEMENT
+                SpecialChars::PLACEHOLDER_BRACKET_OPEN,
+                SpecialChars::PLACEHOLDER_BRACKET_CLOSE
             ),
             array(
-                '{',
-                '}'
+                '\{',
+                '\}'
             ),
             $statement
         );
