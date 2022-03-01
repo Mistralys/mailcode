@@ -64,7 +64,7 @@ class Mailcode_Parser_Statement_Info_Variables
      * Retrieves all variables used in the statement.
      *
      * @return Mailcode_Variables_Variable[]
-     * @throws Mailcode_Exception
+     * @throws Mailcode_Parser_Exception
      */
     public function getAll() : array
     {
