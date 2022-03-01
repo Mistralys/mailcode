@@ -12,13 +12,14 @@ declare(strict_types=1);
 namespace Mailcode;
 
 use AppUtils\ConvertHelper;
+use Mailcode\Interfaces\Commands\Validation\URLEncodingInterface;
 
 /**
  * Detects all URLs in the subject string, and tells all placeholders
- * that are contained in URLs, that they are in an URL. This allows
+ * that are contained in URLs, that they are in a URL. This allows
  * those commands to adjust themselves automatically if necessary.
  *
- * Example: showvar commands that automatically turn on URL encoding.
+ * Example: `showvar` commands that automatically turn on URL encoding.
  *
  * @package Mailcode
  * @subpackage Parser
@@ -56,7 +57,8 @@ class Mailcode_Parser_Safeguard_URLAnalyzer
 
     private function analyzeURL(string $url) : void
     {
-        if(stristr($url, 'tel:') !== false)
+        // Ignore phone URLs
+        if(stripos($url, 'tel:') !== false)
         {
             return;
         }
@@ -67,16 +69,24 @@ class Mailcode_Parser_Safeguard_URLAnalyzer
         {
             $command = $placeholder->getCommand();
 
-            if(!$command->supportsURLEncoding())
+            // The URL is not found in the replacement text
+            if(strpos($url, $placeholder->getReplacementText()) === false)
             {
                 continue;
             }
 
-            if(strstr($url, $placeholder->getReplacementText()) !== false && !$command->isURLDecoded())
+            if($command instanceof URLEncodingInterface)
             {
-                $command->setURLEncoding(true);
-                break;
+                $this->applyEncoding($command);
             }
+        }
+    }
+
+    private function applyEncoding(URLEncodingInterface $command) : void
+    {
+        if(!$command->isURLDecoded())
+        {
+            $command->setURLEncoding();
         }
     }
 }
