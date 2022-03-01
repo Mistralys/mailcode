@@ -76,7 +76,7 @@ class Mailcode_Parser_Statement_Info
      * Retrieves all variables used in the statement.
      *
      * @return Mailcode_Variables_Variable[]
-     * @throws Mailcode_Exception
+     * @throws Mailcode_Parser_Exception
      */
     public function getVariables() : array
     {
@@ -213,13 +213,18 @@ class Mailcode_Parser_Statement_Info
         return $this->keywords->getAll();
     }
 
+    public function getKeywordsCollection() : Mailcode_Parser_Statement_Info_Keywords
+    {
+        return $this->keywords;
+    }
+
     /**
-     * Adds or removes a keyword dependin on whether it should be enabled.
+     * Adds or removes a keyword depending on whether it should be enabled.
      *
      * @param string $keyword The keyword name, with or without :
      * @param bool $enabled
      * @return Mailcode_Parser_Statement_Info
-     * @throws Mailcode_Exception
+     * @throws Mailcode_Parser_Exception
      */
     public function setKeywordEnabled(string $keyword, bool $enabled) : Mailcode_Parser_Statement_Info
     {
@@ -233,7 +238,7 @@ class Mailcode_Parser_Statement_Info
      *
      * @param string $keyword Keyword name, with or without :
      * @return $this
-     * @throws Mailcode_Exception
+     * @throws Mailcode_Parser_Exception
      */
     public function addKeyword(string $keyword) : Mailcode_Parser_Statement_Info
     {
@@ -278,5 +283,10 @@ class Mailcode_Parser_Statement_Info
     public function removeToken(Mailcode_Parser_Statement_Tokenizer_Token $token) : void
     {
         $this->tokenizer->removeToken($token);
+    }
+
+    public function addStringLiteral(string $text) : Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
+    {
+        return $this->tokenizer->appendStringLiteral($text);
     }
 }
