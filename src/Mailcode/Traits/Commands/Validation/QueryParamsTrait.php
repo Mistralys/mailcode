@@ -100,4 +100,20 @@ trait QueryParamsTrait
     {
         return isset($this->queryParams[$name]);
     }
+
+    public function setQueryParam(string $name, string $value) : self
+    {
+        $this->queryParams[$name] = $value;
+        return $this;
+    }
+
+    public function removeQueryParam(string $name) : self
+    {
+        if(isset($this->queryParams[$name]))
+        {
+            unset($this->queryParams[$name]);
+        }
+
+        return $this;
+    }
 }
