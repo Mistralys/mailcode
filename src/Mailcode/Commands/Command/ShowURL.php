@@ -82,7 +82,8 @@ class Mailcode_Commands_Command_ShowURL
             Mailcode_Interfaces_Commands_ProtectedContent::VALIDATION_NAME_CONTENT_ID,
             NoTrackingInterface::VALIDATION_NAME_NO_TRACKING,
             TrackingIDInterface::VALIDATION_NAME_TRACKING_ID,
-            QueryParamsInterface::VALIDATION_NAME_QUERY_PARAMS
+            QueryParamsInterface::VALIDATION_NAME_QUERY_PARAMS,
+            Mailcode_Interfaces_Commands_ProtectedContent::VALIDATION_NAME_NESTED_MAILCODE,
         );
     }
 
@@ -94,5 +95,10 @@ class Mailcode_Commands_Command_ShowURL
     public function getURL() : string
     {
         return $this->getContentTrimmed();
+    }
+
+    public function isMailcodeEnabled() : bool
+    {
+        return true;
     }
 }
