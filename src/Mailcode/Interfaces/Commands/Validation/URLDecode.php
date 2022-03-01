@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use Mailcode\Commands\ParamsException;
+use Mailcode\Interfaces\Commands\EncodableInterface;
+
 /**
  * @package Mailcode
  * @subpackage Validation
@@ -18,7 +21,7 @@ namespace Mailcode;
  *
  * @see Mailcode_Traits_Commands_Validation_URLDecode
  */
-interface Mailcode_Interfaces_Commands_Validation_URLDecode extends Mailcode_Interfaces_Commands_Command
+interface Mailcode_Interfaces_Commands_Validation_URLDecode extends EncodableInterface
 {
     public const VALIDATION_NAME_URLDECODE = 'urldecode';
 
@@ -27,6 +30,9 @@ interface Mailcode_Interfaces_Commands_Validation_URLDecode extends Mailcode_Int
     /**
      * @param bool $decode
      * @return $this
+     * @throws ParamsException
      */
-    public function setURLDecoding(bool $decode=true);
+    public function setURLDecoding(bool $decode=true) : self;
+
+    public function isURLDecoded(): bool;
 }
