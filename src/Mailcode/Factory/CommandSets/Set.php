@@ -23,12 +23,12 @@ abstract class Mailcode_Factory_CommandSets_Set
    /**
     * @var Mailcode_Factory_Instantiator
     */
-    protected $instantiator;
+    protected Mailcode_Factory_Instantiator $instantiator;
 
     /**
      * @var Mailcode_Commands
      */
-    protected $commands;
+    protected Mailcode_Commands $commands;
 
     public function __construct()
     {
