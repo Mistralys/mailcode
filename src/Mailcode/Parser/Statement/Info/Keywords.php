@@ -1,20 +1,29 @@
 <?php
+/**
+ * File containing the class {@see \Mailcode\Mailcode_Parser_Statement_Info_Keywords}.
+ *
+ * @package Mailcode
+ * @subpackage Parser
+ * @see \Mailcode\Mailcode_Parser_Statement_Info_Keywords
+ */
 
 declare(strict_types=1);
 
 namespace Mailcode;
 
+/**
+ * Specialized keyword collection handler: easy API to
+ * access information on keywords used in the parameters
+ * of a command.
+ *
+ * @package Mailcode
+ * @subpackage Parser
+ * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
+ */
 class Mailcode_Parser_Statement_Info_Keywords
 {
-    /**
-     * @var Mailcode_Parser_Statement_Info
-     */
-    private $info;
-
-    /**
-     * @var Mailcode_Parser_Statement_Tokenizer
-     */
-    private $tokenizer;
+    private Mailcode_Parser_Statement_Info $info;
+    private Mailcode_Parser_Statement_Tokenizer $tokenizer;
 
     public function __construct(Mailcode_Parser_Statement_Info $info, Mailcode_Parser_Statement_Tokenizer $tokenizer)
     {
@@ -37,6 +46,28 @@ class Mailcode_Parser_Statement_Info_Keywords
         if($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_Keyword)
         {
             return $token;
+        }
+
+        return null;
+    }
+
+    /**
+     * Attempts to find a keyword of the given name in the
+     * keyword collection, and returns it if found.
+     *
+     * @param string $name
+     * @return Mailcode_Parser_Statement_Tokenizer_Token_Keyword|null
+     */
+    public function getByName(string $name) : ?Mailcode_Parser_Statement_Tokenizer_Token_Keyword
+    {
+        $tokens = $this->getAll();
+
+        foreach($tokens as $token)
+        {
+            if($token->getKeyword() === $name)
+            {
+                return $token;
+            }
         }
 
         return null;
@@ -67,7 +98,7 @@ class Mailcode_Parser_Statement_Info_Keywords
      * @param string $keyword The keyword name, with or without :
      * @param bool $enabled
      * @return Mailcode_Parser_Statement_Info_Keywords
-     * @throws Mailcode_Exception
+     * @throws Mailcode_Parser_Exception
      */
     public function setEnabled(string $keyword, bool $enabled) : Mailcode_Parser_Statement_Info_Keywords
     {
@@ -84,7 +115,7 @@ class Mailcode_Parser_Statement_Info_Keywords
      *
      * @param string $keyword Keyword name, with or without :
      * @return $this
-     * @throws Mailcode_Exception
+     * @throws Mailcode_Parser_Exception
      */
     public function add(string $keyword) : Mailcode_Parser_Statement_Info_Keywords
     {
