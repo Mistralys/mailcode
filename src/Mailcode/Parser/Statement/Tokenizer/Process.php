@@ -9,22 +9,22 @@ abstract class Mailcode_Parser_Statement_Tokenizer_Process
     /**
      * @var Mailcode_Parser_Statement_Tokenizer
      */
-    protected $tokenizer;
+    protected Mailcode_Parser_Statement_Tokenizer $tokenizer;
 
     /**
      * @var string
      */
-    protected $tokenized;
+    protected string $tokenized;
 
     /**
      * @var Mailcode_Parser_Statement_Tokenizer_Token[]
      */
-    protected $tokensTemporary = array();
+    protected array $tokensTemporary = array();
 
     /**
      * @var string
      */
-    protected $delimiter = '§§';
+    protected string $delimiter = '§§^§§';
 
     /**
      * Mailcode_Parser_Statement_Tokenizer_Process constructor.
