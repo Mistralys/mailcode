@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use Mailcode\Commands\ParamsException;
+
 /**
  * Factory utility used to create commands.
  *
@@ -252,7 +254,12 @@ class Mailcode_Factory_Instantiator
         
         return $this->buildIf($ifType, $condition, $subType);
     }
-    
+
+    public function filterKeyword(string $keyword) : string
+    {
+        return rtrim($keyword, ':').':';
+    }
+
     public function filterLiteral(string $term) : string
     {
         return str_replace('"', '\"', $term);
@@ -287,7 +294,8 @@ class Mailcode_Factory_Instantiator
      *
      * @param Mailcode_Commands_Command $cmd
      * @param string $urlEncoding
-     * @throws Mailcode_Exception
+     *
+     * @throws ParamsException
      *
      * @see Mailcode_Factory::URL_ENCODING_NONE
      * @see Mailcode_Factory::URL_ENCODING_ENCODE
@@ -295,18 +303,24 @@ class Mailcode_Factory_Instantiator
      */
     public function setEncoding(Mailcode_Commands_Command $cmd, string $urlEncoding) : void
     {
-        // First off, reset the encoding
-        $cmd->setURLEncoding(false);
-        $cmd->setURLDecoding(false);
+        if($cmd instanceof Mailcode_Interfaces_Commands_Validation_URLEncode)
+        {
+            $cmd->setURLEncoding(false);
 
-        if ($urlEncoding === Mailcode_Factory::URL_ENCODING_ENCODE) {
-            $cmd->setURLEncoding();
-            return;
+            if ($urlEncoding === Mailcode_Factory::URL_ENCODING_ENCODE)
+            {
+                $cmd->setURLEncoding();
+            }
         }
 
-        if ($urlEncoding === Mailcode_Factory::URL_ENCODING_DECODE) {
-            $cmd->setURLDecoding();
-            return;
+        if($cmd instanceof Mailcode_Interfaces_Commands_Validation_URLDecode)
+        {
+            $cmd->setURLDecoding(false);
+
+            if ($urlEncoding === Mailcode_Factory::URL_ENCODING_DECODE)
+            {
+                $cmd->setURLDecoding();
+            }
         }
     }
 
@@ -322,7 +336,7 @@ class Mailcode_Factory_Instantiator
             return $string;
         }
 
-        return '"'.str_replace('"', '\"', $string).'"';
+        return '"'.$this->filterLiteral($string).'"';
     }
     
     public function exceptionUnexpectedType(string $type, Mailcode_Commands_Command $command) : Mailcode_Factory_Exception
