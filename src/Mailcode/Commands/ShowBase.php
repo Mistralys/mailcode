@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use Mailcode\Interfaces\Commands\Validation\URLEncodingInterface;
+use Mailcode\Traits\Commands\EncodableTrait;
+
 /**
  * Abstract base class for IF commands (IF, ELSEIF).
  *
@@ -23,12 +26,12 @@ abstract class Mailcode_Commands_ShowBase
     implements
     Mailcode_Commands_Command_Type_Standalone,
     Mailcode_Interfaces_Commands_Validation_Variable,
-    Mailcode_Interfaces_Commands_Validation_URLEncode,
-    Mailcode_Interfaces_Commands_Validation_URLDecode
+    URLEncodingInterface
 {
     use Mailcode_Traits_Commands_Validation_Variable;
     use Mailcode_Traits_Commands_Validation_URLEncode;
     use Mailcode_Traits_Commands_Validation_URLDecode;
+    use EncodableTrait;
 
     public function supportsURLEncoding() : bool
     {
