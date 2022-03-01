@@ -62,6 +62,15 @@ class Mailcode_Translator_Syntax
             $this->getTypeID(),
             $command->getID()
         );
+
+        if(!class_exists($class))
+        {
+            $class = sprintf(
+                'Mailcode\Translator\Syntax\%s\%s',
+                $this->getTypeID(),
+                $command->getID()
+            );
+        }
         
         if(!class_exists($class))
         {
