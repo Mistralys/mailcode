@@ -21,7 +21,11 @@ namespace Mailcode;
 class Mailcode_Parser_Statement_Tokenizer_Token_Variable extends Mailcode_Parser_Statement_Tokenizer_Token
 {
     public const ERROR_NOT_A_VARIABLE_INSTANCE = 49501;
-    
+
+    /**
+     * @return Mailcode_Variables_Variable
+     * @throws Mailcode_Parser_Exception
+     */
     public function getVariable() : Mailcode_Variables_Variable
     {
         if($this->subject instanceof Mailcode_Variables_Variable)
@@ -29,7 +33,7 @@ class Mailcode_Parser_Statement_Tokenizer_Token_Variable extends Mailcode_Parser
             return $this->subject;
         }
         
-        throw new Mailcode_Exception(
+        throw new Mailcode_Parser_Exception(
             'Subject is not a variable instance.',
             null,
             self::ERROR_NOT_A_VARIABLE_INSTANCE
