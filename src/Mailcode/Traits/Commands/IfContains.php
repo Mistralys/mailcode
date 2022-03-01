@@ -19,11 +19,6 @@ use AppUtils\OperationResult;
  * @package Mailcode
  * @subpackage Commands
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
- * 
- * @property Mailcode_Parser_Statement $params
- * @property OperationResult $validationResult
- * @property Mailcode_Parser_Statement_Validator $validator
- * @property Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral[] $searchTerms
  */
 trait Mailcode_Traits_Commands_IfContains
 {
@@ -33,7 +28,7 @@ trait Mailcode_Traits_Commands_IfContains
    /**
     * @var Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral[]
     */
-    protected $searchTerms = array();
+    protected array $searchTerms = array();
     
     protected function getValidations() : array
     {
@@ -46,16 +41,13 @@ trait Mailcode_Traits_Commands_IfContains
     
     protected function validateSyntax_search_terms() : void
     {
-        $tokens = $this->params->getInfo()->createPruner()
-        ->limitToStringLiterals()
-        ->getTokens();
-        
+        $tokens = $this->requireParams()
+            ->getInfo()
+            ->getStringLiterals();
+
         foreach($tokens as $token)
         {
-            if($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral)
-            {
-                $this->searchTerms[] = $token;
-            }
+            $this->searchTerms[] = $token;
         }
         
         if(empty($this->searchTerms))
