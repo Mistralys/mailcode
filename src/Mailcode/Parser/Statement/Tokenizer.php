@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use Mailcode\Parser\Statement\Tokenizer\SpecialChars;
+
 /**
  * Mailcode statement tokenizer: parses a mailcode statement
  * into its logical parts.
@@ -24,19 +26,19 @@ class Mailcode_Parser_Statement_Tokenizer
     public const ERROR_TOKENIZE_METHOD_MISSING = 49801;
     public const ERROR_INVALID_TOKEN_CREATED = 49802;
     public const ERROR_INVALID_TOKEN_CLASS = 49803;
-    
+
     /**
      * @var string[]
      */
-    protected array $tokenCategories = array(
-        'Variables',
-        'NormalizeQuotes',
-        'EscapedQuotes',
-        'StringLiterals',
-        'Keywords',
-        'Numbers',
-        'Operands',
-        'ExtractTokens'
+    protected array $tokenClasses = array(
+        Mailcode_Parser_Statement_Tokenizer_Process_Variables::class,
+        Mailcode_Parser_Statement_Tokenizer_Process_NormalizeQuotes::class,
+        Mailcode_Parser_Statement_Tokenizer_Process_EncodeSpecialChars::class,
+        Mailcode_Parser_Statement_Tokenizer_Process_StringLiterals::class,
+        Mailcode_Parser_Statement_Tokenizer_Process_Keywords::class,
+        Mailcode_Parser_Statement_Tokenizer_Process_Numbers::class,
+        Mailcode_Parser_Statement_Tokenizer_Process_Operands::class,
+        Mailcode_Parser_Statement_Tokenizer_Process_ExtractTokens::class
     );
     
    /**
@@ -159,7 +161,8 @@ class Mailcode_Parser_Statement_Tokenizer
      * the statement string, and extracts the tokens contained within.
      *
      * @param string $statement
-     * @throws Mailcode_Exception
+     *
+     * @throws Mailcode_Parser_Exception
      *
      * @see Mailcode_Parser_Statement_Tokenizer_Process
      */
@@ -168,9 +171,9 @@ class Mailcode_Parser_Statement_Tokenizer
         $statement = trim($statement);
         $tokens = array();
 
-        foreach($this->tokenCategories as $tokenCategory)
+        foreach($this->tokenClasses as $tokenClass)
         {
-            $processor = $this->createProcessor($tokenCategory, $statement, $tokens);
+            $processor = $this->createProcessor($tokenClass, $statement, $tokens);
             $processor->process();
 
             $statement = $processor->getStatement();
@@ -182,28 +185,26 @@ class Mailcode_Parser_Statement_Tokenizer
     }
 
     /**
-     * @param string $id
+     * @param string $className
      * @param string $statement
      * @param Mailcode_Parser_Statement_Tokenizer_Token[] $tokens
      * @return Mailcode_Parser_Statement_Tokenizer_Process
-     * @throws Mailcode_Exception
+     * @throws Mailcode_Parser_Exception
      */
-    protected function createProcessor(string $id, string $statement, array $tokens) : Mailcode_Parser_Statement_Tokenizer_Process
+    protected function createProcessor(string $className, string $statement, array $tokens) : Mailcode_Parser_Statement_Tokenizer_Process
     {
-        $class = 'Mailcode\Mailcode_Parser_Statement_Tokenizer_Process_'.$id;
-
-        $instance = new $class($this, $statement, $tokens);
+        $instance = new $className($this, $statement, $tokens);
 
         if($instance instanceof Mailcode_Parser_Statement_Tokenizer_Process)
         {
             return $instance;
         }
 
-        throw new Mailcode_Exception(
+        throw new Mailcode_Parser_Exception(
             'Unknown statement token.',
             sprintf(
-                'The tokenize class [%s] is not present.',
-                $class
+                'The tokenize class [%s] does not extend the base process class.',
+                $className
             ),
             self::ERROR_TOKENIZE_METHOD_MISSING
         );
@@ -228,7 +229,7 @@ class Mailcode_Parser_Statement_Tokenizer
             return $token;
         }
 
-        throw new Mailcode_Exception(
+        throw new Mailcode_Parser_Exception(
             'Invalid token class',
             sprintf(
                 'The class [%s] does not extend the base token class.',
@@ -249,7 +250,26 @@ class Mailcode_Parser_Statement_Tokenizer
             return $token;
         }
 
-        throw new Mailcode_Exception(
+        throw new Mailcode_Parser_Exception(
+            'Invalid token created',
+            '',
+            self::ERROR_INVALID_TOKEN_CREATED
+        );
+    }
+
+    public function appendStringLiteral(string $text) : Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
+    {
+        $token = $this->appendToken(
+            'StringLiteral',
+            SpecialChars::encodeAll($text)
+        );
+
+        if($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral)
+        {
+            return $token;
+        }
+
+        throw new Mailcode_Parser_Exception(
             'Invalid token created',
             '',
             self::ERROR_INVALID_TOKEN_CREATED
