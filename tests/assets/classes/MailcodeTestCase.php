@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Collection;
+use Mailcode\Mailcode_Commands_Command;
 use Mailcode\Mailcode_Exception;
 use Mailcode\Mailcode_Parser_Safeguard;
 use Mailcode\Mailcode_Variables_Collection;
@@ -149,5 +150,23 @@ abstract class MailcodeTestCase extends TestCase
             $collection->hasErrorCode($code),
             (string)$message
         );
+    }
+
+    protected function parseStringValid(string $subject) : Mailcode_Collection
+    {
+        $collection = Mailcode::create()->parseString($subject);
+
+        $this->assertCollectionValid($collection);
+
+        return $collection;
+    }
+
+    protected function parseCommandStringValid(string $subject) : Mailcode_Commands_Command
+    {
+        $command = $this->parseStringValid($subject)->getFirstCommand();
+
+        $this->assertNotNull($command);
+
+        return $command;
     }
 }
