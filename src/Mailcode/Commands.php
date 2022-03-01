@@ -61,7 +61,7 @@ class Mailcode_Commands
      * NOTE: These instances are only used for information purposes.
      *
      * @return Mailcode_Commands_Command[]
-     * @throws Mailcode_Exception
+     * @throws Mailcode_Factory_Exception
      */
     public function getAll() : array
     {
@@ -142,13 +142,14 @@ class Mailcode_Commands
         
         return in_array($id, $ids);
     }
-    
-   /**
-    * Checks wether the specified name exists.
-    * 
-    * @param string $name For example: "showvar".
-    * @return bool
-    */
+
+    /**
+     * Checks whether the specified name exists.
+     *
+     * @param string $name For example: "showvar".
+     * @return bool
+     * @throws Mailcode_Factory_Exception
+     */
     public function nameExists(string $name) : bool
     {
         $items = $this->getAll();
@@ -162,14 +163,22 @@ class Mailcode_Commands
         
         return false;
     }
-    
+
+    /**
+     * @param string $id The command ID, e.g. `ShowVar`.
+     * @param string $type The command's subtype, e.g. `variable` for the `if variable` command.
+     * @param string $params The parameter string
+     * @param string $matchedString The original matched string of the parsed command.
+     * @return Mailcode_Commands_Command
+     * @throws Mailcode_Factory_Exception
+     */
     public function createCommand(string $id, string $type, string $params, string $matchedString) : Mailcode_Commands_Command
     {
         $class = $this->resolveClassName($id, $type);
         
         if(!class_exists($class))
         {
-            throw new Mailcode_Exception(
+            throw new Mailcode_Factory_Exception(
                 'No such command',
                 sprintf(
                     'The command ID [%1$s] does not exist, class [%2$s] not found.',
@@ -187,7 +196,7 @@ class Mailcode_Commands
             return $command;
         }
 
-        throw new Mailcode_Exception(
+        throw new Mailcode_Factory_Exception(
             'Invalid command class',
             sprintf(
                 'The class [%s] does not extend the base command class.',
@@ -239,7 +248,7 @@ class Mailcode_Commands
      *
      * @param string $id
      * @return Mailcode_Commands_Command
-     * @throws Mailcode_Exception
+     * @throws Mailcode_Factory_Exception
      */
     private function getDummyCommand(string $id) : Mailcode_Commands_Command
     {
@@ -256,7 +265,7 @@ class Mailcode_Commands
             return $cmd;
         }
         
-        throw new Mailcode_Exception(
+        throw new Mailcode_Factory_Exception(
             'Invalid dummy command type',
             sprintf('The stored variable type is %1$s.', gettype(self::$dummyCommands[$id])),
             self::ERROR_INVALID_DUMMY_COMMAND_TYPE
