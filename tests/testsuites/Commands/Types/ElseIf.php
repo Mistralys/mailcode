@@ -20,8 +20,8 @@ final class Mailcode_ElseIfTests extends MailcodeTestCase
             ),
             array(
                 'label' => 'Escaping brackets',
-                'string' => '{if: 1 == 1}{elseif: $FOOBAR \{test\} }{end}',
-                'normalized' => '{if: 1 == 1}{elseif: $FOOBAR \{test\} }{end}',
+                'string' => '{if: 1 == 1}{elseif: $FOOBAR "\{test\}"}{end}',
+                'normalized' => '{if: 1 == 1}{elseif: $FOOBAR "\{test\}"}{end}',
                 'valid' => true,
                 'code' => 0
             )

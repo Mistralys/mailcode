@@ -131,6 +131,44 @@ EOT;
         $this->assertSame($subject, $command->getNormalized());
     }
 
+    public function test_nestedMailcode() : void
+    {
+        $subject = <<<'EOT'
+{showurl: "trackme"}
+{showvar: $FOO}
+{showurl}
+EOT;
+
+        $command = $this->parseCommand($subject);
+
+        $this->assertTrue($command->isMailcodeEnabled());
+
+        $collection = $command->getNestedMailcode();
+        $commands = $collection->getCommands();
+
+        $this->assertCount(1, $commands);
+        $this->assertSame('showvar', $commands[0]->getName());
+    }
+
+    public function test_getNestedVariables() : void
+    {
+        $subject = <<<'EOT'
+{showurl: "trackme"}
+{showvar: $FOO}
+{if variable: $BAR == ""}
+https://mistralys.eu
+{end}
+{showurl}
+EOT;
+
+        $command = $this->parseCommand($subject);
+        $variables = $command->getVariables()->getAll();
+
+        $this->assertCount(2, $variables);
+        $this->assertSame('$FOO', $variables[0]->getFullName());
+        $this->assertSame('$BAR', $variables[1]->getFullName());
+    }
+
     // endregion
 
     // region: _Tests, tracking ID generation

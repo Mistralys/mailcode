@@ -123,12 +123,10 @@ final class Mailcode_CommandsTests extends MailcodeTestCase
         foreach($tests as $test)
         {
             $collection = Mailcode::create()->parseString($test['string']);
-            $commands = $collection->getCommands();
-            
-            /* @var $command Mailcode_Commands_Command */
-            $command = array_pop($commands);
-            
-            $this->assertEquals($test['expected'], $command->getNormalized());
+            $command = $collection->getFirstCommand();
+
+            $this->assertNotNull($command);
+            $this->assertSame($test['expected'], $command->getNormalized());
         }
     }
 }

@@ -85,7 +85,7 @@ final class Mailcode_IfListContainsTests extends MailcodeTestCase
             );
 
         $this->assertSame(
-            '{if list-contains: $LIST.PROP regex: "[0-9:]{3}"}',
+            '{if list-contains: $LIST.PROP regex: "[0-9:]\{3\}"}',
             $cmd->getNormalized()
         );
     }

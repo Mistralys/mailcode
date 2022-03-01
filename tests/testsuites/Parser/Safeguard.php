@@ -1,5 +1,6 @@
 <?php
 
+use Mailcode\Interfaces\Commands\Validation\URLEncodingInterface;
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands_Command;
 use Mailcode\Mailcode_Exception;
@@ -211,30 +212,6 @@ final class Parser_SafeguardTests extends MailcodeTestCase
     }
 
     /**
-     * Trying to enable URL encoding on a command that does
-     * not support it must trigger an exception.
-     */
-    public function test_url_encoding_unsupported() : void
-    {
-        $command = Mailcode_Factory::if()->varEqualsString('FOO', 'Test');
-
-        try{
-            $command->setURLEncoding(true);
-        }
-        catch(Mailcode_Exception $e)
-        {
-            $this->assertEquals(
-                Mailcode_Commands_Command::ERROR_URL_ENCODING_NOT_SUPPORTED,
-                $e->getCode()
-            );
-
-            return;
-        }
-
-        $this->fail('Should have triggered the expected exception.');
-    }
-
-    /**
      * When the safeguard detects commands in URLs, the URL encoding
      * must be automatically turned on, except in Email addresses, which
      * should be ignored.
@@ -242,7 +219,7 @@ final class Parser_SafeguardTests extends MailcodeTestCase
     public function test_auto_url_encoding() : void
     {
         $original =
-            'Lorem ipsum dolor http://google.com?var={showvar: $FOO} sit amet. '.
+            'Lorem ipsum dolor https://google.com?var={showvar: $FOO} sit amet. '.
             'Ipsum lorem mailto:{showvar: $BAR} dolor amet.';
 
         $parser = Mailcode::create()->getParser();
@@ -255,8 +232,14 @@ final class Parser_SafeguardTests extends MailcodeTestCase
 
         $this->assertCount(2, $placeholders);
 
-        $this->assertTrue($placeholders[0]->getCommand()->isURLEncoded());
-        $this->assertFalse($placeholders[1]->getCommand()->isURLEncoded());
+        $cmdA = $placeholders[0]->getCommand();
+        $cmdB = $placeholders[1]->getCommand();
+
+        $this->assertInstanceOf(URLEncodingInterface::class, $cmdA);
+        $this->assertInstanceOf(URLEncodingInterface::class, $cmdB);
+
+        $this->assertTrue($cmdA->isURLEncoded());
+        $this->assertFalse($cmdB->isURLEncoded());
     }
 
     /**
