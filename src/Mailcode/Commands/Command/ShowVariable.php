@@ -11,6 +11,13 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use Mailcode\Interfaces\Commands\EncodableInterface;
+use Mailcode\Interfaces\Commands\Validation\IDNEncodeInterface;
+use Mailcode\Interfaces\Commands\Validation\IDNEncodingInterface;
+use Mailcode\Traits\Commands\EncodableTrait;
+use Mailcode\Traits\Commands\Validation\IDNDecodeTrait;
+use Mailcode\Traits\Commands\Validation\IDNEncodeTrait;
+
 /**
  * Mailcode command: show a variable value.
  *
@@ -18,9 +25,15 @@ namespace Mailcode;
  * @subpackage Commands
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Mailcode_Commands_Command_ShowVariable extends Mailcode_Commands_ShowBase
+class Mailcode_Commands_Command_ShowVariable
+    extends Mailcode_Commands_ShowBase
+    implements
+    IDNEncodingInterface
 {
     public const VALIDATION_TOO_MANY_PARAMETERS = 69701;
+
+    use IDNEncodeTrait;
+    use IDNDecodeTrait;
 
     public function getName() : string
     {
@@ -36,8 +49,6 @@ class Mailcode_Commands_Command_ShowVariable extends Mailcode_Commands_ShowBase
     {
         return array(
             Mailcode_Interfaces_Commands_Validation_Variable::VALIDATION_NAME_VARIABLE,
-            Mailcode_Interfaces_Commands_Validation_URLEncode::VALIDATION_NAME_URLENCODE,
-            Mailcode_Interfaces_Commands_Validation_URLDecode::VALIDATION_NAME_URLDECODE,
             'no_other_tokens'
         );
     }
@@ -68,16 +79,15 @@ class Mailcode_Commands_Command_ShowVariable extends Mailcode_Commands_ShowBase
     {
         $allowed = array($this->getVariableToken());
 
-        $token = $this->getURLEncodeToken();
-        if($token)
-        {
-            $allowed[] = $token;
-        }
+        $encodings = $this->getSupportedEncodings();
 
-        $token = $this->getURLDecodeToken();
-        if($token)
+        foreach($encodings as $keyword)
         {
-            $allowed[] = $token;
+            $token = $this->getEncodingToken($keyword);
+            if($token)
+            {
+                $allowed[] = $token;
+            }
         }
 
         return $allowed;
