@@ -27,6 +27,8 @@ class Mailcode_Commands_Keywords
     public const TYPE_URLENCODE = 'urlencode:';
     public const TYPE_URLDECODE = 'urldecode:';
     public const TYPE_MULTILINE = 'multiline:';
+    public const TYPE_IDN_ENCODE = 'idnencode:';
+    public const TYPE_IDN_DECODE = 'idndecode:';
     public const TYPE_NOHTML = 'nohtml:';
     public const TYPE_ABSOLUTE = 'absolute:';
     public const TYPE_NO_TRACKING = 'no-tracking:';
@@ -45,7 +47,8 @@ class Mailcode_Commands_Keywords
             self::TYPE_MULTILINE,
             self::TYPE_NOHTML,
             self::TYPE_ABSOLUTE,
-            self::TYPE_NO_TRACKING
+            self::TYPE_NO_TRACKING,
+            self::TYPE_IDN_ENCODE
         );
     }
 }
