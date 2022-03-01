@@ -178,4 +178,9 @@ class Mailcode_Commands_Command_Code
             self::VALIDATION_UNKNOWN_LANGUAGE
         );
     }
+
+    public function isMailcodeEnabled() : bool
+    {
+        return false;
+    }
 }
