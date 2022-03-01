@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Mailcode;
 
 use AppUtils\ConvertHelper;
+use Mailcode\Parser\Statement\Tokenizer\SpecialChars;
 
 /**
  * Prepares a string to be parsed by the parser, by rendering
@@ -25,8 +26,6 @@ use AppUtils\ConvertHelper;
  */
 class Mailcode_Parser_StringPreProcessor
 {
-    public const LITERAL_BRACKET_RIGHT_REPLACEMENT = '﴿';
-    public const LITERAL_BRACKET_LEFT_REPLACEMENT = '﴾';
     /**
      * @var string
      */
@@ -41,10 +40,28 @@ class Mailcode_Parser_StringPreProcessor
     {
         $this->stripStyleTags();
         $this->escapeRegexBrackets();
+        $this->encodeBrackets();
 
         return $this->subject;
     }
 
+    /**
+     * Special case for escaped brackets: to allow regular
+     * parsing of these, we replace them with placeholders.
+     */
+    private function encodeBrackets() : void
+    {
+        $this->subject = str_replace('\{', SpecialChars::PLACEHOLDER_BRACKET_OPEN, $this->subject);
+        $this->subject = str_replace('\}', SpecialChars::PLACEHOLDER_BRACKET_CLOSE, $this->subject);
+    }
+
+    /**
+     * Detects regex size brackets, e.g. `{1,2}` or `{5}`,
+     * and escapes the brackets as expected by Mailcode commands,
+     * e.g. `\{5\}`.
+     *
+     * @return void
+     */
     private function escapeRegexBrackets() : void
     {
         preg_match_all('/{[0-9]+,[0-9]+}|{[0-9]+}/xU', $this->subject, $result, PREG_PATTERN_ORDER);
@@ -53,7 +70,7 @@ class Mailcode_Parser_StringPreProcessor
 
         foreach ($matches as $match)
         {
-            $this->subject = $this->replaceBrackets($this->subject, $match);
+            $this->subject = $this->escapeRegexBracketMatch($this->subject, $match);
         }
     }
 
@@ -74,14 +91,11 @@ class Mailcode_Parser_StringPreProcessor
         );
     }
 
-    private function replaceBrackets(string $subject, string $needle) : string
+    private function escapeRegexBracketMatch(string $subject, string $needle) : string
     {
         $replacement =  str_replace(
             array('{', '}'),
-            array(
-                self::LITERAL_BRACKET_LEFT_REPLACEMENT,
-                self::LITERAL_BRACKET_RIGHT_REPLACEMENT
-            ),
+            array('\{', '\}'),
             $needle
         );
 
