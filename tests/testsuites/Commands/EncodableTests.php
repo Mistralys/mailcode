@@ -35,6 +35,26 @@ final class EncodableTests extends MailcodeTestCase
         $this->assertTrue($command->isIDNEncoded());
     }
 
+    public function test_getSupportedEncodings() : void
+    {
+        $command = $this->createCommand();
+
+        $expected = array(
+            Mailcode_Commands_Keywords::TYPE_URLENCODE,
+            Mailcode_Commands_Keywords::TYPE_URLDECODE,
+            Mailcode_Commands_Keywords::TYPE_IDN_ENCODE,
+            Mailcode_Commands_Keywords::TYPE_IDN_DECODE
+        );
+
+        // To stay consistent, the encodings are sorted alphabetically.
+        sort($expected);
+
+        $this->assertSame(
+            $expected,
+            $command->getSupportedEncodings()
+        );
+    }
+
     /**
      * When enabling encodings programmatically, they
      * must keep the code order when normalizing the
@@ -42,7 +62,17 @@ final class EncodableTests extends MailcodeTestCase
      */
     public function test_enableEncodingsOrder() : void
     {
+        $command = $this->createCommand();
 
+        $command->setIDNEncoding(true);
+
+        $this->assertSame(
+            array(
+                Mailcode_Commands_Keywords::TYPE_URLENCODE,
+                Mailcode_Commands_Keywords::TYPE_IDN_ENCODE
+            ),
+            $command->getActiveEncodings()
+        );
     }
 
     // endregion
