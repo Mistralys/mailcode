@@ -24,6 +24,8 @@ use Mailcode\Interfaces\Commands\Validation\TrackingIDInterface;
  */
 class AutoTrackingID
 {
+    public const AUTO_ID_TEMPLATE = 'link-%03d';
+
     private static int $linkCounter = 0;
 
     /**
@@ -98,10 +100,15 @@ class AutoTrackingID
         return self::generateDefault();
     }
 
+    public static function resetLinkCounter() : void
+    {
+        self::$linkCounter = 0;
+    }
+
     public static function generateDefault() : string
     {
         self::$linkCounter++;
 
-        return 'link-'.self::$linkCounter;
+        return sprintf(self::AUTO_ID_TEMPLATE, self::$linkCounter);
     }
 }
