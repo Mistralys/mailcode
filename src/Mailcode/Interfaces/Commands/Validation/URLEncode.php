@@ -27,10 +27,10 @@ interface Mailcode_Interfaces_Commands_Validation_URLEncode extends EncodableInt
     public function getURLEncodeToken() : ?Mailcode_Parser_Statement_Tokenizer_Token_Keyword;
 
     /**
-     * @param bool $encoding
+     * @param bool $enabled
      * @return $this
      */
-    public function setURLEncoding(bool $encoding = true) : self;
+    public function setURLEncoding(bool $enabled = true) : self;
 
     public function isURLEncoded(): bool;
 }

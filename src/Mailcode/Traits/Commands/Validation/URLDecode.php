@@ -31,13 +31,13 @@ trait Mailcode_Traits_Commands_Validation_URLDecode
     }
 
     /**
-     * @param bool $decode
+     * @param bool $enabled
      * @return $this
      * @throws Mailcode_Exception
      */
-    public function setURLDecoding(bool $decode=true) : self
+    public function setURLDecoding(bool $enabled=true) : self
     {
-        return $this->setEncodingEnabled(Mailcode_Commands_Keywords::TYPE_URLDECODE, $decode);
+        return $this->setEncodingEnabled(Mailcode_Commands_Keywords::TYPE_URLDECODE, $enabled);
     }
 
     public function isURLDecoded() : bool

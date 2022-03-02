@@ -31,7 +31,7 @@ interface IDNDecodeInterface extends EncodableInterface
      * @param bool $enabled
      * @return $this
      */
-    public function setIDNDecodingEnabled(bool $enabled) : self;
+    public function setIDNDecoding(bool $enabled) : self;
 
     public function isIDNDecoded() : bool;
 

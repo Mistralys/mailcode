@@ -37,12 +37,12 @@ trait Mailcode_Traits_Commands_Validation_URLEncode
     }
 
     /**
-     * @param bool $encoding
+     * @param bool $enabled
      * @return $this
      * @throws Mailcode_Exception
      */
-    public function setURLEncoding(bool $encoding=true) : self
+    public function setURLEncoding(bool $enabled=true) : self
     {
-        return $this->setEncodingEnabled(Mailcode_Commands_Keywords::TYPE_URLENCODE, $encoding);
+        return $this->setEncodingEnabled(Mailcode_Commands_Keywords::TYPE_URLENCODE, $enabled);
     }
 }

@@ -28,11 +28,11 @@ interface Mailcode_Interfaces_Commands_Validation_URLDecode extends EncodableInt
     public function getURLDecodeToken() : ?Mailcode_Parser_Statement_Tokenizer_Token_Keyword;
 
     /**
-     * @param bool $decode
+     * @param bool $enabled
      * @return $this
      * @throws ParamsException
      */
-    public function setURLDecoding(bool $decode=true) : self;
+    public function setURLDecoding(bool $enabled=true) : self;
 
     public function isURLDecoded(): bool;
 }
