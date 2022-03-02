@@ -159,7 +159,7 @@ class Mailcode_Parser_Statement
     public function copy() : Mailcode_Parser_Statement
     {
         return new Mailcode_Parser_Statement(
-            $this->statement,
+            $this->getNormalized(),
             $this->freeform,
             $this->sourceCommand
         );
