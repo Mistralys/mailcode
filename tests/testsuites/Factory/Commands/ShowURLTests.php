@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace testsuites\Factory\Commands;
 
+use Mailcode\Commands\Command\ShowURL\AutoTrackingID;
 use Mailcode\Mailcode_Factory;
 use Mailcode\Parser\PreParser;
 use MailcodeTestCase;
@@ -15,6 +16,7 @@ class ShowURLTests extends MailcodeTestCase
         parent::setUp();
 
         PreParser::reset();
+        AutoTrackingID::resetLinkCounter();
     }
 
     public function test_createDefault() : void
@@ -25,7 +27,6 @@ class ShowURLTests extends MailcodeTestCase
 
         $this->assertTrue($cmd->isTrackingEnabled());
         $this->assertSame($url, $cmd->getURL());
-        $this->assertFalse($cmd->hasTrackingID());
         $this->assertFalse($cmd->hasQueryParams());
     }
 
@@ -63,5 +64,52 @@ class ShowURLTests extends MailcodeTestCase
         $cmd = Mailcode_Factory::show()->url($url, 'trackme', array('foo', 'bar'));
 
         $this->assertSame($url, $cmd->getURL());
+    }
+
+    public function test_normalizeTrackingID() : void
+    {
+        $url = 'https://mistralys.eu';
+
+        $expected = <<<'EOT'
+{showurl: "link-001"}https://mistralys.eu{showurl}
+EOT;
+
+        $cmd = Mailcode_Factory::show()->url($url);
+
+        $this->assertSame($expected, $cmd->getNormalized());
+    }
+
+    public function test_setTrackingID() : void
+    {
+        $url = 'https://mistralys.eu';
+
+        $expected = <<<'EOT'
+{showurl: "trackmenow"}https://mistralys.eu{showurl}
+EOT;
+
+        $cmd = Mailcode_Factory::show()->url($url);
+
+        $this->assertSame('link-001', $cmd->getTrackingID());
+
+        $cmd->setTrackingID('trackmenow');
+        $this->assertSame('trackmenow', $cmd->getTrackingID());
+
+        $this->assertSame($expected, $cmd->getNormalized());
+    }
+
+    public function test_setQueryParam() : void
+    {
+        $url = 'https://mistralys.eu';
+
+        $expected = <<<'EOT'
+{showurl: "link-001" "foo=bar" "quoted=\"quoted\""}https://mistralys.eu{showurl}
+EOT;
+
+        $cmd = Mailcode_Factory::show()
+            ->url($url)
+            ->setQueryParam('foo', 'bar')
+            ->setQueryParam('quoted', '"quoted"');
+
+        $this->assertSame($expected, $cmd->getNormalized());
     }
 }

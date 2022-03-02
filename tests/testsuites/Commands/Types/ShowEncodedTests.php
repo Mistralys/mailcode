@@ -125,6 +125,17 @@ EOT;
         $this->assertSame('{Brackets}', $command->getText());
     }
 
+    public function test_decode() : void
+    {
+        $subject = <<<'EOT'
+{showencoded: "Initial text" idndecode:}
+EOT;
+
+        $command = $this->parseCommand($subject);
+
+        $this->assertTrue($command->isIDNDecoded());
+    }
+
     // endregion
 
     // region: Support methods
