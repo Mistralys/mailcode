@@ -1,4 +1,11 @@
 <?php
+/**
+ * File containing the class {@see \Mailcode\Translator\Syntax\ApacheVelocity\ShowURL}.
+ *
+ * @package Mailcode
+ * @subpackage Translator
+ * @see \Mailcode\Translator\Syntax\ApacheVelocity\ShowURL
+ */
 
 declare(strict_types=1);
 
@@ -10,12 +17,36 @@ use Mailcode\Mailcode_Commands_Command_ShowURL;
 use Mailcode\Mailcode_Translator_Syntax_ApacheVelocity;
 use Mailcode\Translator\Command\ShowURLInterface;
 
+/**
+ * Translates the `showurl` command to ApacheVelocity.
+ *
+ * @package Mailcode
+ * @subpackage Translator
+ * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
+ */
 class ShowURL extends Mailcode_Translator_Syntax_ApacheVelocity implements ShowURLInterface
 {
+    public const URL_VAR_TEMPLATE = 'url_tpl%03d';
+
+    private static int $urlCounter = 0;
+
+
+    public static function resetURLCounter() : void
+    {
+        self::$urlCounter = 0;
+    }
+
     public function translate(Mailcode_Commands_Command_ShowURL $command) : string
     {
+        self::$urlCounter++;
+
+        $urlVar = sprintf(
+            self::URL_VAR_TEMPLATE,
+            self::$urlCounter
+        );
+
         $statements = array();
-        $statements[] = $this->renderURL($command);
+        $statements[] = $this->renderURL($urlVar);
 
         if($command->isTrackingEnabled())
         {
@@ -33,8 +64,18 @@ class ShowURL extends Mailcode_Translator_Syntax_ApacheVelocity implements ShowU
         }
 
         return sprintf(
-            '$tracking.%s',
+            '%s$tracking.%s',
+            $this->renderURLTemplate($command, $urlVar),
             implode('.', $statements)
+        );
+    }
+
+    private function renderURLTemplate(Mailcode_Commands_Command_ShowURL $command, string $urlVar) : string
+    {
+        return sprintf(
+            '#define($%s)%s#end',
+            $urlVar,
+            $this->resolveURL($command)
         );
     }
 
@@ -55,11 +96,11 @@ class ShowURL extends Mailcode_Translator_Syntax_ApacheVelocity implements ShowU
         );
     }
 
-    private function renderURL(Mailcode_Commands_Command_ShowURL $command) : string
+    private function renderURL(string $urlVar) : string
     {
         return sprintf(
-            'url(%s)',
-            $this->renderQuotedValue($this->resolveURL($command))
+            'url(${%s})',
+            $urlVar
         );
     }
 
