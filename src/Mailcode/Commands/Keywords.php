@@ -48,7 +48,8 @@ class Mailcode_Commands_Keywords
             self::TYPE_NOHTML,
             self::TYPE_ABSOLUTE,
             self::TYPE_NO_TRACKING,
-            self::TYPE_IDN_ENCODE
+            self::TYPE_IDN_ENCODE,
+            self::TYPE_IDN_DECODE
         );
     }
 }
