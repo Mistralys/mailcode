@@ -289,4 +289,9 @@ class Mailcode_Parser_Statement_Info
     {
         return $this->tokenizer->appendStringLiteral($text);
     }
+
+    public function prependStringLiteral(string $text) : Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
+    {
+        return $this->tokenizer->prependStringLiteral($text);
+    }
 }
