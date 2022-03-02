@@ -109,6 +109,109 @@ To disable the  `<br>` tags, use the `nohtml:` keyword:
 {showsnippet: $snippet_name nohtml:}
 ```
 
+### Display a URL with or without tracking
+
+URLs may contain variables, or even logic commands. The `showurl` command
+makes it possible to integrate these into tracking URLs, by rendering the
+final URL on the target language level.
+
+#### Adding tracking
+
+Consider the following URL:
+
+```
+{if variable: $COUNTRY == "fr"}
+https://mistralys.fr
+{else}
+https://mistralys.eu
+{end}
+```
+
+To make this trackable, use the following command:
+
+```
+{showurl: "TrackingID"}
+{if variable: $COUNTRY == "fr"}
+https://mistralys.fr
+{else}
+https://mistralys.eu
+{end}
+{showurl}
+```
+
+> NOTE: The command must be closed with {showurl}, not {end}.
+
+On the target language level (e.g. Apache Velocity), this will evaluate 
+the result of the `if` command first, to resolve the final URL. This can 
+then be easily used in any tracking implementation, which also needs to
+be implemented on the target language level.
+
+#### Tracking IDs
+
+The tracking ID is used to identify the location of the link in the 
+document, e.g. `header-image`. If it is omitted or empty, an automatic
+ID will be generated.
+
+The minimum version of the command looks like this:
+
+```
+{showurl: ""}
+https://mistralys.eu
+{showurl}
+```
+
+The default generated tracking ID follows this scheme: `link-001`, with
+a link counter that is unique for the whole request. A custom ID generator
+can be registered like this:
+
+```php
+use \Mailcode\Mailcode_Commands_Command_ShowURL;
+use \Mailcode\Commands\Command\ShowURL\AutoTrackingID;
+
+// The method expects a callable, which must return a string.
+AutoTrackingID::setGenerator(static function(Mailcode_Commands_Command_ShowURL $command) : string 
+{
+    return 'trackingID';
+});
+```
+
+#### Adding query parameters
+
+The command allows specifying additional query parameters that should
+be added to the target URL, like UTM parameters or the like.
+
+Example command:
+
+```
+{showurl: "TrackingID" "foo=bar" "other=value"}
+https://mistralys.eu
+{showurl}
+```
+
+Resulting example tracking URL:
+
+```
+https://track.domain?id=TrackingID&target=https%3A%2F%2Fmistralys.eu%3Ffoo%3Dbar%26other%3Dvalue
+```
+
+#### Disabling the tracking
+
+The tracking can be disabled with the `no-tracking:` keyword,
+in which case only the evaluated URL is used. Additional query
+parameters can still be added.
+
+```
+{showurl: no-tracking: "foo=bar"}
+https://mistralys.eu
+{showurl}
+```
+
+Resulting URL:
+
+```
+https://mistralys.eu?foo=bar
+```
+
 ### Phone numbers in URLs
 
 The `{showphone}` command can convert a phone number in a country-specific or international
@@ -871,155 +974,7 @@ $apacheString = $apache->translateCommand($command);
 
 ### Translate to: Apache Velocity
 
-The Apache Velocity translator uses the formal reference notation for all commands, to minimize the risks of running into parsing conflicts. In general, all generated commands should be compatible from Apache Velocity 2.0 and upwards.
-
-**Requirements**
-
-The following tools have to be enabled in the Velocity templates:
-
-  * [DateTool][]
-  * [EscapeTool][]
-  * [StringUtils][]
-  * [LibPhoneNumber][] (see below for details) 
-  * PriceTool (custom tool, see below)
-  * Map command for lists (custom command, see below)
-
-These tools can be added to the context of templates like this:
-
-```javascript
-context.add("date", new DateTool());
-context.add("esc", new EscapeTool());
-context.put("StringUtils", new StringUtils());
-```
-
-  > NOTE: The names are case sensitive. There is a mix of cases here - they have 
-    to stay this way to be backwards compatible.
-
-Commands that require these tools:
-
-  - ShowDate (DateTool)
-  - ShowSnippet (EscapeTool)
-  - If Empty / If Not Empty (StringUtils)
-  - ElseIf Empty / ElseIf Not Empty (StringUtils)
-  - List contains / List not contains (Map command)
-  - ShowPhone (LibPhoneNumber)
-  - ShowNumber (PriceTool)
-
-If these tools are not available, these commands will throw errors if they are used in a template.
-
-#### LibPhoneNumber
-
-This library is required for converting phone numbers to the E164 format, to create `tel:` URLs 
-for clickable phone number links. The library is used to convert the localized phone number 
-syntax to E164.
-
-The `showphone` command expects the tool to be available in the `$phone` variable. The 
-following is an example implementation for making this available in a Velocity template:
-
-```java
-private static final PhoneNumberUtil PHONE_NUMBER_UTIL = PhoneNumberUtil.getInstance();
-
-public String e164(String phoneNumber, String country) {
-    try {
-        return PHONE_NUMBER_UTIL.format(PHONE_NUMBER_UTIL.parse(phoneNumber, country), PhoneNumberUtil.PhoneNumberFormat.E164);
-    } catch (Exception e) {
-        return phoneNumber;
-    }
-}
-```
-
-Its usage is expected to look like this:
-
-```
-${phone.e164($PHONE.NUMBER, 'FR')}
-```
-
-#### Map command for lists
-
-The commands `list-contains` and `list-not-contains` depend on a custom command which we implemented on the Velocity side for our project.
-
-This basically provides the following Velocity command, assuming that `$PRODUCTS` is a list of records:
-
-```javascript
-#if($map.hasElement($PRODUCTS.list(), "NAME", "(?s)Value") )
-```
-
-The matching java code then looks like this:
-
-```javascript
-return list.stream().anyMatch(map -> map.get("NAME").matches("(?s)Value"));
-```
-
-To use those commands, this has to be implemented in your Velocity engine.
-
-#### PriceTool utility
-
-The `shownumber` command relies on the price tool class to be present
-in the `$price` variable in templates. This class is a custom implementation
-used to convert numbers, so they can be formatted as prices. It is
-basically just a wrapper around Java functions for number formatting. to
-make the code in the template easier to read and maintain.
-
-> Due to copyright issues, the source code cannot be posted here.
-
-The generated command looks like this:
-
-```javascript
-${price.format($FOO.BAR, 2, ',', ' ')}
-```
-
-And the absolute number variant:
-
-```javascript
-${price.format(${price.abs($FOO.BAR)}, 2, ',', ' ')}
-```
-
-#### Configuring date formats
-
-When working with dates, the generated velocity statement will assume the date to be provided in the default internal format:
-
-```
-yyyy-MM-dd'T'HH:mm:ss.SSSXXX
-```  
-
-If the variable source data does not match this format, the date commands will fail. 
-
-To change this, the internal format can be specified on a per-command basis, using translation parameters:
-
-```php
-use \Mailcode\Mailcode_Factory;
-
-$var = Mailcode_Factory::show()->date('ORDER.DATE');
-$var->setTranslationParam('internal_format', 'yyyy-MM-dd');
-```
-
-The translator will automatically use the specified format instead.
-
-#### Configuring date formats via Safeguard
-
-To adjust the format of dates in a safeguarded string, the shortest way is to set the translation parameter for relevant date variables.
-
-```php
-use \Mailcode\Mailcode;
-
-$sourceString = '(Mailcode commands here)';
-$internalFormat = 'yyyy-MM-dd';
-
-// Create the translator and the safeguard
-$mailcode = Mailcode::create();
-$syntax = $mailcode->createTranslator()->createSyntax('ApacheVelocity');
-$safeguard = Mailcode::create()->createSafeguard($sourceString);
-
-// Configure all date commands, as needed
-$dateCommands = $safeguard->getCollection()->getShowDateCommands();
-foreach($dateCommands as $dateCommand)
-{
-    $dateCommand->setTranslationParam('internal_format', $internalFormat);
-}
-
-// Translate the string
-$result = $syntax->translateSafeguard($safeguard);
-```
+See the [Velocity documentation][].
 
 ## Browser-enabled tools
 
@@ -1036,3 +991,5 @@ browser there.
 [EscapeTool]: https://velocity.apache.org/tools/devel/apidocs/org/apache/velocity/tools/generic/EscapeTool.html
 [StringUtils]: http://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/StringUtils.html
 [LibPhoneNumber]: https://github.com/google/libphonenumber  
+[Velocity documentation]: https://github.com/Mistralys/mailcode/tree/master/docs/user-guide/translate-apache-velocity.md
+
