@@ -20,6 +20,8 @@
 - Collection: Added `getErrorCodes()`.
 - Code quality: Increased PHPStan analysis level to `9`.
 - Code quality: Newly added classes now use namespaces in preparation for future changes.
+- Parser: Added `prependStringLiteral()` to the statement info.
+- Parser: Tokenizer: Added possibility to prepend tokens to the list.
 
 **Breaking changes**
 
