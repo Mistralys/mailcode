@@ -15,6 +15,7 @@ use Mailcode\Commands\Command\ShowURL\AutoTrackingID;
 use Mailcode\Interfaces\Commands\Validation\TrackingIDInterface;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
 use Mailcode\Mailcode_Parser_Statement_Validator;
+use phpDocumentor\Descriptor\Interfaces\FunctionInterface;
 
 /**
  * Command validation drop-in: checks for the presence
@@ -33,7 +34,6 @@ use Mailcode\Mailcode_Parser_Statement_Validator;
  */
 trait TrackingIDTrait
 {
-    protected string $trackingID = '';
     private ?Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral $trackingIDToken = null;
 
     /**
@@ -41,17 +41,66 @@ trait TrackingIDTrait
      */
     public function getTrackingID() : string
     {
-        if(!empty($this->trackingID))
+        return $this->getTrackingIDToken()->getText();
+    }
+
+    public function getTrackingIDToken() : Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
+    {
+        return $this->initTrackingToken();
+    }
+
+    private function initTrackingToken() : Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
+    {
+        if(isset($this->trackingIDToken))
         {
-            return $this->trackingID;
+            return $this->trackingIDToken;
         }
 
-        return AutoTrackingID::generate($this);
+        $token = $this->detectToken();
+        if($token === null)
+        {
+            $token = $this->requireParams()
+                ->getInfo()
+                ->addStringLiteral(AutoTrackingID::generate($this));
+        }
+
+        $this->trackingIDToken = $token;
+
+        return $token;
+    }
+
+    public function setTrackingID(string $trackingID) : self
+    {
+        $this->getTrackingIDToken()->setText($trackingID);
+        return $this;
     }
 
     public function hasTrackingID() : bool
     {
-        return !empty($this->trackingID);
+        return !empty($this->getTrackingIDToken()->getText());
+    }
+
+    private function detectToken() : ?Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
+    {
+        $literals = $this->requireParams()
+            ->getInfo()
+            ->getStringLiterals();
+
+        if(empty($literals))
+        {
+            return null;
+        }
+
+        $trackingID = array_shift($literals);
+
+        $id = $trackingID->getText();
+
+        if(strpos($id, '=') === false)
+        {
+            return $trackingID;
+        }
+
+        return null;
     }
 
     /**
@@ -62,23 +111,6 @@ trait TrackingIDTrait
      */
     protected function validateSyntax_tracking_id() : void
     {
-        $literals = $this->requireParams()
-            ->getInfo()
-            ->getStringLiterals();
-
-        if(empty($literals))
-        {
-            return;
-        }
-
-        $trackingID = array_shift($literals);
-
-        $id = $trackingID->getText();
-
-        if(strpos($id, '=') === false)
-        {
-            $this->trackingID = $id;
-            $this->trackingIDToken = $trackingID;
-        }
+        $this->initTrackingToken();
     }
 }

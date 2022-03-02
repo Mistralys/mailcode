@@ -11,8 +11,10 @@ declare(strict_types=1);
 
 namespace Mailcode\Traits\Commands\Validation;
 
+use Mailcode\Commands\ParamsException;
 use Mailcode\Interfaces\Commands\Validation\QueryParamsInterface;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
+use Mailcode\Traits\Commands\Validation\QueryParamsTrait\QueryParam;
 
 /**
  * Command validation drop-in: checks for the presence
@@ -28,46 +30,19 @@ use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
 trait QueryParamsTrait
 {
     /**
-     * @var array<string,string>
-     */
-    private array $queryParams = array();
-
-    /**
      * @var Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral[]
      */
     private array $queryParamTokens = array();
 
     protected function validateSyntax_query_params() : void
     {
-        $literals = $this->requireParams()
-            ->getInfo()
-            ->getStringLiterals();
 
-        foreach($literals as $literal)
-        {
-            $text = $literal->getText();
-
-            if(strpos($text, '=') !== false && $this->analyzeQueryString($text))
-            {
-                $this->queryParamTokens[] = $literal;
-            }
-        }
-    }
-
-    private function analyzeQueryString(string $param) : bool
-    {
-        $tokens = explode('=', $param);
-        $name = trim(array_shift($tokens));
-        $value = trim(implode('=', $tokens));
-
-        $this->queryParams[$name] = $value;
-
-        return true;
     }
 
     public function hasQueryParams() : bool
     {
-        return !empty($this->queryParams);
+        $params = $this->collectParams();
+        return !empty($params);
     }
 
     /**
@@ -75,7 +50,15 @@ trait QueryParamsTrait
      */
     public function getQueryParams() : array
     {
-        return $this->queryParams;
+        $params = $this->collectParams();
+        $result = array();
+
+        foreach($params as $param)
+        {
+            $result[$param->getName()] = $param->getValue();
+        }
+
+        return $result;
     }
 
     /**
@@ -83,14 +66,50 @@ trait QueryParamsTrait
      */
     public function getQueryParamTokens() : array
     {
-        return $this->queryParamTokens;
+        $params = $this->collectParams();
+        $result = array();
+
+        foreach($params as $param)
+        {
+            $result[] = $param->getToken();
+        }
+
+        return $result;
+    }
+
+    /**
+     * @return array<string,QueryParam>
+     * @throws ParamsException
+     */
+    private function collectParams() : array
+    {
+        $literals = $this->requireParams()
+            ->getInfo()
+            ->getStringLiterals();
+
+        $result = array();
+
+        foreach($literals as $literal)
+        {
+            $text = $literal->getText();
+
+            if(strpos($text, '=') !== false)
+            {
+                $param = new QueryParam($literal);
+                $result[$param->getName()] = $param;
+            }
+        }
+
+        return $result;
     }
 
     public function getQueryParam(string $name) : string
     {
-        if(isset($this->queryParams[$name]))
+        $params = $this->collectParams();
+
+        if(isset($params[$name]))
         {
-            return $this->queryParams[$name];
+            return $params[$name]->getValue();
         }
 
         return '';
@@ -98,20 +117,43 @@ trait QueryParamsTrait
 
     public function hasQueryParam(string $name) : bool
     {
-        return isset($this->queryParams[$name]);
+        $params = $this->collectParams();
+
+        return isset($params[$name]);
     }
 
     public function setQueryParam(string $name, string $value) : self
     {
-        $this->queryParams[$name] = $value;
+        $params = $this->collectParams();
+
+        if(isset($params[$name]))
+        {
+            $params[$name]->setValue($value);
+        }
+        else
+        {
+            $this->addParam($name, $value);
+        }
+
         return $this;
+    }
+
+    private function addParam(string $name, string $value) : void
+    {
+        $this->requireParams()
+            ->getInfo()
+            ->addStringLiteral(sprintf('%s=%s', $name, $value));
     }
 
     public function removeQueryParam(string $name) : self
     {
-        if(isset($this->queryParams[$name]))
+        $params = $this->collectParams();
+
+        if(isset($params[$name]))
         {
-            unset($this->queryParams[$name]);
+            $this->requireParams()
+                ->getInfo()
+                ->removeToken($params[$name]->getToken());
         }
 
         return $this;
