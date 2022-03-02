@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Mailcode;
 
 use Mailcode\Parser\Statement\Tokenizer\SpecialChars;
+use phpDocumentor\Guides\RestructuredText\Exception\InvalidTableStructure;
 
 /**
  * Mailcode statement tokenizer: parses a mailcode statement
@@ -141,7 +142,7 @@ class Mailcode_Parser_Statement_Tokenizer
     public function getNormalized() : string
     {
         $parts = array();
-        
+
         foreach($this->tokensOrdered as $token)
         {
             $string = $token->getNormalized();
@@ -239,11 +240,11 @@ class Mailcode_Parser_Statement_Tokenizer
         );
     }
 
-    public function appendKeyword(string $name) : Mailcode_Parser_Statement_Tokenizer_Token_Keyword
+    private function createKeyword(string $name) : Mailcode_Parser_Statement_Tokenizer_Token_Keyword
     {
         $name = rtrim($name, ':').':';
 
-        $token = $this->appendToken('Keyword', $name);
+        $token = $this->createToken('Keyword', $name);
 
         if($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_Keyword)
         {
@@ -257,12 +258,18 @@ class Mailcode_Parser_Statement_Tokenizer
         );
     }
 
-    public function appendStringLiteral(string $text) : Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
+    public function appendKeyword(string $name) : Mailcode_Parser_Statement_Tokenizer_Token_Keyword
     {
-        $token = $this->appendToken(
-            'StringLiteral',
-            SpecialChars::encodeAll($text)
-        );
+        $token = $this->createKeyword($name);
+
+        $this->appendToken($token);
+
+        return $token;
+    }
+
+    private function createStringLiteral(string $text) : Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
+    {
+        $token = $this->createToken('StringLiteral', SpecialChars::encodeAll($text));
 
         if($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral)
         {
@@ -274,6 +281,24 @@ class Mailcode_Parser_Statement_Tokenizer
             '',
             self::ERROR_INVALID_TOKEN_CREATED
         );
+    }
+
+    public function appendStringLiteral(string $text) : Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
+    {
+        $token = $this->createStringLiteral($text);
+
+        $this->appendToken($token);
+
+        return $token;
+    }
+
+    public function prependStringLiteral(string $text) : Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
+    {
+        $token = $this->createStringLiteral($text);
+
+        $this->prependToken($token);
+
+        return $token;
     }
 
     public function removeToken(Mailcode_Parser_Statement_Tokenizer_Token $token) : Mailcode_Parser_Statement_Tokenizer
@@ -297,20 +322,29 @@ class Mailcode_Parser_Statement_Tokenizer
     }
 
     /**
-     * @param string $type
-     * @param string $matchedText
-     * @param mixed $subject
-     * @return Mailcode_Parser_Statement_Tokenizer_Token
+     * @param Mailcode_Parser_Statement_Tokenizer_Token $token
+     * @return $this
      */
-    protected function appendToken(string $type, string $matchedText, $subject=null) : Mailcode_Parser_Statement_Tokenizer_Token
+    protected function appendToken(Mailcode_Parser_Statement_Tokenizer_Token $token) : self
     {
-        $token = $this->createToken($type, $matchedText, $subject);
-
         $this->tokensOrdered[] = $token;
 
         $this->triggerTokensChanged();
 
-        return $token;
+        return $this;
+    }
+
+    /**
+     * @param Mailcode_Parser_Statement_Tokenizer_Token $token
+     * @return $this
+     */
+    protected function prependToken(Mailcode_Parser_Statement_Tokenizer_Token $token) : self
+    {
+        array_unshift($this->tokensOrdered, $token);
+
+        $this->triggerTokensChanged();
+
+        return $this;
     }
     
    /**
