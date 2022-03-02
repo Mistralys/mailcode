@@ -28,6 +28,6 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ShowNumber extends Mailcode_Tran
             $command->isAbsolute()
         );
 
-        return $this->addURLEncoding($command, $statement);
+        return $this->renderVariableEncodings($command, $statement);
     }
 }

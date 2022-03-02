@@ -75,7 +75,7 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ShowDate extends Mailcode_Transl
             $varName
         );
 
-        return $this->addURLEncoding($command, $statement);
+        return $this->renderVariableEncodings($command, $statement);
     }
 
     private function translateFormat(string $formatString) : string

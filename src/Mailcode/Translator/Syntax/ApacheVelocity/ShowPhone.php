@@ -33,6 +33,6 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ShowPhone extends Mailcode_Trans
             $format
         );
 
-        return $this->addURLEncoding($command, $statement);
+        return $this->renderVariableEncodings($command, $statement);
     }
 }

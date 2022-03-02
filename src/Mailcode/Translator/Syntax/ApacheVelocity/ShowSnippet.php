@@ -44,6 +44,6 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ShowSnippet extends Mailcode_Tra
             );
         }
 
-        return $this->addURLEncoding($command, $statement);
+        return $this->renderVariableEncodings($command, $statement);
     }
 }

@@ -24,6 +24,6 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ShowVariable extends Mailcode_Tr
     {
         $varName = ltrim($command->getVariableName(), '$');
 
-        return $this->addURLEncoding($command, $varName);
+        return $this->renderVariableEncodings($command, $varName);
     }
 }
