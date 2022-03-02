@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use Mailcode\Interfaces\Commands\EncodableInterface;
 use Mailcode\Interfaces\Commands\Validation\URLEncodingInterface;
 
 /**
@@ -83,33 +84,17 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
         return $string;
     }
 
-    protected function addURLEncoding(Mailcode_Commands_Command $command, string $statement) : string
+    protected function renderVariableEncodings(Mailcode_Commands_Command $command, string $varName) : string
     {
-        if(!$command instanceof URLEncodingInterface)
-        {
-            return $statement;
-        }
-
-        if($command->isURLEncoded())
+        if(!$command instanceof EncodableInterface || !$command->hasActiveEncodings())
         {
             return sprintf(
-                '${esc.url($%s)}',
-                $statement
+                '${%s}',
+                $varName
             );
         }
 
-        if($command->isURLDecoded())
-        {
-            return sprintf(
-                '${esc.unurl($%s)}',
-                $statement
-            );
-        }
-
-        return sprintf(
-            '${%s}',
-            $statement
-        );
+        return $this->renderEncodings($command, '$'.$varName);
     }
 
     public function renderNumberFormat(string $varName, Mailcode_Number_Info $numberInfo, bool $absolute) : string
@@ -151,5 +136,35 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
     public function getSyntaxName() : string
     {
         return 'ApacheVelocity';
+    }
+
+    /**
+     * @var array<string,string>
+     */
+    private array $encodingTemplates = array(
+        Mailcode_Commands_Keywords::TYPE_URLENCODE => '${esc.url(%s)}',
+        Mailcode_Commands_Keywords::TYPE_URLDECODE => '${esc.unurl(%s)}',
+        Mailcode_Commands_Keywords::TYPE_IDN_ENCODE => '${esc.idn(%s)}',
+        Mailcode_Commands_Keywords::TYPE_IDN_DECODE => '${esc.unidn(%s)}'
+    );
+
+    protected function renderEncodings(EncodableInterface $command, string $statement) : string
+    {
+        $encodings = $command->getActiveEncodings();
+        $result = $statement;
+
+        foreach($encodings as $encoding)
+        {
+            $result = $this->renderEncoding($encoding, $result);
+        }
+
+        return $result;
+    }
+
+    protected function renderEncoding(string $keyword, $result) : string
+    {
+        $template = $this->encodingTemplates[$keyword] ?? '%s';
+
+        return sprintf($template, $result);
     }
 }
