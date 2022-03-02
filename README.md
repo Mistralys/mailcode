@@ -29,7 +29,9 @@ With parameters:
 
 The subtype can switch between modes of the same command.
 
-### Escaping quotes
+### Escaping special characters
+
+#### Double quotes
 
 String literals are expected to be quoted using double quotes ("). To use double quotes within a string literal, it can be escaped using a backslash (\):
 
@@ -37,7 +39,17 @@ String literals are expected to be quoted using double quotes ("). To use double
 {if contains: $PRODUCT.NAME "Search term with \"quotes\""}
 ```
 
-Note: When using the Factory to create commands, this is done automatically.
+> Note: When using the Factory to create commands, this is done automatically.
+
+#### Curly braces
+
+To use curly braces in a document, or in string literals, they can be escaped:
+
+```
+{if contains: $PRODUCT.NAME "With \{braces\}"}
+   Literal braces: \{end\}
+{end}
+```
 
 ## Supported commands
 
@@ -335,7 +347,19 @@ The `list-contains` can be switched to regex mode with the `regex:` keyword:
 ```
 
   > NOTE: This can be combined with the `insensitive:` keyword to make the
-    regular expression case insensitive.
+    regular expression case-insensitive.
+
+Regular expressions may use curly braces when defining quantifiers, e.g. `{1,5}`.
+This is a special case where you do not have to escape the braces. The parser
+will recognize these braces so the regex stays readable. 
+
+These commands are both valid:
+
+```
+{if list-contains: $PRODUCTS.NAME regex: "[0-9]{1,3}"}
+
+{if list-contains: $PRODUCTS.NAME regex: "[0-9]\{1,3\}"}
+```
 
 #### Searching lists by exact matches
 
