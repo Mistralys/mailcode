@@ -26,16 +26,15 @@ final class ShowURLTests extends VelocityTestCase
         $trackingID = 'trackme';
         $cmd = Mailcode_Factory::show()->url($url, $trackingID);
 
-        $expected =
-            $this->baseTemplate.
-            '.lt(${tracking_host}, ${envelope_hash}, "%3$s")';
-
         $this->assertSame(
             sprintf(
-                $expected,
+                $this->baseTemplate,
                 $this->varName,
                 $url,
-                $trackingID
+                sprintf(
+                    '.lt(${tracking_host}, ${envelope_hash}, "%1$s")',
+                    $trackingID
+                )
             ),
             $this->translateCommand($cmd)
         );
@@ -55,7 +54,8 @@ final class ShowURLTests extends VelocityTestCase
             sprintf(
                 $this->baseTemplate,
                 $this->varName,
-                $url
+                $url,
+                ''
             ),
             $this->translateCommand($cmd)
         );
@@ -75,11 +75,11 @@ final class ShowURLTests extends VelocityTestCase
             ->setQueryParam('quotes', '"quoted"');
 
         $expected = sprintf(
-            $this->baseTemplate.
-            '.query("foo", "bar")'.
-            '.query("quotes", "\"quoted\"")',
+            $this->baseTemplate,
             $this->varName,
-            $url
+            $url,
+            '.query("foo", "bar")'.
+            '.query("quotes", "\"quoted\"")'
         );
 
         $this->assertSame(
@@ -112,7 +112,8 @@ EOT;
         $expected = sprintf(
             $this->baseTemplate,
             $this->varName,
-            $expectedURL
+            $expectedURL,
+            ''
         );
 
         $this->assertSame(
@@ -135,7 +136,8 @@ EOT;
         $expected = sprintf(
             $this->baseTemplate,
             $this->varName,
-            $expectedURL
+            $expectedURL,
+            ''
         );
 
         $this->assertSame(
@@ -158,7 +160,8 @@ EOT;
         $expected = sprintf(
             $this->baseTemplate,
             $this->varName,
-            $expectedURL
+            $expectedURL,
+            ''
         );
 
         $this->assertSame(
@@ -180,7 +183,8 @@ EOT;
         $expected = sprintf(
             $this->baseTemplate,
             $this->varName,
-            $expectedURL
+            $expectedURL,
+            ''
         );
 
         $this->assertSame(
@@ -194,9 +198,9 @@ EOT;
     // region: Support methods
 
     private string $baseTemplate =
-        '#define($%1$s)%2$s#end'.
-        '$tracking'.
-        '.url(${%1$s})';
+        '#{define}($%1$s)%2$s#{end}'.
+        '${tracking}'.
+        '.url(${%1$s})%3$s';
 
     private string $varName = '';
 

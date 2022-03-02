@@ -71,6 +71,29 @@ EOT;
         $command = $this->parseCommand($subject);
 
         $this->assertTrue($command->isTrackingEnabled());
+        $this->assertNotEmpty($command->getTrackingID());
+        $this->assertSame($this->autoLinkName, $command->getTrackingID());
+    }
+
+    /**
+     * The command requires parameters to be set,
+     * so an empty tracking ID can be used to have
+     * one generated automatically.
+     */
+    public function test_emptyTrackingID() : void
+    {
+        // An empty tracking ID must be specified
+        $subject = <<<'EOT'
+{showurl: ""}
+https://mistralys.eu
+{showurl}
+EOT;
+
+        $command = $this->parseCommand($subject);
+
+        $this->assertTrue($command->isTrackingEnabled());
+        $this->assertNotEmpty($command->getTrackingID());
+        $this->assertSame($this->autoLinkName, $command->getTrackingID());
     }
 
     public function test_tracking_disabled() : void
@@ -183,6 +206,15 @@ EOT;
     // endregion
 
     // region: Support methods
+
+    protected function setUp() : void
+    {
+        parent::setUp();
+
+        AutoTrackingID::resetLinkCounter();
+
+        $this->autoLinkName = sprintf(AutoTrackingID::AUTO_ID_TEMPLATE, 1);
+    }
 
     private function parseCommand(string $subject) : Mailcode_Commands_Command_ShowURL
     {
