@@ -72,6 +72,13 @@ trait EncodableTrait
         return $this;
     }
 
+    public function hasActiveEncodings() : bool
+    {
+        $list = $this->getActiveEncodings();
+
+        return !empty($list);
+    }
+
     public function getActiveEncodings() : array
     {
         $keywords = $this->requireParams()
@@ -99,6 +106,16 @@ trait EncodableTrait
     {
         $encodings = array();
 
+        if($this instanceof Mailcode_Interfaces_Commands_Validation_URLEncode)
+        {
+            $encodings[] = Mailcode_Commands_Keywords::TYPE_URLENCODE;
+        }
+
+        if($this instanceof Mailcode_Interfaces_Commands_Validation_URLDecode)
+        {
+            $encodings[] = Mailcode_Commands_Keywords::TYPE_URLDECODE;
+        }
+
         if($this instanceof IDNEncodeInterface)
         {
             $encodings[] = Mailcode_Commands_Keywords::TYPE_IDN_ENCODE;
@@ -109,15 +126,7 @@ trait EncodableTrait
             $encodings[] = Mailcode_Commands_Keywords::TYPE_IDN_DECODE;
         }
 
-        if($this instanceof Mailcode_Interfaces_Commands_Validation_URLEncode)
-        {
-            $encodings[] = Mailcode_Commands_Keywords::TYPE_URLENCODE;
-        }
-
-        if($this instanceof Mailcode_Interfaces_Commands_Validation_URLDecode)
-        {
-            $encodings[] = Mailcode_Commands_Keywords::TYPE_URLDECODE;
-        }
+        sort($encodings);
 
         return $encodings;
     }

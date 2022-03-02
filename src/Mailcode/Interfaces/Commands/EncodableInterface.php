@@ -37,5 +37,7 @@ interface EncodableInterface extends Mailcode_Interfaces_Commands_Command
      */
     public function getActiveEncodings() : array;
 
+    public function hasActiveEncodings() : bool;
+
     public function getEncodingToken(string $keyword) : ?Mailcode_Parser_Statement_Tokenizer_Token_Keyword;
 }
