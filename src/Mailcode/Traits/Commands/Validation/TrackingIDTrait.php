@@ -41,7 +41,12 @@ trait TrackingIDTrait
      */
     public function getTrackingID() : string
     {
-        return $this->trackingID ?? AutoTrackingID::generate($this);
+        if(!empty($this->trackingID))
+        {
+            return $this->trackingID;
+        }
+
+        return AutoTrackingID::generate($this);
     }
 
     public function hasTrackingID() : bool
