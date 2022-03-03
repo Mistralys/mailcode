@@ -11,12 +11,12 @@ declare(strict_types=1);
 
 namespace Mailcode\Traits\Commands\Validation;
 
+use AppUtils\NamedClosure;
+use Closure;
 use Mailcode\Commands\Command\ShowURL\AutoTrackingID;
-use Mailcode\Interfaces\Commands\TrackableInterface;
 use Mailcode\Interfaces\Commands\Validation\TrackingIDInterface;
+use Mailcode\Mailcode_Parser_Statement_Tokenizer;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
-use Mailcode\Mailcode_Parser_Statement_Validator;
-use phpDocumentor\Descriptor\Interfaces\FunctionInterface;
 
 /**
  * Command validation drop-in: checks for the presence
@@ -50,15 +50,20 @@ trait TrackingIDTrait
             return '';
         }
 
-        $trackingID = $token->getText();
-
-        if(empty($trackingID))
-        {
-            $trackingID = AutoTrackingID::generate($this);
-            $token->setText($trackingID);
-        }
+        // In case of an empty tracking ID
+        $token->setText($this->filterTrackingID($token->getText()));
 
         return $token->getText();
+    }
+
+    private function filterTrackingID(string $trackingID) : string
+    {
+        if(empty($trackingID))
+        {
+            return AutoTrackingID::generate($this);
+        }
+
+        return $trackingID;
     }
 
     public function getTrackingIDToken() : ?Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
@@ -72,7 +77,7 @@ trait TrackingIDTrait
     {
         if(!$this->isTrackingEnabled())
         {
-            $this->clearTrackingToken();
+            $this->clearTrackingIDToken();
             return;
         }
 
@@ -92,7 +97,7 @@ trait TrackingIDTrait
         $this->trackingIDToken = $token;
     }
 
-    private function clearTrackingToken() : void
+    private function clearTrackingIDToken() : void
     {
         $this->trackingIDToken = null;
 
@@ -111,17 +116,10 @@ trait TrackingIDTrait
 
         if($token !== null)
         {
-            $token->setText($trackingID);
+            $token->setText($this->filterTrackingID($trackingID));
         }
 
         return $this;
-    }
-
-    public function hasTrackingID() : bool
-    {
-        $token = $this->getTrackingIDToken();
-
-        return $token !== null && !empty($token->getText());
     }
 
     private function detectToken() : ?Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
@@ -154,6 +152,21 @@ trait TrackingIDTrait
      * after the optional query parameters.
      */
     protected function validateSyntax_tracking_id() : void
+    {
+        // Add a listener to automatically update the
+        // tracking ID if the tracking is disabled
+        // programmatically via `setTrackingEnabled()`.
+        $this->requireParams()->getEventHandler()->onKeywordsChanged(
+            NamedClosure::fromClosure(
+                Closure::fromCallable(array($this, 'handleKeywordsChanged')),
+                array($this, 'handleKeywordsChanged')
+            )
+        );
+
+        $this->initTrackingToken();
+    }
+
+    private function handleKeywordsChanged(Mailcode_Parser_Statement_Tokenizer $tokenizer) : void
     {
         $this->initTrackingToken();
     }
