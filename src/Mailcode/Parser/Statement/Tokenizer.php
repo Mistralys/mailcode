@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use Mailcode\Parser\Statement\Tokenizer\EventHandler;
 use Mailcode\Parser\Statement\Tokenizer\SpecialChars;
-use phpDocumentor\Guides\RestructuredText\Exception\InvalidTableStructure;
 
 /**
  * Mailcode statement tokenizer: parses a mailcode statement
@@ -67,9 +67,12 @@ class Mailcode_Parser_Statement_Tokenizer
      */
     protected array $changeHandlers = array();
 
+    private EventHandler $eventHandler;
+
     public function __construct(Mailcode_Parser_Statement $statement)
     {
         $this->statement = $statement;
+        $this->eventHandler = new EventHandler($this);
 
         $this->tokenize($statement->getStatementString());
     }
@@ -305,18 +308,25 @@ class Mailcode_Parser_Statement_Tokenizer
     {
         $keep = array();
         $tokenID = $token->getID();
+        $removed = false;
 
         foreach ($this->tokensOrdered as $checkToken)
         {
-            if($checkToken->getID() !== $tokenID)
+            if($checkToken->getID() === $tokenID)
             {
-                $keep[] = $checkToken;
+                $removed = true;
+                continue;
             }
+
+            $keep[] = $checkToken;
         }
 
         $this->tokensOrdered = $keep;
 
-        $this->triggerTokensChanged();
+        if($removed)
+        {
+            $this->eventHandler->handleTokenRemoved($token);
+        }
 
         return $this;
     }
@@ -329,7 +339,7 @@ class Mailcode_Parser_Statement_Tokenizer
     {
         $this->tokensOrdered[] = $token;
 
-        $this->triggerTokensChanged();
+        $this->eventHandler->handleTokenAppended($token);
 
         return $this;
     }
@@ -342,7 +352,7 @@ class Mailcode_Parser_Statement_Tokenizer
     {
         array_unshift($this->tokensOrdered, $token);
 
-        $this->triggerTokensChanged();
+        $this->eventHandler->handleTokenPrepended($token);
 
         return $this;
     }
@@ -389,11 +399,11 @@ class Mailcode_Parser_Statement_Tokenizer
         $this->changeHandlers[] = $callback;
     }
 
-    protected function triggerTokensChanged() : void
+    /**
+     * @return EventHandler
+     */
+    public function getEventHandler() : EventHandler
     {
-        foreach ($this->changeHandlers as $callback)
-        {
-            $callback($this);
-        }
+        return $this->eventHandler;
     }
 }
