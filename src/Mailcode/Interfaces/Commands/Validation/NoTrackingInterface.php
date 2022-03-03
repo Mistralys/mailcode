@@ -24,8 +24,7 @@ use Mailcode\Traits\Commands\Validation\NoTrackingTrait;
  */
 interface NoTrackingInterface extends Mailcode_Interfaces_Commands_Command
 {
-    public const VALIDATION_NAME_NO_TRACKING = 'no_tracking';
-
     public function isTrackingEnabled() : bool;
     public function getNoTrackingToken() : ?Mailcode_Parser_Statement_Tokenizer_Token_Keyword;
+    public function setTrackingEnabled(bool $enabled) : self;
 }
