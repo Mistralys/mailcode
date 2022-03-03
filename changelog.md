@@ -5,8 +5,13 @@
 - Safeguard: The `getPlaceholderXXX` methods are now deprecated.
 - Parser: Added a pre-parser for protected content commands.
 - Parser: Protected content commands may now contain any text, including Mailcode commands.
-- Parser: Added `copy()` to the parameter statement class.
 - Parser: Added `Mailcode_Parser_Statement_Info_Keywords::getByName()`.
+- Parser: Params: Added `copy()` to the parameter statement class.
+- Parser: Params: Added `prependStringLiteral()` to the statement info.
+- Parser: Params: Fixed sync issues with the Tokenizer's tokens collection.
+- Parser: Params: Added `getEventHandler()`.
+- Parser: Tokenizer: Added possibility to prepend tokens to the list.
+- Parser: Tokenizer: Added more detailed event handling via the `EventHandler` class.
 - Formatting: Added a replacer to remove all Mailcode commands from a string.
 - Commands: Added `Mailcode_Commands::getContentCommands()`.
 - Commands: Added `Mailcode_Commands_Command_Code::getSupportedSyntaxes()`.
@@ -20,8 +25,6 @@
 - Collection: Added `getErrorCodes()`.
 - Code quality: Increased PHPStan analysis level to `9`.
 - Code quality: Newly added classes now use namespaces in preparation for future changes.
-- Parser: Added `prependStringLiteral()` to the statement info.
-- Parser: Tokenizer: Added possibility to prepend tokens to the list.
 
 **Breaking changes**
 
