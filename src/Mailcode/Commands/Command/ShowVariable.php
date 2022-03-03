@@ -55,7 +55,7 @@ class Mailcode_Commands_Command_ShowVariable
     
     protected function validateSyntax_no_other_tokens() : void
     {
-        $tokens = $this->params->getInfo()->getTokens();
+        $tokens = $this->requireParams()->getInfo()->getTokens();
         $allowed = $this->resolveActiveTokens();
 
         if(count($tokens) > count($allowed))

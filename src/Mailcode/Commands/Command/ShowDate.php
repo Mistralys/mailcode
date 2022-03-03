@@ -24,12 +24,12 @@ class Mailcode_Commands_Command_ShowDate extends Mailcode_Commands_ShowBase
     * The date format string.
     * @var string
     */
-    private $formatString;
+    private string $formatString;
     
    /**
     * @var Mailcode_Date_FormatInfo
     */
-    private $formatInfo;
+    private Mailcode_Date_FormatInfo $formatInfo;
 
     public function getName() : string
     {
@@ -59,7 +59,9 @@ class Mailcode_Commands_Command_ShowDate extends Mailcode_Commands_ShowBase
     
     protected function validateSyntax_check_format() : void
     {
-        $tokens = $this->params->getInfo()->getStringLiterals();
+        $tokens = $this->requireParams()
+            ->getInfo()
+            ->getStringLiterals();
 
         // no format specified? Use the default one.
         if(empty($tokens))

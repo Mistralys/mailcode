@@ -20,7 +20,6 @@ namespace Mailcode;
  */
 class Mailcode_Commands_Command_ShowNumber extends Mailcode_Commands_ShowBase
 {
-    public const VALIDATION_NOT_A_FORMAT_STRING = 72201;
     public const VALIDATION_PADDING_SEPARATOR_OVERFLOW = 72202;
     public const VALIDATION_INVALID_FORMAT_NUMBER = 72203;
     public const VALIDATION_INVALID_THOUSANDS_SEPARATOR = 72204;
@@ -35,12 +34,12 @@ class Mailcode_Commands_Command_ShowNumber extends Mailcode_Commands_ShowBase
     * The default number format string.
     * @var string
     */
-    private $formatString = Mailcode_Number_Info::DEFAULT_FORMAT;
+    private string $formatString = Mailcode_Number_Info::DEFAULT_FORMAT;
 
     /**
      * @var Mailcode_Parser_Statement_Tokenizer_Token_Keyword|NULL
      */
-    private $absoluteKeyword;
+    private ?Mailcode_Parser_Statement_Tokenizer_Token_Keyword $absoluteKeyword = null;
 
     public function getName() : string
     {
@@ -63,7 +62,9 @@ class Mailcode_Commands_Command_ShowNumber extends Mailcode_Commands_ShowBase
 
     protected function validateSyntax_check_format() : void
     {
-         $tokens = $this->params->getInfo()->getStringLiterals();
+         $tokens = $this->requireParams()
+             ->getInfo()
+             ->getStringLiterals();
          
          // no format specified? Use the default one.
          if(empty($tokens))
@@ -77,7 +78,9 @@ class Mailcode_Commands_Command_ShowNumber extends Mailcode_Commands_ShowBase
 
     protected function validateSyntax_absolute() : void
     {
-        $keywords = $this->params->getInfo()->getKeywords();
+        $keywords = $this->requireParams()
+            ->getInfo()
+            ->getKeywords();
 
         foreach($keywords as $keyword)
         {
@@ -124,13 +127,13 @@ class Mailcode_Commands_Command_ShowNumber extends Mailcode_Commands_ShowBase
     {
         if($absolute === false && isset($this->absoluteKeyword))
         {
-            $this->params->getInfo()->removeKeyword($this->absoluteKeyword->getKeyword());
+            $this->requireParams()->getInfo()->removeKeyword($this->absoluteKeyword->getKeyword());
             $this->absoluteKeyword = null;
         }
 
         if($absolute === true && !isset($this->absoluteKeyword))
         {
-             $this->params
+             $this->requireParams()
                  ->getInfo()
                  ->addKeyword(Mailcode_Commands_Keywords::TYPE_ABSOLUTE);
 

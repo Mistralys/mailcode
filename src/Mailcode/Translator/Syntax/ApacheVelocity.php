@@ -161,7 +161,7 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
         return $result;
     }
 
-    protected function renderEncoding(string $keyword, $result) : string
+    protected function renderEncoding(string $keyword, string $result) : string
     {
         $template = $this->encodingTemplates[$keyword] ?? '%s';
 

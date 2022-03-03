@@ -26,18 +26,27 @@ class SpecialChars
     public const PLACEHOLDER_BRACKET_OPEN = '__BRACKET_OPEN__';
     public const PLACEHOLDER_BRACKET_CLOSE = '__BRACKET_CLOSE__';
 
+    /**
+     * @var array<string,string>
+     */
     private static array $charsEncoded = array(
         '"' => self::PLACEHOLDER_QUOTE,
         '{' => self::PLACEHOLDER_BRACKET_OPEN,
         '}' => self::PLACEHOLDER_BRACKET_CLOSE
     );
 
+    /**
+     * @var array<string,string>
+     */
     private static array $charsEscaped = array(
         '"' => self::ESCAPE_CHAR.'"',
         '{' => self::ESCAPE_CHAR.'{',
         '}' => self::ESCAPE_CHAR.'}'
     );
 
+    /**
+     * @return array<string,string>
+     */
     public static function getChars() : array
     {
         return self::$charsEncoded;
