@@ -60,6 +60,11 @@ EOT;
         }
     }
 
+    /**
+     * Tracking is enabled by default, even if no tracking
+     * ID has been specified. In this case, an automatically
+     * generated ID is used.
+     */
     public function test_tracking_defaultEnabled() : void
     {
         $subject = <<<'EOT'
@@ -96,7 +101,11 @@ EOT;
         $this->assertSame($this->autoLinkName, $command->getTrackingID());
     }
 
-    public function test_tracking_disabled() : void
+    /**
+     * When tracking is disabled, no tracking ID is
+     * available.
+     */
+    public function test_trackingDisabled() : void
     {
         $subject = <<<'EOT'
 {showurl: no-tracking:}
@@ -107,6 +116,8 @@ EOT;
         $command = $this->parseCommand($subject);
 
         $this->assertFalse($command->isTrackingEnabled());
+        $this->assertEmpty($command->getTrackingID());
+        $this->assertSame($subject, $command->getNormalized());
     }
 
     public function test_setTrackingEnabled() : void
@@ -138,10 +149,11 @@ EOT;
 
         $command = $this->parseCommand($subject);
 
+        $this->assertSame('trackme', $command->getTrackingID());
         $this->assertSame($subject, $command->getNormalized());
     }
 
-    public function test_normalize_trackingDisabled() : void
+    public function test_normalize_trackingDisabledWithQueryParam() : void
     {
         $subject = <<<'EOT'
 {showurl: no-tracking: "param=value"}
@@ -173,6 +185,11 @@ EOT;
         $this->assertSame('showvar', $commands[0]->getName());
     }
 
+    /**
+     * When fetching the command's list of variables,
+     * the variables used in nested commands must be
+     * included in the collection.
+     */
     public function test_getNestedVariables() : void
     {
         $subject = <<<'EOT'
@@ -192,11 +209,7 @@ EOT;
         $this->assertSame('$BAR', $variables[1]->getFullName());
     }
 
-    // endregion
-
-    // region: _Tests, tracking ID generation
-
-    public function test_resetCustomGenerator() : void
+    public function test_autoTracker_resetCustomGenerator() : void
     {
         AutoTrackingID::resetGenerator();
 

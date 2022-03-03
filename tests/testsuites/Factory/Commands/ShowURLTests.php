@@ -92,9 +92,38 @@ EOT;
         $this->assertSame('link-001', $cmd->getTrackingID());
 
         $cmd->setTrackingID('trackmenow');
-        $this->assertSame('trackmenow', $cmd->getTrackingID());
 
+        $this->assertSame('trackmenow', $cmd->getTrackingID());
         $this->assertSame($expected, $cmd->getNormalized());
+    }
+
+    public function test_setTrackingIDNoTracking() : void
+    {
+        $cmd = Mailcode_Factory::show()
+            ->url('https://mistralys.eu')
+            ->setTrackingEnabled(false);
+
+        $this->assertFalse($cmd->isTrackingEnabled());
+        $this->assertEmpty($cmd->getTrackingID());
+
+        $cmd->setTrackingID('trackme');
+
+        $this->assertEmpty($cmd->getTrackingID());
+    }
+
+    public function test_getTrackingIDAfterDisabling() : void
+    {
+        $cmd = Mailcode_Factory::show()
+            ->url('https://mistralys.eu', 'trackme');
+
+        $this->assertTrue($cmd->isTrackingEnabled());
+        $this->assertSame('trackme', $cmd->getTrackingID());
+
+        $cmd->setTrackingEnabled(false);
+
+        $this->assertFalse($cmd->isTrackingEnabled());
+        $this->assertEmpty($cmd->getTrackingID());
+        $this->assertSame('{showurl: no-tracking:}https://mistralys.eu{showurl}', $cmd->getNormalized());
     }
 
     public function test_setQueryParam() : void
