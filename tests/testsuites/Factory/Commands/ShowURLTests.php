@@ -39,7 +39,6 @@ class ShowURLTests extends MailcodeTestCase
         $this->assertSame('{showurl: "trackme"}'.$url.'{showurl}', $cmd->getNormalized());
         $this->assertSame($url, $cmd->getURL());
         $this->assertTrue($cmd->isTrackingEnabled());
-        $this->assertTrue($cmd->hasTrackingID());
         $this->assertSame('trackme', $cmd->getTrackingID());
         $this->assertFalse($cmd->hasQueryParams());
     }
@@ -51,7 +50,6 @@ class ShowURLTests extends MailcodeTestCase
         $cmd = Mailcode_Factory::show()->url($url, 'trackme', array('foo' => 'bar'));
 
         $this->assertTrue($cmd->isTrackingEnabled());
-        $this->assertTrue($cmd->hasTrackingID());
         $this->assertSame($url, $cmd->getURL());
         $this->assertTrue($cmd->hasQueryParams());
         $this->assertSame('bar', $cmd->getQueryParam('foo'));
@@ -121,9 +119,9 @@ EOT;
 
         $cmd->setTrackingEnabled(false);
 
+        $this->assertSame('{showurl: no-tracking:}https://mistralys.eu{showurl}', $cmd->getNormalized());
         $this->assertFalse($cmd->isTrackingEnabled());
         $this->assertEmpty($cmd->getTrackingID());
-        $this->assertSame('{showurl: no-tracking:}https://mistralys.eu{showurl}', $cmd->getNormalized());
     }
 
     public function test_setQueryParam() : void
@@ -140,5 +138,19 @@ EOT;
             ->setQueryParam('quoted', '"quoted"');
 
         $this->assertSame($expected, $cmd->getNormalized());
+    }
+
+    public function test_setEmptyTrackingID() : void
+    {
+        $cmd = Mailcode_Factory::show()->url('https://mistralys.eu');
+
+        $expected = <<<'EOT'
+{showurl: "link-001"}https://mistralys.eu{showurl}
+EOT;
+
+        $cmd->setTrackingID('');
+
+        $this->assertSame($expected, $cmd->getNormalized());
+        $this->assertNotEmpty($cmd->getTrackingID()); // must be after getNormalized().
     }
 }
