@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Mailcode;
 
 use AppUtils\OperationResult;
+use Mailcode\Parser\Statement\Tokenizer\EventHandler;
 use Mailcode\Parser\Statement\Tokenizer\SpecialChars;
 
 /**
@@ -103,6 +104,11 @@ class Mailcode_Parser_Statement
     public function getValidationResult() : OperationResult
     {
         return $this->result;
+    }
+
+    public function getEventHandler() : EventHandler
+    {
+        return $this->tokenizer->getEventHandler();
     }
     
     public function getInfo() : Mailcode_Parser_Statement_Info
