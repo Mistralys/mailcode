@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use Mailcode\Interfaces\Commands\TrackableInterface;
 use Mailcode\Interfaces\Commands\Validation\QueryParamsInterface;
 use Mailcode\Interfaces\Commands\Validation\TrackingIDInterface;
 use Mailcode\Interfaces\Commands\Validation\NoTrackingInterface;
@@ -32,8 +33,7 @@ class Mailcode_Commands_Command_ShowURL
     extends Mailcode_Commands_Command
     implements
     Mailcode_Interfaces_Commands_ProtectedContent,
-    NoTrackingInterface,
-    TrackingIDInterface,
+    TrackableInterface,
     QueryParamsInterface
 {
     use Mailcode_Traits_Commands_ProtectedContent;

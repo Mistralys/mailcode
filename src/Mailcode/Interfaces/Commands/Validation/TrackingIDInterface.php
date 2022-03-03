@@ -37,5 +37,5 @@ interface TrackingIDInterface extends Mailcode_Interfaces_Commands_Command
 
     public function setTrackingID(string $trackingID) : self;
 
-    public function getTrackingIDToken() : Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
+    public function getTrackingIDToken() : ?Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
 }
