@@ -44,12 +44,8 @@ class Mailcode_Parser_Statement_Info
     public function __construct(Mailcode_Parser_Statement_Tokenizer $tokenizer)
     {
         $this->tokenizer = $tokenizer;
-        $this->tokens = $this->tokenizer->getTokens();
         $this->keywords = new Mailcode_Parser_Statement_Info_Keywords($this, $this->tokenizer);
         $this->variables = new Mailcode_Parser_Statement_Info_Variables($this, $this->tokenizer);
-
-        // Add a listener to be informed when tokens are added or removed
-        $this->tokenizer->onTokensChanged(array($this, 'handleTokensChanged'));
     }
     
    /**
@@ -159,9 +155,11 @@ class Mailcode_Parser_Statement_Info
     */
     public function getTokenByIndex(int $index) : ?Mailcode_Parser_Statement_Tokenizer_Token
     {
-        if(isset($this->tokens[$index]))
+        $tokens = $this->tokenizer->getTokens();
+
+        if(isset($tokens[$index]))
         {
-            return $this->tokens[$index];
+            return $tokens[$index];
         }
         
         return null;
@@ -169,7 +167,9 @@ class Mailcode_Parser_Statement_Info
     
     public function hasTokenAtIndex(int $index) : bool
     {
-        return isset($this->tokens[$index]);
+        $tokens = $this->tokenizer->getTokens();
+
+        return isset($tokens[$index]);
     }
     
    /**
@@ -178,7 +178,7 @@ class Mailcode_Parser_Statement_Info
     */
     public function getTokens() : array
     {
-        return $this->tokens;
+        return $this->tokenizer->getTokens();
     }
     
    /**
@@ -188,8 +188,9 @@ class Mailcode_Parser_Statement_Info
     public function getStringLiterals() : array
     {
         $result = array();
+        $tokens = $this->tokenizer->getTokens();
         
-        foreach($this->tokens as $token)
+        foreach($tokens as $token)
         {
             if($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral)
             {
@@ -270,14 +271,6 @@ class Mailcode_Parser_Statement_Info
     public function hasKeyword(string $keyword) : bool
     {
         return $this->keywords->hasKeyword($keyword);
-    }
-
-    /**
-     * Called whenever the token collection in the tokenizer has changed.
-     */
-    public function handleTokensChanged() : void
-    {
-        $this->tokens = $this->tokenizer->getTokens();
     }
 
     public function removeToken(Mailcode_Parser_Statement_Tokenizer_Token $token) : void
