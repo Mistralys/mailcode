@@ -29,46 +29,14 @@ use phpDocumentor\Reflection\Utils;
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  *
  * @see NoTrackingInterface
- *
- * @property Mailcode_Parser_Statement_Validator $validator
  */
 trait NoTrackingTrait
 {
-    /**
-     * @var boolean
-     */
-    protected bool $trackingEnabled = true;
-
-    /**
-     * @var Mailcode_Parser_Statement_Tokenizer_Token_Keyword|NULL
-     */
-    protected ?Mailcode_Parser_Statement_Tokenizer_Token_Keyword $noTrackingToken = null;
-
-    protected function validateSyntax_no_tracking() : void
-    {
-        $keywords = $this->requireParams()
-            ->getInfo()
-            ->getKeywords();
-
-        // Reset the tracking values in case we are calling
-        // this after the initial validation.
-        $this->noTrackingToken = null;
-        $this->trackingEnabled = true;
-
-        foreach($keywords as $keyword)
-        {
-            if($keyword->getKeyword() === Mailcode_Commands_Keywords::TYPE_NO_TRACKING)
-            {
-                $this->noTrackingToken = $keyword;
-                $this->trackingEnabled = false;
-                break;
-            }
-        }
-    }
-
     public function isTrackingEnabled() : bool
     {
-        return $this->trackingEnabled;
+        return !$this->requireParams()
+            ->getInfo()
+            ->hasKeyword(Mailcode_Commands_Keywords::TYPE_NO_TRACKING);
     }
 
     /**
@@ -82,18 +50,14 @@ trait NoTrackingTrait
             ->getInfo()
             ->setKeywordEnabled(Mailcode_Commands_Keywords::TYPE_NO_TRACKING, !$enabled);
 
-        $this->validateSyntax_no_tracking();
-
         return $this;
     }
 
     public function getNoTrackingToken() : ?Mailcode_Parser_Statement_Tokenizer_Token_Keyword
     {
-        if($this->noTrackingToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_Keyword)
-        {
-            return $this->noTrackingToken;
-        }
-
-        return null;
+        return $this->requireParams()
+            ->getInfo()
+            ->getKeywordsCollection()
+            ->getByName(Mailcode_Commands_Keywords::TYPE_NO_TRACKING);
     }
 }
