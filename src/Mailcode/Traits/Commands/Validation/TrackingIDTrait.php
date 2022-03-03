@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Mailcode\Traits\Commands\Validation;
 
 use Mailcode\Commands\Command\ShowURL\AutoTrackingID;
+use Mailcode\Interfaces\Commands\TrackableInterface;
 use Mailcode\Interfaces\Commands\Validation\TrackingIDInterface;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
 use Mailcode\Mailcode_Parser_Statement_Validator;
@@ -24,13 +25,14 @@ use phpDocumentor\Descriptor\Interfaces\FunctionInterface;
  * present or not a match for a tracking ID name, an
  * empty string is used as default.
  *
+ * When the `no-tracking:` keyword is enabled, the
+ * tracking ID will always be empty.
+ *
  * @package Mailcode
  * @subpackage Validation
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  *
  * @see TrackingIDInterface
- * @property Mailcode_Parser_Statement_Validator $validator
- *
  */
 trait TrackingIDTrait
 {
@@ -41,19 +43,42 @@ trait TrackingIDTrait
      */
     public function getTrackingID() : string
     {
-        return $this->getTrackingIDToken()->getText();
+        $token = $this->getTrackingIDToken();
+
+        if($token === null)
+        {
+            return '';
+        }
+
+        $trackingID = $token->getText();
+
+        if(empty($trackingID))
+        {
+            $trackingID = AutoTrackingID::generate($this);
+            $token->setText($trackingID);
+        }
+
+        return $token->getText();
     }
 
-    public function getTrackingIDToken() : Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
+    public function getTrackingIDToken() : ?Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
     {
-        return $this->initTrackingToken();
+        $this->initTrackingToken();
+
+        return $this->trackingIDToken;
     }
 
-    private function initTrackingToken() : Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
+    private function initTrackingToken() : void
     {
+        if(!$this->isTrackingEnabled())
+        {
+            $this->clearTrackingToken();
+            return;
+        }
+
         if(isset($this->trackingIDToken))
         {
-            return $this->trackingIDToken;
+            return;
         }
 
         $token = $this->detectToken();
@@ -65,19 +90,38 @@ trait TrackingIDTrait
         }
 
         $this->trackingIDToken = $token;
+    }
 
-        return $token;
+    private function clearTrackingToken() : void
+    {
+        $this->trackingIDToken = null;
+
+        $token = $this->detectToken();
+        if($token !== null)
+        {
+            $this->requireParams()
+                ->getInfo()
+                ->removeToken($token);
+        }
     }
 
     public function setTrackingID(string $trackingID) : self
     {
-        $this->getTrackingIDToken()->setText($trackingID);
+        $token = $this->getTrackingIDToken();
+
+        if($token !== null)
+        {
+            $token->setText($trackingID);
+        }
+
         return $this;
     }
 
     public function hasTrackingID() : bool
     {
-        return !empty($this->getTrackingIDToken()->getText());
+        $token = $this->getTrackingIDToken();
+
+        return $token !== null && !empty($token->getText());
     }
 
     private function detectToken() : ?Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
