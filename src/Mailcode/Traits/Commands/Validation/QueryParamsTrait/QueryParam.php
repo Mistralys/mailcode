@@ -1,4 +1,11 @@
 <?php
+/**
+ * File containing the class {@see \Mailcode\Traits\Commands\Validation\QueryParamsTrait\QueryParam}.
+ *
+ * @package Mailcode
+ * @subpackage Validation
+ * @see \Mailcode\Traits\Commands\Validation\QueryParamsTrait\QueryParam
+ */
 
 declare(strict_types=1);
 
@@ -6,6 +13,15 @@ namespace Mailcode\Traits\Commands\Validation\QueryParamsTrait;
 
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
 
+/**
+ * Handles a single query parameter, by modifying the
+ * matching tokenizer token directly. This ensures that
+ * any changes are directly applied to the tokens.
+ *
+ * @package Mailcode
+ * @subpackage Validation
+ * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
+ */
 class QueryParam
 {
     private Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral $token;
