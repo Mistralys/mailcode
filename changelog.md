@@ -1,3 +1,6 @@
+### v3.0.3 - ShowURL command syntax fix
+- Fixed the syntax of the `$tracking.url()` command.
+
 ### v3.0.2 - Variable name bugfix
 - Fixed the name of the `$envelope.hash` variable.
 

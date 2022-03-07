@@ -64,7 +64,7 @@ class ShowURL extends Mailcode_Translator_Syntax_ApacheVelocity implements ShowU
         }
 
         return sprintf(
-            '%s${tracking}.%s',
+            '%s${tracking.%s}',
             $this->renderURLTemplate($command, $urlVar),
             implode('.', $statements)
         );

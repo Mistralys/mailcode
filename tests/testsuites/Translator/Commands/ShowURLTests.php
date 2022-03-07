@@ -199,8 +199,8 @@ EOT;
 
     private string $baseTemplate =
         '#{define}($%1$s)%2$s#{end}'.
-        '${tracking}'.
-        '.url(${%1$s})%3$s';
+        '${tracking'.
+        '.url(${%1$s})%3$s}';
 
     private string $varName = '';
 
