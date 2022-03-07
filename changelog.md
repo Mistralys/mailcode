@@ -1,5 +1,6 @@
 ### v3.0.1 - IDN encoding update
 - Renamed the IDN encoding methods to `$text.idn` and `$text.unidn`.
+- Added some missing german translations.
 
 ### v3.0.0 - PHP 7.4 and new commands 
 
