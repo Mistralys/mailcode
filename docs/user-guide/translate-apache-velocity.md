@@ -13,6 +13,7 @@ The following tools have to be enabled in the Velocity templates:
 * PriceTool (custom tool, see below)
 * Map command for lists (custom command, see below)
 * TrackingTool (custom tool, see below)
+* TextTool (custom tool)
 
 These tools can be added to the context of templates like this:
 
@@ -30,6 +31,7 @@ Commands that require these tools:
 - ShowDate (DateTool)
 - ShowSnippet (EscapeTool)
 - ShowXXX commands, for URL encoding support (EscapeTool)
+- ShowXXX commands, for IDN encoding support (TextTool)
 - If Empty / If Not Empty (StringUtils)
 - ElseIf Empty / ElseIf Not Empty (StringUtils)
 - List contains / List not contains (Map command)
@@ -159,6 +161,31 @@ and a unique identifier of the request in the form of a hash string.
 
 Each call to `query` adds or replaces a single query parameter
 intended to be added to the final URL.
+
+### TextTool custom utility
+
+#### IDN encoding
+
+This tool offers the IDN encoding support for the following Velocity functions:
+
+- `$text.idn("Subject")` - IDN encode the subject
+- `$text.unidn("Subject")` - Remove IDN encoding from the subject
+
+These two functions use an IDN encoding library to process the subject values.
+
+Mailcode:
+
+```
+{showencoded: "öäü.com" idnencode:}
+{showvar: $DOMAIN.NAME idnencode:}
+```
+
+Velocity:
+
+```
+${text.idn("öäü.com")}
+${text.idn(${DOMAIN.NAME})}
+```
 
 ### Configuring date formats
 
