@@ -41,14 +41,14 @@ final class ShowVariableTests extends VelocityTestCase
                 'mailcode' => Mailcode_Factory::show()
                     ->var('FOO.BAR')
                     ->setIDNEncoding(true),
-                'expected' => '${esc.idn($FOO.BAR)}'
+                'expected' => '${text.idn($FOO.BAR)}'
             ),
             array(
                 'label' => 'Show variable, IDN decoded',
                 'mailcode' => Mailcode_Factory::show()
                     ->var('FOO.BAR')
                     ->setIDNDecoding(true),
-                'expected' => '${esc.unidn($FOO.BAR)}'
+                'expected' => '${text.unidn($FOO.BAR)}'
             ),
             array(
                 'label' => 'Show variable, multiple encodings',
@@ -56,7 +56,7 @@ final class ShowVariableTests extends VelocityTestCase
                     ->var('FOO.BAR')
                     ->setIDNEncoding(true)
                     ->setURLEncoding(true),
-                'expected' => '${esc.url(${esc.idn($FOO.BAR)})}'
+                'expected' => '${esc.url(${text.idn($FOO.BAR)})}'
             )
         );
         

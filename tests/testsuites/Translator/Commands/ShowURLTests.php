@@ -131,7 +131,7 @@ EOT;
         // Since the showvar command is used in a URL, it automatically gets
         // the URL encoding, which is not an issue, because the IDN encoded
         // domain is already fully URL encoding compatible.
-        $expectedURL = 'https://mistralys.eu?domain=${esc.url(${esc.idn($DOMAIN.NAME)})}';
+        $expectedURL = 'https://mistralys.eu?domain=${esc.url(${text.idn($DOMAIN.NAME)})}';
 
         $expected = sprintf(
             $this->baseTemplate,
@@ -155,7 +155,7 @@ EOT;
         // Since the showvar command is used in a URL, it automatically gets
         // the URL encoding, which is not an issue, because the IDN encoded
         // domain is already fully URL encoding compatible.
-        $expectedURL = 'https://mistralys.eu?domain=${esc.url(${esc.idn("iönöüs.com")})}';
+        $expectedURL = 'https://mistralys.eu?domain=${esc.url(${text.idn("iönöüs.com")})}';
 
         $expected = sprintf(
             $this->baseTemplate,
@@ -178,7 +178,7 @@ EOT;
 
         // The automated URL encoding does not work here, because
         // the variable-based URL cannot be recognized as a URL.
-        $expectedURL = '${PRODUCT.URL}?domain=${esc.idn("iönöüs.com")}';
+        $expectedURL = '${PRODUCT.URL}?domain=${text.idn("iönöüs.com")}';
 
         $expected = sprintf(
             $this->baseTemplate,

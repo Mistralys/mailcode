@@ -144,8 +144,8 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
     private array $encodingTemplates = array(
         Mailcode_Commands_Keywords::TYPE_URLENCODE => '${esc.url(%s)}',
         Mailcode_Commands_Keywords::TYPE_URLDECODE => '${esc.unurl(%s)}',
-        Mailcode_Commands_Keywords::TYPE_IDN_ENCODE => '${esc.idn(%s)}',
-        Mailcode_Commands_Keywords::TYPE_IDN_DECODE => '${esc.unidn(%s)}'
+        Mailcode_Commands_Keywords::TYPE_IDN_ENCODE => '${text.idn(%s)}',
+        Mailcode_Commands_Keywords::TYPE_IDN_DECODE => '${text.unidn(%s)}'
     );
 
     protected function renderEncodings(EncodableInterface $command, string $statement) : string
