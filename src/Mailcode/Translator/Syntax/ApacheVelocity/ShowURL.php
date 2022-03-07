@@ -91,7 +91,7 @@ class ShowURL extends Mailcode_Translator_Syntax_ApacheVelocity implements ShowU
     private function renderTracking(Mailcode_Commands_Command_ShowURL $command) : string
     {
         return sprintf(
-            "lt(\${tracking_host}, \${envelope_hash}, %s)",
+            "lt(\${tracking_host}, \${envelope.hash}, %s)",
             $this->renderQuotedValue($command->getTrackingID())
         );
     }

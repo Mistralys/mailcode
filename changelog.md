@@ -1,3 +1,6 @@
+### v3.0.2 - Variable name bugfix
+- Fixed the name of the `$envelope.hash` variable.
+
 ### v3.0.1 - IDN encoding update
 - Renamed the IDN encoding methods to `$text.idn` and `$text.unidn`.
 - Added some missing german translations.

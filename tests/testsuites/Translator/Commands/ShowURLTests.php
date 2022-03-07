@@ -32,7 +32,7 @@ final class ShowURLTests extends VelocityTestCase
                 $this->varName,
                 $url,
                 sprintf(
-                    '.lt(${tracking_host}, ${envelope_hash}, "%1$s")',
+                    '.lt(${tracking_host}, ${envelope.hash}, "%1$s")',
                     $trackingID
                 )
             ),
