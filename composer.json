@@ -13,17 +13,18 @@
 	],
 	"autoload" : 
 	{
-		"psr-4" : 
-		{
-			"Mailcode\\" : "src/"
-		},
-		"files" : 
+		"files" :
         [
             "src/functions.php"
         ],
 		"classmap" : 
 		[
-			"src/",
+			"src/"
+		]
+	},
+	"autoload-dev": {
+		"classmap" :
+		[
 			"tests/assets"
 		]
 	},
@@ -31,16 +32,16 @@
 	"prefer-stable" : true,
 	"require" : 
 	{
-		"mistralys/application-utils" : "^1.1",
-		"mistralys/application-localization" : "^1.2",
+		"mistralys/application-utils" : ">=1.9",
+		"mistralys/application-localization" : ">=1.4",
 		"giggsey/libphonenumber-for-php": "^8.12",
-		"monolog/monolog" : ">=2.3.5",
+		"monolog/monolog" : ">=2.7",
 		"ext-json": "*",
 		"php": ">=7.4"
 	},
 	"require-dev" : 
 	{
-		"phpunit/phpunit" : ">=8.2",
-		"phpstan/phpstan" : ">=0.12.4"
+		"phpunit/phpunit" : ">=9.5",
+		"phpstan/phpstan" : ">=1.7"
 	}
 }
