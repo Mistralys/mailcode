@@ -1,13 +1,15 @@
 @echo off
 
-cls 
+cls
+
+set Level=9
 
 echo -------------------------------------------------------
-echo RUNNING PHPSTAN ANALYSIS
+echo RUNNING PHPSTAN ANALYSIS @ LEVEL %Level%
 echo -------------------------------------------------------
 
 echo.
 
-call ../vendor/bin/phpstan analyse -c ./config/phpstan.neon -l 9 > phpstan/output.txt
+call ../vendor/bin/phpstan analyse -c ./config/phpstan.neon -l %Level% > phpstan/output.txt
 
 start "" "phpstan/output.txt"
