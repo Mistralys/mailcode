@@ -1,3 +1,6 @@
+### v3.0.4 - Dependencies update
+- Loosened the `mistralys/application-tools` version constraint. 
+
 ### v3.0.3 - ShowURL command syntax fix
 - Fixed the syntax of the `$tracking.url()` command.
 
