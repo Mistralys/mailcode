@@ -11,14 +11,14 @@ final class Translator_Velocity_ElseIfBiggerThanTests extends VelocityTestCase
                 'label' => 'Integer value',
                 'mailcode' => Mailcode_Factory::elseIf()->biggerThan('FOO.BAR', '100'),
                 'expected' => <<<'EOD'
-#elseif($price.toNumber($FOO.BAR) > 100)
+#elseif($numeric.toNumber($FOO.BAR) > 100)
 EOD
             ),
             array(
                 'label' => 'Value with comma',
                 'mailcode' => Mailcode_Factory::elseIf()->biggerThan('FOO.BAR', '45,12'),
                 'expected' => <<<'EOD'
-#elseif($price.toNumber($FOO.BAR) > 45.12)
+#elseif($numeric.toNumber($FOO.BAR) > 45.12)
 EOD
 
             ),
@@ -26,11 +26,11 @@ EOD
                 'label' => 'Value with dot',
                 'mailcode' => Mailcode_Factory::elseIf()->biggerThan('FOO.BAR', '45.12'),
                 'expected' => <<<'EOD'
-#elseif($price.toNumber($FOO.BAR) > 45.12)
+#elseif($numeric.toNumber($FOO.BAR) > 45.12)
 EOD
             )
         );
-        
+
         $this->runCommands($tests);
     }
 }

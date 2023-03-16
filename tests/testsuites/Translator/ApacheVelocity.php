@@ -9,20 +9,20 @@ final class Translator_ApacheVelocityTests extends VelocityTestCase
     {
         $cmd = Mailcode_Factory::if()->var('FOO.BAR', '==', 20);
         $cmd->getLogicKeywords()->appendAND('$BARFOO == "Other value"', 'variable');
-        
+
         $expected = '#if($FOO.BAR == 20 && $BARFOO == "Other value")';
-        
+
         $syntax = $this->translator->createSyntax('ApacheVelocity');
-        
+
         $result = $syntax->translateCommand($cmd);
-        
+
         $this->assertEquals($expected, $result);
     }
-    
+
     public function test_translateSafeguard()
     {
         $syntax = $this->translator->createSyntax('ApacheVelocity');
-        
+
         $subject = '
 {setvar: $CUSTOMER.CUSTOMER_ID = "42"}
 
@@ -50,11 +50,11 @@ ${CUSTOMER.CUSTOMER_ID}
     Lucky you!
 #{end}
 ';
-        
+
         $safeguard = Mailcode::create()->createSafeguard($subject);
-        
+
         $result = $syntax->translateSafeguard($safeguard);
-      
+
         $this->assertEquals($expected, $result);
     }
 
@@ -67,7 +67,7 @@ ${CUSTOMER.CUSTOMER_ID}
     {
         $subject = '{showdate: $FOO.BAR "d.m.Y"}';
         $internalFormat = 'yyyy-MM-dd';
-        $expected = '${date.format("dd.MM.yyyy", $date.toDate("'.$internalFormat.'", $FOO.BAR))}';
+        $expected = '${time.input("'.$internalFormat.'", $FOO.BAR).output("dd.MM.yyyy")}';
 
         $syntax = $this->translator->createSyntax('ApacheVelocity');
         $safeguard = Mailcode::create()->createSafeguard($subject);
