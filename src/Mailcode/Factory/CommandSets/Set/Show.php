@@ -30,27 +30,27 @@ class Mailcode_Factory_CommandSets_Set_Show extends Mailcode_Factory_CommandSets
     public function var(string $variableName) : Mailcode_Commands_Command_ShowVariable
     {
         $variableName = $this->instantiator->filterVariableName($variableName);
-        
+
         $cmd = $this->commands->createCommand(
             'ShowVariable',
             '',
             $variableName,
             '{showvar:'.$variableName.'}'
         );
-        
+
         $this->instantiator->checkCommand($cmd);
-        
+
         if($cmd instanceof Mailcode_Commands_Command_ShowVariable)
         {
             return $cmd;
         }
-        
+
         throw $this->instantiator->exceptionUnexpectedType('ShowVariable', $cmd);
     }
-    
-    public function date(string $variableName, string $formatString="") : Mailcode_Commands_Command_ShowDate
+
+    public function date(string $variableName, string $formatString="", string $timezoneString="") : Mailcode_Commands_Command_ShowDate
     {
-        return (new Date())->create($variableName, $formatString);
+        return (new Date())->create($variableName, $formatString, $timezoneString);
     }
 
     public function number(string $variableName, string $formatString="", bool $absolute=false) : Mailcode_Commands_Command_ShowNumber

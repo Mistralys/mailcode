@@ -67,11 +67,14 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ShowDate extends Mailcode_Transl
         $varName = ltrim($command->getVariableName(), '$');
         $javaFormat = $this->translateFormat($command->getFormatString());
 
+        $timezoneFormat = sprintf('.zone("%s")', $command->getTimezone() ?? 'UTC');
+
         $statement = sprintf(
-            'time.input("%s", $%s).output("%s")',
+            'time.input("%s", $%s).output("%s")%s',
             $internalFormat,
             $varName,
             $javaFormat,
+            $timezoneFormat
         );
 
         return $this->renderVariableEncodings($command, $statement);

@@ -23,7 +23,7 @@ use Mailcode\Mailcode_Factory_CommandSets_Set;
  */
 class Date extends Mailcode_Factory_CommandSets_Set
 {
-    public function create(string $variableName, string $formatString="") : Mailcode_Commands_Command_ShowDate
+    public function create(string $variableName, string $formatString="", string $timezoneString="") : Mailcode_Commands_Command_ShowDate
     {
         $variableName = $this->instantiator->filterVariableName($variableName);
 
@@ -36,14 +36,24 @@ class Date extends Mailcode_Factory_CommandSets_Set
             );
         }
 
+        $timezone = '';
+        if(!empty($timezoneString))
+        {
+            $timezone = sprintf(
+                ' %s',
+                $timezoneString
+            );
+        }
+
         $cmd = $this->commands->createCommand(
             'ShowDate',
             '',
-            $variableName.$format,
+            $variableName.$format.$timezone,
             sprintf(
-                '{showdate: %s%s}',
+                '{showdate: %s%s%s}',
                 $variableName,
-                $format
+                $format,
+                $timezone
             )
         );
 
