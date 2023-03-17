@@ -22,14 +22,40 @@ use Mailcode\Interfaces\Commands\Validation\TimezoneInterface;
  */
 trait TimezoneTrait
 {
-    public function getTimezone(): ?string
-    {
-        $variables = $this->getVariables()->getAll();
+    /**
+     * The timezone
+     * @var string
+     */
+    protected string $timezone = '';
 
-        foreach ($variables as $variable) {
-            error_log(print_r($variable->getFullName(), true));
+    protected function validateSyntax_check_timezone(): void
+    {
+        // first, check if we have an explicit timezone
+        $tokens = $this->requireParams()
+            ->getInfo()
+            ->getStringLiterals();
+
+        if (sizeof($tokens) > 1) {
+            $this->timezone = '"' . $tokens[1]->getText() . '"';
+            return;
         }
 
-        return null;
+        // then, check if a variable is used for timezone
+        $variables = $this->requireParams()
+            ->getInfo()
+            ->getVariables();
+
+        if (sizeof($variables) > 1) {
+            $this->timezone = $variables[1]->getFullName();
+            return;
+        }
+
+        // neither explicit timezone nor variable present, so use nothing
+        $this->timezone= '';
+    }
+
+    public function getTimezone(): ?string
+    {
+        return $this->timezone;
     }
 }

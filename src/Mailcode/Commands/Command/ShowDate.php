@@ -53,7 +53,8 @@ class Mailcode_Commands_Command_ShowDate
     {
         return array(
             Mailcode_Interfaces_Commands_Validation_Variable::VALIDATION_NAME_VARIABLE,
-            'check_format'
+            'check_format',
+            'check_timezone'
         );
     }
 
@@ -76,8 +77,9 @@ class Mailcode_Commands_Command_ShowDate
             return;
         }
 
-        $token = array_pop($tokens);
-        $this->parseFormatString($token->getText());
+        $format = $tokens[0]->getText();
+
+        $this->parseFormatString($format);
     }
 
     private function parseFormatString(string $format): void
