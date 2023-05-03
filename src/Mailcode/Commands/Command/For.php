@@ -41,6 +41,7 @@ class Mailcode_Commands_Command_For
     public const VALIDATION_VARIABLE_NAME_IS_THE_SAME = 49703;
     public const VALIDATION_VARIABLE_NAME_WITH_DOT = 49704;
     public const VALIDATION_LOOP_VARIABLE_NAME_WITH_DOT = 49705;
+    public const VALIDATION_BREAK_AT_WRONG_PARAMETER = 49706;
 
     /**
      * @var Mailcode_Parser_Statement_Tokenizer_Token_Variable|NULL

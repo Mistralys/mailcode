@@ -58,13 +58,13 @@ class Mailcode_Factory_CommandSets_Set_Misc extends Mailcode_Factory_CommandSets
      * @throws Mailcode_Exception
      * @throws Mailcode_Factory_Exception
      */
-    public function for(string $sourceVariable, string $loopVariable, string $breakAtString = ''): Mailcode_Commands_Command_For
+    public function for(string $sourceVariable, string $loopVariable, string $breakAtValue = ''): Mailcode_Commands_Command_For
     {
         $sourceVariable = '$' . ltrim($sourceVariable, '$');
         $loopVariable = '$' . ltrim($loopVariable, '$');
 
-        if (!empty($breakAtString)) {
-            $breakAtString = sprintf(' break-at: %s', $breakAtString);
+        if (!empty($breakAtValue)) {
+            $breakAtValue = sprintf(' break-at: %s', $breakAtValue);
         }
 
         $cmd = $this->commands->createCommand(
@@ -74,13 +74,13 @@ class Mailcode_Factory_CommandSets_Set_Misc extends Mailcode_Factory_CommandSets
                 '%s in: %s%s',
                 $loopVariable,
                 $sourceVariable,
-                $breakAtString
+                $breakAtValue
             ),
             sprintf(
                 '{for: %s in: %s%s}',
                 $loopVariable,
                 $sourceVariable,
-                $breakAtString
+                $breakAtValue
             )
         );
 

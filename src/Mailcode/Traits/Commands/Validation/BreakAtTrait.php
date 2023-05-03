@@ -11,9 +11,13 @@ declare(strict_types=1);
 
 namespace Mailcode\Traits\Commands\Validation;
 
+use Mailcode\Mailcode_Commands_Command_For;
 use Mailcode\Mailcode_Commands_Keywords;
-use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Keyword;
+use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token;
+use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Number;
+use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Variable;
 use phpDocumentor\Descriptor\Interfaces\FunctionInterface;
+use function Mailcode\t;
 
 /**
  * Command validation drop-in: checks for the presence
@@ -29,21 +33,27 @@ trait BreakAtTrait
     /**
      * @var boolean
      */
-    protected bool $breakAtEnabled = false;
+    private bool $breakAtEnabled = false;
 
-    /**
-     * @var Mailcode_Parser_Statement_Tokenizer_Token_Keyword|NULL
-     */
-    protected ?Mailcode_Parser_Statement_Tokenizer_Token_Keyword $breakAtToken;
+    private ?Mailcode_Parser_Statement_Tokenizer_Token $token = null;
 
     protected function validateSyntax_break_at(): void
     {
+        $this->token = $this->requireParams()->getInfo()->getTokenForKeyword(Mailcode_Commands_Keywords::TYPE_BREAK_AT);
+
         $val = $this->validator->createKeyword(Mailcode_Commands_Keywords::TYPE_BREAK_AT);
 
-        $this->breakAtEnabled = $val->isValid();
+        $this->breakAtEnabled = $val->isValid() && $this->token != null;;
 
-        if ($val->isValid()) {
-            $this->breakAtToken = $val->getToken();
+        if ($this->breakAtEnabled) {
+            if (!$this->token instanceof Mailcode_Parser_Statement_Tokenizer_Token_Number &&
+                !$this->token instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable) {
+                $this->validationResult->makeError(
+                    t('Invalid break-at usage'),
+                    Mailcode_Commands_Command_For::VALIDATION_BREAK_AT_WRONG_PARAMETER
+                );
+                return;
+            }
         }
     }
 
@@ -52,12 +62,9 @@ trait BreakAtTrait
         return $this->breakAtEnabled;
     }
 
-    public function getBreakAtToken(): ?Mailcode_Parser_Statement_Tokenizer_Token_Keyword
+    public function getBreakAtToken(): ?Mailcode_Parser_Statement_Tokenizer_Token
     {
-        if ($this->breakAtToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_Keyword) {
-            return $this->breakAtToken;
-        }
-
-        return null;
+        return $this->token;
     }
+
 }

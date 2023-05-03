@@ -21,14 +21,14 @@ namespace Mailcode;
  */
 class Mailcode_Parser_Statement_Info
 {
-   /**
-    * @var Mailcode_Parser_Statement_Tokenizer
-    */
+    /**
+     * @var Mailcode_Parser_Statement_Tokenizer
+     */
     protected $tokenizer;
-    
-   /**
-    * @var Mailcode_Parser_Statement_Tokenizer_Token[]
-    */
+
+    /**
+     * @var Mailcode_Parser_Statement_Tokenizer_Token[]
+     */
     protected $tokens = array();
 
     /**
@@ -47,23 +47,23 @@ class Mailcode_Parser_Statement_Info
         $this->keywords = new Mailcode_Parser_Statement_Info_Keywords($this, $this->tokenizer);
         $this->variables = new Mailcode_Parser_Statement_Info_Variables($this, $this->tokenizer);
     }
-    
-   /**
-    * Whether the whole statement is a variable being assigned a value.
-    * 
-    * @return bool
-    */
-    public function isVariableAssignment() : bool
+
+    /**
+     * Whether the whole statement is a variable being assigned a value.
+     *
+     * @return bool
+     */
+    public function isVariableAssignment(): bool
     {
         return $this->variables->isAssignment();
     }
-    
-   /**
-    * Whether the whole statement is a variable being compared to something.
-    * 
-    * @return bool
-    */
-    public function isVariableComparison() : bool
+
+    /**
+     * Whether the whole statement is a variable being compared to something.
+     *
+     * @return bool
+     */
+    public function isVariableComparison(): bool
     {
         return $this->variables->isComparison();
     }
@@ -74,134 +74,151 @@ class Mailcode_Parser_Statement_Info
      * @return Mailcode_Variables_Variable[]
      * @throws Mailcode_Parser_Exception
      */
-    public function getVariables() : array
+    public function getVariables(): array
     {
         return $this->variables->getAll();
     }
-    
-   /**
-    * Retrieves a variable by its position in the command's parameters.
-    * Returns null if there is no parameter at the specified index, or
-    * if it is of another type.
-    * 
-    * @param int $index Zero-based index.
-    * @return Mailcode_Parser_Statement_Tokenizer_Token_Variable|NULL
-    */
-    public function getVariableByIndex(int $index) : ?Mailcode_Parser_Statement_Tokenizer_Token_Variable
+
+    /**
+     * Retrieves a variable by its position in the command's parameters.
+     * Returns null if there is no parameter at the specified index, or
+     * if it is of another type.
+     *
+     * @param int $index Zero-based index.
+     * @return Mailcode_Parser_Statement_Tokenizer_Token_Variable|NULL
+     */
+    public function getVariableByIndex(int $index): ?Mailcode_Parser_Statement_Tokenizer_Token_Variable
     {
         return $this->variables->getByIndex($index);
     }
-    
-   /**
-    * Retrieves a string literal by its position in the command's parameters.
-    * Returns null if there is no parameter at the specified index, or
-    * if it is of another type.
-    *
-    * @param int $index Zero-based index.
-    * @return Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral|NULL
-    */
-    public function getStringLiteralByIndex(int $index) : ?Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
+
+    /**
+     * Retrieves a string literal by its position in the command's parameters.
+     * Returns null if there is no parameter at the specified index, or
+     * if it is of another type.
+     *
+     * @param int $index Zero-based index.
+     * @return Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral|NULL
+     */
+    public function getStringLiteralByIndex(int $index): ?Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
     {
         $token = $this->getTokenByIndex($index);
-        
-        if($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral)
-        {
+
+        if ($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral) {
             return $token;
         }
-        
+
         return null;
     }
-    
-   /**
-    * Retrieves a keyword by its position in the command's parameters.
-    * Returns null if there is no parameter at the specified index, or
-    * if it is of another type.
-    *
-    * @param int $index Zero-based index.
-    * @return Mailcode_Parser_Statement_Tokenizer_Token_Keyword|NULL
-    */
-    public function getKeywordByIndex(int $index) : ?Mailcode_Parser_Statement_Tokenizer_Token_Keyword
+
+    /**
+     * Retrieves a keyword by its position in the command's parameters.
+     * Returns null if there is no parameter at the specified index, or
+     * if it is of another type.
+     *
+     * @param int $index Zero-based index.
+     * @return Mailcode_Parser_Statement_Tokenizer_Token_Keyword|NULL
+     */
+    public function getKeywordByIndex(int $index): ?Mailcode_Parser_Statement_Tokenizer_Token_Keyword
     {
         return $this->keywords->getByIndex($index);
     }
-    
-   /**
-    * Retrieves an operand by its position in the command's parameters.
-    * Returns null if there is no parameter at the specified index, or
-    * if it is of another type.
-    *
-    * @param int $index Zero-based index.
-    * @return Mailcode_Parser_Statement_Tokenizer_Token_Operand|NULL
-    */
-    public function getOperandByIndex(int $index) : ?Mailcode_Parser_Statement_Tokenizer_Token_Operand
+
+    /**
+     * Retrieves an operand by its position in the command's parameters.
+     * Returns null if there is no parameter at the specified index, or
+     * if it is of another type.
+     *
+     * @param int $index Zero-based index.
+     * @return Mailcode_Parser_Statement_Tokenizer_Token_Operand|NULL
+     */
+    public function getOperandByIndex(int $index): ?Mailcode_Parser_Statement_Tokenizer_Token_Operand
     {
         $token = $this->getTokenByIndex($index);
-        
-        if($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_Operand)
-        {
+
+        if ($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_Operand) {
             return $token;
         }
-        
+
         return null;
     }
-    
-   /**
-    * Retrieves a parameter token by its position in the command's parameters,
-    * regardless of its type. Returns null if there is no parameter at the 
-    * specified index.
-    *
-    * @param int $index Zero-based index.
-    * @return Mailcode_Parser_Statement_Tokenizer_Token|NULL
-    */
-    public function getTokenByIndex(int $index) : ?Mailcode_Parser_Statement_Tokenizer_Token
+
+    /**
+     * Retrieves a parameter token by its position in the command's parameters,
+     * regardless of its type. Returns null if there is no parameter at the
+     * specified index.
+     *
+     * @param int $index Zero-based index.
+     * @return Mailcode_Parser_Statement_Tokenizer_Token|NULL
+     */
+    public function getTokenByIndex(int $index): ?Mailcode_Parser_Statement_Tokenizer_Token
     {
         $tokens = $this->tokenizer->getTokens();
 
-        if(isset($tokens[$index]))
-        {
+        if (isset($tokens[$index])) {
             return $tokens[$index];
         }
-        
+
         return null;
     }
-    
-    public function hasTokenAtIndex(int $index) : bool
+
+    public function getTokenForKeyWord(string $keywordName): ?Mailcode_Parser_Statement_Tokenizer_Token
+    {
+        $tokens = $this->tokenizer->getTokens();
+
+        $tokenCount = count($tokens);
+
+        for ($index = 0; $index < $tokenCount; $index++) {
+            $token = $tokens[$index];
+
+            if ($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_Keyword) {
+                if ($token->getKeyword() == $keywordName) {
+                    $tokenIndex = $index + 1;
+                    if ($tokenIndex < $tokenCount) {
+                        return $tokens[$tokenIndex];
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public function hasTokenAtIndex(int $index): bool
     {
         $tokens = $this->tokenizer->getTokens();
 
         return isset($tokens[$index]);
     }
-    
-   /**
-    * Retrieves all tokens.
-    * @return Mailcode_Parser_Statement_Tokenizer_Token[]
-    */
-    public function getTokens() : array
+
+    /**
+     * Retrieves all tokens.
+     * @return Mailcode_Parser_Statement_Tokenizer_Token[]
+     */
+    public function getTokens(): array
     {
         return $this->tokenizer->getTokens();
     }
-    
-   /**
-    * Retrieves all string literals that were found in the command.
-    * @return Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral[]
-    */
-    public function getStringLiterals() : array
+
+    /**
+     * Retrieves all string literals that were found in the command.
+     * @return Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral[]
+     */
+    public function getStringLiterals(): array
     {
         $result = array();
         $tokens = $this->tokenizer->getTokens();
-        
-        foreach($tokens as $token)
-        {
-            if($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral)
-            {
+
+        foreach ($tokens as $token) {
+            if ($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral) {
                 $result[] = $token;
             }
         }
-        
+
         return $result;
     }
-    
-    public function createPruner() : Mailcode_Parser_Statement_Info_Pruner
+
+    public function createPruner(): Mailcode_Parser_Statement_Info_Pruner
     {
         return new Mailcode_Parser_Statement_Info_Pruner($this);
     }
@@ -209,12 +226,12 @@ class Mailcode_Parser_Statement_Info
     /**
      * @return Mailcode_Parser_Statement_Tokenizer_Token_Keyword[]
      */
-    public function getKeywords() : array
+    public function getKeywords(): array
     {
         return $this->keywords->getAll();
     }
 
-    public function getKeywordsCollection() : Mailcode_Parser_Statement_Info_Keywords
+    public function getKeywordsCollection(): Mailcode_Parser_Statement_Info_Keywords
     {
         return $this->keywords;
     }
@@ -227,7 +244,7 @@ class Mailcode_Parser_Statement_Info
      * @return Mailcode_Parser_Statement_Info
      * @throws Mailcode_Parser_Exception
      */
-    public function setKeywordEnabled(string $keyword, bool $enabled) : Mailcode_Parser_Statement_Info
+    public function setKeywordEnabled(string $keyword, bool $enabled): Mailcode_Parser_Statement_Info
     {
         $this->keywords->setEnabled($keyword, $enabled);
 
@@ -241,7 +258,7 @@ class Mailcode_Parser_Statement_Info
      * @return $this
      * @throws Mailcode_Parser_Exception
      */
-    public function addKeyword(string $keyword) : Mailcode_Parser_Statement_Info
+    public function addKeyword(string $keyword): Mailcode_Parser_Statement_Info
     {
         $this->keywords->add($keyword);
 
@@ -255,7 +272,7 @@ class Mailcode_Parser_Statement_Info
      * @param string $keyword Keyword name, with or without :
      * @return $this
      */
-    public function removeKeyword(string $keyword) : Mailcode_Parser_Statement_Info
+    public function removeKeyword(string $keyword): Mailcode_Parser_Statement_Info
     {
         $this->keywords->remove($keyword);
 
@@ -268,22 +285,22 @@ class Mailcode_Parser_Statement_Info
      * @param string $keyword Keyword name, with or without :
      * @return bool
      */
-    public function hasKeyword(string $keyword) : bool
+    public function hasKeyword(string $keyword): bool
     {
         return $this->keywords->hasKeyword($keyword);
     }
 
-    public function removeToken(Mailcode_Parser_Statement_Tokenizer_Token $token) : void
+    public function removeToken(Mailcode_Parser_Statement_Tokenizer_Token $token): void
     {
         $this->tokenizer->removeToken($token);
     }
 
-    public function addStringLiteral(string $text) : Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
+    public function addStringLiteral(string $text): Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
     {
         return $this->tokenizer->appendStringLiteral($text);
     }
 
-    public function prependStringLiteral(string $text) : Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
+    public function prependStringLiteral(string $text): Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
     {
         return $this->tokenizer->prependStringLiteral($text);
     }
