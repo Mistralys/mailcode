@@ -9,7 +9,7 @@ use Mailcode\Mailcode_Factory;
 
 final class Mailcode_ShowDateTests extends MailcodeTestCase
 {
-    public function test_validation()
+    public function test_validation() : void
     {
         $tests = array(
             array(
@@ -124,6 +124,34 @@ final class Mailcode_ShowDateTests extends MailcodeTestCase
     {
         $cmd = Mailcode::create()->parseString('{showdate: $FOO urlencode:}')->getFirstCommand();
 
+        $this->assertNotNull($cmd);
+        $this->assertInstanceOf(Mailcode_Commands_Command_ShowDate::class, $cmd);
         $this->assertTrue($cmd->isURLEncoded());
+    }
+
+    public function test_timezoneString(): void
+    {
+        $cmd = Mailcode::create()->parseString('{showdate: $FOO "Y.m.d" "Europe/Paris"}')->getFirstCommand();
+
+        $this->assertNotNull($cmd);
+        $this->assertInstanceOf(Mailcode_Commands_Command_ShowDate::class, $cmd);
+
+        $this->assertTrue($cmd->hasTimezone());
+        $this->assertNotNull($cmd->getTimezoneString());
+        $this->assertSame('Europe/Paris', $cmd->getTimezoneString());
+        $this->assertNull($cmd->getTimezoneVariable());
+    }
+
+    public function test_timezoneVariable(): void
+    {
+        $cmd = Mailcode::create()->parseString('{showdate: $FOO "Y.m.d" $TIMEZONE}')->getFirstCommand();
+
+        $this->assertNotNull($cmd);
+        $this->assertInstanceOf(Mailcode_Commands_Command_ShowDate::class, $cmd);
+
+        $this->assertTrue($cmd->hasTimezone());
+        $this->assertNotNull($cmd->getTimezoneVariable());
+        $this->assertSame('$TIMEZONE', $cmd->getTimezoneVariable());
+        $this->assertNull($cmd->getTimezoneString());
     }
 }

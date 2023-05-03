@@ -24,9 +24,10 @@ trait TimezoneTrait
 {
     /**
      * The timezone
-     * @var string
+     * @var string|NULL
      */
-    protected string $timezone = '';
+    protected ?string $timezoneString = null;
+    private ?string $timezoneVariable = null;
 
     protected function validateSyntax_check_timezone(): void
     {
@@ -35,8 +36,8 @@ trait TimezoneTrait
             ->getInfo()
             ->getStringLiterals();
 
-        if (sizeof($tokens) > 1) {
-            $this->timezone = '"' . $tokens[1]->getText() . '"';
+        if (count($tokens) > 1) {
+            $this->timezoneString = $tokens[1]->getText();
             return;
         }
 
@@ -45,17 +46,28 @@ trait TimezoneTrait
             ->getInfo()
             ->getVariables();
 
-        if (sizeof($variables) > 1) {
-            $this->timezone = $variables[1]->getFullName();
+        if (count($variables) > 1) {
+            $this->timezoneVariable = $variables[1]->getFullName();
             return;
         }
 
         // neither explicit timezone nor variable present, so use nothing
-        $this->timezone= '';
+        $this->timezoneString= null;
+        $this->timezoneVariable = null;
     }
 
-    public function getTimezone(): ?string
+    public function getTimezoneString(): ?string
     {
-        return $this->timezone;
+        return $this->timezoneString;
+    }
+
+    public function getTimezoneVariable() : ?string
+    {
+        return $this->timezoneVariable;
+    }
+
+    public function hasTimezone() : bool
+    {
+        return isset($this->timezoneString) || isset($this->timezoneVariable);
     }
 }
