@@ -1,15 +1,15 @@
 <?php
 
+use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands_Command;
 use Mailcode\Mailcode_Commands_Command_For;
+use Mailcode\Mailcode_Exception;
 use Mailcode\Mailcode_Factory;
 use Mailcode\Mailcode_Variables_Variable;
-use Mailcode\Mailcode;
-use Mailcode\Mailcode_Exception;
 
 final class Mailcode_ForTests extends MailcodeTestCase
 {
-    public function test_validation() : void
+    public function test_validation(): void
     {
         $tests = array(
             array(
@@ -77,41 +77,47 @@ final class Mailcode_ForTests extends MailcodeTestCase
                 'string' => '{for: $RECORD in: $LIST}{end}',
                 'valid' => true,
                 'code' => 0
+            ),
+            array(
+                'label' => 'Valid statement',
+                'string' => '{for: $RECORD in: $LIST break-at: 13}{end}',
+                'valid' => true,
+                'code' => 0
             )
         );
-        
+
         $this->runCollectionTests($tests);
     }
-    
-    public function test_getVariables() : void
+
+    public function test_getVariables(): void
     {
         $cmd = Mailcode_Factory::misc()->for('SOURCE', 'LOOP');
-        
+
         $this->assertInstanceOf(Mailcode_Variables_Variable::class, $cmd->getSourceVariable());
         $this->assertInstanceOf(Mailcode_Variables_Variable::class, $cmd->getLoopVariable());
-        
+
         $this->assertEquals('$SOURCE', $cmd->getSourceVariable()->getFullName());
         $this->assertEquals('$LOOP', $cmd->getLoopVariable()->getFullName());
     }
-    
-   /**
-    * Ensure that trying to get the source variable of an erroneous
-    * for command will throw an exception.
-    */
-    public function test_getVariables_exception() : void
+
+    /**
+     * Ensure that trying to get the source variable of an erroneous
+     * for command will throw an exception.
+     */
+    public function test_getVariables_exception(): void
     {
-        $cmd = $cmd = Mailcode::create()->getCommands()->createCommand(
+        $cmd = Mailcode::create()->getCommands()->createCommand(
             'For',
             '',
             'params',
             '{for: params}'
         );
-        
+
         $this->assertInstanceOf(Mailcode_Commands_Command_For::class, $cmd);
         $this->assertFalse($cmd->isValid());
-        
+
         $this->expectException(Mailcode_Exception::class);
-        
+
         $cmd->getSourceVariable();
     }
 
@@ -119,7 +125,7 @@ final class Mailcode_ForTests extends MailcodeTestCase
      * Fetch all list variables found in the command: this is always
      * a single variable, the source variable of the command.
      */
-    public function test_getListVariables() : void
+    public function test_getListVariables(): void
     {
         $cmd = Mailcode_Factory::misc()->for('LIST', 'RECORD');
 
