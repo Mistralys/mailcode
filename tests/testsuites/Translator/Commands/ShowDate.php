@@ -36,8 +36,13 @@ final class Translator_Velocity_ShowDateTests extends VelocityTestCase
                 'expected' => '${time.input("' . $defaultFormat . '", $FOO.BAR).output("dd.MM.yyyy H:m:s").zone("US/Eastern")}'
             ),
             array(
+                'label' => 'Show date, german format, US timezone',
+                'mailcode' => Mailcode_Factory::show()->date('FOO.BAR', 'd.m.Y H:i:s', 'US/Eastern'),
+                'expected' => '${time.input("' . $defaultFormat . '", $FOO.BAR).output("dd.MM.yyyy H:m:s").zone("US/Eastern")}'
+            ),
+            array(
                 'label' => 'Show date, german format, variable timezone',
-                'mailcode' => Mailcode_Factory::show()->date('FOO.BAR', 'd.m.Y H:i:s', '$FOO.TIMEZONE'),
+                'mailcode' => Mailcode_Factory::show()->date('FOO.BAR', 'd.m.Y H:i:s', null, '$FOO.TIMEZONE'),
                 'expected' => '${time.input("' . $defaultFormat . '", $FOO.BAR).output("dd.MM.yyyy H:m:s").zone($FOO.TIMEZONE)}'
             )
         );

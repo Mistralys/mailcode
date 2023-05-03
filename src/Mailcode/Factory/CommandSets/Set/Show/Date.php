@@ -23,13 +23,12 @@ use Mailcode\Mailcode_Factory_CommandSets_Set;
  */
 class Date extends Mailcode_Factory_CommandSets_Set
 {
-    public function create(string $variableName, string $formatString="", string $timezoneString="") : Mailcode_Commands_Command_ShowDate
+    public function create(string $variableName, string $formatString = "", string $timezoneString = null, string $timezoneVariable = null): Mailcode_Commands_Command_ShowDate
     {
         $variableName = $this->instantiator->filterVariableName($variableName);
 
         $format = '';
-        if(!empty($formatString))
-        {
+        if (!empty($formatString)) {
             $format = sprintf(
                 ' "%s"',
                 $formatString
@@ -37,18 +36,22 @@ class Date extends Mailcode_Factory_CommandSets_Set
         }
 
         $timezone = '';
-        if(!empty($timezoneString))
-        {
+        if (!empty($timezoneString)) {
             $timezone = sprintf(
                 ' %s',
-                $timezoneString
+                $this->quoteString($timezoneString)
+            );
+        } else if (!empty($timezoneVariable)) {
+            $timezone = sprintf(
+                ' %s',
+                $timezoneVariable
             );
         }
 
         $cmd = $this->commands->createCommand(
             'ShowDate',
             '',
-            $variableName.$format.$timezone,
+            $variableName . $format . $timezone,
             sprintf(
                 '{showdate: %s%s%s}',
                 $variableName,
@@ -59,11 +62,20 @@ class Date extends Mailcode_Factory_CommandSets_Set
 
         $this->instantiator->checkCommand($cmd);
 
-        if($cmd instanceof Mailcode_Commands_Command_ShowDate)
-        {
+        if ($cmd instanceof Mailcode_Commands_Command_ShowDate) {
             return $cmd;
         }
 
         throw $this->instantiator->exceptionUnexpectedType('ShowDate', $cmd);
     }
+
+    private function quoteString(string $string): string
+    {
+        if (substr($string, 0, 1) === '"' && substr($string, -1, 1) === '"') {
+            return $string;
+        }
+
+        return '"' . str_replace('"', '\"', $string) . '"';
+    }
+
 }

@@ -27,7 +27,7 @@ use Mailcode\Factory\CommandSets\Set\Show\URL;
  */
 class Mailcode_Factory_CommandSets_Set_Show extends Mailcode_Factory_CommandSets_Set
 {
-    public function var(string $variableName) : Mailcode_Commands_Command_ShowVariable
+    public function var(string $variableName): Mailcode_Commands_Command_ShowVariable
     {
         $variableName = $this->instantiator->filterVariableName($variableName);
 
@@ -35,25 +35,24 @@ class Mailcode_Factory_CommandSets_Set_Show extends Mailcode_Factory_CommandSets
             'ShowVariable',
             '',
             $variableName,
-            '{showvar:'.$variableName.'}'
+            '{showvar:' . $variableName . '}'
         );
 
         $this->instantiator->checkCommand($cmd);
 
-        if($cmd instanceof Mailcode_Commands_Command_ShowVariable)
-        {
+        if ($cmd instanceof Mailcode_Commands_Command_ShowVariable) {
             return $cmd;
         }
 
         throw $this->instantiator->exceptionUnexpectedType('ShowVariable', $cmd);
     }
 
-    public function date(string $variableName, string $formatString="", string $timezoneString="") : Mailcode_Commands_Command_ShowDate
+    public function date(string $variableName, string $formatString = "", string $timezoneString = null, string $timezoneVariable = null): Mailcode_Commands_Command_ShowDate
     {
-        return (new Date())->create($variableName, $formatString, $timezoneString);
+        return (new Date())->create($variableName, $formatString, $timezoneString, $timezoneVariable);
     }
 
-    public function number(string $variableName, string $formatString="", bool $absolute=false) : Mailcode_Commands_Command_ShowNumber
+    public function number(string $variableName, string $formatString = "", bool $absolute = false): Mailcode_Commands_Command_ShowNumber
     {
         return (new Number())->create($variableName, $formatString, $absolute);
     }
@@ -67,7 +66,7 @@ class Mailcode_Factory_CommandSets_Set_Show extends Mailcode_Factory_CommandSets
      * @return Mailcode_Commands_Command_ShowPhone
      * @throws Mailcode_Factory_Exception
      */
-    public function phone(string $variableName, string $sourceFormat, string $urlEncoding=Mailcode_Factory::URL_ENCODING_NONE) : Mailcode_Commands_Command_ShowPhone
+    public function phone(string $variableName, string $sourceFormat, string $urlEncoding = Mailcode_Factory::URL_ENCODING_NONE): Mailcode_Commands_Command_ShowPhone
     {
         return (new Phone())->create($variableName, $sourceFormat, $urlEncoding);
     }
@@ -77,7 +76,7 @@ class Mailcode_Factory_CommandSets_Set_Show extends Mailcode_Factory_CommandSets
      * @return Mailcode_Commands_Command_ShowSnippet
      * @throws Mailcode_Factory_Exception
      */
-    public function snippet(string $snippetName) : Mailcode_Commands_Command_ShowSnippet
+    public function snippet(string $snippetName): Mailcode_Commands_Command_ShowSnippet
     {
         return (new Snippet())->create($snippetName);
     }
@@ -89,7 +88,7 @@ class Mailcode_Factory_CommandSets_Set_Show extends Mailcode_Factory_CommandSets
      * @return Mailcode_Commands_Command_ShowURL
      * @throws Mailcode_Factory_Exception
      */
-    public function url(string $url, ?string $trackingID=null, array $queryParams=array()) : Mailcode_Commands_Command_ShowURL
+    public function url(string $url, ?string $trackingID = null, array $queryParams = array()): Mailcode_Commands_Command_ShowURL
     {
         return (new URL())->create($url, $trackingID, $queryParams);
     }
@@ -100,8 +99,8 @@ class Mailcode_Factory_CommandSets_Set_Show extends Mailcode_Factory_CommandSets
      * @return Mailcode_Commands_Command_ShowEncoded
      * @throws Mailcode_Factory_Exception
      */
-    public function encoded(string $subject, array $encodings) : Mailcode_Commands_Command_ShowEncoded
+    public function encoded(string $subject, array $encodings): Mailcode_Commands_Command_ShowEncoded
     {
-        return(new Encoded())->create($subject, $encodings);
+        return (new Encoded())->create($subject, $encodings);
     }
 }
