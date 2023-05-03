@@ -54,7 +54,7 @@ class Mailcode_Commands_Command_ShowDate
         return array(
             Mailcode_Interfaces_Commands_Validation_Variable::VALIDATION_NAME_VARIABLE,
             'check_format',
-            'check_timezone'
+            TimezoneInterface::VALIDATION_TIMEZONE_NAME
         );
     }
 
