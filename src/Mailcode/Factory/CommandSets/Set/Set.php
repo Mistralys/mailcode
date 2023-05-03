@@ -20,31 +20,33 @@ namespace Mailcode;
  */
 class Mailcode_Factory_CommandSets_Set_Set extends Mailcode_Factory_CommandSets_Set
 {
-    public function var(string $variableName, string $value, bool $quoteValue=true) : Mailcode_Commands_Command_SetVariable
+    public function var(string $variableName, string $value, bool $quoteValue = true, bool $asCount = false): Mailcode_Commands_Command_SetVariable
     {
         $variableName = $this->instantiator->filterVariableName($variableName);
-        
-        if($quoteValue)
-        {
-            $value = $this->instantiator->quoteString($value);
+
+        if ($asCount) {
+            $params = $variableName . ' count: ' . $value;
+        } else {
+            if ($quoteValue) {
+                $value = $this->instantiator->quoteString($value);
+            }
+
+            $params = $variableName . ' = ' . $value;
         }
-        
-        $params = $variableName.' = '.$value;
-        
+
         $cmd = $this->commands->createCommand(
             'SetVariable',
             '', // type
             $params,
-            '{setvar: '.$params.'}'
+            '{setvar: ' . $params . '}'
         );
-        
+
         $this->instantiator->checkCommand($cmd);
-        
-        if($cmd instanceof Mailcode_Commands_Command_SetVariable)
-        {
+
+        if ($cmd instanceof Mailcode_Commands_Command_SetVariable) {
             return $cmd;
         }
-        
+
         throw $this->instantiator->exceptionUnexpectedType('SetVariable', $cmd);
     }
 
@@ -56,7 +58,7 @@ class Mailcode_Factory_CommandSets_Set_Set extends Mailcode_Factory_CommandSets_
      * @return Mailcode_Commands_Command_SetVariable
      * @throws Mailcode_Factory_Exception
      */
-    public function varString(string $variableName, string $value) : Mailcode_Commands_Command_SetVariable
+    public function varString(string $variableName, string $value): Mailcode_Commands_Command_SetVariable
     {
         return $this->var($variableName, $value, true);
     }

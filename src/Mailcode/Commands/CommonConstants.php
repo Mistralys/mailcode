@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * File containing the {@see Mailcode_Commands_CommonConstants} class.
  *
@@ -41,6 +41,7 @@ class Mailcode_Commands_CommonConstants
     public const VALIDATION_CONTENT_CLOSING_MISMATCHED_TAG = 49217;
     public const VALIDATION_UNSUPPORTED_ENCODING = 49218;
     public const VALIDATION_NO_ENCODINGS_SPECIFIED = 49219;
+    public const VALIDATION_INVALID_COUNT_USAGE = 49220;
 
     public const ERROR_NO_VARIABLE_AVAILABLE = 52601;
     public const ERROR_NO_STRING_LITERAL_AVAILABLE = 52602;

@@ -22,10 +22,24 @@ class Mailcode_Translator_Syntax_ApacheVelocity_SetVariable extends Mailcode_Tra
 {
     public function translate(Mailcode_Commands_Command_SetVariable $command): string
     {
+        $assignmentString = $command->getAssignmentString();
+
+        if ($command->isCountEnabled()) {
+            $variable = $command->getCountVariable();
+
+            printf('C' . $variable->getFullName() . "|");
+
+            $assignmentString = sprintf(
+                '$map.of(%s).keys("%s").count()',
+                '$' . $variable->getPath(),
+                $variable->getName()
+            );
+        }
+
         return sprintf(
             '#set(%s = %s)',
             $command->getVariable()->getFullName(),
-            $command->getAssignmentString()
+            $assignmentString
         );
     }
 }
