@@ -1,15 +1,18 @@
 <?php
 
+use Mailcode\Interfaces\Commands\Validation\TimezoneInterface;
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands_Command;
 use Mailcode\Mailcode_Commands_Command_ShowDate;
 use Mailcode\Mailcode_Commands_CommonConstants;
 use Mailcode\Mailcode_Date_FormatInfo;
 use Mailcode\Mailcode_Factory;
+use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
+use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Variable;
 
 final class Mailcode_ShowDateTests extends MailcodeTestCase
 {
-    public function test_validation() : void
+    public function test_validation(): void
     {
         $tests = array(
             array(
@@ -77,6 +80,12 @@ final class Mailcode_ShowDateTests extends MailcodeTestCase
                 'string' => '{showdate: $foo_bar "Y-m-d H:i:s" $FOO.TIMEZONE}',
                 'valid' => true,
                 'code' => 0
+            ),
+            array(
+                'label' => 'With valid variable, valid format string, valid variable timezone',
+                'string' => '{showdate: $foo_bar "Y-m-d H:i:s" 13}',
+                'valid' => false,
+                'code' => TimezoneInterface::VALIDATION_TIMEZONE_CODE_WRONG_TYPE
             )
         );
 
@@ -137,9 +146,12 @@ final class Mailcode_ShowDateTests extends MailcodeTestCase
         $this->assertInstanceOf(Mailcode_Commands_Command_ShowDate::class, $cmd);
 
         $this->assertTrue($cmd->hasTimezone());
-        $this->assertNotNull($cmd->getTimezoneString());
-        $this->assertSame('Europe/Paris', $cmd->getTimezoneString());
-        $this->assertNull($cmd->getTimezoneVariable());
+        $timezone = $cmd->getTimezoneToken();
+        $this->assertNotNull($timezone);
+        $this->assertTrue($timezone instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral);
+        if ($timezone instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral) {
+            $this->assertSame('Europe/Paris', $timezone->getText());
+        }
     }
 
     public function test_timezoneVariable(): void
@@ -150,8 +162,11 @@ final class Mailcode_ShowDateTests extends MailcodeTestCase
         $this->assertInstanceOf(Mailcode_Commands_Command_ShowDate::class, $cmd);
 
         $this->assertTrue($cmd->hasTimezone());
-        $this->assertNotNull($cmd->getTimezoneVariable());
-        $this->assertSame('$TIMEZONE', $cmd->getTimezoneVariable());
-        $this->assertNull($cmd->getTimezoneString());
+        $timezone = $cmd->getTimezoneToken();
+        $this->assertNotNull($timezone);
+        $this->assertTrue($timezone instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable);
+        if ($timezone instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable) {
+            $this->assertSame('$TIMEZONE', $timezone->getVariable()->getFullName());
+        }
     }
 }

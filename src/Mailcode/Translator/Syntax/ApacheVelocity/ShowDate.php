@@ -66,12 +66,16 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ShowDate extends Mailcode_Transl
         $internalFormat = $this->getInternalFormat($command);
         $varName = ltrim($command->getVariableName(), '$');
         $javaFormat = $this->translateFormat($command->getFormatString());
-        $timezoneFormat = '';
 
-        if (!empty($command->getTimezoneString())) {
-            $timezoneFormat = sprintf('.zone("%s")', $command->getTimezoneString());
-        } else if(!empty($command->getTimezoneVariable())) {
-            $timezoneFormat = sprintf('.zone(%s)', $command->getTimezoneVariable());
+        $timezoneFormat = '';
+        if ($command->hasTimezone()) {
+            $token = $command->getTimezoneToken();
+
+            if ($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral) {
+                $timezoneFormat = sprintf('.zone("%s")', $token->getText());
+            } else if ($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable) {
+                $timezoneFormat = sprintf('.zone(%s)', $token->getVariable()->getFullName());
+            }
         }
 
         $statement = sprintf(

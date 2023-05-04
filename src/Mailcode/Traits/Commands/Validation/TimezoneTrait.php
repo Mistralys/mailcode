@@ -12,6 +12,10 @@ declare(strict_types=1);
 namespace Mailcode\Traits\Commands\Validation;
 
 use Mailcode\Interfaces\Commands\Validation\TimezoneInterface;
+use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token;
+use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
+use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Variable;
+use function Mailcode\t;
 
 /**
  * @package Mailcode
@@ -22,52 +26,37 @@ use Mailcode\Interfaces\Commands\Validation\TimezoneInterface;
  */
 trait TimezoneTrait
 {
-    /**
-     * The timezone
-     * @var string|NULL
-     */
-    protected ?string $timezoneString = null;
-    private ?string $timezoneVariable = null;
+    private bool $timezoneEnabled = false;
+
+    private ?Mailcode_Parser_Statement_Tokenizer_Token $timezoneToken = null;
 
     protected function validateSyntax_check_timezone(): void
     {
-        // first, check if we have an explicit timezone
-        $tokens = $this->requireParams()
-            ->getInfo()
-            ->getStringLiterals();
+        $tokens = $this->requireParams()->getInfo()->getTokens();
 
-        if (count($tokens) > 1) {
-            $this->timezoneString = $tokens[1]->getText();
-            return;
+        if (count($tokens) > 2) {
+            $this->timezoneToken = $tokens[2];
+
+            if (!$this->timezoneToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral &&
+                !$this->timezoneToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable) {
+                $this->validationResult->makeError(
+                    t('Invalid timezone type.' . ' ' . 'Expected String or Variable.'),
+                    TimezoneInterface::VALIDATION_TIMEZONE_CODE_WRONG_TYPE
+                );
+                return;
+            }
+
+            $this->timezoneEnabled = true;
         }
-
-        // then, check if a variable is used for timezone
-        $variables = $this->requireParams()
-            ->getInfo()
-            ->getVariables();
-
-        if (count($variables) > 1) {
-            $this->timezoneVariable = $variables[1]->getFullName();
-            return;
-        }
-
-        // neither explicit timezone nor variable present, so use nothing
-        $this->timezoneString= null;
-        $this->timezoneVariable = null;
     }
 
-    public function getTimezoneString(): ?string
+    public function hasTimezone(): bool
     {
-        return $this->timezoneString;
+        return isset($this->timezoneToken);
     }
 
-    public function getTimezoneVariable() : ?string
+    public function getTimezoneToken(): ?Mailcode_Parser_Statement_Tokenizer_Token
     {
-        return $this->timezoneVariable;
-    }
-
-    public function hasTimezone() : bool
-    {
-        return isset($this->timezoneString) || isset($this->timezoneVariable);
+        return $this->timezoneToken;
     }
 }
