@@ -4,6 +4,9 @@ install: composer.lock
 update composer.lock: composer.json
 	/usr/bin/php7 /usr/bin/composer update
 
+autoload composer.lock: composer.json
+	/usr/bin/php7 /usr/bin/composer dumpautoload
+
 testsuite: composer.lock
 ifdef testsuite
 	vendor/bin/phpunit --testsuite $(testsuite)
