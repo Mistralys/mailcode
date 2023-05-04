@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+use Mailcode\Mailcode;
+use Mailcode\Mailcode_Commands_Command_SetVariable;
 use Mailcode\Mailcode_Factory;
 
 final class Translator_Velocity_SetVariableTests extends VelocityTestCase
@@ -35,5 +39,22 @@ final class Translator_Velocity_SetVariableTests extends VelocityTestCase
         );
 
         $this->runCommands($tests);
+    }
+
+    /**
+     * Check the case where two same name variables are not
+     * tokenized correctly, causing a "Unquoted string literal
+     * '.COUNT'" error.
+     */
+    public function test_weirdParseBehavior() : void
+    {
+        $collection = Mailcode::create()->parseString('{setvar: $FOO count: $FOO.COUNT}');
+
+        if(!$collection->isValid()) {
+            $this->fail($collection->getFirstError()->getMessage());
+        }
+
+        $command = $collection->getFirstCommand();
+        $this->assertInstanceOf(Mailcode_Commands_Command_SetVariable::class, $command);
     }
 }
