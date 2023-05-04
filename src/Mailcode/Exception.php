@@ -20,6 +20,17 @@ use AppUtils\BaseException;
  */
 class Mailcode_Exception extends BaseException
 {
+    public function __construct(string $message, ?string $details = null, $code = null, $previous = null)
+    {
+        if(defined('TESTS_ROOT') && !empty($details)) {
+            $message .= PHP_EOL.
+                'Details:'.PHP_EOL.
+                $details;
+        }
+
+        parent::__construct($message, $details, $code, $previous);
+    }
+
     /**
      * @var Mailcode_Collection|null
      */
