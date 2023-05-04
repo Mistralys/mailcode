@@ -18,12 +18,14 @@ use Mailcode\Traits\Commands\Validation\BreakAtTrait;
 /**
  * @package Mailcode
  * @subpackage Validation
+ * @author Olaf Böcker <olaf.boecker@ionos.com>
  *
  * @see BreakAtTrait
  */
 interface BreakAtInterface extends Mailcode_Interfaces_Commands_Command
 {
-    public const VALIDATION_NAME_BREAK_AT = 'break_at';
+    public const VALIDATION_BREAK_AT_NAME = 'check_break_at';
+    public const VALIDATION_BREAK_AT_CODE_WRONG_TYPE = 135601;
 
     public function isBreakAtEnabled(): bool;
 

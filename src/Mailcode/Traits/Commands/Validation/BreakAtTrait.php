@@ -1,8 +1,8 @@
 <?php
 /**
- * File containing the {@see \Mailcode\Traits\Commands\Validation\NoTrackingTrait} trait.
+ * File containing the {@see \Mailcode\Traits\Commands\Validation\BreakAtTrait} trait.
  *
- * @see \Mailcode\Traits\Commands\Validation\NoTrackingTrait
+ * @see \Mailcode\Traits\Commands\Validation\BreakAtTrait
  * @subpackage Validation
  * @package Mailcode
  */
@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Mailcode\Traits\Commands\Validation;
 
-use Mailcode\Mailcode_Commands_Command_For;
+use Mailcode\Interfaces\Commands\Validation\BreakAtInterface;
 use Mailcode\Mailcode_Commands_Keywords;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Number;
@@ -25,32 +25,30 @@ use function Mailcode\t;
  *
  * @package Mailcode
  * @subpackage Validation
+ * @author Olaf Böcker <olaf.boecker@ionos.com>
  *
  * @see BreakAtInterface
  */
 trait BreakAtTrait
 {
-    /**
-     * @var boolean
-     */
     private bool $breakAtEnabled = false;
 
-    private ?Mailcode_Parser_Statement_Tokenizer_Token $token = null;
+    private ?Mailcode_Parser_Statement_Tokenizer_Token $breakAtToken = null;
 
-    protected function validateSyntax_break_at(): void
+    protected function validateSyntax_check_break_at(): void
     {
-        $this->token = $this->requireParams()->getInfo()->getTokenForKeyword(Mailcode_Commands_Keywords::TYPE_BREAK_AT);
+        $this->breakAtToken = $this->requireParams()->getInfo()->getTokenForKeyword(Mailcode_Commands_Keywords::TYPE_BREAK_AT);
 
         $val = $this->validator->createKeyword(Mailcode_Commands_Keywords::TYPE_BREAK_AT);
 
-        $this->breakAtEnabled = $val->isValid() && $this->token != null;;
+        $this->breakAtEnabled = $val->isValid() && $this->breakAtToken != null;;
 
         if ($this->breakAtEnabled) {
-            if (!$this->token instanceof Mailcode_Parser_Statement_Tokenizer_Token_Number &&
-                !$this->token instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable) {
+            if (!$this->breakAtToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_Number &&
+                !$this->breakAtToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable) {
                 $this->validationResult->makeError(
-                    t('Invalid break-at usage'),
-                    Mailcode_Commands_Command_For::VALIDATION_BREAK_AT_WRONG_PARAMETER
+                    t('Invalid break-at type.' . ' ' . 'Expected Number or Variable.'),
+                    BreakAtInterface::VALIDATION_BREAK_AT_CODE_WRONG_TYPE
                 );
                 return;
             }
@@ -64,7 +62,6 @@ trait BreakAtTrait
 
     public function getBreakAtToken(): ?Mailcode_Parser_Statement_Tokenizer_Token
     {
-        return $this->token;
+        return $this->breakAtToken;
     }
-
 }

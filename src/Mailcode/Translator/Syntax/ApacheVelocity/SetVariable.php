@@ -27,13 +27,13 @@ class Mailcode_Translator_Syntax_ApacheVelocity_SetVariable extends Mailcode_Tra
         if ($command->isCountEnabled()) {
             $variable = $command->getCountVariable();
 
-            printf('C' . $variable->getFullName() . "|");
-
-            $assignmentString = sprintf(
-                '$map.of(%s).keys("%s").count()',
-                '$' . $variable->getPath(),
-                $variable->getName()
-            );
+            if ($variable != null) {
+                $assignmentString = sprintf(
+                    '$map.of(%s).keys("%s").count()',
+                    '$' . $variable->getPath(),
+                    $variable->getName()
+                );
+            }
         }
 
         return sprintf(

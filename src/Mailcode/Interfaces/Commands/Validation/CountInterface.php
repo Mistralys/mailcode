@@ -1,10 +1,10 @@
 <?php
 /**
- * File containing the interface {@see \Mailcode\Interfaces\Commands\Validation\BreakAtInterface}.
+ * File containing the interface {@see \Mailcode\Interfaces\Commands\Validation\CountInterface}.
  *
  * @package Mailcode
  * @subpackage Validation
- * @see \Mailcode\Interfaces\Commands\Validation\BreakAtInterface
+ * @see \Mailcode\Interfaces\Commands\Validation\CountInterface
  */
 
 declare(strict_types=1);
@@ -18,12 +18,14 @@ use Mailcode\Traits\Commands\Validation\CountTrait;
 /**
  * @package Mailcode
  * @subpackage Validation
+ * @author Olaf Böcker <olaf.boecker@ionos.com>
  *
  * @see CountTrait
  */
 interface CountInterface extends Mailcode_Interfaces_Commands_Command
 {
-    public const VALIDATION_NAME_COUNT = 'count';
+    public const VALIDATION_COUNT_NAME = 'check_count';
+    public const VALIDATION_COUNT_CODE_WRONG_TYPE = 135701;
 
     public function isCountEnabled(): bool;
 

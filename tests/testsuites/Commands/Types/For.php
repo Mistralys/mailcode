@@ -1,5 +1,6 @@
 <?php
 
+use Mailcode\Interfaces\Commands\Validation\BreakAtInterface;
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands_Command;
 use Mailcode\Mailcode_Commands_Command_For;
@@ -94,7 +95,7 @@ final class Mailcode_ForTests extends MailcodeTestCase
                 'label' => 'String as break-at parameter',
                 'string' => '{for: $RECORD in: $LIST break-at: "13"}{end}',
                 'valid' => false,
-                'code' => Mailcode_Commands_Command_For::VALIDATION_BREAK_AT_WRONG_PARAMETER
+                'code' => BreakAtInterface::VALIDATION_BREAK_AT_CODE_WRONG_TYPE
             ),
             array(
                 'label' => 'Unquoted text as break-at parameter',
@@ -106,7 +107,7 @@ final class Mailcode_ForTests extends MailcodeTestCase
                 'label' => 'Keyword as break-at parameter',
                 'string' => '{for: $RECORD in: $LIST break-at: idnencode:}{end}',
                 'valid' => false,
-                'code' => Mailcode_Commands_Command_For::VALIDATION_BREAK_AT_WRONG_PARAMETER
+                'code' => BreakAtInterface::VALIDATION_BREAK_AT_CODE_WRONG_TYPE
             )
         );
 

@@ -1,5 +1,6 @@
 <?php
 
+use Mailcode\Interfaces\Commands\Validation\CountInterface;
 use Mailcode\Mailcode_Commands_Command;
 use Mailcode\Mailcode_Commands_CommonConstants;
 
@@ -96,13 +97,13 @@ final class Mailcode_SetVarTests extends MailcodeTestCase
                 'label' => 'Keyword count has invalid parameter (text)',
                 'string' => '{setvar: $FOO.BAR count: "Text"}',
                 'valid' => false,
-                'code' => Mailcode_Commands_CommonConstants::VALIDATION_INVALID_COUNT_USAGE
+                'code' => CountInterface::VALIDATION_COUNT_CODE_WRONG_TYPE
             ),
             array(
                 'label' => 'Keyword count has invalid parameter (number)',
                 'string' => '{setvar: $FOO.BAR count: 13}',
                 'valid' => false,
-                'code' => Mailcode_Commands_CommonConstants::VALIDATION_INVALID_COUNT_USAGE
+                'code' => CountInterface::VALIDATION_COUNT_CODE_WRONG_TYPE
             ),
             array(
                 'label' => 'Valid count keyword with parameter',
@@ -120,7 +121,7 @@ final class Mailcode_SetVarTests extends MailcodeTestCase
                 'label' => 'Keyword count without parameter',
                 'string' => '{setvar: $FOO.BAR count:}',
                 'valid' => false,
-                'code' => Mailcode_Commands_CommonConstants::VALIDATION_INVALID_COUNT_USAGE
+                'code' => CountInterface::VALIDATION_COUNT_CODE_WRONG_TYPE
             )
         );
 

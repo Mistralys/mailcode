@@ -75,7 +75,7 @@ class Mailcode_Commands_Command_SetVariable
             'variable',
             'operand',
             'assignment',
-            CountInterface::VALIDATION_NAME_COUNT
+            CountInterface::VALIDATION_COUNT_NAME
         );
     }
 

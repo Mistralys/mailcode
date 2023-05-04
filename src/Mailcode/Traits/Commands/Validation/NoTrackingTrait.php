@@ -15,7 +15,6 @@ use Mailcode\Interfaces\Commands\Validation\NoTrackingInterface;
 use Mailcode\Mailcode_Commands_Keywords;
 use Mailcode\Mailcode_Exception;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Keyword;
-use Mailcode\Mailcode_Parser_Statement_Validator;
 use phpDocumentor\Descriptor\Interfaces\FunctionInterface;
 use phpDocumentor\Reflection\Utils;
 

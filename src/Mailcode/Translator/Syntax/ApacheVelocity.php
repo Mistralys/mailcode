@@ -12,10 +12,9 @@ declare(strict_types=1);
 namespace Mailcode;
 
 use Mailcode\Interfaces\Commands\EncodableInterface;
-use Mailcode\Interfaces\Commands\Validation\URLEncodingInterface;
 
 /**
- * Abstract base class for apache velocity command translation classes. 
+ * Abstract base class for apache velocity command translation classes.
  *
  * @package Mailcode
  * @subpackage Translator
@@ -24,8 +23,8 @@ use Mailcode\Interfaces\Commands\Validation\URLEncodingInterface;
 abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Translator_Command
 {
     /**
-    * @var string[]
-    */
+     * @var string[]
+     */
     private array $regexSpecialChars = array(
         '?',
         '.',
@@ -50,64 +49,61 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
     }
 
     /**
-    * Filters the string for use in an Apache Velocity (Java)
-    * regex string: escapes all special characters.
-    *
-    * Velocity does its own escaping, so no need to escape special
-    * characters as if they were a javascript string.
-    * 
-    * @param string $string
-    * @return string
-    */
-    public function filterRegexString(string $string) : string
+     * Filters the string for use in an Apache Velocity (Java)
+     * regex string: escapes all special characters.
+     *
+     * Velocity does its own escaping, so no need to escape special
+     * characters as if they were a javascript string.
+     *
+     * @param string $string
+     * @return string
+     */
+    public function filterRegexString(string $string): string
     {
-        // Special case: previously escaped quotes. 
+        // Special case: previously escaped quotes.
         // To avoid modifying them, we strip them out.
         $string = str_replace('\\"', 'ESCQUOTE', $string);
-        
+
         // Any other existing backslashes in the string
-        // have to be double-escaped, giving four 
+        // have to be double-escaped, giving four
         // backslashes in the java regex.
         $string = str_replace('\\', '\\\\', $string);
-        
+
         // All other special characters have to be escaped
-        // with two backslashes. 
-        foreach($this->regexSpecialChars as $char)
-        {
-            $string = str_replace($char, '\\'.$char, $string);
+        // with two backslashes.
+        foreach ($this->regexSpecialChars as $char) {
+            $string = str_replace($char, '\\' . $char, $string);
         }
-        
-        // Restore the escaped quotes, which stay escaped 
+
+        // Restore the escaped quotes, which stay escaped
         // with a single backslash.
         $string = str_replace('ESCQUOTE', '\\"', $string);
 
         return $string;
     }
 
-    protected function renderVariableEncodings(Mailcode_Commands_Command $command, string $varName) : string
+    protected function renderVariableEncodings(Mailcode_Commands_Command $command, string $varName): string
     {
-        if(!$command instanceof EncodableInterface || !$command->hasActiveEncodings())
-        {
+        if (!$command instanceof EncodableInterface || !$command->hasActiveEncodings()) {
             return sprintf(
                 '${%s}',
                 $varName
             );
         }
 
-        return $this->renderEncodings($command, '$'.$varName);
+        return $this->renderEncodings($command, '$' . $varName);
     }
 
-    public function renderNumberFormat(string $varName, Mailcode_Number_Info $numberInfo, bool $absolute) : string
+    public function renderNumberFormat(string $varName, Mailcode_Number_Info $numberInfo, bool $absolute): string
     {
-        $varName = '$'.ltrim($varName, '$');
+        $varName = '$' . ltrim($varName, '$');
 
-        if($absolute)
-        {
-            $varName = sprintf('${price.abs(%s)}', $varName);
+        if ($absolute) {
+            $varName = sprintf('${numeric.abs(%s)}', $varName);
         }
 
         return sprintf(
-            "price.format(%s, %s, '%s', '%s')",
+            "numeric.format(%s, %s, '%s', '%s')",
             $varName,
             $numberInfo->getDecimals(),
             $numberInfo->getDecimalsSeparator(),
@@ -115,17 +111,17 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
         );
     }
 
-    public function renderStringToNumber(string $varName) : string
+    public function renderStringToNumber(string $varName): string
     {
         $varName = ltrim($varName, '$');
 
         return sprintf(
-            '$price.toNumber(%s)',
-            '$'.$varName
+            '$numeric.toNumber(%s)',
+            '$' . $varName
         );
     }
 
-    public function renderQuotedValue(string $value) : string
+    public function renderQuotedValue(string $value): string
     {
         return sprintf(
             '"%s"',
@@ -133,7 +129,7 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
         );
     }
 
-    public function getSyntaxName() : string
+    public function getSyntaxName(): string
     {
         return 'ApacheVelocity';
     }
@@ -148,20 +144,19 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
         Mailcode_Commands_Keywords::TYPE_IDN_DECODE => '${text.unidn(%s)}'
     );
 
-    protected function renderEncodings(EncodableInterface $command, string $statement) : string
+    protected function renderEncodings(EncodableInterface $command, string $statement): string
     {
         $encodings = $command->getActiveEncodings();
         $result = $statement;
 
-        foreach($encodings as $encoding)
-        {
+        foreach ($encodings as $encoding) {
             $result = $this->renderEncoding($encoding, $result);
         }
 
         return $result;
     }
 
-    protected function renderEncoding(string $keyword, string $result) : string
+    protected function renderEncoding(string $keyword, string $result): string
     {
         $template = $this->encodingTemplates[$keyword] ?? '%s';
 
