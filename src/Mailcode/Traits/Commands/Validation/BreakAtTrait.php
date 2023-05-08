@@ -16,7 +16,6 @@ use Mailcode\Mailcode_Commands_Keywords;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Number;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Variable;
-use phpDocumentor\Descriptor\Interfaces\FunctionInterface;
 use function Mailcode\t;
 
 /**

@@ -15,7 +15,6 @@ use Mailcode\Interfaces\Commands\Validation\CountInterface;
 use Mailcode\Mailcode_Commands_Keywords;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Variable;
 use Mailcode\Mailcode_Variables_Variable;
-use phpDocumentor\Descriptor\Interfaces\FunctionInterface;
 use function Mailcode\t;
 
 /**
