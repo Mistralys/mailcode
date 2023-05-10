@@ -166,15 +166,13 @@ class Mailcode_Parser_Statement_Info
     {
         $tokens = $this->tokenizer->getTokens();
 
-        $tokenCount = count($tokens);
-
-        for ($index = 0; $index < $tokenCount; $index++) {
+        for ($index = 0; $index < count($tokens); $index++) {
             $token = $tokens[$index];
 
             if ($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_Keyword) {
                 if ($token->getKeyword() == $keywordName) {
                     $tokenIndex = $index + 1;
-                    if ($tokenIndex < $tokenCount) {
+                    if (isset($tokens[$tokenIndex])) {
                         return $tokens[$tokenIndex];
                     }
                 }
