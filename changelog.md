@@ -6,6 +6,7 @@
 - Variables: Added static `dollarizeName()` and `undollarizeName()`.
 - Factory: Added `set()->varCount()` as shortcut to create a count variable.
 - Dependencies: Increased minimum `mistralys/application-utils` to v2.1.2.
+- Commands: Updated example phone numbers for some countries.
 
 ### v3.1.0
 - Parser: Fixed the tokenizer breaking same name variable mixes ($FOO + $FOO.BAR).
