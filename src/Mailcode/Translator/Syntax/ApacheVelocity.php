@@ -49,16 +49,16 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
     }
 
     /**
-     * Filters the string for use in an Apache Velocity (Java)
-     * regex string: escapes all special characters.
-     *
-     * Velocity does its own escaping, so no need to escape special
-     * characters as if they were a javascript string.
-     *
-     * @param string $string
-     * @return string
-     */
-    public function filterRegexString(string $string): string
+    * Filters the string for use in an Apache Velocity (Java)
+    * regex string: escapes all special characters.
+    *
+    * Velocity does its own escaping, so no need to escape special
+    * characters as if they were a javascript string.
+    *
+    * @param string $string
+    * @return string
+    */
+    public function filterRegexString(string $string) : string
     {
         // Special case: previously escaped quotes.
         // To avoid modifying them, we strip them out.
@@ -71,8 +71,9 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
 
         // All other special characters have to be escaped
         // with two backslashes.
-        foreach ($this->regexSpecialChars as $char) {
-            $string = str_replace($char, '\\' . $char, $string);
+        foreach($this->regexSpecialChars as $char)
+        {
+            $string = str_replace($char, '\\'.$char, $string);
         }
 
         // Restore the escaped quotes, which stay escaped
@@ -98,7 +99,8 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
     {
         $varName = '$' . ltrim($varName, '$');
 
-        if ($absolute) {
+        if($absolute)
+        {
             $varName = sprintf('${numeric.abs(%s)}', $varName);
         }
 
@@ -117,7 +119,7 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
 
         return sprintf(
             '$numeric.toNumber(%s)',
-            '$' . $varName
+            '$'.$varName
         );
     }
 
