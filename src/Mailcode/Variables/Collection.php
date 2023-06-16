@@ -106,12 +106,7 @@ abstract class Mailcode_Variables_Collection
     */
     protected function fixName(string $fullName) : string
     {
-        if(substr($fullName, 0, 1) === '$')
-        {
-            return $fullName;
-        }
-        
-        return '$'.$fullName;
+        return dollarize($fullName);
     }
     
    /**

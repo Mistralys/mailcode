@@ -24,12 +24,12 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ShowPhone extends Mailcode_Trans
     {
         $template = "phone.e164(%s, '%s')";
 
-        $varName = ltrim($command->getVariableName(), '$');
+        $varName = undollarize($command->getVariableName());
         $format = $command->getSourceFormat();
 
         $statement = sprintf(
             $template,
-            '$'.$varName,
+            dollarize($varName),
             $format
         );
 

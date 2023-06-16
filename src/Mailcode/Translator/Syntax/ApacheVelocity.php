@@ -92,12 +92,12 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
             );
         }
 
-        return $this->renderEncodings($command, '$' . $varName);
+        return $this->renderEncodings($command, dollarize($varName));
     }
 
     public function renderNumberFormat(string $varName, Mailcode_Number_Info $numberInfo, bool $absolute): string
     {
-        $varName = '$' . ltrim($varName, '$');
+        $varName = dollarize($varName);
 
         if($absolute)
         {
@@ -115,11 +115,9 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
 
     public function renderStringToNumber(string $varName): string
     {
-        $varName = ltrim($varName, '$');
-
         return sprintf(
             '$numeric.toNumber(%s)',
-            '$'.$varName
+            dollarize($varName)
         );
     }
 

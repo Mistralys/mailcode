@@ -42,7 +42,7 @@ trait Mailcode_Traits_Commands_Validation_ListPropertyVariable
         $var = $this->getVariable();
 
         // Split the variable name by the dot
-        $parts = explode('.', ltrim($var->getFullName(), '$'));
+        $parts = explode('.', undollarize($var->getFullName()));
 
         if(count($parts) !== 2)
         {
@@ -59,7 +59,7 @@ trait Mailcode_Traits_Commands_Validation_ListPropertyVariable
         $this->listVariable = new Mailcode_Variables_Variable(
             '',
             $parts[0],
-            '$'.$parts[0],
+            dollarize($parts[0]),
             $var->getSourceCommand()
         );
     }

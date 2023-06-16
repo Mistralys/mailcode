@@ -64,7 +64,7 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ShowDate extends Mailcode_Transl
     public function translate(Mailcode_Commands_Command_ShowDate $command): string
     {
         $internalFormat = $this->getInternalFormat($command);
-        $varName = ltrim($command->getVariableName(), '$');
+        $varName = undollarize($command->getVariableName());
         $javaFormat = $this->translateFormat($command->getFormatString());
 
         $timezoneFormat = '';

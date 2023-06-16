@@ -27,7 +27,7 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ShowSnippet extends Mailcode_Tra
 {
     public function translate(Mailcode_Commands_Command_ShowSnippet $command): string
     {
-        $varName = ltrim($command->getVariableName(), '$');
+        $varName = undollarize($command->getVariableName());
 
         if($command->isHTMLEnabled())
         {

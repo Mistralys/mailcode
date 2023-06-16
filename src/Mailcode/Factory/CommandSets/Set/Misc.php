@@ -61,8 +61,8 @@ class Mailcode_Factory_CommandSets_Set_Misc extends Mailcode_Factory_CommandSets
      */
     public function for(string $sourceVariable, string $loopVariable, $breakAtValue = ''): Mailcode_Commands_Command_For
     {
-        $sourceVariable = '$' . ltrim($sourceVariable, '$');
-        $loopVariable = '$' . ltrim($loopVariable, '$');
+        $sourceVariable = dollarize($sourceVariable);
+        $loopVariable = dollarize($loopVariable);
 
         if($breakAtValue instanceof Mailcode_Variables_Variable) {
             $breakAtValue = $breakAtValue->getFullName();

@@ -195,7 +195,7 @@ class Mailcode_Factory_Instantiator
     {
         $params = sprintf(
             '%1$s "%2$s"',
-            '$'.ltrim($variable, '$'),
+            dollarize($variable),
             $value
         );
 
@@ -269,7 +269,7 @@ class Mailcode_Factory_Instantiator
     {
         $name = (string)preg_replace('/\s/', '', $name);
         
-        return '$'.ltrim($name, '$');
+        return dollarize($name);
     }
     
     public function checkCommand(Mailcode_Commands_Command $command) : void

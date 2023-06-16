@@ -97,10 +97,10 @@ class Mailcode_Variables_Variable
     {
         if(empty($this->path))
         {
-            return '$'.$this->name;
+            return dollarize($this->name);
         }
         
-        return '$'.$this->path.'.'.$this->name;
+        return dollarize($this->path.'.'.$this->name);
     }
 
     /**

@@ -164,7 +164,7 @@ class Mailcode_Translator_Syntax_ApacheVelocity_Contains_StatementBuilder
 
         return sprintf(
             '$map.hasElement(%s.list(), "%s", %s)',
-            '$'.$name['path'],
+            dollarize($name['path']),
             $name['name'],
             $this->renderRegex($searchTerm)
         );
@@ -227,7 +227,7 @@ class Mailcode_Translator_Syntax_ApacheVelocity_Contains_StatementBuilder
      */
      private function parseVarName() : array
      {
-         $tokens = explode('.', ltrim($this->variable->getFullName(), '$'));
+         $tokens = explode('.', undollarize($this->variable->getFullName()));
 
          if(count($tokens) === 2)
          {

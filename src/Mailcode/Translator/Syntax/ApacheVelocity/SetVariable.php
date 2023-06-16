@@ -30,7 +30,7 @@ class Mailcode_Translator_Syntax_ApacheVelocity_SetVariable extends Mailcode_Tra
             if ($variable != null) {
                 $assignmentString = sprintf(
                     '$map.of(%s).keys("%s").count()',
-                    '$' . $variable->getPath(),
+                    dollarize($variable->getPath()),
                     $variable->getName()
                 );
             }
