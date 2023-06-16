@@ -12,3 +12,4 @@ tests/assets/files/test-highlight-marked-variables.html
 tests/assets/files/test-highlight-output-raw.html
 docs/config/resultCache.php
 docs/phpdoc/phpDocumentor.phar
+composer.phar
