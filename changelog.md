@@ -1,4 +1,4 @@
-### v3.2.0
+### v3.1.0
 - Commands: Added `break-at:` keyword in the `for` command.
 - Commands: Added the `count:` keyword in the `setvar` command.
 - Velocity: Updated the time tool commands.
@@ -7,8 +7,6 @@
 - Factory: Added `set()->varCount()` as shortcut to create a count variable.
 - Dependencies: Increased minimum `mistralys/application-utils` to v2.1.2.
 - Commands: Updated example phone numbers for some countries.
-
-### v3.1.0
 - Parser: Fixed the tokenizer breaking same name variable mixes ($FOO + $FOO.BAR).
 
 ### v3.0.4 - Dependencies update
