@@ -107,10 +107,13 @@ function extractLabels() : array
 {
     $lines = CSVHelper::parseFile('countrycodes.csv');
 
+    $isoIdx = 1;
+    $nameIdx = 0;
+
     $result = array();
 
     foreach ($lines as $line) {
-        $result[$line['ISO2']] = $line['Country Name'];
+        $result[$line[$isoIdx]] = $line[$nameIdx];
     }
 
     return $result;
