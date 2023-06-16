@@ -1,12 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
+namespace MailcodeTests\Commands\Types;
+
 use Mailcode\Interfaces\Commands\Validation\CountInterface;
 use Mailcode\Mailcode_Commands_Command;
 use Mailcode\Mailcode_Commands_CommonConstants;
+use Mailcode\Mailcode_Factory;
+use MailcodeTestCase;
 
-final class Mailcode_SetVarTests extends MailcodeTestCase
+final class SetVarTests extends MailcodeTestCase
 {
-    public function test_validation()
+    public function test_validation() : void
     {
         $tests = array(
             array(
@@ -126,5 +132,15 @@ final class Mailcode_SetVarTests extends MailcodeTestCase
         );
 
         $this->runCollectionTests($tests);
+    }
+
+    public function test_countParameter() : void
+    {
+        $cmd = Mailcode_Factory::set()->varCount('VAR_NAME', 'VAR_COUNT');
+        $count = $cmd->getCountVariable();
+
+        $this->assertTrue($cmd->isCountEnabled());
+        $this->assertNotNull($count);
+        $this->assertSame('$VAR_COUNT', $count->getFullName());
     }
 }
