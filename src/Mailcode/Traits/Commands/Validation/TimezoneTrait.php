@@ -40,7 +40,7 @@ trait TimezoneTrait
             if (!$this->timezoneToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral &&
                 !$this->timezoneToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable) {
                 $this->validationResult->makeError(
-                    t('Invalid timezone type.' . ' ' . 'Expected String or Variable.'),
+                    t('Invalid timezone:') . ' ' . t('Expected a string or variable.'),
                     TimezoneInterface::VALIDATION_TIMEZONE_CODE_WRONG_TYPE
                 );
                 return;

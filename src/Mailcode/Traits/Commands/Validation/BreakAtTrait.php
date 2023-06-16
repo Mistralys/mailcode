@@ -49,7 +49,7 @@ trait BreakAtTrait
             if (!$this->breakAtToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_Number &&
                 !$this->breakAtToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable) {
                 $this->validationResult->makeError(
-                    t('Invalid break-at type.' . ' ' . 'Expected Number or Variable.'),
+                    t('Invalid break-at value:') . ' ' . t('Expected a number or variable.'),
                     BreakAtInterface::VALIDATION_BREAK_AT_CODE_WRONG_TYPE
                 );
                 return;

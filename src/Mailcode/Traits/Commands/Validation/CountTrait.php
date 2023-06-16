@@ -47,7 +47,7 @@ trait CountTrait
         if ($this->countEnabled) {
             if (!$this->countToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable) {
                 $this->validationResult->makeError(
-                    t('Invalid count type.' . ' ' . 'Expected Variable.'),
+                    t('Invalid count subject:') . ' ' . t('Expected a variable.'),
                     CountInterface::VALIDATION_COUNT_CODE_WRONG_TYPE
                 );
                 return;
