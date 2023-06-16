@@ -1,3 +1,12 @@
+### v3.2.0
+- Commands: Added `break-at:` keyword in the `for` command.
+- Commands: Added the `count:` keyword in the `setvar` command.
+- Velocity: Updated the time tool commands.
+- Global functions: Added `dollarize()` and `undollarize()`.
+- Variables: Added static `dollarizeName()` and `undollarizeName()`.
+- Factory: Added `set()->varCount()` as shortcut to create a count variable.
+- Dependencies: Increased minimum `mistralys/application-utils` to v2.1.2.
+
 ### v3.1.0
 - Parser: Fixed the tokenizer breaking same name variable mixes ($FOO + $FOO.BAR).
 
