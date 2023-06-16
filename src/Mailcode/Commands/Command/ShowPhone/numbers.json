@@ -211,8 +211,8 @@
     },
     "CI": {
         "label": "Ivory Coast",
-        "local": "21 23 45 67",
-        "international": "+225 21 23 45 67"
+        "local": "21 23 4 56789",
+        "international": "+225 21 23 4 56789"
     },
     "CK": {
         "label": "Cook Islands",
@@ -236,8 +236,8 @@
     },
     "CO": {
         "label": "Colombia",
-        "local": "(1) 2345678",
-        "international": "+57 1 2345678"
+        "local": "(601) 2345678",
+        "international": "+57 601 2345678"
     },
     "CR": {
         "label": "Costa Rica",
@@ -836,8 +836,8 @@
     },
     "NZ": {
         "label": "New Zealand",
-        "local": "03-234 5678",
-        "international": "+64 3-234 5678"
+        "local": "03 234 5678",
+        "international": "+64 3 234 5678"
     },
     "OM": {
         "label": "Oman",
@@ -866,8 +866,8 @@
     },
     "PH": {
         "label": "Philippines",
-        "local": "(02) 123 4567",
-        "international": "+63 2 123 4567"
+        "local": "(02) 3234 5678",
+        "international": "+63 2 3234 5678"
     },
     "PK": {
         "label": "Pakistan",
@@ -1186,8 +1186,8 @@
     },
     "WF": {
         "label": "Wallis and Futuna",
-        "local": "50 12 34",
-        "international": "+681 50 12 34"
+        "local": "72 12 34",
+        "international": "+681 72 12 34"
     },
     "WS": {
         "label": "Samoa",
