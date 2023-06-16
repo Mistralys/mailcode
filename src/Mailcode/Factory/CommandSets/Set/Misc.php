@@ -28,7 +28,7 @@ class Mailcode_Factory_CommandSets_Set_Misc extends Mailcode_Factory_CommandSets
      * @throws Mailcode_Exception
      * @throws Mailcode_Factory_Exception
      */
-    public function comment(string $comments) : Mailcode_Commands_Command_Comment
+    public function comment(string $comments): Mailcode_Commands_Command_Comment
     {
         $cmd = $this->commands->createCommand(
             'Comment',
@@ -39,14 +39,13 @@ class Mailcode_Factory_CommandSets_Set_Misc extends Mailcode_Factory_CommandSets
                 $this->instantiator->quoteString($comments)
             )
         );
-    
+
         $this->instantiator->checkCommand($cmd);
-        
-        if($cmd instanceof Mailcode_Commands_Command_Comment)
-        {
+
+        if ($cmd instanceof Mailcode_Commands_Command_Comment) {
             return $cmd;
         }
-        
+
         throw $this->instantiator->exceptionUnexpectedType('Comment', $cmd);
     }
 
@@ -59,33 +58,38 @@ class Mailcode_Factory_CommandSets_Set_Misc extends Mailcode_Factory_CommandSets
      * @throws Mailcode_Exception
      * @throws Mailcode_Factory_Exception
      */
-    public function for(string $sourceVariable, string $loopVariable) : Mailcode_Commands_Command_For
+    public function for(string $sourceVariable, string $loopVariable, string $breakAtValue = ''): Mailcode_Commands_Command_For
     {
-        $sourceVariable = '$'.ltrim($sourceVariable, '$');
-        $loopVariable = '$'.ltrim($loopVariable, '$');
-        
+        $sourceVariable = '$' . ltrim($sourceVariable, '$');
+        $loopVariable = '$' . ltrim($loopVariable, '$');
+
+        if (!empty($breakAtValue)) {
+            $breakAtValue = sprintf(' break-at: %s', $breakAtValue);
+        }
+
         $cmd = $this->commands->createCommand(
-            'For', 
-            '', 
+            'For',
+            '',
             sprintf(
-                '%s in: %s',
+                '%s in: %s%s',
                 $loopVariable,
-                $sourceVariable
-            ), 
+                $sourceVariable,
+                $breakAtValue
+            ),
             sprintf(
-                '{for: %s in: %s}',
+                '{for: %s in: %s%s}',
                 $loopVariable,
-                $sourceVariable
+                $sourceVariable,
+                $breakAtValue
             )
         );
-        
+
         $this->instantiator->checkCommand($cmd);
-        
-        if($cmd instanceof Mailcode_Commands_Command_For)
-        {
+
+        if ($cmd instanceof Mailcode_Commands_Command_For) {
             return $cmd;
         }
-        
+
         throw $this->instantiator->exceptionUnexpectedType('For', $cmd);
     }
 
@@ -98,7 +102,7 @@ class Mailcode_Factory_CommandSets_Set_Misc extends Mailcode_Factory_CommandSets
      * @throws Mailcode_Exception
      * @throws Mailcode_Factory_Exception
      */
-    public function break() : Mailcode_Commands_Command_Break
+    public function break(): Mailcode_Commands_Command_Break
     {
         $cmd = $this->commands->createCommand(
             'Break',
@@ -109,8 +113,7 @@ class Mailcode_Factory_CommandSets_Set_Misc extends Mailcode_Factory_CommandSets
 
         $this->instantiator->checkCommand($cmd);
 
-        if($cmd instanceof Mailcode_Commands_Command_Break)
-        {
+        if ($cmd instanceof Mailcode_Commands_Command_Break) {
             return $cmd;
         }
 
@@ -129,17 +132,17 @@ class Mailcode_Factory_CommandSets_Set_Misc extends Mailcode_Factory_CommandSets
      * @throws Mailcode_Exception
      * @throws Mailcode_Factory_Exception
      */
-    public function mono(bool $multiline=false, array $classes=array()) : Mailcode_Commands_Command_Mono
+    public function mono(bool $multiline = false, array $classes = array()): Mailcode_Commands_Command_Mono
     {
         $params = '';
         $source = '{code';
 
-        if($multiline) {
+        if ($multiline) {
             $params = 'multiline:';
             $source = '{code: multiline:';
         }
 
-        if(!empty($classes)) {
+        if (!empty($classes)) {
             $classString = sprintf('"%s"', implode(' ', $classes));
             $params .= $classString;
             $source .= $classString;
@@ -156,15 +159,14 @@ class Mailcode_Factory_CommandSets_Set_Misc extends Mailcode_Factory_CommandSets
 
         $this->instantiator->checkCommand($cmd);
 
-        if($cmd instanceof Mailcode_Commands_Command_Mono)
-        {
+        if ($cmd instanceof Mailcode_Commands_Command_Mono) {
             return $cmd;
         }
 
         throw $this->instantiator->exceptionUnexpectedType('Mono', $cmd);
     }
 
-    public function code(string $language, string $content) : Mailcode_Commands_Command_Code
+    public function code(string $language, string $content): Mailcode_Commands_Command_Code
     {
         $contentID = PreParser::storeContent($content);
 
@@ -185,8 +187,7 @@ class Mailcode_Factory_CommandSets_Set_Misc extends Mailcode_Factory_CommandSets
 
         $this->instantiator->checkCommand($cmd);
 
-        if($cmd instanceof Mailcode_Commands_Command_Code)
-        {
+        if ($cmd instanceof Mailcode_Commands_Command_Code) {
             return $cmd;
         }
 

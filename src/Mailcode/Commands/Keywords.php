@@ -32,24 +32,28 @@ class Mailcode_Commands_Keywords
     public const TYPE_NOHTML = 'nohtml:';
     public const TYPE_ABSOLUTE = 'absolute:';
     public const TYPE_NO_TRACKING = 'no-tracking:';
+    public const TYPE_BREAK_AT = 'break-at:';
+    public const TYPE_COUNT = 'count:';
 
     /**
      * @return string[]
      */
-    public static function getAll() : array
+    public static function getAll(): array
     {
         return array(
             self::TYPE_IN,
             self::TYPE_INSENSITIVE,
-            self::TYPE_URLDECODE,
-            self::TYPE_URLENCODE,
             self::TYPE_REGEX,
+            self::TYPE_URLENCODE,
+            self::TYPE_URLDECODE,
             self::TYPE_MULTILINE,
+            self::TYPE_IDN_ENCODE,
+            self::TYPE_IDN_DECODE,
             self::TYPE_NOHTML,
             self::TYPE_ABSOLUTE,
             self::TYPE_NO_TRACKING,
-            self::TYPE_IDN_ENCODE,
-            self::TYPE_IDN_DECODE
+            self::TYPE_BREAK_AT,
+            self::TYPE_COUNT
         );
     }
 }

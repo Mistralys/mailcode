@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Mailcode;
 
 use Mailcode\Interfaces\Commands\EncodableInterface;
-use Mailcode\Interfaces\Commands\Validation\URLEncodingInterface;
 
 /**
  * Abstract base class for apache velocity command translation classes.
@@ -24,8 +23,8 @@ use Mailcode\Interfaces\Commands\Validation\URLEncodingInterface;
 abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Translator_Command
 {
     /**
-    * @var string[]
-    */
+     * @var string[]
+     */
     private array $regexSpecialChars = array(
         '?',
         '.',
@@ -84,22 +83,21 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
         return $string;
     }
 
-    protected function renderVariableEncodings(Mailcode_Commands_Command $command, string $varName) : string
+    protected function renderVariableEncodings(Mailcode_Commands_Command $command, string $varName): string
     {
-        if(!$command instanceof EncodableInterface || !$command->hasActiveEncodings())
-        {
+        if (!$command instanceof EncodableInterface || !$command->hasActiveEncodings()) {
             return sprintf(
                 '${%s}',
                 $varName
             );
         }
 
-        return $this->renderEncodings($command, '$'.$varName);
+        return $this->renderEncodings($command, '$' . $varName);
     }
 
-    public function renderNumberFormat(string $varName, Mailcode_Number_Info $numberInfo, bool $absolute) : string
+    public function renderNumberFormat(string $varName, Mailcode_Number_Info $numberInfo, bool $absolute): string
     {
-        $varName = '$'.ltrim($varName, '$');
+        $varName = '$' . ltrim($varName, '$');
 
         if($absolute)
         {
@@ -115,7 +113,7 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
         );
     }
 
-    public function renderStringToNumber(string $varName) : string
+    public function renderStringToNumber(string $varName): string
     {
         $varName = ltrim($varName, '$');
 
@@ -125,7 +123,7 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
         );
     }
 
-    public function renderQuotedValue(string $value) : string
+    public function renderQuotedValue(string $value): string
     {
         return sprintf(
             '"%s"',
@@ -133,7 +131,7 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
         );
     }
 
-    public function getSyntaxName() : string
+    public function getSyntaxName(): string
     {
         return 'ApacheVelocity';
     }
@@ -148,20 +146,19 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
         Mailcode_Commands_Keywords::TYPE_IDN_DECODE => '${text.unidn(%s)}'
     );
 
-    protected function renderEncodings(EncodableInterface $command, string $statement) : string
+    protected function renderEncodings(EncodableInterface $command, string $statement): string
     {
         $encodings = $command->getActiveEncodings();
         $result = $statement;
 
-        foreach($encodings as $encoding)
-        {
+        foreach ($encodings as $encoding) {
             $result = $this->renderEncoding($encoding, $result);
         }
 
         return $result;
     }
 
-    protected function renderEncoding(string $keyword, string $result) : string
+    protected function renderEncoding(string $keyword, string $result): string
     {
         $template = $this->encodingTemplates[$keyword] ?? '%s';
 

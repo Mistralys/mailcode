@@ -1,3 +1,6 @@
+### v3.1.0
+- Parser: Fixed the tokenizer breaking same name variable mixes ($FOO + $FOO.BAR).
+
 ### v3.0.4 - Dependencies update
 - Loosened the `mistralys/application-tools` version constraint. 
 

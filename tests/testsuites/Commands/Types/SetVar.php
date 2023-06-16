@@ -1,5 +1,6 @@
 <?php
 
+use Mailcode\Interfaces\Commands\Validation\CountInterface;
 use Mailcode\Mailcode_Commands_Command;
 use Mailcode\Mailcode_Commands_CommonConstants;
 
@@ -85,9 +86,45 @@ final class Mailcode_SetVarTests extends MailcodeTestCase
                 'string' => '{setvar: $FOO.BAR = 4 <= 6}',
                 'valid' => false,
                 'code' => Mailcode_Commands_CommonConstants::VALIDATION_INVALID_OPERAND
+            ),
+            array(
+                'label' => 'Keyword count has invalid parameter (unquoted text)',
+                'string' => '{setvar: $FOO.BAR count: FOO.COUNT}',
+                'valid' => false,
+                'code' => Mailcode_Commands_Command::VALIDATION_INVALID_PARAMS_STATEMENT
+            ),
+            array(
+                'label' => 'Keyword count has invalid parameter (text)',
+                'string' => '{setvar: $FOO.BAR count: "Text"}',
+                'valid' => false,
+                'code' => CountInterface::VALIDATION_COUNT_CODE_WRONG_TYPE
+            ),
+            array(
+                'label' => 'Keyword count has invalid parameter (number)',
+                'string' => '{setvar: $FOO.BAR count: 13}',
+                'valid' => false,
+                'code' => CountInterface::VALIDATION_COUNT_CODE_WRONG_TYPE
+            ),
+            array(
+                'label' => 'Valid count keyword with parameter',
+                'string' => '{setvar: $FOO.BAR count: $FOO.COUNT}',
+                'valid' => true,
+                'code' => 0
+            ),
+            array(
+                'label' => 'Simple variable is valid',
+                'string' => '{setvar: $COUNTER count: $FOO.COUNT}',
+                'valid' => true,
+                'code' => 0
+            ),
+            array(
+                'label' => 'Keyword count without parameter',
+                'string' => '{setvar: $FOO.BAR count:}',
+                'valid' => false,
+                'code' => CountInterface::VALIDATION_COUNT_CODE_WRONG_TYPE
             )
         );
-        
+
         $this->runCollectionTests($tests);
     }
 }

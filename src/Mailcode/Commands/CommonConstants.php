@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * File containing the {@see Mailcode_Commands_CommonConstants} class.
  *
