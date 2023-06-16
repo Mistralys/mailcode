@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use AppUtils\ClassHelper;
+
 /**
  * Factory utility used to create commands.
  *
@@ -23,6 +25,7 @@ class Mailcode_Factory_CommandSets_Set_Set extends Mailcode_Factory_CommandSets_
     public function var(string $variableName, string $value, bool $quoteValue = true, bool $asCount = false): Mailcode_Commands_Command_SetVariable
     {
         $variableName = $this->instantiator->filterVariableName($variableName);
+        $commandID = ClassHelper::getClassTypeName(Mailcode_Commands_Command_SetVariable::class);
 
         if ($asCount) {
             $params = $variableName . ' count: ' . $value;
@@ -35,10 +38,14 @@ class Mailcode_Factory_CommandSets_Set_Set extends Mailcode_Factory_CommandSets_
         }
 
         $cmd = $this->commands->createCommand(
-            'SetVariable',
+            $commandID,
             '', // type
             $params,
-            '{setvar: ' . $params . '}'
+            sprintf(
+                '{%s: %s}',
+                Mailcode_Commands_Command_SetVariable::COMMAND_NAME,
+                $params
+            )
         );
 
         $this->instantiator->checkCommand($cmd);
@@ -47,7 +54,7 @@ class Mailcode_Factory_CommandSets_Set_Set extends Mailcode_Factory_CommandSets_
             return $cmd;
         }
 
-        throw $this->instantiator->exceptionUnexpectedType('SetVariable', $cmd);
+        throw $this->instantiator->exceptionUnexpectedType($commandID, $cmd);
     }
 
     /**
@@ -61,5 +68,24 @@ class Mailcode_Factory_CommandSets_Set_Set extends Mailcode_Factory_CommandSets_
     public function varString(string $variableName, string $value): Mailcode_Commands_Command_SetVariable
     {
         return $this->var($variableName, $value, true);
+    }
+
+    /**
+     * Set a variable by counting the amount of entries in the
+     * target list variable.
+     *
+     * @param string $variableName The name of the variable to store the value in.
+     * @param string $listVariableName The name of the variable to count records of.
+     * @return Mailcode_Commands_Command_SetVariable
+     * @throws Mailcode_Factory_Exception
+     */
+    public function varCount(string $variableName, string $listVariableName) : Mailcode_Commands_Command_SetVariable
+    {
+        return $this->var(
+            $variableName,
+            dollarize($listVariableName),
+            false,
+            true
+        );
     }
 }
