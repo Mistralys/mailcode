@@ -1,14 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
+namespace MailcodeTests\Commands\Types;
+
 use Mailcode\Interfaces\Commands\Validation\BreakAtInterface;
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands_Command;
 use Mailcode\Mailcode_Commands_Command_For;
 use Mailcode\Mailcode_Exception;
 use Mailcode\Mailcode_Factory;
+use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Number;
+use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Variable;
 use Mailcode\Mailcode_Variables_Variable;
+use MailcodeTestCase;
 
-final class Mailcode_ForTests extends MailcodeTestCase
+final class ForTests extends MailcodeTestCase
 {
     public function test_validation(): void
     {
@@ -118,8 +125,8 @@ final class Mailcode_ForTests extends MailcodeTestCase
     {
         $cmd = Mailcode_Factory::misc()->for('SOURCE', 'LOOP');
 
-        $this->assertInstanceOf(Mailcode_Variables_Variable::class, $cmd->getSourceVariable());
-        $this->assertInstanceOf(Mailcode_Variables_Variable::class, $cmd->getLoopVariable());
+        $this->assertNotNull($cmd->getSourceVariable());
+        $this->assertNotNull($cmd->getLoopVariable());
 
         $this->assertEquals('$SOURCE', $cmd->getSourceVariable()->getFullName());
         $this->assertEquals('$LOOP', $cmd->getLoopVariable()->getFullName());
@@ -158,5 +165,57 @@ final class Mailcode_ForTests extends MailcodeTestCase
 
         $this->assertCount(1, $listVars);
         $this->assertEquals('$LIST', $listVars[0]->getFullName());
+    }
+
+    public function test_getBreakAtNumericToken() : void
+    {
+        $cmd = Mailcode_Factory::misc()->for('LIST', 'RECORD', 42);
+
+        $break = $cmd->getBreakAtToken();
+
+        $this->assertNotNull($break);
+        $this->assertInstanceOf(Mailcode_Parser_Statement_Tokenizer_Token_Number::class, $break);
+        $this->assertSame('42', $break->getValue());
+    }
+
+    public function test_getBreakAtVariableToken() : void
+    {
+        $cmd = Mailcode_Factory::misc()->for('LIST', 'RECORD', '$BREAK_AT');
+
+        $break = $cmd->getBreakAtToken();
+
+        $this->assertNotNull($break);
+        $this->assertInstanceOf(Mailcode_Parser_Statement_Tokenizer_Token_Variable::class, $break);
+        $this->assertSame('$BREAK_AT', $break->getVariable()->getFullName());
+    }
+
+    public function test_getBreakAtNumericValue() : void
+    {
+        $cmd = Mailcode_Factory::misc()->for('LIST', 'RECORD', 42);
+
+        $break = $cmd->getBreakAt();
+
+        $this->assertNotNull($break);
+        $this->assertSame(42, $break);
+    }
+
+    public function test_getBreakAtVariable() : void
+    {
+        $cmd = Mailcode_Factory::misc()->for('LIST', 'RECORD', '$BREAK_AT');
+
+        $break = $cmd->getBreakAt();
+
+        $this->assertNotNull($break);
+        $this->assertInstanceOf(Mailcode_Variables_Variable::class, $break);
+    }
+
+    public function test_getBreakAtFloatValue() : void
+    {
+        $cmd = Mailcode_Factory::misc()->for('LIST', 'RECORD', '42.99');
+
+        $break = $cmd->getBreakAt();
+
+        $this->assertNotNull($break);
+        $this->assertSame(42, $break);
     }
 }
