@@ -29,14 +29,13 @@ class Mailcode_Commands_Command_SetVariable
 {
     use CountTrait;
 
-    /**
-     * @var Mailcode_Parser_Statement_Tokenizer_Token_Variable|NULL
-     */
-    private $variableToken;
+    public const COMMAND_NAME = 'setvar';
+
+    private ?Mailcode_Parser_Statement_Tokenizer_Token_Variable $variableToken = null;
 
     public function getName(): string
     {
-        return 'setvar';
+        return self::COMMAND_NAME;
     }
 
     public function getLabel(): string
