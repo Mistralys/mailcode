@@ -239,19 +239,36 @@ This will convert the phone number to the expected format.
 
 ### Set a variable
 
-With a string value:
+#### String value
 
 ```
 {setvar: $CUSTOMER.NAME = "value"}
 ```
 
-With an arithmetic operation:
+#### Arithmetic operation
+
+Basic arithmetic operations can be used, provided that the target
+language supports these. They are typically passed on directly 
+through the translator, unless it has special logic to convert
+them.
 
 ```
 {setvar: $AMOUNT = 45 * 2}
 ```
 
-The equals sign is implied, so it can be omitted:
+#### Counting lists 
+
+The `count:` keyword allows specifying a list variable
+to count the records of, and store the amount in the
+target variable.
+
+```
+{setvar: $AMOUNT count: $LIST_VAR}
+```
+
+#### Omitting the = sign
+
+The equals sign is implied, so it can be omitted.
 
 ```
 {setvar: $AMOUNT 45 * 2}
@@ -460,6 +477,17 @@ Using OR:
         {break}
     {end}
     {showvar: $NAME}
+{end}
+```
+
+#### Stopping at a specific iteration
+
+The `break-at` parameter allows stopping the loop at a 
+specific loop iteration count (`0`-based).
+
+```
+{for: $ENTRY in $CUSTOMERS break-at: 6}
+    {showvar: $ENTRY.NAME}
 {end}
 ```
 
