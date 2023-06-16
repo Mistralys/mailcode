@@ -11,7 +11,7 @@ final class Factory_SetVarTests extends FactoryTestCase
         return Mailcode_Commands_Command_SetVariable::class;
     }
 
-    public function test_setVar()
+    public function test_setVar() : void
     {
         $this->runCommand('Variable name without $',
             function () {
@@ -38,17 +38,27 @@ final class Factory_SetVarTests extends FactoryTestCase
         );
     }
 
-    public function test_setVar_error()
+    public function test_setVar_error() : void
     {
         $this->expectException(Mailcode_Factory_Exception::class);
 
         Mailcode_Factory::set()->var('$FOO.BAR', 'Some text', false);
     }
 
-    public function test_setVar_error_invalid_count()
+    public function test_setVar_error_invalid_count() : void
     {
         $this->expectException(Mailcode_Factory_Exception::class);
 
         Mailcode_Factory::set()->var('$VAR.NAME', '"Text"', true, true);
+    }
+
+    public function test_setVarCount() : void
+    {
+        $cmd = Mailcode_Factory::set()->varCount('VAR.NAME', 'VAR.COUNT');
+        $variable = $cmd->getCountVariable();
+
+        $this->assertTrue($cmd->isCountEnabled());
+        $this->assertNotNull($variable);
+        $this->assertSame('$VAR.COUNT', $variable->getFullName());
     }
 }
