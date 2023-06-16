@@ -13,9 +13,12 @@ namespace Mailcode\Traits\Commands\Validation;
 
 use Mailcode\Interfaces\Commands\Validation\BreakAtInterface;
 use Mailcode\Mailcode_Commands_Keywords;
+use Mailcode\Mailcode_Parser_Statement_Tokenizer_Process_StringLiterals;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Number;
+use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Variable;
+use Mailcode\Mailcode_Variables_Variable;
 use function Mailcode\t;
 
 /**
@@ -62,5 +65,30 @@ trait BreakAtTrait
     public function getBreakAtToken(): ?Mailcode_Parser_Statement_Tokenizer_Token
     {
         return $this->breakAtToken;
+    }
+
+    /**
+     * @return Mailcode_Variables_Variable|int|NULL
+     */
+    public function getBreakAt()
+    {
+        $token = $this->getBreakAtToken();
+        if($token === null) {
+            return null;
+        }
+
+        if($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable) {
+            return $token->getVariable();
+        }
+
+        if($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_Number) {
+            return (int)$token->getValue();
+        }
+
+        if($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral) {
+            return (int)$token->getText();
+        }
+
+        return null;
     }
 }
