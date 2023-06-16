@@ -24,15 +24,15 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ShowDate extends Mailcode_Transl
 {
     public const ERROR_UNKNOWN_DATE_FORMAT_CHARACTER = 55501;
 
-   /**
-    * The date format used in the date variable. This is used to convert
-    * the native date to the format specified in the variable command.
-    */
+    /**
+     * The date format used in the date variable. This is used to convert
+     * the native date to the format specified in the variable command.
+     */
     public const DEFAULT_INTERNAL_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
 
-   /**
-    * @var string[]string
-    */
+    /**
+     * @var string[]string
+     */
     private $charTable = array(
         'd' => 'dd',
         'j' => 'd',
@@ -50,12 +50,11 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ShowDate extends Mailcode_Transl
         ' ' => ' '
     );
 
-    public function getInternalFormat(Mailcode_Commands_Command_ShowDate $command) : string
+    public function getInternalFormat(Mailcode_Commands_Command_ShowDate $command): string
     {
         $internalFormat = $command->getTranslationParam('internal_format');
 
-        if(is_string($internalFormat) && !empty($internalFormat))
-        {
+        if (is_string($internalFormat) && !empty($internalFormat)) {
             return $internalFormat;
         }
 
@@ -68,25 +67,35 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ShowDate extends Mailcode_Transl
         $varName = ltrim($command->getVariableName(), '$');
         $javaFormat = $this->translateFormat($command->getFormatString());
 
+        $timezoneFormat = '';
+        if ($command->hasTimezone()) {
+            $token = $command->getTimezoneToken();
+
+            if ($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral) {
+                $timezoneFormat = sprintf('.zone("%s")', $token->getText());
+            } else if ($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable) {
+                $timezoneFormat = sprintf('.zone(%s)', $token->getVariable()->getFullName());
+            }
+        }
+
         $statement = sprintf(
-            'date.format("%s", $date.toDate("%s", $%s))',
-            $javaFormat,
+            'time.input("%s", $%s).output("%s")%s',
             $internalFormat,
-            $varName
+            $varName,
+            $javaFormat,
+            $timezoneFormat
         );
 
         return $this->renderVariableEncodings($command, $statement);
     }
 
-    private function translateFormat(string $formatString) : string
+    private function translateFormat(string $formatString): string
     {
         $chars = ConvertHelper::string2array($formatString);
         $result = array();
-        
-        foreach($chars as $char)
-        {
-            if(!isset($this->charTable[$char]))
-            {
+
+        foreach ($chars as $char) {
+            if (!isset($this->charTable[$char])) {
                 throw new Mailcode_Translator_Exception(
                     'Unknown date format string character',
                     sprintf(
@@ -95,12 +104,11 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ShowDate extends Mailcode_Transl
                     ),
                     self::ERROR_UNKNOWN_DATE_FORMAT_CHARACTER
                 );
-                
             }
-            
-            $result[] = $this->charTable[$char]; 
+
+            $result[] = $this->charTable[$char];
         }
-        
+
         return implode('', $result);
     }
 }

@@ -10,16 +10,17 @@ The following tools have to be enabled in the Velocity templates:
 * [EscapeTool][]
 * [StringUtils][]
 * [LibPhoneNumber][] (see below for details)
-* PriceTool (custom tool, see below)
+* NumericTool (custom tool, see below)
 * Map command for lists (custom command, see below)
 * TrackingTool (custom tool, see below)
 * TextTool (custom tool)
+* TimeTool (custom tool)
 
 These tools can be added to the context of templates like this:
 
 ```javascript
-context.add("date", new DateTool());
-context.add("esc", new EscapeTool());
+context.put("date", new DateTool());
+context.put("esc", new EscapeTool());
 context.put("StringUtils", new StringUtils());
 ```
 
@@ -28,7 +29,7 @@ to stay this way to be backwards compatible.
 
 Commands that require these tools:
 
-- ShowDate (DateTool)
+- ShowDate (TimeTool)
 - ShowSnippet (EscapeTool)
 - ShowXXX commands, for URL encoding support (EscapeTool)
 - ShowXXX commands, for IDN encoding support (TextTool)
@@ -36,7 +37,7 @@ Commands that require these tools:
 - ElseIf Empty / ElseIf Not Empty (StringUtils)
 - List contains / List not contains (Map command)
 - ShowPhone (LibPhoneNumber)
-- ShowNumber (PriceTool)
+- ShowNumber (NumericTool)
 - ShowURL (TrackingTool)
 
 If these tools are not available, these commands will throw errors if they are used in a template.
@@ -86,10 +87,10 @@ return list.stream().anyMatch(map -> map.get("NAME").matches("(?s)Value"));
 
 To use those commands, this has to be implemented in your Velocity engine.
 
-### PriceTool custom utility
+### NumericTool custom utility
 
-The `shownumber` command relies on the price tool class to be present
-in the `$price` variable in templates. This class is a custom implementation
+The `shownumber` command relies on the numeric tool class to be present
+in the `$numeric` variable in templates. This class is a custom implementation
 used to convert numbers, so they can be formatted as prices. It is
 basically just a wrapper around Java functions for number formatting. to
 make the code in the template easier to read and maintain.
@@ -99,16 +100,16 @@ make the code in the template easier to read and maintain.
 The generated command looks like this:
 
 ```javascript
-${price.format($FOO.BAR, 2, ',', ' ')}
+${numeric.format($FOO.BAR, 2, ',', ' ')}
 ```
 
 And the absolute number variant:
 
 ```velocity
-${price.format(${price.abs($FOO.BAR)}, 2, ',', ' ')}
+${numeric.format(${numeric.abs($FOO.BAR)}, 2, ',', ' ')}
 ```
 
-> The price tool expects all numbers to be specified without
+> The numeric tool expects all numbers to be specified without
 > thousands separator, and dots as decimal separator.
 
 ### TrackingTool custom utility

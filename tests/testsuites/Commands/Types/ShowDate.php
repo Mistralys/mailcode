@@ -1,15 +1,18 @@
 <?php
 
+use Mailcode\Interfaces\Commands\Validation\TimezoneInterface;
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands_Command;
 use Mailcode\Mailcode_Commands_Command_ShowDate;
-use Mailcode\Mailcode_Factory;
-use Mailcode\Mailcode_Date_FormatInfo;
 use Mailcode\Mailcode_Commands_CommonConstants;
+use Mailcode\Mailcode_Date_FormatInfo;
+use Mailcode\Mailcode_Factory;
+use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
+use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Variable;
 
 final class Mailcode_ShowDateTests extends MailcodeTestCase
 {
-    public function test_validation()
+    public function test_validation(): void
     {
         $tests = array(
             array(
@@ -43,26 +46,56 @@ final class Mailcode_ShowDateTests extends MailcodeTestCase
                 'code' => Mailcode_Date_FormatInfo::VALIDATION_EMPTY_FORMAT_STRING
             ),
             array(
+                'label' => 'With valid variable and only timezone',
+                'string' => '{showdate: $foo_bar "US/Eastern"}',
+                'valid' => false,
+                'code' => Mailcode_Date_FormatInfo::VALIDATION_INVALID_FORMAT_CHARACTER
+            ),
+            array(
                 'label' => 'With valid variable and invalid format string',
                 'string' => '{showdate: $foo_bar "Y-m-B"}',
                 'valid' => false,
                 'code' => Mailcode_Date_FormatInfo::VALIDATION_INVALID_FORMAT_CHARACTER
             ),
             array(
+                'label' => 'With valid variable, valid format string, invalid timezone',
+                'string' => '{showdate: $foo_bar "Y-m-d H:i:s" US/Eastern}',
+                'valid' => false,
+                'code' => Mailcode_Commands_Command::VALIDATION_INVALID_PARAMS_STATEMENT
+            ),
+            array(
                 'label' => 'With valid variable and valid format string',
                 'string' => '{showdate: $foo_bar "Y-m-d H:i:s"}',
                 'valid' => true,
                 'code' => 0
+            ),
+            array(
+                'label' => 'With valid variable, valid format string, valid timezone',
+                'string' => '{showdate: $foo_bar "Y-m-d H:i:s" "US/Eastern"}',
+                'valid' => true,
+                'code' => 0
+            ),
+            array(
+                'label' => 'With valid variable, valid format string, valid variable timezone',
+                'string' => '{showdate: $foo_bar "Y-m-d H:i:s" $FOO.TIMEZONE}',
+                'valid' => true,
+                'code' => 0
+            ),
+            array(
+                'label' => 'With valid variable, valid format string, valid variable timezone',
+                'string' => '{showdate: $foo_bar "Y-m-d H:i:s" 13}',
+                'valid' => false,
+                'code' => TimezoneInterface::VALIDATION_TIMEZONE_CODE_WRONG_TYPE
             )
         );
-        
+
         $this->runCollectionTests($tests);
     }
-    
+
     public function test_getVariable()
     {
         $cmd = Mailcode_Factory::show()->date('foobar');
-        
+
         $this->assertEquals('$foobar', $cmd->getVariable()->getFullName());
         $this->assertEquals('$foobar', $cmd->getVariableName());
     }
@@ -71,10 +104,10 @@ final class Mailcode_ShowDateTests extends MailcodeTestCase
      * The showdate and showvar commands can verify if they are nested
      * in a loop (FOR command), which enables finding the source variable.
      */
-    public function test_isInLoop() : void
+    public function test_isInLoop(): void
     {
         $string =
-        '{for: $RECORD in: $FOO}
+            '{for: $RECORD in: $FOO}
             {if not-empty: $RECORD.NAME}
                 {showdate: $RECORD.NAME}
             {end}
@@ -96,10 +129,44 @@ final class Mailcode_ShowDateTests extends MailcodeTestCase
         $this->assertEquals($for, $show->getLoopCommand());
     }
 
-    public function test_urlencode() : void
+    public function test_urlencode(): void
     {
         $cmd = Mailcode::create()->parseString('{showdate: $FOO urlencode:}')->getFirstCommand();
 
+        $this->assertNotNull($cmd);
+        $this->assertInstanceOf(Mailcode_Commands_Command_ShowDate::class, $cmd);
         $this->assertTrue($cmd->isURLEncoded());
+    }
+
+    public function test_timezoneString(): void
+    {
+        $cmd = Mailcode::create()->parseString('{showdate: $FOO "Y.m.d" "Europe/Paris"}')->getFirstCommand();
+
+        $this->assertNotNull($cmd);
+        $this->assertInstanceOf(Mailcode_Commands_Command_ShowDate::class, $cmd);
+
+        $this->assertTrue($cmd->hasTimezone());
+        $timezone = $cmd->getTimezoneToken();
+        $this->assertNotNull($timezone);
+        $this->assertTrue($timezone instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral);
+        if ($timezone instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral) {
+            $this->assertSame('Europe/Paris', $timezone->getText());
+        }
+    }
+
+    public function test_timezoneVariable(): void
+    {
+        $cmd = Mailcode::create()->parseString('{showdate: $FOO "Y.m.d" $TIMEZONE}')->getFirstCommand();
+
+        $this->assertNotNull($cmd);
+        $this->assertInstanceOf(Mailcode_Commands_Command_ShowDate::class, $cmd);
+
+        $this->assertTrue($cmd->hasTimezone());
+        $timezone = $cmd->getTimezoneToken();
+        $this->assertNotNull($timezone);
+        $this->assertTrue($timezone instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable);
+        if ($timezone instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable) {
+            $this->assertSame('$TIMEZONE', $timezone->getVariable()->getFullName());
+        }
     }
 }

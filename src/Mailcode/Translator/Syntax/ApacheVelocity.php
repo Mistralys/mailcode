@@ -15,7 +15,7 @@ use Mailcode\Interfaces\Commands\EncodableInterface;
 use Mailcode\Interfaces\Commands\Validation\URLEncodingInterface;
 
 /**
- * Abstract base class for apache velocity command translation classes. 
+ * Abstract base class for apache velocity command translation classes.
  *
  * @package Mailcode
  * @subpackage Translator
@@ -55,29 +55,29 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
     *
     * Velocity does its own escaping, so no need to escape special
     * characters as if they were a javascript string.
-    * 
+    *
     * @param string $string
     * @return string
     */
     public function filterRegexString(string $string) : string
     {
-        // Special case: previously escaped quotes. 
+        // Special case: previously escaped quotes.
         // To avoid modifying them, we strip them out.
         $string = str_replace('\\"', 'ESCQUOTE', $string);
-        
+
         // Any other existing backslashes in the string
-        // have to be double-escaped, giving four 
+        // have to be double-escaped, giving four
         // backslashes in the java regex.
         $string = str_replace('\\', '\\\\', $string);
-        
+
         // All other special characters have to be escaped
-        // with two backslashes. 
+        // with two backslashes.
         foreach($this->regexSpecialChars as $char)
         {
             $string = str_replace($char, '\\'.$char, $string);
         }
-        
-        // Restore the escaped quotes, which stay escaped 
+
+        // Restore the escaped quotes, which stay escaped
         // with a single backslash.
         $string = str_replace('ESCQUOTE', '\\"', $string);
 
@@ -103,11 +103,11 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
 
         if($absolute)
         {
-            $varName = sprintf('${price.abs(%s)}', $varName);
+            $varName = sprintf('${numeric.abs(%s)}', $varName);
         }
 
         return sprintf(
-            "price.format(%s, %s, '%s', '%s')",
+            "numeric.format(%s, %s, '%s', '%s')",
             $varName,
             $numberInfo->getDecimals(),
             $numberInfo->getDecimalsSeparator(),
@@ -120,7 +120,7 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
         $varName = ltrim($varName, '$');
 
         return sprintf(
-            '$price.toNumber(%s)',
+            '$numeric.toNumber(%s)',
             '$'.$varName
         );
     }
