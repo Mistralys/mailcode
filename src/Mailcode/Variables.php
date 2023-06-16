@@ -41,7 +41,7 @@ class Mailcode_Variables
         $matches = array();
         preg_match_all(self::REGEX_VARIABLE_NAME, $subject, $matches, PREG_PATTERN_ORDER);
         
-        if(!isset($matches[0]) || empty($matches[0]))
+        if(empty($matches[0]))
         {
             return $this->collection;
         }
@@ -81,5 +81,15 @@ class Mailcode_Variables
         }
         
         $this->collection->add(new Mailcode_Variables_Variable($path, $name, $matchedText, $sourceCommand));
+    }
+
+    public static function dollarizeName(string $name) : string
+    {
+        return '$'.self::undollarizeName($name);
+    }
+
+    public static function undollarizeName(string $name) : string
+    {
+        return ltrim($name, '$');
     }
 }
