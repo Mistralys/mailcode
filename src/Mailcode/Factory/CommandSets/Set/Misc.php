@@ -54,14 +54,19 @@ class Mailcode_Factory_CommandSets_Set_Misc extends Mailcode_Factory_CommandSets
      *
      * @param string $sourceVariable
      * @param string $loopVariable
+     * @param Mailcode_Variables_Variable|string|int|NULL $breakAtValue
      * @return Mailcode_Commands_Command_For
      * @throws Mailcode_Exception
      * @throws Mailcode_Factory_Exception
      */
-    public function for(string $sourceVariable, string $loopVariable, string $breakAtValue = ''): Mailcode_Commands_Command_For
+    public function for(string $sourceVariable, string $loopVariable, $breakAtValue = ''): Mailcode_Commands_Command_For
     {
         $sourceVariable = '$' . ltrim($sourceVariable, '$');
         $loopVariable = '$' . ltrim($loopVariable, '$');
+
+        if($breakAtValue instanceof Mailcode_Variables_Variable) {
+            $breakAtValue = $breakAtValue->getFullName();
+        }
 
         if (!empty($breakAtValue)) {
             $breakAtValue = sprintf(' break-at: %s', $breakAtValue);
