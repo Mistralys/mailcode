@@ -23,6 +23,30 @@ function t(string $subject, ...$args) : string
 }
 
 /**
+ * Adds the <code>$</code> sign in front of a variable
+ * name, if it does not already have it.
+ *
+ * @param string $variableName
+ * @return string
+ */
+function dollarize(string $variableName) : string
+{
+    return Mailcode_Variables::dollarizeName($variableName);
+}
+
+/**
+ * Removes the <code>$</code> sign in front of a variable
+ * name, if present.
+ *
+ * @param string $variableName
+ * @return string
+ */
+function undollarize(string $variableName) : string
+{
+    return Mailcode_Variables::undollarizeName($variableName);
+}
+
+/**
  * @param array<mixed,mixed> $array
  * @return int|string|null
  */
