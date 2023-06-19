@@ -14,6 +14,8 @@ abstract class VelocityTestCase extends MailcodeTestCase
     
     protected function setUp() : void
     {
+        parent::setUp();
+
         $this->translator = Mailcode::create()->createTranslator();
     }
     
