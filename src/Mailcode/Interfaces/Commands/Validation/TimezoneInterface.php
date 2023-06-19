@@ -30,14 +30,8 @@ interface TimezoneInterface extends Mailcode_Interfaces_Commands_Command
     public const VALIDATION_TIMEZONE_CODE_WRONG_TYPE = 135501;
 
     /**
-     * Check if a timezone has been set
-     * @return bool
+     * Retrieves the token containing the timezone information.
+     * @return Mailcode_Parser_Statement_Tokenizer_Token
      */
-    public function hasTimezone(): bool;
-
-    /**
-     * Retrieves the token containing the timezone information if set
-     * @return Mailcode_Parser_Statement_Tokenizer_Token|null
-     */
-    public function getTimezoneToken(): ?Mailcode_Parser_Statement_Tokenizer_Token;
+    public function getTimezoneToken(): Mailcode_Parser_Statement_Tokenizer_Token;
 }
