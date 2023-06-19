@@ -29,6 +29,11 @@ class Mailcode_Commands_Command_ShowDate
     use TimezoneTrait;
 
     /**
+     * @var Mailcode_Variables_Variable|string|NULL
+     */
+    private static $defaultTimeZone = null;
+
+    /**
      * The date format string.
      * @var string
      */
@@ -105,5 +110,26 @@ class Mailcode_Commands_Command_ShowDate
     public function getFormatString(): string
     {
         return $this->formatString;
+    }
+
+    /**
+     * @param string|Mailcode_Variables_Variable|NULL $zone A timezone identifier, e.g. <code>Europe/Paris</code> or a variable containing the zone identifier, or NULL to use the PHP default.
+     * @return void
+     */
+    public static function setDefaultTimezone($zone) : void
+    {
+        self::$defaultTimeZone = $zone;
+    }
+
+    /**
+     * Gets the default time zone used for dates. If not set via
+     * {@see self::setDefaultTimezone()}, this defaults to PHP's
+     * default time zone (typically <code>UTC</code> if not changed).
+     *
+     * @return string|Mailcode_Variables_Variable
+     */
+    public static function getDefaultTimezone()
+    {
+        return self::$defaultTimeZone ?? date_default_timezone_get();
     }
 }
