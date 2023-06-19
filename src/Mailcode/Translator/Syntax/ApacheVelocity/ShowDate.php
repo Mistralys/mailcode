@@ -23,6 +23,7 @@ use AppUtils\ConvertHelper;
 class Mailcode_Translator_Syntax_ApacheVelocity_ShowDate extends Mailcode_Translator_Syntax_ApacheVelocity implements Mailcode_Translator_Command_ShowDate
 {
     public const ERROR_UNKNOWN_DATE_FORMAT_CHARACTER = 55501;
+    public const ERROR_UNHANDLED_TIME_ZONE_TOKEN_TYPE = 55502;
 
     /**
      * The date format used in the date variable. This is used to convert
@@ -63,33 +64,40 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ShowDate extends Mailcode_Transl
 
     public function translate(Mailcode_Commands_Command_ShowDate $command): string
     {
-        $internalFormat = $this->getInternalFormat($command);
-        $varName = undollarize($command->getVariableName());
-        $javaFormat = $this->translateFormat($command->getFormatString());
-
-        $timezoneFormat = '';
-        if ($command->hasTimezone()) {
-            $token = $command->getTimezoneToken();
-
-            if ($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral) {
-                $timezoneFormat = sprintf('.zone("%s")', $token->getText());
-            } else if ($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable) {
-                $timezoneFormat = sprintf('.zone(%s)', $token->getVariable()->getFullName());
-            }
-        }
-
         $statement = sprintf(
             'time.input("%s", $%s).output("%s")%s',
-            $internalFormat,
-            $varName,
-            $javaFormat,
-            $timezoneFormat
+            $this->getInternalFormat($command),
+            undollarize($command->getVariableName()),
+            $this->resolveJavaFormat($command->getFormatString()),
+            $this->resolveTimeZoneFormat($command)
         );
 
         return $this->renderVariableEncodings($command, $statement);
     }
 
-    private function translateFormat(string $formatString): string
+    private function resolveTimeZoneFormat(Mailcode_Commands_Command_ShowDate $command) : string
+    {
+        $token = $command->getTimezoneToken();
+
+        if ($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral) {
+            return sprintf('.zone("%s")', $token->getText());
+        }
+
+        if ($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable) {
+            return sprintf('.zone(%s)', $token->getVariable()->getFullName());
+        }
+
+        throw new Mailcode_Translator_Exception(
+            'Unknown time zone type.',
+            sprintf(
+                'The time zone token type is unhandled: [%s].',
+                get_class($token)
+            ),
+            self::ERROR_UNHANDLED_TIME_ZONE_TOKEN_TYPE
+        );
+    }
+
+    private function resolveJavaFormat(string $formatString): string
     {
         $chars = ConvertHelper::string2array($formatString);
         $result = array();
