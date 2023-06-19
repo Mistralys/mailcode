@@ -38,12 +38,12 @@ class Date extends Mailcode_Factory_CommandSets_Set
         $timezone = '';
         if (!empty($timezoneString)) {
             $timezone = sprintf(
-                ' %s',
+                ' timezone: %s',
                 $this->quoteString($timezoneString)
             );
         } else if (!empty($timezoneVariable)) {
             $timezone = sprintf(
-                ' %s',
+                ' timezone: %s',
                 $timezoneVariable
             );
         }

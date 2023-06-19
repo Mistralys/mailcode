@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Mailcode\Traits\Commands\Validation;
 
 use Mailcode\Interfaces\Commands\Validation\TimezoneInterface;
+use Mailcode\Mailcode_Commands_Keywords;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Variable;
@@ -32,11 +33,16 @@ trait TimezoneTrait
 
     protected function validateSyntax_check_timezone(): void
     {
+        $this->timezoneToken = $this->requireParams()->getInfo()->getTokenForKeyword(Mailcode_Commands_Keywords::TYPE_TIMEZONE);
+
+        $val = $this->validator->createKeyword(Mailcode_Commands_Keywords::TYPE_TIMEZONE);
+
+        $this->timezoneEnabled = $val->isValid() && $this->timezoneToken != null;;
+
+        // ---
         $tokens = $this->requireParams()->getInfo()->getTokens();
 
-        if (count($tokens) > 2) {
-            $this->timezoneToken = $tokens[2];
-
+        if ($this->timezoneEnabled) {
             if (!$this->timezoneToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral &&
                 !$this->timezoneToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable) {
                 $this->validationResult->makeError(
@@ -45,8 +51,6 @@ trait TimezoneTrait
                 );
                 return;
             }
-
-            $this->timezoneEnabled = true;
         }
     }
 
