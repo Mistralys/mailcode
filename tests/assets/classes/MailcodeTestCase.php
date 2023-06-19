@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Collection;
 use Mailcode\Mailcode_Commands_Command;
+use Mailcode\Mailcode_Commands_Command_ShowDate;
 use Mailcode\Mailcode_Exception;
 use Mailcode\Mailcode_Parser_Safeguard;
 use Mailcode\Mailcode_Variables_Collection;
@@ -16,6 +17,11 @@ abstract class MailcodeTestCase extends TestCase
     protected function setUp() : void
     {
         Mailcode::setDebugging(false);
+
+        $this->assertSame('UTC', date_default_timezone_get(), 'The tests expect the default PHP time zone to be UTC.');
+
+        // Reset the time zone
+        Mailcode_Commands_Command_ShowDate::setDefaultTimezone(null);
     }
 
     protected function enableDebug() : void
