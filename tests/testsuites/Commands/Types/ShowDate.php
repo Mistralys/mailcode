@@ -116,7 +116,41 @@ final class Mailcode_ShowDateTests extends MailcodeTestCase
         $this->runCollectionTests($tests);
     }
 
-    public function test_getVariable()
+    public function test_timezoneDefaultPHP() : void
+    {
+        $cmd = Mailcode_Factory::show()->date('DATE');
+
+        $timezone = $cmd->getTimezoneToken();
+        $this->assertInstanceOf(Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral::class, $timezone);
+        $this->assertSame(date_default_timezone_get(), $timezone->getText());
+    }
+
+    public function test_timezoneDefaultString() : void
+    {
+        $cmd = Mailcode_Factory::show()->date('DATE');
+
+        Mailcode_Commands_Command_ShowDate::setDefaultTimezone('Europe/Paris');
+
+        $this->assertNotSame('Europe/Paris', date_default_timezone_get());
+
+        $timezone = $cmd->getTimezoneToken();
+        $this->assertInstanceOf(Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral::class, $timezone);
+        $this->assertSame('Europe/Paris', $timezone->getText());
+    }
+
+    public function test_timezoneDefaultVariable() : void
+    {
+        $cmd = Mailcode_Factory::show()->date('DATE');
+        $variables = Mailcode::create()->createVariables();
+
+        Mailcode_Commands_Command_ShowDate::setDefaultTimezone($variables->createVariable('TIMEZONE'));
+
+        $timezone = $cmd->getTimezoneToken();
+        $this->assertInstanceOf(Mailcode_Parser_Statement_Tokenizer_Token_Variable::class, $timezone);
+        $this->assertSame('$TIMEZONE', $timezone->getVariable()->getFullName());
+    }
+
+    public function test_getVariable() : void
     {
         $cmd = Mailcode_Factory::show()->date('foobar');
 
@@ -169,13 +203,9 @@ final class Mailcode_ShowDateTests extends MailcodeTestCase
         $this->assertNotNull($cmd);
         $this->assertInstanceOf(Mailcode_Commands_Command_ShowDate::class, $cmd);
 
-        $this->assertTrue($cmd->hasTimezone());
         $timezone = $cmd->getTimezoneToken();
-        $this->assertNotNull($timezone);
-        $this->assertTrue($timezone instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral);
-        if ($timezone instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral) {
-            $this->assertSame('Europe/Paris', $timezone->getText());
-        }
+        $this->assertInstanceOf(Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral::class, $timezone);
+        $this->assertSame('Europe/Paris', $timezone->getText());
     }
 
     public function test_timezoneVariable(): void
@@ -185,12 +215,8 @@ final class Mailcode_ShowDateTests extends MailcodeTestCase
         $this->assertNotNull($cmd);
         $this->assertInstanceOf(Mailcode_Commands_Command_ShowDate::class, $cmd);
 
-        $this->assertTrue($cmd->hasTimezone());
         $timezone = $cmd->getTimezoneToken();
-        $this->assertNotNull($timezone);
-        $this->assertTrue($timezone instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable);
-        if ($timezone instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable) {
-            $this->assertSame('$TIMEZONE', $timezone->getVariable()->getFullName());
-        }
+        $this->assertInstanceOf(Mailcode_Parser_Statement_Tokenizer_Token_Variable::class, $timezone);
+        $this->assertSame('$TIMEZONE', $timezone->getVariable()->getFullName());
     }
 }

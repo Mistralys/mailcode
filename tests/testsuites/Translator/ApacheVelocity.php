@@ -63,12 +63,12 @@ ${CUSTOMER.CUSTOMER_ID}
      * specific internal date format when they are translated,
      * while not translating them manually.
      */
-    public function test_translateSafeguard_dates(): void
+    public function test_translateSafeguard_dates() : void
     {
         $subject = '{showdate: $FOO.BAR "d.m.Y"}';
 
         $internalFormat = 'yyyy-MM-dd';
-        $expected = '${time.input("' . $internalFormat . '", $FOO.BAR).output("dd.MM.yyyy")}';
+        $expected = '${time.input("'.$internalFormat.'", $FOO.BAR).output("dd.MM.yyyy").zone("UTC")}';
 
         $syntax = $this->translator->createSyntax('ApacheVelocity');
         $safeguard = Mailcode::create()->createSafeguard($subject);
@@ -88,7 +88,7 @@ ${CUSTOMER.CUSTOMER_ID}
         $subject = '{showdate: $FOO.BAR "Y-m-d" urlencode:}';
 
         $internalFormat = 'yyyy-MM-dd';
-        $expected = '${esc.url($time.input("' . $internalFormat . '", $FOO.BAR).output("yyyy-MM-dd"))}';
+        $expected = '${esc.url($time.input("' . $internalFormat . '", $FOO.BAR).output("yyyy-MM-dd").zone("UTC"))}';
 
         $syntax = $this->translator->createSyntax('ApacheVelocity');
         $safeguard = Mailcode::create()->createSafeguard($subject);
@@ -108,7 +108,7 @@ ${CUSTOMER.CUSTOMER_ID}
         $subject = '{showdate: urlencode: $FOO.BAR "Y-m-d"}';
 
         $internalFormat = 'yyyy-MM-dd';
-        $expected = '${esc.url($time.input("' . $internalFormat . '", $FOO.BAR).output("yyyy-MM-dd"))}';
+        $expected = '${esc.url($time.input("' . $internalFormat . '", $FOO.BAR).output("yyyy-MM-dd").zone("UTC"))}';
 
         $syntax = $this->translator->createSyntax('ApacheVelocity');
         $safeguard = Mailcode::create()->createSafeguard($subject);

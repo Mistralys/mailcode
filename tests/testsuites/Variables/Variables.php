@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Factory;
 use Mailcode\Mailcode_Variables_Collection;
@@ -9,7 +11,7 @@ use Mailcode\Mailcode_Variables_Variable;
 
 final class Variables_VariablesTests extends MailcodeTestCase
 {
-    public function test_collection_merge()
+    public function test_collection_merge() : void
     {
         $vars = Mailcode::create()->createVariables();
         
@@ -318,5 +320,21 @@ final class Variables_VariablesTests extends MailcodeTestCase
 
         $this->assertNotNull($cmd->getLoopVariable()->getSourceCommand(), 'Loop variable must have a source command');
         $this->assertNotNull($cmd->getSourceVariable()->getSourceCommand(), 'Source variable must have a source command');
+    }
+
+    public function test_createVariable() : void
+    {
+        $collection = Mailcode::create()->createVariables();
+
+        $this->assertSame('$FOO', $collection->createVariable('FOO')->getFullName());
+        $this->assertSame('$FOO.BAR', $collection->createVariable('FOO', 'BAR')->getFullName());
+    }
+
+    public function test_createVariableByName() : void
+    {
+        $collection = Mailcode::create()->createVariables();
+
+        $this->assertSame('$FOO', $collection->createVariableByName('FOO')->getFullName());
+        $this->assertSame('$FOO.BAR', $collection->createVariableByName('FOO.BAR')->getFullName());
     }
 }

@@ -13,22 +13,22 @@ final class Translator_Velocity_ShowDateTests extends VelocityTestCase
             array(
                 'label' => 'Show date, default format',
                 'mailcode' => Mailcode_Factory::show()->date('FOO.BAR'),
-                'expected' => '${time.input("' . $defaultFormat . '", $FOO.BAR).output("yyyy/MM/dd")}'
+                'expected' => '${time.input("' . $defaultFormat . '", $FOO.BAR).output("yyyy/MM/dd").zone("UTC")}'
             ),
             array(
                 'label' => 'Show date, german format',
                 'mailcode' => Mailcode_Factory::show()->date('FOO.BAR', 'd.m.Y H:i:s'),
-                'expected' => '${time.input("' . $defaultFormat . '", $FOO.BAR).output("dd.MM.yyyy H:m:s")}'
+                'expected' => '${time.input("' . $defaultFormat . '", $FOO.BAR).output("dd.MM.yyyy H:m:s").zone("UTC")}'
             ),
             array(
                 'label' => 'Show date, short year format',
                 'mailcode' => Mailcode_Factory::show()->date('FOO.BAR', 'd.m.y'),
-                'expected' => '${time.input("' . $defaultFormat . '", $FOO.BAR).output("dd.MM.yy")}'
+                'expected' => '${time.input("' . $defaultFormat . '", $FOO.BAR).output("dd.MM.yy").zone("UTC")}'
             ),
             array(
                 'label' => 'With URL encoding',
                 'mailcode' => Mailcode_Factory::show()->date('FOO.BAR', 'd.m.y')->setURLEncoding(true),
-                'expected' => '${esc.url($time.input("' . $defaultFormat . '", $FOO.BAR).output("dd.MM.yy"))}'
+                'expected' => '${esc.url($time.input("' . $defaultFormat . '", $FOO.BAR).output("dd.MM.yy").zone("UTC"))}'
             ),
             array(
                 'label' => 'Show date, german format, US timezone',
@@ -60,6 +60,6 @@ final class Translator_Velocity_ShowDateTests extends VelocityTestCase
 
         $result = $syntax->translateCommand($var);
 
-        $this->assertEquals('${time.input("yyyy-MM-dd", $FOO.BAR).output("dd.MM.yyyy")}', $result);
+        $this->assertEquals('${time.input("yyyy-MM-dd", $FOO.BAR).output("dd.MM.yyyy").zone("UTC")}', $result);
     }
 }
