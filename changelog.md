@@ -1,4 +1,4 @@
-### v3.1.1
+### v3.1.1 - TimeZone update
 - ShowDate Command: Fixed the command being considered invalid without a timezone.
 - ShowDate Command: Now using the PHP timezone as default if none is set.
 - ShowDate Command: Added the `timezone:` keyword to specify the timezone.
