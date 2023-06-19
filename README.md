@@ -73,7 +73,30 @@ With a custom date/time format:
 {showdate: $ORDER.DATE "d/m/Y"}
 ```
 
-Also see the section on date formats for details on how to specify date and time.
+> Note: Also see the [section on date formats](#date-formats) for details 
+> on how to specify date and time.
+
+With a specific time zone:
+
+```
+{showdate: $ORDER.DATE "d.m.Y" timezone: "Europe/Paris"}
+{showdate: $ORDER.DATE "d.m.Y" timezone: $TIME_ZONE}
+```
+
+If no time zone is specified, the default PHP time zone is used
+(this is typically `UTC` unless the server is configured differently). 
+
+It is possible to set the default time zone globally for the command, 
+separately from the native PHP time zone:
+
+```php
+use Mailcode\Mailcode_Commands_Command_ShowDate;
+
+Mailcode_Commands_Command_ShowDate::setDefaultTimezone('Europe/Paris');
+```
+
+This will make all `showdate` commands use `Europe/Paris`, unless a
+specific time zone is specified with `timezone:` keyword.
 
 ### Display a formatted number
 
