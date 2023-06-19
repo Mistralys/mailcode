@@ -1,4 +1,10 @@
 ### v3.1.1
+- ShowDate Command: Fixed the command being considered invalid without a timezone.
+- ShowDate Command: Now using the PHP timezone as default if none is set.
+- ShowDate Command: Added the `timezone:` keyword to specify the timezone.
+- ShowDate Command: Added `setDefaultTimezone()` to set it globally for the command.
+- ShowDate Command: `getTimezoneToken()` now always returns a value.
+- Variables: Added `createVariable()` and `createVariableByName()`.
 - Translation: Added missing german translations.
 
 ### v3.1.0 - New parameters update
