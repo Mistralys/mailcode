@@ -92,4 +92,28 @@ class Mailcode_Variables
     {
         return ltrim($name, '$');
     }
+
+    public function createVariable(string $path, ?string $name='') : Mailcode_Variables_Variable
+    {
+        if(empty($name)) {
+            $fullName = dollarize($path);
+            $name = $path;
+            $path = '';
+        } else {
+            $fullName = dollarize($path.'.'.$name);
+        }
+
+        return new Mailcode_Variables_Variable($path, $name, $fullName);
+    }
+
+    public function createVariableByName(string $name) : Mailcode_Variables_Variable
+    {
+        $parts = explode('.', undollarize($name));
+
+        if(count($parts) === 1) {
+            return $this->createVariable($parts[0]);
+        }
+
+        return $this->createVariable($parts[0], $parts[1]);
+    }
 }
