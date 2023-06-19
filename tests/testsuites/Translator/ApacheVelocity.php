@@ -63,18 +63,118 @@ ${CUSTOMER.CUSTOMER_ID}
      * specific internal date format when they are translated,
      * while not translating them manually.
      */
-    public function test_translateSafeguard_dates() : void
+    public function test_translateSafeguard_dates(): void
     {
         $subject = '{showdate: $FOO.BAR "d.m.Y"}';
+
         $internalFormat = 'yyyy-MM-dd';
-        $expected = '${time.input("'.$internalFormat.'", $FOO.BAR).output("dd.MM.yyyy")}';
+        $expected = '${time.input("' . $internalFormat . '", $FOO.BAR).output("dd.MM.yyyy")}';
 
         $syntax = $this->translator->createSyntax('ApacheVelocity');
         $safeguard = Mailcode::create()->createSafeguard($subject);
         $dateCommands = $safeguard->getCollection()->getShowDateCommands();
 
-        foreach($dateCommands as $dateCommand)
-        {
+        foreach ($dateCommands as $dateCommand) {
+            $dateCommand->setTranslationParam('internal_format', $internalFormat);
+        }
+
+        $result = $syntax->translateSafeguard($safeguard);
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function test_showDate_keyword_behind(): void
+    {
+        $subject = '{showdate: $FOO.BAR "Y-m-d" urlencode:}';
+
+        $internalFormat = 'yyyy-MM-dd';
+        $expected = '${esc.url($time.input("' . $internalFormat . '", $FOO.BAR).output("yyyy-MM-dd"))}';
+
+        $syntax = $this->translator->createSyntax('ApacheVelocity');
+        $safeguard = Mailcode::create()->createSafeguard($subject);
+        $dateCommands = $safeguard->getCollection()->getShowDateCommands();
+
+        foreach ($dateCommands as $dateCommand) {
+            $dateCommand->setTranslationParam('internal_format', $internalFormat);
+        }
+
+        $result = $syntax->translateSafeguard($safeguard);
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function test_showDate_keyword_before(): void
+    {
+        $subject = '{showdate: urlencode: $FOO.BAR "Y-m-d"}';
+
+        $internalFormat = 'yyyy-MM-dd';
+        $expected = '${esc.url($time.input("' . $internalFormat . '", $FOO.BAR).output("yyyy-MM-dd"))}';
+
+        $syntax = $this->translator->createSyntax('ApacheVelocity');
+        $safeguard = Mailcode::create()->createSafeguard($subject);
+        $dateCommands = $safeguard->getCollection()->getShowDateCommands();
+
+        foreach ($dateCommands as $dateCommand) {
+            $dateCommand->setTranslationParam('internal_format', $internalFormat);
+        }
+
+        $result = $syntax->translateSafeguard($safeguard);
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function test_showDate_keyword_behind_timezone(): void
+    {
+        $subject = '{showdate: $FOO.BAR "Y-m-d" timezone: "Europe/Berlin" urlencode:}';
+
+        $internalFormat = 'yyyy-MM-dd';
+        $expected = '${esc.url($time.input("' . $internalFormat . '", $FOO.BAR).output("yyyy-MM-dd").zone("Europe/Berlin"))}';
+
+        $syntax = $this->translator->createSyntax('ApacheVelocity');
+        $safeguard = Mailcode::create()->createSafeguard($subject);
+        $dateCommands = $safeguard->getCollection()->getShowDateCommands();
+
+        foreach ($dateCommands as $dateCommand) {
+            $dateCommand->setTranslationParam('internal_format', $internalFormat);
+        }
+
+        $result = $syntax->translateSafeguard($safeguard);
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function test_showDate_keyword_before_timezone(): void
+    {
+        $subject = '{showdate: urlencode: $FOO.BAR "Y-m-d" timezone: "Europe/Berlin"}';
+
+        $internalFormat = 'yyyy-MM-dd';
+        $expected = '${esc.url($time.input("' . $internalFormat . '", $FOO.BAR).output("yyyy-MM-dd").zone("Europe/Berlin"))}';
+
+        $syntax = $this->translator->createSyntax('ApacheVelocity');
+        $safeguard = Mailcode::create()->createSafeguard($subject);
+        $dateCommands = $safeguard->getCollection()->getShowDateCommands();
+
+        foreach ($dateCommands as $dateCommand) {
+            $dateCommand->setTranslationParam('internal_format', $internalFormat);
+        }
+
+        $result = $syntax->translateSafeguard($safeguard);
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function test_showDate_keyword_between_timezone(): void
+    {
+        $subject = '{showdate: $FOO.BAR "Y-m-d" urlencode: timezone: "Europe/Berlin"}';
+
+        $internalFormat = 'yyyy-MM-dd';
+        $expected = '${esc.url($time.input("' . $internalFormat . '", $FOO.BAR).output("yyyy-MM-dd").zone("Europe/Berlin"))}';
+
+        $syntax = $this->translator->createSyntax('ApacheVelocity');
+        $safeguard = Mailcode::create()->createSafeguard($subject);
+        $dateCommands = $safeguard->getCollection()->getShowDateCommands();
+
+        foreach ($dateCommands as $dateCommand) {
             $dateCommand->setTranslationParam('internal_format', $internalFormat);
         }
 
