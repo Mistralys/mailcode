@@ -13,9 +13,12 @@ namespace Mailcode\Traits\Commands\Validation;
 
 use Mailcode\Interfaces\Commands\Validation\TimezoneInterface;
 use Mailcode\Mailcode_Commands_Keywords;
+use Mailcode\Mailcode;
+use Mailcode\Mailcode_Commands_Command_ShowDate;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Variable;
+use Mailcode\Mailcode_Variables_Variable;
 use function Mailcode\t;
 
 /**
@@ -33,34 +36,64 @@ trait TimezoneTrait
 
     protected function validateSyntax_check_timezone(): void
     {
-        $this->timezoneToken = $this->requireParams()->getInfo()->getTokenForKeyword(Mailcode_Commands_Keywords::TYPE_TIMEZONE);
+        $this->timezoneToken = $this->requireParams()
+            ->getInfo()
+            ->getTokenForKeyword(Mailcode_Commands_Keywords::TYPE_TIMEZONE);
 
         $val = $this->validator->createKeyword(Mailcode_Commands_Keywords::TYPE_TIMEZONE);
 
-        $this->timezoneEnabled = $val->isValid() && $this->timezoneToken != null;;
+        if ($this->timezoneToken === null || !$val->isValid()) {
+            return;
+        }
 
-        // ---
-        $tokens = $this->requireParams()->getInfo()->getTokens();
-
-        if ($this->timezoneEnabled) {
-            if (!$this->timezoneToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral &&
-                !$this->timezoneToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable) {
-                $this->validationResult->makeError(
-                    t('Invalid timezone:') . ' ' . t('Expected a string or variable.'),
-                    TimezoneInterface::VALIDATION_TIMEZONE_CODE_WRONG_TYPE
-                );
-                return;
-            }
+        if (!$this->timezoneToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral &&
+            !$this->timezoneToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable) {
+            $this->validationResult->makeError(
+                t('Invalid timezone:') . ' ' . t('Expected a string or variable.'),
+                TimezoneInterface::VALIDATION_TIMEZONE_CODE_WRONG_TYPE
+            );
         }
     }
 
-    public function hasTimezone(): bool
+    /**
+     * Gets the time zone to use for the command. If none has
+     * been specified in the original command, the default
+     * time zone is used as defined via {@see Mailcode_Commands_Command_ShowDate::setDefaultTimezone()}.
+     *
+     * @return Mailcode_Parser_Statement_Tokenizer_Token
+     */
+    public function getTimezoneToken(): Mailcode_Parser_Statement_Tokenizer_Token
     {
-        return isset($this->timezoneToken);
+        if(!isset($this->timezoneToken)) {
+            $this->timezoneToken = $this->createTimeZoneToken();
+        }
+
+        return $this->timezoneToken;
     }
 
-    public function getTimezoneToken(): ?Mailcode_Parser_Statement_Tokenizer_Token
+    /**
+     * Creates the default time zone token on demand.
+     *
+     * @return Mailcode_Parser_Statement_Tokenizer_Token
+     */
+    private function createTimeZoneToken() : Mailcode_Parser_Statement_Tokenizer_Token
     {
-        return $this->timezoneToken;
+        $default = Mailcode_Commands_Command_ShowDate::getDefaultTimezone();
+
+        if($default instanceof Mailcode_Variables_Variable) {
+            return new Mailcode_Parser_Statement_Tokenizer_Token_Variable(
+                'showdate-timezone-token',
+                $default->getFullName(),
+                $default,
+                $this
+            );
+        }
+
+        return new Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral(
+            'showdate-timezone-token',
+            $default,
+            null,
+            $this
+        );
     }
 }
