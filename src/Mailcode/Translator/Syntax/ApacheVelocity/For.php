@@ -25,8 +25,8 @@ class Mailcode_Translator_Syntax_ApacheVelocity_For extends Mailcode_Translator_
         $loopBreak = '';
         if ($command->isBreakAtEnabled()) {
             $token = $command->getBreakAtToken();
-            if ($token != null) {
-                $loopBreak = sprintf(' #if($foreach.count > %s) #{break} #{end}', $token->getMatchedText());
+            if ($token !== null) {
+                $loopBreak = sprintf('#if($foreach.count > %s)#{break}#{end}', $token->getMatchedText());
             }
         }
 

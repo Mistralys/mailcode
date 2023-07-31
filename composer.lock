@@ -54,16 +54,16 @@
         },
         {
             "name": "giggsey/libphonenumber-for-php",
-            "version": "8.13.14",
+            "version": "8.13.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/giggsey/libphonenumber-for-php.git",
-                "reference": "31b94ef2aa349b76bb725f375e9cfa2e398a1620"
+                "reference": "dee92bfa0782fd5899fe6b295dea40cdb0607476"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/giggsey/libphonenumber-for-php/zipball/31b94ef2aa349b76bb725f375e9cfa2e398a1620",
-                "reference": "31b94ef2aa349b76bb725f375e9cfa2e398a1620",
+                "url": "https://api.github.com/repos/giggsey/libphonenumber-for-php/zipball/dee92bfa0782fd5899fe6b295dea40cdb0607476",
+                "reference": "dee92bfa0782fd5899fe6b295dea40cdb0607476",
                 "shasum": ""
             },
             "require": {
@@ -122,7 +122,7 @@
                 "issues": "https://github.com/giggsey/libphonenumber-for-php/issues",
                 "source": "https://github.com/giggsey/libphonenumber-for-php"
             },
-            "time": "2023-06-13T08:08:40+00:00"
+            "time": "2023-07-20T10:32:50+00:00"
         },
         {
             "name": "giggsey/locale",
@@ -235,16 +235,16 @@
         },
         {
             "name": "mistralys/application-utils",
-            "version": "2.3.2",
+            "version": "2.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Mistralys/application-utils.git",
-                "reference": "dd1f9a70bee852bf82a434dcfb77262c4ad79248"
+                "reference": "1e338ab355f1e7cc6186f8bf8fd5b07ca270f415"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Mistralys/application-utils/zipball/dd1f9a70bee852bf82a434dcfb77262c4ad79248",
-                "reference": "dd1f9a70bee852bf82a434dcfb77262c4ad79248",
+                "url": "https://api.github.com/repos/Mistralys/application-utils/zipball/1e338ab355f1e7cc6186f8bf8fd5b07ca270f415",
+                "reference": "1e338ab355f1e7cc6186f8bf8fd5b07ca270f415",
                 "shasum": ""
             },
             "require": {
@@ -293,9 +293,9 @@
             "description": "Drop-in utilities for PHP applications.",
             "support": {
                 "issues": "https://github.com/Mistralys/application-utils/issues",
-                "source": "https://github.com/Mistralys/application-utils/tree/2.3.2"
+                "source": "https://github.com/Mistralys/application-utils/tree/2.4.1"
             },
-            "time": "2023-03-24T13:19:15+00:00"
+            "time": "2023-07-12T10:51:48+00:00"
         },
         {
             "name": "mistralys/jtokenizer",
@@ -908,16 +908,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v4.15.5",
+            "version": "v4.16.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "11e2663a5bc9db5d714eedb4277ee300403b4a9e"
+                "reference": "19526a33fb561ef417e822e85f08a00db4059c17"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/11e2663a5bc9db5d714eedb4277ee300403b4a9e",
-                "reference": "11e2663a5bc9db5d714eedb4277ee300403b4a9e",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/19526a33fb561ef417e822e85f08a00db4059c17",
+                "reference": "19526a33fb561ef417e822e85f08a00db4059c17",
                 "shasum": ""
             },
             "require": {
@@ -958,9 +958,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v4.15.5"
+                "source": "https://github.com/nikic/PHP-Parser/tree/v4.16.0"
             },
-            "time": "2023-05-19T20:20:00+00:00"
+            "time": "2023-06-25T14:52:30+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -1075,16 +1075,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.10.19",
+            "version": "1.10.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "af5a296ff02610c1bfb4ddfac9fd4a08657b9046"
+                "reference": "5d660cbb7e1b89253a47147ae44044f49832351f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/af5a296ff02610c1bfb4ddfac9fd4a08657b9046",
-                "reference": "af5a296ff02610c1bfb4ddfac9fd4a08657b9046",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/5d660cbb7e1b89253a47147ae44044f49832351f",
+                "reference": "5d660cbb7e1b89253a47147ae44044f49832351f",
                 "shasum": ""
             },
             "require": {
@@ -1133,7 +1133,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-06-14T15:26:58+00:00"
+            "time": "2023-07-19T12:44:37+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -1455,16 +1455,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "9.6.9",
+            "version": "9.6.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "a9aceaf20a682aeacf28d582654a1670d8826778"
+                "reference": "a6d351645c3fe5a30f5e86be6577d946af65a328"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/a9aceaf20a682aeacf28d582654a1670d8826778",
-                "reference": "a9aceaf20a682aeacf28d582654a1670d8826778",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/a6d351645c3fe5a30f5e86be6577d946af65a328",
+                "reference": "a6d351645c3fe5a30f5e86be6577d946af65a328",
                 "shasum": ""
             },
             "require": {
@@ -1538,7 +1538,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.9"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.10"
             },
             "funding": [
                 {
@@ -1554,7 +1554,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-06-11T06:13:56+00:00"
+            "time": "2023-07-10T04:04:23+00:00"
         },
         {
             "name": "sebastian/cli-parser",

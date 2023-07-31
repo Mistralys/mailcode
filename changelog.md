@@ -1,3 +1,6 @@
+### v3.1.2 - Bugfix release
+- Foreach: Fixed the `break-at:` keyword translation to Velocity not using the extended command syntax.
+
 ### v3.1.1 - TimeZone update
 - ShowDate Command: Fixed the command being considered invalid without a timezone.
 - ShowDate Command: Now using the PHP timezone as default if none is set.
