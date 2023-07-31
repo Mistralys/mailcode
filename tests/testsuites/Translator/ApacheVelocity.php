@@ -19,6 +19,19 @@ final class Translator_ApacheVelocityTests extends VelocityTestCase
         $this->assertEquals($expected, $result);
     }
 
+    public function test_list_equals()
+    {
+        $cmd = Mailcode_Factory::if()->listEquals("FOO.BAR", ["true"]);
+
+        $expected = '#if($map.hasElement($FOO.list(), "BAR", "(?s)\Atrue\Z"))';
+
+        $syntax = $this->translator->createSyntax('ApacheVelocity');
+
+        $result = $syntax->translateCommand($cmd);
+
+        $this->assertEquals($expected, $result);
+    }
+
     public function test_translateSafeguard()
     {
         $syntax = $this->translator->createSyntax('ApacheVelocity');

@@ -215,7 +215,7 @@ class Mailcode_Translator_Syntax_ApacheVelocity_Contains_StatementBuilder
 
         if($this->containsType === 'list-equals')
         {
-            return '\\\A'.$searchTerm.'\\\Z';
+            return '\A'.$searchTerm.'\Z';
         }
 
         return '.*'.$searchTerm.'.*';
@@ -248,4 +248,3 @@ class Mailcode_Translator_Syntax_ApacheVelocity_Contains_StatementBuilder
          );
      }
 }
-
