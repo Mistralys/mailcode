@@ -1,3 +1,6 @@
+### v3.1.3 - Velocity translation fix
+- ListContains Command: Fixed the Velocity regex.
+
 ### v3.1.2 - Bugfix release
 - Foreach: Fixed the `break-at:` keyword translation to Velocity not using the extended command syntax.
 
