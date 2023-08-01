@@ -18,13 +18,13 @@ final class Translator_Velocity_IfListEqualsTests extends VelocityTestCase
             array(
                 'label' => 'If list contains',
                 'mailcode' => Mailcode_Factory::if()->listEquals('FOO.BAR', array('Value')),
-                'expected' => '#if($map.hasElement($FOO.list(), "BAR", "(?s)[DBLSLASH]AValue[DBLSLASH]Z"))'
+                'expected' => '#if($map.hasElement($FOO.list(), "BAR", "(?s)[SLASH]AValue[SLASH]Z"))'
             ),
             array(
                 'label' => 'If contains with slash',
                 'mailcode' => Mailcode_Factory::if()->listEquals('FOO.BAR', array('Va\lue')),
                 'expected' => sprintf(
-                    '#if($map.hasElement($FOO.list(), "BAR", "(?s)[DBLSLASH]A%s[DBLSLASH]Z"))',
+                    '#if($map.hasElement($FOO.list(), "BAR", "(?s)[SLASH]A%s[SLASH]Z"))',
                     'Va[DBLSLASH]lue'
                 )
             ),
@@ -32,20 +32,20 @@ final class Translator_Velocity_IfListEqualsTests extends VelocityTestCase
                 'label' => 'If contains with special characters',
                 'mailcode' => Mailcode_Factory::if()->listEquals('FOO.BAR', array('6 + 4 * 3')),
                 'expected' => sprintf(
-                    '#if($map.hasElement($FOO.list(), "BAR", "(?s)[DBLSLASH]A%s[DBLSLASH]Z"))',
+                    '#if($map.hasElement($FOO.list(), "BAR", "(?s)[SLASH]A%s[SLASH]Z"))',
                     '6 [SLASH]+ 4 [SLASH]* 3'
                 )
             ),
             array(
                 'label' => 'Several search terms',
                 'mailcode' => Mailcode_Factory::if()->listEquals('FOO.BAR', array('Foo', 'Bar')),
-                'expected' => '#if($map.hasElement($FOO.list(), "BAR", "(?s)[DBLSLASH]AFoo[DBLSLASH]Z") || $map.hasElement($FOO.list(), "BAR", "(?s)[DBLSLASH]ABar[DBLSLASH]Z"))'
+                'expected' => '#if($map.hasElement($FOO.list(), "BAR", "(?s)[SLASH]AFoo[SLASH]Z") || $map.hasElement($FOO.list(), "BAR", "(?s)[SLASH]ABar[SLASH]Z"))'
             ),
             array(
                 'label' => 'With quotes in search term',
                 'mailcode' => Mailcode_Factory::if()->listEquals('FOO.BAR', array('Value, "weird" huh?')),
                 'expected' => sprintf(
-                    '#if($map.hasElement($FOO.list(), "BAR", "(?s)[DBLSLASH]A%s[DBLSLASH]Z"))',
+                    '#if($map.hasElement($FOO.list(), "BAR", "(?s)[SLASH]A%s[SLASH]Z"))',
                     'Value, [SLASH]"weird[SLASH]" huh[SLASH]?'
                 )
             )
