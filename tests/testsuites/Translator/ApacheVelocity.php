@@ -32,6 +32,32 @@ final class Translator_ApacheVelocityTests extends VelocityTestCase
         $this->assertEquals($expected, $result);
     }
 
+    public function test_show_decryption()
+    {
+        $cmd = Mailcode_Factory::show()->var("FOO.BAR", true);
+
+        $expected = '${text.decrypt($FOO.BAR, "default")}';
+
+        $syntax = $this->translator->createSyntax('ApacheVelocity');
+
+        $result = $syntax->translateCommand($cmd);
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function test_show_decryption_custom()
+    {
+        $cmd = Mailcode_Factory::show()->var("FOO.BAR", true, "barfoo");
+
+        $expected = '${text.decrypt($FOO.BAR, "barfoo")}';
+
+        $syntax = $this->translator->createSyntax('ApacheVelocity');
+
+        $result = $syntax->translateCommand($cmd);
+
+        $this->assertEquals($expected, $result);
+    }
+
     public function test_translateSafeguard()
     {
         $syntax = $this->translator->createSyntax('ApacheVelocity');

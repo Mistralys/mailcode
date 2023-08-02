@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Mailcode;
 
 use Mailcode\Interfaces\Commands\EncodableInterface;
+use Mailcode\Interfaces\Commands\Validation\DecryptInterface;
 
 /**
  * Abstract base class for apache velocity command translation classes.
@@ -49,16 +50,16 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
     }
 
     /**
-    * Filters the string for use in an Apache Velocity (Java)
-    * regex string: escapes all special characters.
-    *
-    * Velocity does its own escaping, so no need to escape special
-    * characters as if they were a javascript string.
-    *
-    * @param string $string
-    * @return string
-    */
-    public function filterRegexString(string $string) : string
+     * Filters the string for use in an Apache Velocity (Java)
+     * regex string: escapes all special characters.
+     *
+     * Velocity does its own escaping, so no need to escape special
+     * characters as if they were a javascript string.
+     *
+     * @param string $string
+     * @return string
+     */
+    public function filterRegexString(string $string): string
     {
         // Special case: previously escaped quotes.
         // To avoid modifying them, we strip them out.
@@ -71,9 +72,8 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
 
         // All other special characters have to be escaped
         // with two backslashes.
-        foreach($this->regexSpecialChars as $char)
-        {
-            $string = str_replace($char, '\\'.$char, $string);
+        foreach ($this->regexSpecialChars as $char) {
+            $string = str_replace($char, '\\' . $char, $string);
         }
 
         // Restore the escaped quotes, which stay escaped
@@ -99,8 +99,7 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
     {
         $varName = dollarize($varName);
 
-        if($absolute)
-        {
+        if ($absolute) {
             $varName = sprintf('${numeric.abs(%s)}', $varName);
         }
 
@@ -138,6 +137,7 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
      * @var array<string,string>
      */
     private array $encodingTemplates = array(
+        Mailcode_Commands_Keywords::TYPE_DECRYPT => '${text.decrypt(%s, %s)}',
         Mailcode_Commands_Keywords::TYPE_URLENCODE => '${esc.url(%s)}',
         Mailcode_Commands_Keywords::TYPE_URLDECODE => '${esc.unurl(%s)}',
         Mailcode_Commands_Keywords::TYPE_IDN_ENCODE => '${text.idn(%s)}',
@@ -150,16 +150,20 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
         $result = $statement;
 
         foreach ($encodings as $encoding) {
-            $result = $this->renderEncoding($encoding, $result);
+            $result = $this->renderEncoding($encoding, $result, $command);
         }
 
         return $result;
     }
 
-    protected function renderEncoding(string $keyword, string $result): string
+    protected function renderEncoding(string $keyword, string $result, EncodableInterface $command): string
     {
         $template = $this->encodingTemplates[$keyword] ?? '%s';
 
-        return sprintf($template, $result);
+        if (Mailcode_Commands_Keywords::TYPE_DECRYPT == $keyword && $command instanceof DecryptInterface) {
+            return sprintf($template, $result, $command->getDecryptionKeyToken()->getValue());
+        } else {
+            return sprintf($template, $result);
+        }
     }
 }

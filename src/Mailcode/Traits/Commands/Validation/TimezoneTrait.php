@@ -12,9 +12,8 @@ declare(strict_types=1);
 namespace Mailcode\Traits\Commands\Validation;
 
 use Mailcode\Interfaces\Commands\Validation\TimezoneInterface;
-use Mailcode\Mailcode_Commands_Keywords;
-use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands_Command_ShowDate;
+use Mailcode\Mailcode_Commands_Keywords;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Variable;
@@ -30,8 +29,6 @@ use function Mailcode\t;
  */
 trait TimezoneTrait
 {
-    private bool $timezoneEnabled = false;
-
     private ?Mailcode_Parser_Statement_Tokenizer_Token $timezoneToken = null;
 
     protected function validateSyntax_check_timezone(): void

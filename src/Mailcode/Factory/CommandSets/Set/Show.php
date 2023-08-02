@@ -27,15 +27,30 @@ use Mailcode\Factory\CommandSets\Set\Show\URL;
  */
 class Mailcode_Factory_CommandSets_Set_Show extends Mailcode_Factory_CommandSets_Set
 {
-    public function var(string $variableName): Mailcode_Commands_Command_ShowVariable
+    public function var(string $variableName, bool $decryptionKeyPresent = false, string $decryptionKeyString = null): Mailcode_Commands_Command_ShowVariable
     {
         $variableName = $this->instantiator->filterVariableName($variableName);
+
+        $decryptionKey = '';
+        if ($decryptionKeyPresent) {
+            if (!empty($decryptionKeyString)) {
+                $decryptionKey = sprintf(
+                    ' decrypt: %s',
+                    $this->quoteString($decryptionKeyString)
+                );
+            } else {
+                $decryptionKey = ' decrypt:';
+            }
+        }
 
         $cmd = $this->commands->createCommand(
             'ShowVariable',
             '',
-            $variableName,
-            '{showvar:' . $variableName . '}'
+            $variableName . $decryptionKey,
+            sprintf('{showvar: %s%s}',
+                $variableName,
+                $decryptionKey
+            )
         );
 
         $this->instantiator->checkCommand($cmd);

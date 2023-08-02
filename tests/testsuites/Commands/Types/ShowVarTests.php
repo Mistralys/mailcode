@@ -46,15 +46,27 @@ final class ShowVarTests extends MailcodeTestCase
                 'valid' => false,
                 'code' => Mailcode_Commands_Command_ShowVariable::VALIDATION_TOO_MANY_PARAMETERS
             ),
+            array(
+                'label' => 'With valid variable and decryption key',
+                'string' => '{showvar: $foo_bar decrypt:}',
+                'valid' => true,
+                'code' => 0
+            ),
+            array(
+                'label' => 'With valid variable and custom decryption key',
+                'string' => '{showvar: $foo_bar decrypt: "barfoo"}',
+                'valid' => true,
+                'code' => 0
+            ),
         );
-        
+
         $this->runCollectionTests($tests);
     }
-    
+
     public function test_getVariable() : void
     {
         $cmd = Mailcode_Factory::show()->var('foobar');
-        
+
         $this->assertEquals('$foobar', $cmd->getVariable()->getFullName());
         $this->assertEquals('$foobar', $cmd->getVariableName());
     }
