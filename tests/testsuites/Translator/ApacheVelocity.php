@@ -97,6 +97,32 @@ ${CUSTOMER.CUSTOMER_ID}
         $this->assertEquals($expected, $result);
     }
 
+    public function test_showvar_decrypt()
+    {
+        $syntax = $this->translator->createSyntax('ApacheVelocity');
+
+        $subject = '{showvar: $CUSTOMER.CUSTOMER_ID decrypt: idnencode:}';
+        $expected = '${text.idn(${text.decrypt($CUSTOMER.CUSTOMER_ID, "default")})}';
+
+        $safeguard = Mailcode::create()->createSafeguard($subject);
+        $result = $syntax->translateSafeguard($safeguard);
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function test_showvar_decrypt_custom()
+    {
+        $syntax = $this->translator->createSyntax('ApacheVelocity');
+
+        $subject = '{showvar: $CUSTOMER.CUSTOMER_ID decrypt: "barfoo" idnencode:}';
+        $expected = '${text.idn(${text.decrypt($CUSTOMER.CUSTOMER_ID, "barfoo")})}';
+
+        $safeguard = Mailcode::create()->createSafeguard($subject);
+        $result = $syntax->translateSafeguard($safeguard);
+
+        $this->assertEquals($expected, $result);
+    }
+
     /**
      * Configuring the translation of showdate commands to use a
      * specific internal date format when they are translated,

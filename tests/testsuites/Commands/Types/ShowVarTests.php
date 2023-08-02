@@ -58,6 +58,12 @@ final class ShowVarTests extends MailcodeTestCase
                 'valid' => true,
                 'code' => 0
             ),
+            array(
+                'label' => 'With valid variable and custom decryption key',
+                'string' => '{showvar: $foo_bar decrypt: idnencode:}',
+                'valid' => true,
+                'code' => 0
+            ),
         );
 
         $this->runCollectionTests($tests);
