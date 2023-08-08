@@ -1,3 +1,6 @@
+### v3.1.4 - Date formats update
+- ShowDate Command: Added milliseconds and time zone format support with `e` and `v`.
+
 ### v3.1.3 - Velocity translation fix
 - ListContains Command: Fixed the Velocity regex.
 
