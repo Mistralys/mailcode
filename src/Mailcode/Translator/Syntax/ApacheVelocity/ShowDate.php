@@ -44,6 +44,8 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ShowDate extends Mailcode_Transl
         'H' => 'H',
         'i' => 'm',
         's' => 's',
+        'v' => 'SSS',
+        'e' => 'XXX',
         '.' => '.',
         ':' => ':',
         '-' => '-',
@@ -75,7 +77,7 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ShowDate extends Mailcode_Transl
         return $this->renderVariableEncodings($command, $statement);
     }
 
-    private function resolveTimeZoneFormat(Mailcode_Commands_Command_ShowDate $command) : string
+    private function resolveTimeZoneFormat(Mailcode_Commands_Command_ShowDate $command): string
     {
         $token = $command->getTimezoneToken();
 
