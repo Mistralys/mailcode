@@ -110,6 +110,12 @@ final class Mailcode_ShowDateTests extends MailcodeTestCase
                 'string' => '{showdate: $foo_bar "Y-m-d H:i:s" timezone: 13}',
                 'valid' => false,
                 'code' => TimezoneInterface::VALIDATION_TIMEZONE_CODE_WRONG_TYPE
+            ),
+            array(
+                'label' => 'With valid variable, milliseconds and time zone formats',
+                'string' => '{showdate: $foo_bar "Y-m-d H:i:s ve"}',
+                'valid' => true,
+                'code' => 0
             )
         );
 

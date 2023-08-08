@@ -44,6 +44,11 @@ final class Translator_Velocity_ShowDateTests extends VelocityTestCase
                 'label' => 'Show date, german format, variable timezone',
                 'mailcode' => Mailcode_Factory::show()->date('FOO.BAR', 'd.m.Y H:i:s', null, '$FOO.TIMEZONE'),
                 'expected' => '${time.input("' . $defaultFormat . '", $FOO.BAR).output("dd.MM.yyyy H:m:s").zone($FOO.TIMEZONE)}'
+            ),
+            array(
+                'label' => 'Show date with milliseconds and time zone format',
+                'mailcode' => Mailcode_Factory::show()->date('FOO.BAR', 'd.m.Y H:i:s v e'),
+                'expected' => '${time.input("' . $defaultFormat . '", $FOO.BAR).output("dd.MM.yyyy H:m:s SSS XXX").zone("UTC")}'
             )
         );
 
