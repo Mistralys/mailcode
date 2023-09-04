@@ -32,25 +32,35 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ShowDate extends Mailcode_Transl
     public const DEFAULT_INTERNAL_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
 
     /**
-     * @var string[]string
+     * Conversion table for the date format characters, from PHP to Java.
+     *
+     * @var array<string,string>
+     * @see https://stackoverflow.com/questions/12781273/what-are-the-date-formats-available-in-simpledateformat-class
+     * @see https://www.php.net/manual/en/datetime.format.php
      */
-    private $charTable = array(
-        'd' => 'dd',
-        'j' => 'd',
-        'm' => 'MM',
-        'n' => 'M',
-        'Y' => 'yyyy',
-        'y' => 'yy',
-        'H' => 'H',
-        'i' => 'm',
-        's' => 's',
-        'v' => 'SSS',
-        'e' => 'XXX',
+    public static array $charTable = array(
+        Mailcode_Date_FormatInfo::CHAR_DAY_LZ => 'dd', // Day of the month with leading zeros
+        Mailcode_Date_FormatInfo::CHAR_DAY_NZ => 'd', // Day of the month without leading zeros
+        Mailcode_Date_FormatInfo::CHAR_MONTH_LZ => 'MM', // Month number with leading zeros
+        Mailcode_Date_FormatInfo::CHAR_MONTH_NZ => 'M', // Month number without leading zeros
+        Mailcode_Date_FormatInfo::CHAR_YEAR_4 => 'yyyy', // Year with four digits
+        Mailcode_Date_FormatInfo::CHAR_YEAR_2 => 'yy', // Year with two digits
+        Mailcode_Date_FormatInfo::CHAR_HOUR_24_LZ => 'HH', // Hour in 24-hour format with leading zeros
+        Mailcode_Date_FormatInfo::CHAR_HOUR_24_NZ => 'H', // Hour in 24-hour format without leading zeros
+        Mailcode_Date_FormatInfo::CHAR_HOUR_12_LZ => 'hh', // 12-hour hour with leading zeros
+        Mailcode_Date_FormatInfo::CHAR_HOUR_12_NZ => 'h', // 12-hour hour without leading zeros
+        Mailcode_Date_FormatInfo::CHAR_AM_PM => 'a', // am/pm marker (lowercase in Java)
+        Mailcode_Date_FormatInfo::CHAR_MINUTES_LZ => 'mm', // Minutes with leading zeros
+        Mailcode_Date_FormatInfo::CHAR_SECONDS_LZ => 'ss', // Seconds with leading zeros
+        Mailcode_Date_FormatInfo::CHAR_MILLISECONDS => 'SSS', // Milliseconds
+        Mailcode_Date_FormatInfo::CHAR_TIMEZONE => 'XXX', // Timezone identifier, e.g. "UTC", "GMT" or "Europe/Paris"
+
+        // PUNCTUATION
         '.' => '.',
         ':' => ':',
         '-' => '-',
         '/' => '/',
-        ' ' => ' '
+        ' ' => ' ',
     );
 
     public function getInternalFormat(Mailcode_Commands_Command_ShowDate $command): string
@@ -99,13 +109,18 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ShowDate extends Mailcode_Transl
         );
     }
 
+    /**
+     * @param string $formatString
+     * @return string
+     * @throws Mailcode_Translator_Exception {@see self::ERROR_UNKNOWN_DATE_FORMAT_CHARACTER}
+     */
     private function resolveJavaFormat(string $formatString): string
     {
         $chars = ConvertHelper::string2array($formatString);
         $result = array();
 
         foreach ($chars as $char) {
-            if (!isset($this->charTable[$char])) {
+            if (!isset(self::$charTable[$char])) {
                 throw new Mailcode_Translator_Exception(
                     'Unknown date format string character',
                     sprintf(
@@ -116,7 +131,7 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ShowDate extends Mailcode_Transl
                 );
             }
 
-            $result[] = $this->charTable[$char];
+            $result[] = self::$charTable[$char];
         }
 
         return implode('', $result);
