@@ -21,6 +21,7 @@ namespace Mailcode;
 abstract class Mailcode_Parser_Statement_Tokenizer_Token implements Mailcode_Parser_Statement_Tokenizer_TypeInterface
 {
     protected string $tokenID;
+    protected string $name = '';
     protected string $matchedText;
     private ?Mailcode_Commands_Command $sourceCommand;
 
@@ -48,6 +49,16 @@ abstract class Mailcode_Parser_Statement_Tokenizer_Token implements Mailcode_Par
     protected function init() : void
     {
 
+    }
+
+    public function getName() : string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name) : void
+    {
+        $this->name = $name;
     }
 
     /**

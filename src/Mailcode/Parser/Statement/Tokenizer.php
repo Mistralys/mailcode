@@ -35,11 +35,13 @@ class Mailcode_Parser_Statement_Tokenizer
         Mailcode_Parser_Statement_Tokenizer_Process_Variables::class,
         Mailcode_Parser_Statement_Tokenizer_Process_NormalizeQuotes::class,
         Mailcode_Parser_Statement_Tokenizer_Process_EncodeSpecialChars::class,
-        Mailcode_Parser_Statement_Tokenizer_Process_StringLiterals::class,
         Mailcode_Parser_Statement_Tokenizer_Process_Keywords::class,
+        Mailcode_Parser_Statement_Tokenizer_Process_StringLiterals::class,
         Mailcode_Parser_Statement_Tokenizer_Process_Numbers::class,
+        Mailcode_Parser_Statement_Tokenizer_Process_NamedParameters::class,
         Mailcode_Parser_Statement_Tokenizer_Process_Operands::class,
-        Mailcode_Parser_Statement_Tokenizer_Process_ExtractTokens::class
+        Mailcode_Parser_Statement_Tokenizer_Process_ExtractTokens::class,
+        Mailcode_Parser_Statement_Tokenizer_Process_SetNames::class,
     );
     
    /**

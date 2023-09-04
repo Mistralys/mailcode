@@ -29,6 +29,18 @@ With parameters:
 
 The subtype can switch between modes of the same command.
 
+Togglable flags to enable/disable features:
+
+```
+{command subtype: parameters flagFoo: flagBar:}
+```
+
+Named parameters:
+
+```
+{command subtype: "value" name="param value"}
+```
+
 ### Escaping special characters
 
 #### Double quotes

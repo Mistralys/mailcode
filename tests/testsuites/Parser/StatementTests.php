@@ -38,4 +38,17 @@ class StatementTests extends MailcodeTestCase
 
         $this->assertSame('"String1"', $copy->getNormalized());
     }
+
+    public function test_namedParameter() : void
+    {
+        $statement = new Mailcode_Parser_Statement('"value" name="param value"');
+        $info = $statement->getInfo();
+
+        $this->assertCount(3, $info->getTokens());
+
+        $literals = $info->getStringLiterals();
+        $this->assertArrayHasKey(1, $literals);
+
+        $this->assertSame('name', $literals[1]->getName());
+    }
 }
