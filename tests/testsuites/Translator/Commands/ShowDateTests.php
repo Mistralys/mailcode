@@ -1,9 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
+namespace testsuites\Translator\Commands;
+
 use Mailcode\Mailcode_Factory;
 use Mailcode\Mailcode_Translator_Syntax_ApacheVelocity_ShowDate;
+use VelocityTestCase;
 
-final class Translator_Velocity_ShowDateTests extends VelocityTestCase
+final class ShowDateTests extends VelocityTestCase
 {
     public function test_translateCommand(): void
     {
@@ -18,7 +23,7 @@ final class Translator_Velocity_ShowDateTests extends VelocityTestCase
             array(
                 'label' => 'Show date, german format',
                 'mailcode' => Mailcode_Factory::show()->date('FOO.BAR', 'd.m.Y H:i:s'),
-                'expected' => '${time.input("' . $defaultFormat . '", $FOO.BAR).output("dd.MM.yyyy H:m:s").zone("UTC")}'
+                'expected' => '${time.input("' . $defaultFormat . '", $FOO.BAR).output("dd.MM.yyyy HH:mm:ss").zone("UTC")}'
             ),
             array(
                 'label' => 'Show date, short year format',
@@ -33,22 +38,22 @@ final class Translator_Velocity_ShowDateTests extends VelocityTestCase
             array(
                 'label' => 'Show date, german format, US timezone',
                 'mailcode' => Mailcode_Factory::show()->date('FOO.BAR', 'd.m.Y H:i:s', '"US/Eastern"'),
-                'expected' => '${time.input("' . $defaultFormat . '", $FOO.BAR).output("dd.MM.yyyy H:m:s").zone("US/Eastern")}'
+                'expected' => '${time.input("' . $defaultFormat . '", $FOO.BAR).output("dd.MM.yyyy HH:mm:ss").zone("US/Eastern")}'
             ),
             array(
                 'label' => 'Show date, german format, US timezone',
                 'mailcode' => Mailcode_Factory::show()->date('FOO.BAR', 'd.m.Y H:i:s', 'US/Eastern'),
-                'expected' => '${time.input("' . $defaultFormat . '", $FOO.BAR).output("dd.MM.yyyy H:m:s").zone("US/Eastern")}'
+                'expected' => '${time.input("' . $defaultFormat . '", $FOO.BAR).output("dd.MM.yyyy HH:mm:ss").zone("US/Eastern")}'
             ),
             array(
                 'label' => 'Show date, german format, variable timezone',
                 'mailcode' => Mailcode_Factory::show()->date('FOO.BAR', 'd.m.Y H:i:s', null, '$FOO.TIMEZONE'),
-                'expected' => '${time.input("' . $defaultFormat . '", $FOO.BAR).output("dd.MM.yyyy H:m:s").zone($FOO.TIMEZONE)}'
+                'expected' => '${time.input("' . $defaultFormat . '", $FOO.BAR).output("dd.MM.yyyy HH:mm:ss").zone($FOO.TIMEZONE)}'
             ),
             array(
                 'label' => 'Show date with milliseconds and time zone format',
                 'mailcode' => Mailcode_Factory::show()->date('FOO.BAR', 'd.m.Y H:i:s v e'),
-                'expected' => '${time.input("' . $defaultFormat . '", $FOO.BAR).output("dd.MM.yyyy H:m:s SSS XXX").zone("UTC")}'
+                'expected' => '${time.input("' . $defaultFormat . '", $FOO.BAR).output("dd.MM.yyyy HH:mm:ss SSS XXX").zone("UTC")}'
             )
         );
 
@@ -66,5 +71,21 @@ final class Translator_Velocity_ShowDateTests extends VelocityTestCase
         $result = $syntax->translateCommand($var);
 
         $this->assertEquals('${time.input("yyyy-MM-dd", $FOO.BAR).output("dd.MM.yyyy").zone("UTC")}', $result);
+    }
+
+    public function test_formatConversions() : void
+    {
+        $syntax = $this->translator->createSyntax('ApacheVelocity');
+
+        foreach(Mailcode_Translator_Syntax_ApacheVelocity_ShowDate::$charTable as $phpChar => $javaChar)
+        {
+            if($phpChar === ' ') {
+                continue;
+            }
+
+            $result = $syntax->translateCommand(Mailcode_Factory::show()->date('FOO.BAR', $phpChar));
+
+            $this->assertStringContainsString($javaChar, $result, 'PHP Char: ['.$phpChar.']');
+        }
     }
 }
