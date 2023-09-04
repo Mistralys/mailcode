@@ -1,3 +1,9 @@
+### v3.1.5 - Date formats update
+- ShowDate Command: Fixed incorrect conversion of some PHP date format signs.
+- ShowDate Command: Added `a`, `G` and `g` to the formats for AM/PM times.
+- ShowDate Command: Added tests for all format conversions.
+- ShowDate Command: Added constants for all PHP format signs.
+
 ### v3.1.4 - Date formats update
 - ShowDate Command: Added milliseconds and time zone format support with `e` and `v`.
 
