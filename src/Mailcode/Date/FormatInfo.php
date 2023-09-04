@@ -31,25 +31,41 @@ class Mailcode_Date_FormatInfo
     public const CHARTYPE_TIME = 'time';
     public const CHARTYPE_PUNCTUATION = 'punctuation';
 
+    public const CHAR_DAY_LZ = 'd';
+    public const CHAR_DAY_NZ = 'j';
+    public const CHAR_MONTH_LZ = 'm';
+    public const CHAR_MONTH_NZ = 'n';
+    public const CHAR_YEAR_4 = 'Y';
+    public const CHAR_YEAR_2 = 'y';
+    public const CHAR_HOUR_24_LZ = 'H';
+    public const CHAR_HOUR_24_NZ = 'G';
+    public const CHAR_HOUR_12_LZ = 'h';
+    public const CHAR_HOUR_12_NZ = 'g';
+    public const CHAR_AM_PM = 'a';
+    public const CHAR_MINUTES_LZ = 'i';
+    public const CHAR_SECONDS_LZ = 's';
+    public const CHAR_MILLISECONDS = 'v';
+    public const CHAR_TIMEZONE = 'e';
+
     /**
      * @var string
      */
-    private $defaultFormat = "Y/m/d";
+    private string $defaultFormat = "Y/m/d";
 
     /**
      * @var Mailcode_Date_FormatInfo_Character[]
      */
-    private $formatChars = array();
+    private array $formatChars = array();
 
     /**
      * @var string[]
      */
-    private $allowedChars = array();
+    private array $allowedChars = array();
 
     /**
      * @var Mailcode_Date_FormatInfo|NULL
      */
-    private static $instance;
+    private static ?Mailcode_Date_FormatInfo $instance = null;
 
     private function __construct()
     {
@@ -73,18 +89,22 @@ class Mailcode_Date_FormatInfo
     private function initCharacters(): void
     {
         $chars = array(
-            array(self::CHARTYPE_DATE, 'd', t('Day of the month, with leading zeros')),
-            array(self::CHARTYPE_DATE, 'j', t('Day of the month, without leading zeros')),
-            array(self::CHARTYPE_DATE, 'm', t('Month number, with leading zeros')),
-            array(self::CHARTYPE_DATE, 'n', t('Month number, without leading zeros')),
-            array(self::CHARTYPE_DATE, 'Y', t('Year, 4 digits')),
-            array(self::CHARTYPE_DATE, 'y', t('Year, 2 digits')),
+            array(self::CHARTYPE_DATE, self::CHAR_DAY_LZ, t('Day of the month, with leading zeros')),
+            array(self::CHARTYPE_DATE, self::CHAR_DAY_NZ, t('Day of the month, without leading zeros')),
+            array(self::CHARTYPE_DATE, self::CHAR_MONTH_LZ, t('Month number, with leading zeros')),
+            array(self::CHARTYPE_DATE, self::CHAR_MONTH_NZ, t('Month number, without leading zeros')),
+            array(self::CHARTYPE_DATE, self::CHAR_YEAR_4, t('Year, 4 digits')),
+            array(self::CHARTYPE_DATE, self::CHAR_YEAR_2, t('Year, 2 digits')),
 
-            array(self::CHARTYPE_TIME, 'H', t('Hour, 24-hour format with leading zeros')),
-            array(self::CHARTYPE_TIME, 'i', t('Minutes with leading zeros')),
-            array(self::CHARTYPE_TIME, 's', t('Seconds with leading zeros')),
-            array(self::CHARTYPE_TIME, 'v', t('Milliseconds')),
-            array(self::CHARTYPE_TIME, 'e', t('Timezone')),
+            array(self::CHARTYPE_TIME, self::CHAR_HOUR_24_LZ, t('Hour, 24-hour format with leading zeros')),
+            array(self::CHARTYPE_TIME, self::CHAR_HOUR_24_NZ, t('Hour, 24-hour format without leading zeros')),
+            array(self::CHARTYPE_TIME, self::CHAR_HOUR_12_LZ, t('Hour, 12-hour format with leading zeros')),
+            array(self::CHARTYPE_TIME, self::CHAR_HOUR_12_NZ, t('Hour, 12-hour format without leading zeros')),
+            array(self::CHARTYPE_TIME, self::CHAR_AM_PM, t('AM/PM marker')),
+            array(self::CHARTYPE_TIME, self::CHAR_MINUTES_LZ, t('Minutes with leading zeros')),
+            array(self::CHARTYPE_TIME, self::CHAR_SECONDS_LZ, t('Seconds with leading zeros')),
+            array(self::CHARTYPE_TIME, self::CHAR_MILLISECONDS, t('Milliseconds')),
+            array(self::CHARTYPE_TIME, self::CHAR_TIMEZONE, t('Timezone')),
 
             array(self::CHARTYPE_PUNCTUATION, '.', t('Dot')),
             array(self::CHARTYPE_PUNCTUATION, '/', t('Slash')),
