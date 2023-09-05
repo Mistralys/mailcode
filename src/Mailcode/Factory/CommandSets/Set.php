@@ -34,6 +34,13 @@ abstract class Mailcode_Factory_CommandSets_Set
     {
         $this->instantiator = new Mailcode_Factory_Instantiator();
         $this->commands = Mailcode::create()->getCommands();
+
+        $this->init();
+    }
+
+    protected function init() : void
+    {
+
     }
     
     public function end() : Mailcode_Commands_Command_End
