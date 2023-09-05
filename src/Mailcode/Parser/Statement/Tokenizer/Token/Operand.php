@@ -29,6 +29,11 @@ class Mailcode_Parser_Statement_Tokenizer_Token_Operand extends Mailcode_Parser_
     {
         return $this->getSign();
     }
+
+    public function hasSpacing(): bool
+    {
+        return true;
+    }
     
    /**
     * Retrieves all known comparison operator signs.

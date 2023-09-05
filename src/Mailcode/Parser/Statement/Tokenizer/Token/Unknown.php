@@ -24,4 +24,9 @@ class Mailcode_Parser_Statement_Tokenizer_Token_Unknown extends Mailcode_Parser_
     {
         return '';
     }
+
+    public function hasSpacing(): bool
+    {
+        return false;
+    }
 }
