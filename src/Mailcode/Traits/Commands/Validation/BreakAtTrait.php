@@ -23,7 +23,7 @@ use function Mailcode\t;
 
 /**
  * Command validation drop-in: checks for the presence
- * of the `break-at:` keyword in the command statement.
+ * of the `break-at` parameter in the command statement.
  *
  * @package Mailcode
  * @subpackage Validation
@@ -39,22 +39,26 @@ trait BreakAtTrait
 
     protected function validateSyntax_check_break_at(): void
     {
-        $this->breakAtToken = $this->requireParams()->getInfo()->getTokenForKeyword(Mailcode_Commands_Keywords::TYPE_BREAK_AT);
+        $this->breakAtToken = $this
+            ->requireParams()
+            ->getInfo()
+            ->getTokenByParamName(BreakAtInterface::PARAMETER_NAME);
 
-        $val = $this->validator->createKeyword(Mailcode_Commands_Keywords::TYPE_BREAK_AT);
-
-        $this->breakAtEnabled = $val->isValid() && $this->breakAtToken != null;;
-
-        if ($this->breakAtEnabled) {
-            if (!$this->breakAtToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_Number &&
-                !$this->breakAtToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable) {
-                $this->validationResult->makeError(
-                    t('Invalid break-at value:') . ' ' . t('Expected a number or variable.'),
-                    BreakAtInterface::VALIDATION_BREAK_AT_CODE_WRONG_TYPE
-                );
-                return;
-            }
+        if($this->breakAtToken === null) {
+            $this->breakAtEnabled = false;
+            return;
         }
+
+        if (!$this->breakAtToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_Number &&
+            !$this->breakAtToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable) {
+            $this->validationResult->makeError(
+                t('Invalid break-at value:') . ' ' . t('Expected a number or variable.'),
+                BreakAtInterface::VALIDATION_BREAK_AT_CODE_WRONG_TYPE
+            );
+            return;
+        }
+
+        $this->breakAtEnabled = true;
     }
 
     public function isBreakAtEnabled(): bool
