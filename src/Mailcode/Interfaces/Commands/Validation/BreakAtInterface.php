@@ -24,6 +24,7 @@ use Mailcode\Traits\Commands\Validation\BreakAtTrait;
  */
 interface BreakAtInterface extends Mailcode_Interfaces_Commands_Command
 {
+    public const PARAMETER_NAME = 'break-at';
     public const VALIDATION_BREAK_AT_NAME = 'check_break_at';
     public const VALIDATION_BREAK_AT_CODE_WRONG_TYPE = 135601;
 
