@@ -27,5 +27,6 @@ class Mailcode_Collection_Error_Command extends Mailcode_Collection_Error
         $this->matchedText = $command->getMatchedText();
         $this->code = $result->getCode();
         $this->message = t('Error in command %1$s:', $command->getName()).' '.$result->getErrorMessage();
+        $this->command = $command;
     }
 }
