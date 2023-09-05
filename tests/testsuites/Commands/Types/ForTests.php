@@ -88,31 +88,31 @@ final class ForTests extends MailcodeTestCase
             ),
             array(
                 'label' => 'Valid statement with break-at (number)',
-                'string' => '{for: $RECORD in: $LIST break-at: 13}{end}',
+                'string' => '{for: $RECORD in: $LIST break-at=13}{end}',
                 'valid' => true,
                 'code' => 0
             ),
             array(
                 'label' => 'Valid statement with break-at (variable)',
-                'string' => '{for: $RECORD in: $LIST break-at: $FOO.BAR}{end}',
+                'string' => '{for: $RECORD in: $LIST break-at=$FOO.BAR}{end}',
                 'valid' => true,
                 'code' => 0
             ),
             array(
                 'label' => 'String as break-at parameter',
-                'string' => '{for: $RECORD in: $LIST break-at: "13"}{end}',
+                'string' => '{for: $RECORD in: $LIST break-at="13"}{end}',
                 'valid' => false,
                 'code' => BreakAtInterface::VALIDATION_BREAK_AT_CODE_WRONG_TYPE
             ),
             array(
                 'label' => 'Unquoted text as break-at parameter',
-                'string' => '{for: $RECORD in: $LIST break-at: UnquotedText}{end}',
+                'string' => '{for: $RECORD in: $LIST break-at=UnquotedText}{end}',
                 'valid' => false,
                 'code' => Mailcode_Commands_Command::VALIDATION_INVALID_PARAMS_STATEMENT
             ),
             array(
                 'label' => 'Keyword as break-at parameter',
-                'string' => '{for: $RECORD in: $LIST break-at: idnencode:}{end}',
+                'string' => '{for: $RECORD in: $LIST break-at=idnencode:}{end}',
                 'valid' => false,
                 'code' => BreakAtInterface::VALIDATION_BREAK_AT_CODE_WRONG_TYPE
             )

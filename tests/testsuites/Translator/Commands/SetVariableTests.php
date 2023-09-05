@@ -51,7 +51,7 @@ final class SetVariableTests extends VelocityTestCase
      */
     public function test_weirdParseBehavior(): void
     {
-        $collection = Mailcode::create()->parseString('{setvar: $FOO count: $FOO.COUNT}');
+        $collection = Mailcode::create()->parseString('{setvar: $FOO count=$FOO.COUNT}');
 
         if (!$collection->isValid()) {
             $this->fail($collection->getFirstError()->getMessage());
