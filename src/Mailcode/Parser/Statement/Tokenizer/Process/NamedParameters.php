@@ -9,7 +9,7 @@ class Mailcode_Parser_Statement_Tokenizer_Process_NamedParameters extends Mailco
     protected function _process() : void
     {
         $matches = array();
-        preg_match_all('/([a-z][a-z0-9]+)\s*=/iU', $this->tokenized, $matches, PREG_PATTERN_ORDER);
+        preg_match_all('/([a-z][a-z0-9-]+)\s*=/iU', $this->tokenized, $matches, PREG_PATTERN_ORDER);
 
         foreach($matches[0] as $match)
         {

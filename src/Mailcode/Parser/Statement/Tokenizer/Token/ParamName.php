@@ -20,13 +20,18 @@ namespace Mailcode;
  */
 class Mailcode_Parser_Statement_Tokenizer_Token_ParamName extends Mailcode_Parser_Statement_Tokenizer_Token
 {
-    public function getName() : string
+    public function getParamName() : string
     {
         return trim($this->matchedText, ' =');
     }
 
+    public function hasSpacing(): bool
+    {
+        return false;
+    }
+
     public function getNormalized() : string
     {
-        return $this->getName().'=';
+        return $this->getParamName().'=';
     }
 }

@@ -21,7 +21,7 @@ namespace Mailcode;
 abstract class Mailcode_Parser_Statement_Tokenizer_Token implements Mailcode_Parser_Statement_Tokenizer_TypeInterface
 {
     protected string $tokenID;
-    protected string $name = '';
+    protected ?Mailcode_Parser_Statement_Tokenizer_Token_ParamName $nameToken = null;
     protected string $matchedText;
     private ?Mailcode_Commands_Command $sourceCommand;
 
@@ -51,15 +51,36 @@ abstract class Mailcode_Parser_Statement_Tokenizer_Token implements Mailcode_Par
 
     }
 
+    /**
+     * Gets the name of the parameter, if specified.
+     * Returns an empty string otherwise.
+     *
+     * NOTE: To set the name, use the command's statement
+     * instead, and call the {@see Mailcode_Parser_Statement_Info::setParamName()}
+     * method.
+     *
+     * @return string
+     */
     public function getName() : string
     {
-        return $this->name;
+        if(isset($this->nameToken)) {
+            return $this->nameToken->getParamName();
+        }
+
+        return '';
     }
 
-    public function setName(string $name) : void
+    /**
+     * @param Mailcode_Parser_Statement_Tokenizer_Token_ParamName $token
+     * @return $this
+     */
+    public function registerNameToken(Mailcode_Parser_Statement_Tokenizer_Token_ParamName $token) : self
     {
-        $this->name = $name;
+        $this->nameToken = $token;
+        return $this;
     }
+
+    abstract public function hasSpacing() : bool;
 
     /**
      * @return Mailcode_Commands_Command|null

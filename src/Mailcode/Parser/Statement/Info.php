@@ -155,11 +155,7 @@ class Mailcode_Parser_Statement_Info
     {
         $tokens = $this->tokenizer->getTokens();
 
-        if (isset($tokens[$index])) {
-            return $tokens[$index];
-        }
-
-        return null;
+        return $tokens[$index] ?? null;
     }
 
     public function getTokenForKeyWord(string $keywordName): ?Mailcode_Parser_Statement_Tokenizer_Token
@@ -293,6 +289,11 @@ class Mailcode_Parser_Statement_Info
         $this->tokenizer->removeToken($token);
     }
 
+    public function addVariable(Mailcode_Variables_Variable $variable): Mailcode_Parser_Statement_Tokenizer_Token_Variable
+    {
+        return $this->tokenizer->appendVariable($variable);
+    }
+
     public function addStringLiteral(string $text): Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
     {
         return $this->tokenizer->appendStringLiteral($text);
@@ -301,5 +302,35 @@ class Mailcode_Parser_Statement_Info
     public function prependStringLiteral(string $text): Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
     {
         return $this->tokenizer->prependStringLiteral($text);
+    }
+
+    public function getTokenByParamName(string $name) : ?Mailcode_Parser_Statement_Tokenizer_Token
+    {
+        $tokens = $this->tokenizer->getTokens();
+
+        foreach($tokens as $token)
+        {
+            if($token->getName() === $name)
+            {
+                return $token;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Adds a parameter name for the target token, replacing any
+     * existing name token if any.
+     *
+     * @param Mailcode_Parser_Statement_Tokenizer_Token $targetToken
+     * @param string $name
+     * @return Mailcode_Parser_Statement_Tokenizer_Token_ParamName
+     *
+     * @throws Mailcode_Parser_Exception {@see Mailcode_Parser_Statement_Tokenizer::ERROR_TARGET_INSERT_TOKEN_NOT_FOUND}
+     */
+    public function setParamName(Mailcode_Parser_Statement_Tokenizer_Token $targetToken, string $name) : Mailcode_Parser_Statement_Tokenizer_Token_ParamName
+    {
+        return $this->tokenizer->injectParamName($targetToken, $name);
     }
 }
