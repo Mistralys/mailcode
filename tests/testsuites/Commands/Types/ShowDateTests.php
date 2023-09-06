@@ -1,4 +1,9 @@
 <?php
+/**
+ * @package MailcodeTests
+ * @subpackage Commands
+ * @see \MailcodeTests\Commands\Types\ShowDateTests
+ */
 
 namespace MailcodeTests\Commands\Types;
 
@@ -13,6 +18,11 @@ use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Variable;
 use MailcodeTestCase;
 
+/**
+ * @package MailcodeTests
+ * @subpackage Commands
+ * @covers \Mailcode\Mailcode_Commands_Command_ShowDate
+ */
 final class ShowDateTests extends MailcodeTestCase
 {
     public function test_validation(): void

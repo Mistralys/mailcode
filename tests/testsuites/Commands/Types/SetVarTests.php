@@ -1,4 +1,9 @@
 <?php
+/**
+ * @package MailcodeTests
+ * @subpackage Commands
+ * @see \MailcodeTests\Commands\Types\SetVarTests
+ */
 
 declare(strict_types=1);
 
@@ -10,6 +15,11 @@ use Mailcode\Mailcode_Commands_CommonConstants;
 use Mailcode\Mailcode_Factory;
 use MailcodeTestCase;
 
+/**
+ * @package MailcodeTests
+ * @subpackage Commands
+ * @covers \Mailcode\Mailcode_Commands_Command_SetVariable
+ */
 final class SetVarTests extends MailcodeTestCase
 {
     public function test_validation() : void
