@@ -12,7 +12,7 @@
 
 #### Breaking changes
 
-Some keyword constants were removed, because they have been replaced
+Some keyword constants were removed because they have been replaced
 with named parameters:
 
 - `TYPE_TIMEZONE`
