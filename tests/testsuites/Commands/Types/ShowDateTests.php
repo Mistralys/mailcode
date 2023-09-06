@@ -1,5 +1,7 @@
 <?php
 
+namespace MailcodeTests\Commands\Types;
+
 use Mailcode\Interfaces\Commands\Validation\TimezoneInterface;
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands_Command;
@@ -9,8 +11,9 @@ use Mailcode\Mailcode_Date_FormatInfo;
 use Mailcode\Mailcode_Factory;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Variable;
+use MailcodeTestCase;
 
-final class Mailcode_ShowDateTests extends MailcodeTestCase
+final class ShowDateTests extends MailcodeTestCase
 {
     public function test_validation(): void
     {
