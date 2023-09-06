@@ -24,6 +24,7 @@ use Mailcode\Traits\Commands\Validation\CountTrait;
  */
 interface CountInterface extends Mailcode_Interfaces_Commands_Command
 {
+    public const PARAMETER_NAME = 'count';
     public const VALIDATION_COUNT_NAME = 'check_count';
     public const VALIDATION_COUNT_CODE_WRONG_TYPE = 135701;
 
@@ -31,4 +32,5 @@ interface CountInterface extends Mailcode_Interfaces_Commands_Command
 
     public function getCountVariable(): ?Mailcode_Variables_Variable;
 
+    public function setCount(?Mailcode_Variables_Variable $variable) : self;
 }

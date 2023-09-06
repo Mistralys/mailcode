@@ -1,4 +1,9 @@
 <?php
+/**
+ * @package MailcodeTests
+ * @subpackage Commands
+ * @see \MailcodeTests\Commands\Types\SetVarTests
+ */
 
 declare(strict_types=1);
 
@@ -10,6 +15,11 @@ use Mailcode\Mailcode_Commands_CommonConstants;
 use Mailcode\Mailcode_Factory;
 use MailcodeTestCase;
 
+/**
+ * @package MailcodeTests
+ * @subpackage Commands
+ * @covers \Mailcode\Mailcode_Commands_Command_SetVariable
+ */
 final class SetVarTests extends MailcodeTestCase
 {
     public function test_validation() : void
@@ -31,7 +41,7 @@ final class SetVarTests extends MailcodeTestCase
                 'label' => 'With invalid variable',
                 'string' => '{setvar: FOOBAR = "Text"}',
                 'valid' => false,
-                'code' => Mailcode_Commands_Command::VALIDATION_INVALID_PARAMS_STATEMENT
+                'code' => Mailcode_Commands_CommonConstants::VALIDATION_VARIABLE_MISSING
             ),
             array(
                 'label' => 'With missing value',
@@ -95,39 +105,33 @@ final class SetVarTests extends MailcodeTestCase
             ),
             array(
                 'label' => 'Keyword count has invalid parameter (unquoted text)',
-                'string' => '{setvar: $FOO.BAR count: FOO.COUNT}',
+                'string' => '{setvar: $FOO.BAR count=FOO.COUNT}',
                 'valid' => false,
                 'code' => Mailcode_Commands_Command::VALIDATION_INVALID_PARAMS_STATEMENT
             ),
             array(
                 'label' => 'Keyword count has invalid parameter (text)',
-                'string' => '{setvar: $FOO.BAR count: "Text"}',
+                'string' => '{setvar: $FOO.BAR count="Text"}',
                 'valid' => false,
                 'code' => CountInterface::VALIDATION_COUNT_CODE_WRONG_TYPE
             ),
             array(
                 'label' => 'Keyword count has invalid parameter (number)',
-                'string' => '{setvar: $FOO.BAR count: 13}',
+                'string' => '{setvar: $FOO.BAR count=13}',
                 'valid' => false,
                 'code' => CountInterface::VALIDATION_COUNT_CODE_WRONG_TYPE
             ),
             array(
                 'label' => 'Valid count keyword with parameter',
-                'string' => '{setvar: $FOO.BAR count: $FOO.COUNT}',
+                'string' => '{setvar: $FOO.BAR count=$FOO.COUNT}',
                 'valid' => true,
                 'code' => 0
             ),
             array(
                 'label' => 'Simple variable is valid',
-                'string' => '{setvar: $COUNTER count: $FOO.COUNT}',
+                'string' => '{setvar: $COUNTER count=$FOO.COUNT}',
                 'valid' => true,
                 'code' => 0
-            ),
-            array(
-                'label' => 'Keyword count without parameter',
-                'string' => '{setvar: $FOO.BAR count:}',
-                'valid' => false,
-                'code' => CountInterface::VALIDATION_COUNT_CODE_WRONG_TYPE
             )
         );
 
@@ -142,5 +146,39 @@ final class SetVarTests extends MailcodeTestCase
         $this->assertTrue($cmd->isCountEnabled());
         $this->assertNotNull($count);
         $this->assertSame('$VAR_COUNT', $count->getFullName());
+    }
+
+    /**
+     * Setting and removing the count programmatically
+     * must work as expected, with variable names and
+     * instances.
+     */
+    public function test_setCountProgrammatically() : void
+    {
+        $cmd = Mailcode_Factory::set()->var('VAR_NAME', '$SOURCE');
+
+        $this->assertFalse($cmd->isCountEnabled());
+
+        // Set count as a variable string
+        $cmd->setCount('COUNT_STRING');
+
+        $var = $cmd->getCountVariable();
+        $this->assertNotNull($var);
+        $this->assertTrue($cmd->isCountEnabled());
+        $this->assertSame($var->getFullName(), '$COUNT_STRING');
+
+        // Remove the count
+        $cmd->setCount(null);
+
+        $this->assertNull($cmd->getCountVariable());
+        $this->assertFalse($cmd->isCountEnabled());
+
+        // Set count as a variable object
+        $cmd->setCount(Mailcode_Factory::var()->pathName('COUNT_VAR'));
+
+        $var = $cmd->getCountVariable();
+        $this->assertNotNull($var);
+        $this->assertTrue($cmd->isCountEnabled());
+        $this->assertSame($var->getFullName(), '$COUNT_VAR');
     }
 }

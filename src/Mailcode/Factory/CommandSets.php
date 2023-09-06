@@ -20,31 +20,13 @@ namespace Mailcode;
  */
 class Mailcode_Factory_CommandSets
 {
-    /**
-     * @var Mailcode_Factory_CommandSets_Set_If|NULL
-     */
     private ?Mailcode_Factory_CommandSets_Set_If $if = null;
-    
-    /**
-     * @var Mailcode_Factory_CommandSets_Set_Show|NULL
-     */
     private ?Mailcode_Factory_CommandSets_Set_Show $show = null;
-    
-    /**
-     * @var Mailcode_Factory_CommandSets_Set_Misc|NULL
-     */
     private ?Mailcode_Factory_CommandSets_Set_Misc $misc = null;
-    
-   /**
-    * @var Mailcode_Factory_CommandSets_Set_Set|NULL
-    */
     private ?Mailcode_Factory_CommandSets_Set_Set $set = null;
-    
-   /**
-    * @var Mailcode_Factory_CommandSets_Set_ElseIf|NULL
-    */
     private ?Mailcode_Factory_CommandSets_Set_ElseIf $elseIf = null;
-    
+    private ?Mailcode_Factory_CommandSets_Set_Variables $variables = null;
+
     public function if() : Mailcode_Factory_CommandSets_Set_If
     {
         if(!isset($this->if))
@@ -93,5 +75,15 @@ class Mailcode_Factory_CommandSets
         }
         
         return $this->set;
+    }
+
+    public function var() : Mailcode_Factory_CommandSets_Set_Variables
+    {
+        if(!isset($this->variables))
+        {
+            $this->variables = new Mailcode_Factory_CommandSets_Set_Variables();
+        }
+
+        return $this->variables;
     }
 }

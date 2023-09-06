@@ -13,6 +13,8 @@ to unify these into a single language.
 
 ## The syntax
 
+### Base Structure
+
 All commands follow the same structure.
 
 Parameterless:
@@ -29,11 +31,25 @@ With parameters:
 
 The subtype can switch between modes of the same command.
 
+Toggleable flags to enable/disable features:
+
+```
+{command subtype: parameters flagFoo: flagBar:}
+```
+
+Named parameters:
+
+```
+{command subtype: "value" name="param value"}
+```
+
 ### Escaping special characters
 
 #### Double quotes
 
-String literals are expected to be quoted using double quotes ("). To use double quotes within a string literal, it can be escaped using a backslash (\):
+String literals are expected to be quoted using double quotes (`"`). 
+To use double quotes within a string literal, it can be escaped using 
+a backslash (`\`):
 
 ```
 {if contains: $PRODUCT.NAME "Search term with \"quotes\""}
@@ -79,8 +95,8 @@ With a custom date/time format:
 With a specific time zone:
 
 ```
-{showdate: $ORDER.DATE "d.m.Y" timezone: "Europe/Paris"}
-{showdate: $ORDER.DATE "d.m.Y" timezone: $TIME_ZONE}
+{showdate: $ORDER.DATE "d.m.Y" timezone="Europe/Paris"}
+{showdate: $ORDER.DATE "d.m.Y" timezone=$TIME_ZONE}
 ```
 
 If no time zone is specified, the default PHP time zone is used
@@ -96,7 +112,7 @@ Mailcode_Commands_Command_ShowDate::setDefaultTimezone('Europe/Paris');
 ```
 
 This will make all `showdate` commands use `Europe/Paris`, unless a
-specific time zone is specified with `timezone:` keyword.
+specific time zone is specified explicitly in a command.
 
 ### Display a formatted number
 
@@ -281,12 +297,12 @@ them.
 
 #### Counting lists 
 
-The `count:` keyword allows specifying a list variable
+The `count` parameter allows specifying a list variable
 to count the records of, and store the amount in the
 target variable.
 
 ```
-{setvar: $AMOUNT count: $LIST_VAR}
+{setvar: $AMOUNT count=$LIST_VAR}
 ```
 
 #### Omitting the = sign
@@ -509,7 +525,7 @@ The `break-at` parameter allows stopping the loop at a
 specific loop iteration count (`0`-based).
 
 ```
-{for: $ENTRY in $CUSTOMERS break-at: 6}
+{for: $ENTRY in $CUSTOMERS break-at=6}
     {showvar: $ENTRY.NAME}
 {end}
 ```
@@ -607,15 +623,24 @@ This makes it easy to work with complex command structures.
 
 ### Supported formatting characters
 
-The ShowDate command uses formatting characters that are compatibvle with PHP's date formatting functions, but only a subset of these are allowed.
+The ShowDate command uses formatting characters that are compatible with PHP's 
+date formatting functions, but only a subset of these are allowed.
 
   * `d` Day number, with leading zeros
+  * `j` Day number, without leading zeros
   * `m` Month number, with leading zeros
+  * `n` Month number, without leading zeros
   * `y` Year, with 2 digits
   * `Y` Year, with 4 digits
   * `H` Hour, 24-hour format, with leading zeros
+  * `G` Hour, 24-hour format, without leading zeros
+  * `h` Hour, 12-hour format, with leading zeros
+  * `g` Hour, 12-hour format, without leading zeros
+  * `a` AM/PM marker, lowercase
   * `i` Minutes, with leading zeros
   * `s` Seconds, with leading zeros 
+  * `v` Milliseconds
+  * `e` Time zone identifier, e.g. "CET", "Europe/Paris"
   
 Additionally, the following punctuation characters may be used:
 
@@ -627,7 +652,9 @@ Additionally, the following punctuation characters may be used:
 
 ### Accessing format information
 
-The Mailcode_Date_FormatInfo class can be used to access information on the available date formats when using the ShowDate command. It is available globally via a factory method:
+The Mailcode_Date_FormatInfo class can be used to access information on the 
+available date formats when using the ShowDate command. It is available 
+globally via a factory method:
 
 ```php
 use Mailcode\Mailcode_Factory;
@@ -637,7 +664,8 @@ $dateInfo = Mailcode_Factory::createDateInfo();
 
 ### Setting defaults
 
-The ShowDate command uses `Y/m/d` as default date format. The format info class can be used to overwrite this:
+The ShowDate command uses `Y/m/d` as default date format. The format info class 
+can be used to overwrite this:
 
 ```php
 use Mailcode\Mailcode_Factory;
@@ -651,7 +679,9 @@ a custom format string, it will use this default format.
 
 ### Accessing formatting characters programmatically
 
-To make it possible to integrate mailcode in existing documentation, the format info class offers the `getFormatCharacters()` method to get a list of all characters that can be used. 
+To make it possible to integrate mailcode in existing documentation, the format 
+info class offers the `getFormatCharacters()` method to get a list of all 
+characters that can be used. 
 
 Displaying a simple text-based list of allowed characters:
 
@@ -676,7 +706,9 @@ foreach($characters as $character)
 
 ### Manually validating a date format
 
-Use the `validateFormat()` method to validate a date format string, and retrieve a validation message manually. The same method is used by the ShowDate command, but can be used separately for specific needs.
+Use the `validateFormat()` method to validate a date format string, and 
+retrieve a validation message manually. The same method is used by the 
+`ShowDate` command, but can be used separately for specific needs.
 
 ```php
 use Mailcode\Mailcode_Factory;
@@ -702,13 +734,18 @@ else
 
 ## Format compatibility
 
-Mailcode mixes well with HTML and XML. Its strict syntax makes it easy to distinguish it from most text formats. with the notable exception of CSS. In HTML, all style tags are ignored.
+Mailcode mixes well with HTML and XML. Its strict syntax makes it easy to 
+distinguish it from most text formats. with the notable exception of CSS. 
+In HTML, all style tags are ignored.
 
 ## Safeguarding commands when filtering texts
 
-When texts containing commands need to be filtered, or otherwise parsed in a way that could break the command syntax, the safeguard mechanism allows for easy replacement of all commands with neutral placeholder strings.
+When texts containing commands need to be filtered, or otherwise parsed in a 
+way that could break the command syntax, the safeguard mechanism allows for 
+easy replacement of all commands with neutral placeholder strings.
 
-Assuming the text to filter, possibly containing commands, is stored in `$text`:
+Assuming the text to filter, possibly containing commands, is stored in 
+`$text`:
 
 ```php
 use Mailcode\Mailcode;
@@ -732,16 +769,18 @@ $filterText = $safeguard->makeSafe();
 $result = $safeguard->makeWhole($filterText);
 ```
 
-**HINT:** Placeholders are case neutral, and thus cannot be broken by changing the text case.  
+**HINT:** Placeholders are case neutral, and thus cannot be broken by 
+changing the text case.  
 
 ### Avoiding delimiter conflicts
 
-By default, the placeholders use `999` as delimiters, for example: `9990000000001999`. 
-Each delimiter gets a unique number within the same request, which is zero-padded right,
-making each placeholder unique in all subject strings.
+By default, the placeholders use `999` as delimiters, for example:
+`9990000000001999`. Each delimiter gets a unique number within the same 
+request, which is zero-padded right, making each placeholder unique in all 
+subject strings.
 
-Having number-based placeholders means that they are impervious to usual text transformations,
-like changing the case or applying url encoding.
+Having number-based placeholders means that they are impervious to usual text 
+transformations, like changing the case or applying url encoding.
 
 Still, the delimiter string can be adjusted as needed:
 
@@ -758,14 +797,14 @@ This would for example make the delimiters look like `__0000000001__`.
 
 ### Placeholder consistency check
 
-When calling `makeWhole()`, the safeguarder will make sure that all placeholders 
+When calling `makeWhole()`, the Safeguard will make sure that all placeholders 
 that were initially replaced in the target string are still there. If they are 
 not, an exception will be thrown.
 
 ### Accessing placeholder information
 
 The placeholders used in a string can be easily retrieved. Just be sure to call 
-`getPlaceholders()` after the initial configuration (setting the delimiters for 
+`getPlaceholders()` after the initial configuration (setting the delimiters, for 
 example).
 
 ```php
@@ -786,7 +825,11 @@ foreach($placeholders as $placeholder)
 
 ## Applying formatting
 
-By default, when using the safeguard's `makeWhole` method, all command placeholders are replaced with the normalized syntax of the commands. A number of additional formatting options are available via the safeguard's formatting class. In this case, the formatted string is retrieved via the formatting class instead of the safeguard itself. 
+By default, when using the safeguard's `makeWhole` method, all command 
+placeholders are replaced with the normalized syntax of the commands. 
+A number of additional formatting options are available via the safeguard's 
+formatting class. In this case, the formatted string is retrieved via the 
+formatting class instead of the safeguard itself. 
 
 Creating a formatting instance, using a safeguard:
 
@@ -799,7 +842,8 @@ $safeguard = Mailcode::create()->createSafeguard($text);
 $formatting = $safeguard->createFormatting($safeguard->makeSafe());
 ```
 
-**Note:** Formatting is entirely separate from the safeguard. The safeguard instance retains the original text.
+**Note:** Formatting is entirely separate from the safeguard. The safeguard 
+instance retains the original text.
 
 ### Replacers and Formatters
 
