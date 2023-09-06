@@ -309,9 +309,34 @@ class Mailcode_Parser_Statement_Tokenizer
         );
     }
 
+    private function createNumber(string $number) : Mailcode_Parser_Statement_Tokenizer_Token_Number
+    {
+        $token = $this->createToken('Number', $number);
+
+        if($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_Number)
+        {
+            return $token;
+        }
+
+        throw new Mailcode_Parser_Exception(
+            'Invalid token created',
+            '',
+            self::ERROR_INVALID_TOKEN_CREATED
+        );
+    }
+
     public function appendStringLiteral(string $text) : Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
     {
         $token = $this->createStringLiteral($text);
+
+        $this->appendToken($token);
+
+        return $token;
+    }
+
+    public function appendNumber(string $number) : Mailcode_Parser_Statement_Tokenizer_Token_Number
+    {
+        $token = $this->createNumber($number);
 
         $this->appendToken($token);
 

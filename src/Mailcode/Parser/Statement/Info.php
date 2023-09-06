@@ -299,6 +299,11 @@ class Mailcode_Parser_Statement_Info
         return $this->tokenizer->appendStringLiteral($text);
     }
 
+    public function addNumber(string $number): Mailcode_Parser_Statement_Tokenizer_Token_Number
+    {
+        return $this->tokenizer->appendNumber($number);
+    }
+
     public function prependStringLiteral(string $text): Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
     {
         return $this->tokenizer->prependStringLiteral($text);
