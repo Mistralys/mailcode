@@ -2,11 +2,14 @@
 - Syntax: Added support for named parameters via `name=value` syntax.
 - ShowDate Command: `timezone:` keyword converted to a named parameter.
 - SetVar Command: `count:` keyword converted to a named parameter.
+- SetVar Command: Added `setCount()`.
 - For Command: `break-at:` keyword converted to a named parameter.
+- For Command: Added `setBreakAt()`.
 - ShowDate Command: Fixed incorrect conversion of some PHP date format signs.
 - ShowDate Command: Added `a`, `G` and `g` to the formats for AM/PM times.
 - ShowDate Command: Added tests for all format conversions.
 - ShowDate Command: Added constants for all PHP format signs.
+- ShowDate Command: Added `setTimezone()`.
 - Error Messages: Added `getCommand()` to fetch the originating command, if any.
 - Factory: Added the `var()` set to access variable related methods.
 
