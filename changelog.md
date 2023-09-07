@@ -1,3 +1,9 @@
+### v3.2.1 - Minor enhancements
+- Highlighting: Added support for the named parameters.
+- Highlighting: Fixed spacing in tokens, now using the token's `hasSpacing()`.
+- Browser Tools: Added a syntax highlighter to see the highlighting in action.
+- Core: Added `Mailcode::getName()` to gert a human-readable package name.
+
 ### v3.2.0 - Named parameters support (breaking)
 - Syntax: Added support for named parameters via `name=value` syntax.
 - ShowDate Command: `timezone:` keyword converted to a named parameter.
