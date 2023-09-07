@@ -81,21 +81,18 @@ function translateMailcode(string $subject, string $syntax) : string
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Mailcode commands translator</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <title><?php pts('Syntax translator'); ?> - <?php echo Mailcode::getName(); ?></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link href="main.css" rel="stylesheet">
     <style>
         <?php echo $mailcode->createStyler()->getCSS() ?>
-        BODY{
-            padding: 2rem 0;
-        }
-        TEXTAREA{
-            width: 100%;
-        }
-
     </style>
 </head>
 <body>
     <div class="container">
+        <p>
+            <a href="./">&laquo; <?php pts('Back to overview'); ?></a>
+        </p>
         <h1><?php pt('Commands translation') ?></h1>
         <p>
             <?php
