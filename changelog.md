@@ -1,3 +1,6 @@
+### v3.2.2 - Fixed a test
+- Tests: Fixed a minor highlighting test not updated after v3.2.1.
+
 ### v3.2.1 - Minor enhancements
 - Highlighting: Added support for the named parameters.
 - Highlighting: Fixed spacing in tokens, now using the token's `hasSpacing()`.
