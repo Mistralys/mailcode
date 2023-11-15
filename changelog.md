@@ -1,3 +1,6 @@
+### v3.2.3 - SetVar update
+- SetVar Command: Fixed the Velocity translation for counting single variables.
+
 ### v3.2.2 - Fixed a test
 - Tests: Fixed a minor highlighting test not updated after v3.2.1.
 
