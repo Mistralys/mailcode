@@ -60,7 +60,7 @@ class Mailcode_Variables_Variable
    /**
     * @var array<string>
     */
-    protected $validations = array(
+    protected array $validations = array(
         'number_path',
         'number_name',
         'underscore_path',
@@ -197,7 +197,12 @@ class Mailcode_Variables_Variable
             }*/
         }
     }
-    
+
+    public function hasPath() : bool
+    {
+        return $this->getPath() !== '';
+    }
+
     protected function validate_number_path() : void
     {
         $this->validateNumber($this->path, self::VALIDATION_ERROR_PATH_NUMERIC);
@@ -220,7 +225,7 @@ class Mailcode_Variables_Variable
     
     protected function validateNumber(string $value, int $errorCode) : void
     {
-        if(!is_numeric(substr($value, 0, 1)))
+        if(empty($value) || !is_numeric($value[0]))
         {
             return;
         }
