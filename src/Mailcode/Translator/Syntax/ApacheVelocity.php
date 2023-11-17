@@ -83,6 +83,11 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
         return $string;
     }
 
+    protected function hasVariableEncodings(Mailcode_Commands_Command $command) : bool
+    {
+        return $command instanceof EncodableInterface && $command->hasActiveEncodings();
+    }
+
     protected function renderVariableEncodings(Mailcode_Commands_Command $command, string $varName): string
     {
         if (!$command instanceof EncodableInterface || !$command->hasActiveEncodings()) {
@@ -137,7 +142,6 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
      * @var array<string,string>
      */
     private array $encodingTemplates = array(
-        Mailcode_Commands_Keywords::TYPE_DECRYPT => '${text.decrypt(%s, %s)}',
         Mailcode_Commands_Keywords::TYPE_URLENCODE => '${esc.url(%s)}',
         Mailcode_Commands_Keywords::TYPE_URLDECODE => '${esc.unurl(%s)}',
         Mailcode_Commands_Keywords::TYPE_IDN_ENCODE => '${text.idn(%s)}',
@@ -160,10 +164,6 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
     {
         $template = $this->encodingTemplates[$keyword] ?? '%s';
 
-        if (Mailcode_Commands_Keywords::TYPE_DECRYPT == $keyword && $command instanceof DecryptInterface) {
-            return sprintf($template, $result, $command->getDecryptionKeyToken()->getValue());
-        } else {
-            return sprintf($template, $result);
-        }
+        return sprintf($template, $result);
     }
 }

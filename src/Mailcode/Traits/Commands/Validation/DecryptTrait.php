@@ -30,26 +30,61 @@ trait DecryptTrait
 
     protected function validateSyntax_check_decrypt(): void
     {
-        $token = $this->requireParams()
+        $token = $this
+            ->requireParams()
             ->getInfo()
-            ->getTokenForKeyword(Mailcode_Commands_Keywords::TYPE_DECRYPT);
+            ->getTokenByParamName(DecryptInterface::PARAMETER_NAME);
 
-        if ($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral) {
-            $this->decryptionKeyToken = $token;
-        }
-
-        $val = $this->validator->createKeyword(Mailcode_Commands_Keywords::TYPE_DECRYPT);
-
-        if ($this->decryptionKeyToken === null || !$val->isValid()) {
+        if($token === null) {
             return;
         }
 
-        if (!$this->decryptionKeyToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral) {
-            $this->validationResult->makeError(
-                t('Invalid decryption key token:') . ' ' . t('Expected a string.'),
-                DecryptInterface::VALIDATION_DECRYPT_CODE_WRONG_TYPE
-            );
+        if ($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral) {
+            $this->decryptionKeyToken = $token;
+            return;
         }
+
+        $this->validationResult->makeError(
+            t('Invalid decryption key token:') . ' ' . t('Expected a string.'),
+            DecryptInterface::VALIDATION_DECRYPT_CODE_WRONG_TYPE
+        );
+    }
+
+    public function isDecryptionEnabled() : bool
+    {
+        return $this->getDecryptionKeyToken() !== null;
+    }
+
+    public function getDecryptionKey() : string
+    {
+        $key = $this->getDecryptionKeyToken();
+        if($key !== null) {
+            return $key->getText();
+        }
+
+        return '';
+    }
+
+    public function enableDecryption(string $key=DecryptInterface::DEFAULT_DECRYPTION_KEY) : self
+    {
+        $this->decryptionKeyToken = $this
+            ->requireParams()
+            ->getInfo()
+            ->addParamString(DecryptInterface::PARAMETER_NAME, $key);
+
+        return $this;
+    }
+
+    public function disableDecryption() : self
+    {
+        if(isset($this->decryptionKeyToken)) {
+            $this
+                ->requireParams()
+                ->getInfo()
+                ->removeToken($this->decryptionKeyToken);
+        }
+
+        return $this;
     }
 
     /**
@@ -57,31 +92,10 @@ trait DecryptTrait
      * been specified in the original command, the default
      * decryption key is used as defined via {@see Mailcode_Commands_Command_ShowVariable::setDefaultDecryptionKey()}.
      *
-     * @return Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
+     * @return Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral|NULL
      */
-    public function getDecryptionKeyToken(): Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
+    public function getDecryptionKeyToken(): ?Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
     {
-        if (!isset($this->decryptionKeyToken)) {
-            $this->decryptionKeyToken = $this->createDecryptionKeyToken();
-        }
-
         return $this->decryptionKeyToken;
-    }
-
-    /**
-     * Creates the default decryption key token on demand.
-     *
-     * @return Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
-     */
-    private function createDecryptionKeyToken(): Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
-    {
-        $default = Mailcode_Commands_Command_ShowVariable::getDefaultDecryptionKey();
-
-        return new Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral(
-            'showvar-decryption-key-token',
-            $default,
-            null,
-            $this
-        );
     }
 }

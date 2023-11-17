@@ -54,23 +54,8 @@ class Mailcode_Commands_Command_ShowVariable
     {
         return array(
             Mailcode_Interfaces_Commands_Validation_Variable::VALIDATION_NAME_VARIABLE,
-            'no_other_tokens',
             DecryptInterface::VALIDATION_DECRYPT_NAME
         );
-    }
-
-    protected function validateSyntax_no_other_tokens(): void
-    {
-        $tokens = $this->requireParams()->getInfo()->getTokens();
-        $allowed = $this->resolveActiveTokens();
-
-        if (count($tokens) > count($allowed)) {
-            $this->validationResult->makeError(
-                t('Unknown parameters found:') . ' ' .
-                t('Only the variable name and keywords should be specified.'),
-                self::VALIDATION_TOO_MANY_PARAMETERS
-            );
-        }
     }
 
     /**

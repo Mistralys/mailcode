@@ -53,7 +53,8 @@ final class ShowVariableTests extends VelocityTestCase
             array(
                 'label' => 'Show variable, multiple encodings, decryption',
                 'mailcode' => Mailcode_Factory::show()
-                    ->var('FOO.BAR', true)
+                    ->var('FOO.BAR')
+                    ->enableDecryption()
                     ->setIDNEncoding(true)
                     ->setURLEncoding(),
                 'expected' => '${esc.url(${text.idn(${text.decrypt($FOO.BAR, "default")})})}'
@@ -61,7 +62,8 @@ final class ShowVariableTests extends VelocityTestCase
             array(
                 'label' => 'Show variable, multiple encodings, custom decryption',
                 'mailcode' => Mailcode_Factory::show()
-                    ->var('FOO.BAR', true, "barfoo")
+                    ->var('FOO.BAR')
+                    ->enableDecryption('barfoo')
                     ->setIDNEncoding(true)
                     ->setURLEncoding(),
                 'expected' => '${esc.url(${text.idn(${text.decrypt($FOO.BAR, "barfoo")})})}'

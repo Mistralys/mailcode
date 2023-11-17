@@ -12,7 +12,7 @@ final class Translator_ApacheVelocityTests extends VelocityTestCase
 
         $expected = '#if($FOO.BAR == 20 && $BARFOO == "Other value")';
 
-        $syntax = $this->translator->createSyntax('ApacheVelocity');
+        $syntax = $this->translator->createApacheVelocity();
 
         $result = $syntax->translateCommand($cmd);
 
@@ -25,7 +25,7 @@ final class Translator_ApacheVelocityTests extends VelocityTestCase
 
         $expected = '#if($map.hasElement($FOO.list(), "BAR", "(?s)\Atrue\Z"))';
 
-        $syntax = $this->translator->createSyntax('ApacheVelocity');
+        $syntax = $this->translator->createApacheVelocity();
 
         $result = $syntax->translateCommand($cmd);
 
@@ -34,11 +34,13 @@ final class Translator_ApacheVelocityTests extends VelocityTestCase
 
     public function test_show_decryption()
     {
-        $cmd = Mailcode_Factory::show()->var("FOO.BAR", true);
+        $cmd = Mailcode_Factory::show()
+            ->var("FOO.BAR")
+            ->enableDecryption();
 
         $expected = '${text.decrypt($FOO.BAR, "default")}';
 
-        $syntax = $this->translator->createSyntax('ApacheVelocity');
+        $syntax = $this->translator->createApacheVelocity();
 
         $result = $syntax->translateCommand($cmd);
 
@@ -47,11 +49,12 @@ final class Translator_ApacheVelocityTests extends VelocityTestCase
 
     public function test_show_decryption_custom()
     {
-        $cmd = Mailcode_Factory::show()->var("FOO.BAR", true, "barfoo");
+        $cmd = Mailcode_Factory::show()->var("FOO.BAR")
+            ->enableDecryption('barfoo');
 
         $expected = '${text.decrypt($FOO.BAR, "barfoo")}';
 
-        $syntax = $this->translator->createSyntax('ApacheVelocity');
+        $syntax = $this->translator->createApacheVelocity();
 
         $result = $syntax->translateCommand($cmd);
 
@@ -60,7 +63,7 @@ final class Translator_ApacheVelocityTests extends VelocityTestCase
 
     public function test_translateSafeguard()
     {
-        $syntax = $this->translator->createSyntax('ApacheVelocity');
+        $syntax = $this->translator->createApacheVelocity();
 
         $subject = '
 {setvar: $CUSTOMER.CUSTOMER_ID = "42"}
@@ -97,11 +100,11 @@ ${CUSTOMER.CUSTOMER_ID}
         $this->assertEquals($expected, $result);
     }
 
-    public function test_showvar_decrypt()
+    public function test_showvar_decrypt() : void
     {
-        $syntax = $this->translator->createSyntax('ApacheVelocity');
+        $syntax = $this->translator->createApacheVelocity();
 
-        $subject = '{showvar: $CUSTOMER.CUSTOMER_ID decrypt: idnencode:}';
+        $subject = '{showvar: $CUSTOMER.CUSTOMER_ID decrypt="default" idnencode:}';
         $expected = '${text.idn(${text.decrypt($CUSTOMER.CUSTOMER_ID, "default")})}';
 
         $safeguard = Mailcode::create()->createSafeguard($subject);
@@ -110,11 +113,11 @@ ${CUSTOMER.CUSTOMER_ID}
         $this->assertEquals($expected, $result);
     }
 
-    public function test_showvar_decrypt_custom()
+    public function test_showvar_decrypt_custom() : void
     {
-        $syntax = $this->translator->createSyntax('ApacheVelocity');
+        $syntax = $this->translator->createApacheVelocity();
 
-        $subject = '{showvar: $CUSTOMER.CUSTOMER_ID decrypt: "barfoo" idnencode:}';
+        $subject = '{showvar: $CUSTOMER.CUSTOMER_ID decrypt="barfoo" idnencode:}';
         $expected = '${text.idn(${text.decrypt($CUSTOMER.CUSTOMER_ID, "barfoo")})}';
 
         $safeguard = Mailcode::create()->createSafeguard($subject);
@@ -135,7 +138,7 @@ ${CUSTOMER.CUSTOMER_ID}
         $internalFormat = 'yyyy-MM-dd';
         $expected = '${time.input("'.$internalFormat.'", $FOO.BAR).output("dd.MM.yyyy").zone("UTC")}';
 
-        $syntax = $this->translator->createSyntax('ApacheVelocity');
+        $syntax = $this->translator->createApacheVelocity();
         $safeguard = Mailcode::create()->createSafeguard($subject);
         $dateCommands = $safeguard->getCollection()->getShowDateCommands();
 
@@ -155,7 +158,7 @@ ${CUSTOMER.CUSTOMER_ID}
         $internalFormat = 'yyyy-MM-dd';
         $expected = '${esc.url($time.input("' . $internalFormat . '", $FOO.BAR).output("yyyy-MM-dd").zone("UTC"))}';
 
-        $syntax = $this->translator->createSyntax('ApacheVelocity');
+        $syntax = $this->translator->createApacheVelocity();
         $safeguard = Mailcode::create()->createSafeguard($subject);
         $dateCommands = $safeguard->getCollection()->getShowDateCommands();
 
@@ -175,7 +178,7 @@ ${CUSTOMER.CUSTOMER_ID}
         $internalFormat = 'yyyy-MM-dd';
         $expected = '${esc.url($time.input("' . $internalFormat . '", $FOO.BAR).output("yyyy-MM-dd").zone("UTC"))}';
 
-        $syntax = $this->translator->createSyntax('ApacheVelocity');
+        $syntax = $this->translator->createApacheVelocity();
         $safeguard = Mailcode::create()->createSafeguard($subject);
         $dateCommands = $safeguard->getCollection()->getShowDateCommands();
 
@@ -195,7 +198,7 @@ ${CUSTOMER.CUSTOMER_ID}
         $internalFormat = 'yyyy-MM-dd';
         $expected = '${esc.url($time.input("' . $internalFormat . '", $FOO.BAR).output("yyyy-MM-dd").zone("Europe/Berlin"))}';
 
-        $syntax = $this->translator->createSyntax('ApacheVelocity');
+        $syntax = $this->translator->createApacheVelocity();
         $safeguard = Mailcode::create()->createSafeguard($subject);
         $dateCommands = $safeguard->getCollection()->getShowDateCommands();
 
@@ -215,7 +218,7 @@ ${CUSTOMER.CUSTOMER_ID}
         $internalFormat = 'yyyy-MM-dd';
         $expected = '${esc.url($time.input("' . $internalFormat . '", $FOO.BAR).output("yyyy-MM-dd").zone("Europe/Berlin"))}';
 
-        $syntax = $this->translator->createSyntax('ApacheVelocity');
+        $syntax = $this->translator->createApacheVelocity();
         $safeguard = Mailcode::create()->createSafeguard($subject);
         $dateCommands = $safeguard->getCollection()->getShowDateCommands();
 
@@ -235,7 +238,7 @@ ${CUSTOMER.CUSTOMER_ID}
         $internalFormat = 'yyyy-MM-dd';
         $expected = '${esc.url($time.input("' . $internalFormat . '", $FOO.BAR).output("yyyy-MM-dd").zone("Europe/Berlin"))}';
 
-        $syntax = $this->translator->createSyntax('ApacheVelocity');
+        $syntax = $this->translator->createApacheVelocity();
         $safeguard = Mailcode::create()->createSafeguard($subject);
         $dateCommands = $safeguard->getCollection()->getShowDateCommands();
 

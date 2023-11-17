@@ -88,17 +88,12 @@ trait EncodableTrait
 
         // We are using the keywords list from the command's parameters
         // here, so they are in the exact order in which they were specified.
-        // An exclusion is the "decrypt:" keyword, which *must* come first
-        foreach ($keywords as $keyword) {
+        foreach ($keywords as $keyword)
+        {
             $name = $keyword->getKeyword();
 
             if ($this->supportsEncoding($name) && $this->isEncodingEnabled($name)) {
-                if (Mailcode_Commands_Keywords::TYPE_DECRYPT == $name) {
-                    // ensure that "decrypt:" is always first
-                    array_unshift($result, $name);
-                } else {
-                    $result[] = $name;
-                }
+                $result[] = $name;
             }
         }
 
@@ -123,10 +118,6 @@ trait EncodableTrait
 
         if ($this instanceof IDNDecodeInterface) {
             $encodings[] = Mailcode_Commands_Keywords::TYPE_IDN_DECODE;
-        }
-
-        if ($this instanceof DecryptInterface) {
-            $encodings[] = Mailcode_Commands_Keywords::TYPE_DECRYPT;
         }
 
         sort($encodings);

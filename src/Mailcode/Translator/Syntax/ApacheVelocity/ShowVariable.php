@@ -24,6 +24,18 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ShowVariable extends Mailcode_Tr
     {
         $varName = undollarize($command->getVariableName());
 
+        if($command->isDecryptionEnabled()) {
+            $varName = sprintf(
+                'text.decrypt(%s, "%s")',
+                dollarize($varName),
+                $command->getDecryptionKey()
+            );
+
+            if($this->hasVariableEncodings($command)) {
+                $varName = '${'.$varName.'}';
+            }
+        }
+
         return $this->renderVariableEncodings($command, $varName);
     }
 }
