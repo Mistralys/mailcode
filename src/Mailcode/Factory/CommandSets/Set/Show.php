@@ -35,7 +35,10 @@ class Mailcode_Factory_CommandSets_Set_Show extends Mailcode_Factory_CommandSets
             'ShowVariable',
             '',
             $variableName,
-            '{showvar:' . $variableName . '}'
+            sprintf(
+                '{showvar: %s}',
+                $variableName
+            )
         );
 
         $this->instantiator->checkCommand($cmd);

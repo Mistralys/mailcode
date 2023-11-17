@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Mailcode\Decrypt\DecryptSettings;
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Collection;
 use Mailcode\Mailcode_Commands_Command;
@@ -22,6 +23,9 @@ abstract class MailcodeTestCase extends TestCase
 
         // Reset the time zone
         Mailcode_Commands_Command_ShowDate::setDefaultTimezone(null);
+
+        // Reset the global decryption key
+        DecryptSettings::setDefaultKeyName(null);
     }
 
     protected function enableDebug() : void

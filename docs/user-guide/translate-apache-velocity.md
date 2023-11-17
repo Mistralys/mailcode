@@ -221,7 +221,7 @@ $internalFormat = 'yyyy-MM-dd';
 
 // Create the translator and the safeguard
 $mailcode = Mailcode::create();
-$syntax = $mailcode->createTranslator()->createSyntax('ApacheVelocity');
+$syntax = $mailcode->createTranslator()->createApacheVelocity();
 $safeguard = Mailcode::create()->createSafeguard($sourceString);
 
 // Configure all date commands, as needed

@@ -21,7 +21,7 @@ abstract class VelocityTestCase extends MailcodeTestCase
     
     protected function runCommands(array $tests) : void
     {
-        $syntax = $this->translator->createSyntax('ApacheVelocity');
+        $syntax = $this->translator->createApacheVelocity();
         
         foreach($tests as $test)
         {
@@ -47,7 +47,7 @@ abstract class VelocityTestCase extends MailcodeTestCase
     protected function translateCommand(Mailcode_Commands_Command $command) : string
     {
         return $this->translator
-            ->createSyntax('ApacheVelocity')
+            ->createApacheVelocity()
             ->translateCommand($command);
     }
 }

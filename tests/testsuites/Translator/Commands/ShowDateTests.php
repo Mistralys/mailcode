@@ -66,7 +66,7 @@ final class ShowDateTests extends VelocityTestCase
 
         $var->setTranslationParam('internal_format', 'yyyy-MM-dd');
 
-        $syntax = $this->translator->createSyntax('ApacheVelocity');
+        $syntax = $this->translator->createApacheVelocity();
 
         $result = $syntax->translateCommand($var);
 
@@ -75,7 +75,7 @@ final class ShowDateTests extends VelocityTestCase
 
     public function test_formatConversions() : void
     {
-        $syntax = $this->translator->createSyntax('ApacheVelocity');
+        $syntax = $this->translator->createApacheVelocity();
 
         foreach(Mailcode_Translator_Syntax_ApacheVelocity_ShowDate::$charTable as $phpChar => $javaChar)
         {

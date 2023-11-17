@@ -11,10 +11,9 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
-use Mailcode\Interfaces\Commands\EncodableInterface;
-use Mailcode\Interfaces\Commands\Validation\IDNEncodeInterface;
+use Mailcode\Interfaces\Commands\Validation\DecryptInterface;
 use Mailcode\Interfaces\Commands\Validation\IDNEncodingInterface;
-use Mailcode\Traits\Commands\EncodableTrait;
+use Mailcode\Traits\Commands\Validation\DecryptTrait;
 use Mailcode\Traits\Commands\Validation\IDNDecodeTrait;
 use Mailcode\Traits\Commands\Validation\IDNEncodeTrait;
 
@@ -28,44 +27,30 @@ use Mailcode\Traits\Commands\Validation\IDNEncodeTrait;
 class Mailcode_Commands_Command_ShowVariable
     extends Mailcode_Commands_ShowBase
     implements
-    IDNEncodingInterface
+    IDNEncodingInterface, DecryptInterface
 {
     public const VALIDATION_TOO_MANY_PARAMETERS = 69701;
 
     use IDNEncodeTrait;
     use IDNDecodeTrait;
+    use DecryptTrait;
 
-    public function getName() : string
+    public function getName(): string
     {
         return 'showvar';
     }
-    
-    public function getLabel() : string
+
+    public function getLabel(): string
     {
         return t('Show variable');
     }
-    
-    protected function getValidations() : array
+
+    protected function getValidations(): array
     {
         return array(
             Mailcode_Interfaces_Commands_Validation_Variable::VALIDATION_NAME_VARIABLE,
-            'no_other_tokens'
+            DecryptInterface::VALIDATION_DECRYPT_NAME
         );
-    }
-    
-    protected function validateSyntax_no_other_tokens() : void
-    {
-        $tokens = $this->requireParams()->getInfo()->getTokens();
-        $allowed = $this->resolveActiveTokens();
-
-        if(count($tokens) > count($allowed))
-        {
-            $this->validationResult->makeError(
-                t('Unknown parameters found:').' '.
-                t('Only the variable name and keywords should be specified.'),
-                self::VALIDATION_TOO_MANY_PARAMETERS
-            );
-        }
     }
 
     /**
@@ -75,18 +60,21 @@ class Mailcode_Commands_Command_ShowVariable
      * @return Mailcode_Parser_Statement_Tokenizer_Token[]
      * @throws Mailcode_Exception
      */
-    protected function resolveActiveTokens() : array
+    protected function resolveActiveTokens(): array
     {
         $allowed = array($this->getVariableToken());
 
         $encodings = $this->getSupportedEncodings();
 
-        foreach($encodings as $keyword)
-        {
+        foreach ($encodings as $keyword) {
             $token = $this->getEncodingToken($keyword);
-            if($token)
-            {
+            if ($token) {
                 $allowed[] = $token;
+
+                $parameter = $this->requireParams()->getInfo()->getTokenForKeyWord($token->getKeyword());
+                if ($parameter) {
+                    $allowed[] = $parameter;
+                }
             }
         }
 

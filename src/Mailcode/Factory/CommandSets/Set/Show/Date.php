@@ -69,14 +69,4 @@ class Date extends Mailcode_Factory_CommandSets_Set
 
         throw $this->instantiator->exceptionUnexpectedType('ShowDate', $cmd);
     }
-
-    private function quoteString(string $string): string
-    {
-        if (substr($string, 0, 1) === '"' && substr($string, -1, 1) === '"') {
-            return $string;
-        }
-
-        return '"' . str_replace('"', '\"', $string) . '"';
-    }
-
 }

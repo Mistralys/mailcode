@@ -13,7 +13,7 @@ use VelocityTestCase;
  */
 final class ShowVariableTests extends VelocityTestCase
 {
-    public function test_translateCommand() : void
+    public function test_translateCommand(): void
     {
         $tests = array(
             array(
@@ -51,15 +51,25 @@ final class ShowVariableTests extends VelocityTestCase
                 'expected' => '${text.unidn($FOO.BAR)}'
             ),
             array(
-                'label' => 'Show variable, multiple encodings',
+                'label' => 'Show variable, multiple encodings, decryption',
                 'mailcode' => Mailcode_Factory::show()
                     ->var('FOO.BAR')
+                    ->enableDecryption()
                     ->setIDNEncoding(true)
-                    ->setURLEncoding(true),
-                'expected' => '${esc.url(${text.idn($FOO.BAR)})}'
+                    ->setURLEncoding(),
+                'expected' => '${esc.url(${text.idn(${text.decrypt($FOO.BAR, "default")})})}'
+            ),
+            array(
+                'label' => 'Show variable, multiple encodings, custom decryption',
+                'mailcode' => Mailcode_Factory::show()
+                    ->var('FOO.BAR')
+                    ->enableDecryption('barfoo')
+                    ->setIDNEncoding(true)
+                    ->setURLEncoding(),
+                'expected' => '${esc.url(${text.idn(${text.decrypt($FOO.BAR, "barfoo")})})}'
             )
         );
-        
+
         $this->runCommands($tests);
     }
 }

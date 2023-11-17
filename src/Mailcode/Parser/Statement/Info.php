@@ -338,4 +338,19 @@ class Mailcode_Parser_Statement_Info
     {
         return $this->tokenizer->injectParamName($targetToken, $name);
     }
+
+    /**
+     * Adds a parameter with a string-based value.
+     *
+     * @param string $paramName
+     * @param string $value
+     * @return Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
+     * @throws Mailcode_Parser_Exception
+     */
+    public function addParamString(string $paramName, string $value) : Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
+    {
+        $token = $this->addStringLiteral($value);
+        $this->setParamName($token, $paramName);
+        return $token;
+    }
 }

@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use AppUtils\ClassHelper;
 use AppUtils\FileHelper;
 
 /**
@@ -46,6 +47,11 @@ class Mailcode_Translator
             ),
             self::ERROR_INVALID_SYNTAX_NAME
         );
+    }
+
+    public function createApacheVelocity() : Mailcode_Translator_Syntax
+    {
+        return $this->createSyntax(ClassHelper::getClassTypeName(Mailcode_Translator_Syntax_ApacheVelocity::class));
     }
 
     /**

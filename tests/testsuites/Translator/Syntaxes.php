@@ -39,7 +39,7 @@ final class Translator_SyntaxesTests extends VelocityTestCase
     {
         $translator = new Mailcode_Translator();
 
-        $syntax = $translator->createSyntax('ApacheVelocity');
+        $syntax = $translator->createApacheVelocity();
 
         $this->assertEquals('ApacheVelocity', $syntax->getTypeID());
     }

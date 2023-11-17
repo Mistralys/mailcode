@@ -10,7 +10,7 @@ final class Translator_Velocity_MonoTests extends VelocityTestCase
         $expected = 'Monospaced';
 
         $safe = Mailcode::create()->createSafeguard($string);
-        $translator = Mailcode::create()->createTranslator()->createSyntax('ApacheVelocity');
+        $translator = Mailcode::create()->createTranslator()->createApacheVelocity();
         $result = $translator->translateSafeguard($safe);
 
         $this->assertEquals($expected, $result);

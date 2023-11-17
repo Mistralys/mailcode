@@ -1,5 +1,9 @@
 ### v3.2.3 - SetVar update
 - SetVar Command: Fixed the Velocity translation for counting single variables.
+- SetVar Command: Added the `decrypt` parameter.
+- Commands: Added the `DecryptInterface` for commands with decryption capability.
+- Translator: Added the `createApacheVelocity()` helper method.
+- Parser: Added `addParamString()` to the statement info class.
 
 ### v3.2.2 - Fixed a test
 - Tests: Fixed a minor highlighting test not updated after v3.2.1.

@@ -20,9 +20,9 @@ namespace Mailcode;
  */
 abstract class Mailcode_Factory_CommandSets_Set
 {
-   /**
-    * @var Mailcode_Factory_Instantiator
-    */
+    /**
+     * @var Mailcode_Factory_Instantiator
+     */
     protected Mailcode_Factory_Instantiator $instantiator;
 
     /**
@@ -42,8 +42,8 @@ abstract class Mailcode_Factory_CommandSets_Set
     {
 
     }
-    
-    public function end() : Mailcode_Commands_Command_End
+
+    public function end(): Mailcode_Commands_Command_End
     {
         $cmd = $this->commands->createCommand(
             'End',
@@ -51,14 +51,22 @@ abstract class Mailcode_Factory_CommandSets_Set
             '',
             '{end}'
         );
-        
+
         $this->instantiator->checkCommand($cmd);
-        
-        if($cmd instanceof Mailcode_Commands_Command_End)
-        {
+
+        if ($cmd instanceof Mailcode_Commands_Command_End) {
             return $cmd;
         }
-        
+
         throw $this->instantiator->exceptionUnexpectedType('End', $cmd);
+    }
+
+    protected function quoteString(string $string): string
+    {
+        if (substr($string, 0, 1) === '"' && substr($string, -1, 1) === '"') {
+            return $string;
+        }
+
+        return '"' . str_replace('"', '\"', $string) . '"';
     }
 }

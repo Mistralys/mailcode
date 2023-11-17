@@ -12,13 +12,13 @@ declare(strict_types=1);
 namespace Mailcode\Traits\Commands;
 
 use Mailcode\Interfaces\Commands\EncodableInterface;
+use Mailcode\Interfaces\Commands\Validation\DecryptInterface;
 use Mailcode\Interfaces\Commands\Validation\IDNDecodeInterface;
 use Mailcode\Interfaces\Commands\Validation\IDNEncodeInterface;
 use Mailcode\Mailcode_Commands_Keywords;
 use Mailcode\Mailcode_Exception;
 use Mailcode\Mailcode_Interfaces_Commands_Validation_URLDecode;
 use Mailcode\Mailcode_Interfaces_Commands_Validation_URLEncode;
-use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Keyword;
 
 /**
@@ -32,12 +32,12 @@ use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Keyword;
  */
 trait EncodableTrait
 {
-    public function supportsEncoding(string $keyword) : bool
+    public function supportsEncoding(string $keyword): bool
     {
         return in_array($keyword, $this->getSupportedEncodings(), true);
     }
 
-    public function isEncodingEnabled(string $keyword) : bool
+    public function isEncodingEnabled(string $keyword): bool
     {
         return $this->requireParams()
             ->getInfo()
@@ -50,10 +50,9 @@ trait EncodableTrait
      * @return $this
      * @throws Mailcode_Exception
      */
-    public function setEncodingEnabled(string $keyword, bool $enabled) : self
+    public function setEncodingEnabled(string $keyword, bool $enabled): self
     {
-        if(!$this->supportsEncoding($keyword))
-        {
+        if (!$this->supportsEncoding($keyword)) {
             throw new Mailcode_Exception(
                 'Cannot set encoding status, command does not support target encoding.',
                 sprintf(
@@ -72,14 +71,14 @@ trait EncodableTrait
         return $this;
     }
 
-    public function hasActiveEncodings() : bool
+    public function hasActiveEncodings(): bool
     {
         $list = $this->getActiveEncodings();
 
         return !empty($list);
     }
 
-    public function getActiveEncodings() : array
+    public function getActiveEncodings(): array
     {
         $keywords = $this->requireParams()
             ->getInfo()
@@ -93,8 +92,7 @@ trait EncodableTrait
         {
             $name = $keyword->getKeyword();
 
-            if($this->supportsEncoding($name) && $this->isEncodingEnabled($name))
-            {
+            if ($this->supportsEncoding($name) && $this->isEncodingEnabled($name)) {
                 $result[] = $name;
             }
         }
@@ -102,27 +100,23 @@ trait EncodableTrait
         return $result;
     }
 
-    public function getSupportedEncodings() : array
+    public function getSupportedEncodings(): array
     {
         $encodings = array();
 
-        if($this instanceof Mailcode_Interfaces_Commands_Validation_URLEncode)
-        {
+        if ($this instanceof Mailcode_Interfaces_Commands_Validation_URLEncode) {
             $encodings[] = Mailcode_Commands_Keywords::TYPE_URLENCODE;
         }
 
-        if($this instanceof Mailcode_Interfaces_Commands_Validation_URLDecode)
-        {
+        if ($this instanceof Mailcode_Interfaces_Commands_Validation_URLDecode) {
             $encodings[] = Mailcode_Commands_Keywords::TYPE_URLDECODE;
         }
 
-        if($this instanceof IDNEncodeInterface)
-        {
+        if ($this instanceof IDNEncodeInterface) {
             $encodings[] = Mailcode_Commands_Keywords::TYPE_IDN_ENCODE;
         }
 
-        if($this instanceof IDNDecodeInterface)
-        {
+        if ($this instanceof IDNDecodeInterface) {
             $encodings[] = Mailcode_Commands_Keywords::TYPE_IDN_DECODE;
         }
 
@@ -131,7 +125,7 @@ trait EncodableTrait
         return $encodings;
     }
 
-    public function getEncodingToken(string $keyword) : ?Mailcode_Parser_Statement_Tokenizer_Token_Keyword
+    public function getEncodingToken(string $keyword): ?Mailcode_Parser_Statement_Tokenizer_Token_Keyword
     {
         return $this->requireParams()
             ->getInfo()
