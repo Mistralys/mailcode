@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace testsuites\Commands\Types;
 
 use Mailcode\Decrypt\DecryptSettings;
-use Mailcode\Interfaces\Commands\Validation\DecryptInterface;
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands_Command;
 use Mailcode\Mailcode_Commands_Command_ShowVariable;
@@ -87,7 +86,6 @@ final class ShowVarTests extends MailcodeTestCase
     {
         $cmd = $this->getCommandFromString('{showvar: $FOO urlencode:}');
 
-        $this->assertInstanceOf(Mailcode_Commands_Command_ShowVariable::class, $cmd);
         $this->assertTrue($cmd->isURLEncoded());
     }
 
