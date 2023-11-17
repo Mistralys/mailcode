@@ -49,10 +49,10 @@ final class ShowVarTests extends MailcodeTestCase
                 'code' => 0
             ),
             array(
-                'label' => 'With valid variable and default decryption key, but no default set',
+                'label' => 'With valid variable and default decryption key',
                 'string' => '{showvar: $foo_bar decrypt=""}',
-                'valid' => false,
-                'code' => DecryptInterface::VALIDATION_DECRYPT_NO_DEFAULT_KEY
+                'valid' => true,
+                'code' => 0
             ),
             array(
                 'label' => 'With valid variable and custom decryption key',
@@ -130,13 +130,13 @@ final class ShowVarTests extends MailcodeTestCase
 
     public function test_decryptDefault() : void
     {
-        DecryptSettings::setDefaultKey('my-key');
+        DecryptSettings::setDefaultKeyName('my-key');
 
-        $cmd = $this->getCommandFromString('{showvar: $FOO decrypt="default"}');
+        $cmd = $this->getCommandFromString('{showvar: $FOO decrypt=""}');
 
         $this->assertTrue($cmd->isDecryptionEnabled());
-        $this->assertEquals('my-key', $cmd->getDecryptionKey());
-        $this->assertEquals('{showvar: $FOO decrypt="default"}', $cmd->getNormalized());
+        $this->assertEquals('my-key', $cmd->getDecryptionKeyName());
+        $this->assertEquals('{showvar: $FOO decrypt=""}', $cmd->getNormalized());
     }
 
     public function test_decryptCustom() : void
@@ -144,7 +144,7 @@ final class ShowVarTests extends MailcodeTestCase
         $cmd = $this->getCommandFromString('{showvar: $FOO decrypt="custom-key"}');
 
         $this->assertTrue($cmd->isDecryptionEnabled());
-        $this->assertEquals('custom-key', $cmd->getDecryptionKey());
+        $this->assertEquals('custom-key', $cmd->getDecryptionKeyName());
         $this->assertEquals('{showvar: $FOO decrypt="custom-key"}', $cmd->getNormalized());
     }
 
@@ -161,32 +161,31 @@ final class ShowVarTests extends MailcodeTestCase
         $this->assertEquals('{showvar: $FOO}', $cmd->getNormalized());
     }
 
-    public function test_decryptInvalidWhenNoDefault() : void
+    public function test_decryptNoDefault() : void
     {
-        $this->assertSame(DecryptInterface::DEFAULT_DECRYPTION_KEY, DecryptSettings::getDefaultKey());
+        $this->assertNull(DecryptSettings::getDefaultKeyName(), 'Precondition for the test is no default key.');
 
-        $mailcode = Mailcode::create()->parseString('{showvar: $FOO decrypt=""}');
+        $mailcode = $this->getCommandFromString('{showvar: $FOO decrypt=""}');
 
-        $this->assertFalse($mailcode->isValid());
-        $this->assertSame(DecryptInterface::VALIDATION_DECRYPT_NO_DEFAULT_KEY, $mailcode->getFirstError()->getCode());
+        $this->assertEmpty($mailcode->getDecryptionKeyName());
     }
 
     public function test_decryptDefaultKeyWhenDefault() : void
     {
-        DecryptSettings::setDefaultKey('default-key');
+        DecryptSettings::setDefaultKeyName('default-key');
 
-        $cmd = $this->getCommandFromString('{showvar: $FOO decrypt="default"}');
+        $cmd = $this->getCommandFromString('{showvar: $FOO decrypt=""}');
 
-        $this->assertEquals('default-key', $cmd->getDecryptionKey());
+        $this->assertEquals('default-key', $cmd->getDecryptionKeyName());
     }
 
     public function test_decryptDefaultKeyWhenEmpty() : void
     {
-        DecryptSettings::setDefaultKey('default-key');
+        DecryptSettings::setDefaultKeyName('default-key');
 
         $cmd = $this->getCommandFromString('{showvar: $FOO decrypt=""}');
 
-        $this->assertEquals('default-key', $cmd->getDecryptionKey());
+        $this->assertEquals('default-key', $cmd->getDecryptionKeyName());
     }
 
     private function getCommandFromString(string $command) : Mailcode_Commands_Command_ShowVariable

@@ -22,20 +22,44 @@ class Mailcode_Translator_Syntax_ApacheVelocity_ShowVariable extends Mailcode_Tr
 {
     public function translate(Mailcode_Commands_Command_ShowVariable $command): string
     {
-        $varName = undollarize($command->getVariableName());
-
-        if($command->isDecryptionEnabled()) {
-            $varName = sprintf(
-                'text.decrypt(%s, "%s")',
-                dollarize($varName),
-                $command->getDecryptionKey()
-            );
-
-            if($this->hasVariableEncodings($command)) {
-                $varName = '${'.$varName.'}';
-            }
+        if($command->isDecryptionEnabled())
+        {
+            $varName = $this->renderDecryptionKey($command);
+        }
+        else
+        {
+            $varName = undollarize($command->getVariableName());
         }
 
         return $this->renderVariableEncodings($command, $varName);
+    }
+
+    private function renderDecryptionKey(Mailcode_Commands_Command_ShowVariable $command) : string
+    {
+        $keyName = $command->getDecryptionKeyName();
+
+        if(!empty($keyName))
+        {
+            $varName = sprintf(
+                'text.decrypt(%s, "%s")',
+                dollarize($command->getVariableName()),
+                $keyName
+            );
+        }
+        else
+        {
+            // This will make the decryption system use the system's
+            // default key name.
+            $varName = sprintf(
+                'text.decrypt(%s)',
+                dollarize($command->getVariableName())
+            );
+        }
+
+        if($this->hasVariableEncodings($command)) {
+            $varName = '${'.$varName.'}';
+        }
+
+        return $varName;
     }
 }

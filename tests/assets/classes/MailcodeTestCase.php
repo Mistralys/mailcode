@@ -25,7 +25,7 @@ abstract class MailcodeTestCase extends TestCase
         Mailcode_Commands_Command_ShowDate::setDefaultTimezone(null);
 
         // Reset the global decryption key
-        DecryptSettings::setDefaultKey(null);
+        DecryptSettings::setDefaultKeyName(null);
     }
 
     protected function enableDebug() : void

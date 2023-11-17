@@ -49,20 +49,6 @@ trait DecryptTrait
         }
 
         $this->decryptionKeyToken = $token;
-
-        $key = $this->getDecryptionKey();
-
-        if($key !== DecryptInterface::DEFAULT_DECRYPTION_KEY) {
-            return;
-        }
-
-        $this->validationResult->makeError(
-            (string)sb()
-            ->t('Cannot use the default decryption key:')
-            ->t('No default key has been specified.')
-            ->t('A default key must be set, or a key must be specified in the command.'),
-            DecryptInterface::VALIDATION_DECRYPT_NO_DEFAULT_KEY
-        );
     }
 
     public function isDecryptionEnabled() : bool
@@ -70,28 +56,28 @@ trait DecryptTrait
         return $this->getDecryptionKeyToken() !== null;
     }
 
-    public function getDecryptionKey() : string
+    public function getDecryptionKeyName() : string
     {
         $key = $this->getDecryptionKeyToken();
         if($key === null) {
             return '';
         }
 
-        $key = $key->getText();
+        $keyName = $key->getText();
 
-        if(empty($key) || $key === DecryptInterface::DEFAULT_DECRYPTION_KEY) {
-            return DecryptSettings::getDefaultKey();
+        if(empty($keyName)) {
+            $keyName = (string)DecryptSettings::getDefaultKeyName();
         }
 
-        return $key;
+        return $keyName;
     }
 
-    public function enableDecryption(string $key=DecryptInterface::DEFAULT_DECRYPTION_KEY) : self
+    public function enableDecryption(string $keyName=DecryptInterface::DEFAULT_DECRYPTION_KEY_NAME) : self
     {
         $this->decryptionKeyToken = $this
             ->requireParams()
             ->getInfo()
-            ->addParamString(DecryptInterface::PARAMETER_NAME, $key);
+            ->addParamString(DecryptInterface::PARAMETER_NAME, $keyName);
 
         return $this;
     }
@@ -111,7 +97,7 @@ trait DecryptTrait
     /**
      * Gets the decryption key to use for the command. If none has
      * been specified in the original command, the default
-     * decryption key is used as defined via {@see DecryptSettings::setDefaultKey()}.
+     * decryption key is used as defined via {@see DecryptSettings::setDefaultKeyName()}.
      *
      * @return Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral|NULL
      */
