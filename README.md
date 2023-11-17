@@ -75,7 +75,7 @@ To use curly braces in a document, or in string literals, they can be escaped:
 {showvar: $CUSTOMER.NAME}
 ```
 
-### Display a date and/or time
+### Display a date and time
 
 Using the default date and time settings for the current locale:
 
@@ -116,13 +116,15 @@ specific time zone is specified explicitly in a command.
 
 ### Display a formatted number
 
-To specify the format for the number, simply write the number `1000` the way you would like to have it formatted. This will be applied to the values accordingly.
+To specify the format for the number, write the number `1000` the way you 
+would like to have it formatted. This will be applied to the values accordingly.
 
 ```
 {shownumber: $ORDER.PRICE "1,000.00"}
 ```
 
-This will use commas as thousands separator, a dot for the decimals, and two decimal positions.
+This will use commas as a thousand separator, a dot for the decimals, and 
+two decimal positions.
 
 For example, `10` will be displayed as `10.00`, and `5120.4` as `5,120.40`.
 
@@ -134,7 +136,8 @@ Zero-padding is specified by appending the required number length like this:
 {shownumber: $MONTH "1000:##"}
 ```
 
-The amount of hashes determines the target length of the number. This example will add a zero-padding of `2`, meaning a `5` will be shown as `05`.
+The number of hashes determines the target length of the number. This example 
+will add a zero-padding of `2`, meaning a `5` will be shown as `05`.
 
 #### Absolute numbers
 
@@ -270,7 +273,7 @@ formatted style to the E164 format required for `tel:` URLs.
 
 Whenever you wish to add a phone link, use this:
 
-```html
+```
 <a href="tel:{showphone: $PHONE "US" urlencode:}">{showvar: $PHONE}</a>
 ```
 
@@ -286,7 +289,7 @@ This will convert the phone number to the expected format.
 
 #### Arithmetic operation
 
-Basic arithmetic operations can be used, provided that the target
+Basic arithmetic operations can be used, provided the target
 language supports these. They are typically passed on directly 
 through the translator, unless it has special logic to convert
 them.
@@ -307,7 +310,7 @@ target variable.
 
 #### Omitting the = sign
 
-The equals sign is implied, so it can be omitted.
+The equal sign is implied, so it can be omitted.
 
 ```
 {setvar: $AMOUNT 45 * 2}
@@ -351,7 +354,7 @@ Checking if a variable value contains a string:
 {if contains: $PRODUCT.NAME "Search term"}
 ```
 
-Making the search case insensitive:
+Case-insensitive search:
 
 ```
 {if contains: $PRODUCT.NAME "Search term" insensitive:}
@@ -380,9 +383,9 @@ in all records, without having to use a loop:
 
 This will search in the `NAME` property of all products for the specified search term.
 
-The command otherwise behaves just like  the `contains` command, with the same options.
+The command otherwise behaves like  the `contains` command, with the same options.
 
-Case insensitive search:
+Case-insensitive search:
 
 ```
 {if list-contains: $PRODUCTS.NAME "server" insensitive:}
@@ -430,7 +433,7 @@ exactly readable. The `list-equals` command does exactly this.
 This will match only if an entry in the list is an exact match for "Search".
 
 It can be combined with the `insensitive:` keyword to search for the full
-search term, but in a case insensitive way.
+search term, but in a case-insensitive way.
 
 #### Searching lists by beginning or end
 
@@ -446,7 +449,7 @@ Or checking if it ends with a specific string:
 {if ends-with: $PRODUCT.NAME "term"}
 ```
 
-Both can be made case insensitive:
+Both can be made case-insensitive:
 
 ```
 {if begins-with: $PRODUCT.NAME "Search" insensitive:}
@@ -474,7 +477,7 @@ Or checking for an exact match:
 
 #### Freeform conditions:
 
-Without subtype, the IF condition is not validated, and will be passed through as-is to the translation backend.
+Without subtype, the `IF` condition is not validated, and will be passed through as-is to the translation backend.
 
 ```
 {if: 6 + 2 == 8}
@@ -482,7 +485,7 @@ Without subtype, the IF condition is not validated, and will be passed through a
 {end}
 ```
 
-#### AND/OR combinations
+#### `AND` and `OR` combinations
 
 Several conditions can be combined within the same command using the `and:` and `or:` keywords. Either can be used, but not both within the same command. Subtypes can be mixed at will.
 
@@ -533,7 +536,7 @@ specific loop iteration count (`0`-based).
 ### Comments
 
 Comments may be added to document things. Whether they are used when translated
-to an specific preprocessor language depends on the translator. In general, 
+to a specific preprocessor language depends on the translator. In general, 
 the comments are converted to the target language.
 
 ```
@@ -543,6 +546,75 @@ the comments are converted to the target language.
   > NOTE: Comments can contain special characters, except other Mailcode commands
     or texts that can be mistaken for commands (which use the brackets {}).
 
+## Encoding and decoding values
+
+### URL encoding
+
+To URL encode a variable value:
+
+```
+{showvar: $CUSTOMER.NAME urlencode:}
+```
+
+The opposite is also possible:
+
+```
+{showvar: $CUSTOMER.NAME urldecode:}
+```
+
+### IDN encoding
+
+To encode a variable value to IDN:
+
+```
+{showvar: $CUSTOMER.NAME idnencode:}
+```
+
+The opposite is also possible:
+
+```
+{showvar: $CUSTOMER.NAME idndecode:}
+```
+
+### Encrypted values
+
+Encrypted values can be decrypted at render time in the target backend
+system. This is intended to be used with key names, which uniquely 
+identify the relevant encryption key to use to decrypt the values on 
+the backend side.
+
+To use the backend system's default encryption key name, add the parameter 
+with an empty value:
+
+```
+{showvar: $CUSTOMER.NAME decrypt=""}
+```
+
+To use a specific key name:
+
+```
+{showvar: $CUSTOMER.NAME decrypt="keyname"}
+```
+
+#### Default key names
+
+It is also possible to set a default key name that will be automatically
+used for all commands with an empty decrypt parameter:
+
+```php
+use Mailcode\Decrypt\DecryptSettings;
+
+DecryptSettings::getDefaultKeyName('default-key');
+```
+
+After this method is called, the following commands are functionally equivalent:
+
+```
+{showvar: $CUSTOMER.NAME decrypt=""}
+{showvar: $CUSTOMER.NAME decrypt="default-key"}
+```
+
+
 ## Integrated preprocessing
 
 Mailcode is a preprocessor language meant to be interpreted by a preprocessor
@@ -550,7 +622,7 @@ service, but some commands are made to be preprocessed natively by Mailcode
 itself. One example is the `mono` command, which applies monospace formatting
 to text.
 
-The preprocessing is optional, and can be done with the specialized PreProcessor
+The preprocessing is optional and can be done with the specialized PreProcessor
 class.
 
   > NOTE: When translating to an output syntax like Apache Velocity, the default
@@ -559,7 +631,7 @@ class.
 
 ### Working with the PreProcessor
 
-The PreProcessor is very easy to use: simply feed it a string with Mailcode 
+The PreProcessor is very easy to use: feed it a string with Mailcode 
 commands, and all commands that support pre-processing will be rendered.
 After this, the resulting string can be passed into a safeguard instance or
 parsed to fetch the commands.
@@ -588,7 +660,7 @@ The resulting pre-processed text will look like this:
 This text is <code>monospaced</code>.
 ```
 
-To create a `<pre>` tag, simply add the multiline keyword:
+To create a `<pre>` tag, add the multiline keyword:
 
 ```
 {mono: multiline:}
@@ -612,8 +684,8 @@ Commands like for loops, and if statements that have a closing command
 and are closed using the `{end}` command support accessing their siblings,
 and respective opening and closing commands.
 
-For example, the closing command of an if statement has the `getOpeningCommand()`
-method, which returns the if command that it closes, and vice versa. If command
+For example, the closing command of an `IF` statement has the `getOpeningCommand()`
+method, which returns the `IF` command that it closes, and vice versa. If command
 structures with `elseif` and `else` commands allow traversing the whole list of
 sibling commands.
 
@@ -630,8 +702,8 @@ date formatting functions, but only a subset of these are allowed.
   * `j` Day number, without leading zeros
   * `m` Month number, with leading zeros
   * `n` Month number, without leading zeros
-  * `y` Year, with 2 digits
-  * `Y` Year, with 4 digits
+  * `y` Year, with two digits
+  * `Y` Year, with four digits
   * `H` Hour, 24-hour format, with leading zeros
   * `G` Hour, 24-hour format, without leading zeros
   * `h` Hour, 12-hour format, with leading zeros
@@ -798,12 +870,12 @@ This would for example make the delimiters look like `__0000000001__`.
 ### Placeholder consistency check
 
 When calling `makeWhole()`, the Safeguard will make sure that all placeholders 
-that were initially replaced in the target string are still there. If they are 
-not, an exception will be thrown.
+initially replaced in the target string are still there. If they are not, an 
+exception will be thrown.
 
 ### Accessing placeholder information
 
-The placeholders used in a string can be easily retrieved. Just be sure to call 
+The placeholders used in a string can be easily retrieved. Be sure to call 
 `getPlaceholders()` after the initial configuration (setting the delimiters, for 
 example).
 
@@ -878,7 +950,7 @@ $text = '(Mailcode commands here)';
 $safeguard = Mailcode::create()->createSafeguard($text);
 $formatting = $safeguard->createFormatting($safeguard->makeSafe());
 
-// choose to replace commands with syntax highlighted commands
+// Select to replace commands with syntax-highlighted commands
 $formatting->replaceWithHTMLHighlighting();
 
 $highlighted = $formatting->toString();
@@ -925,11 +997,12 @@ NOTE: The excluded tag check goes up the whole tag nesting chain, which means th
 
 For the highlighting to work, the according CSS styles need to be loaded in the target page. 
 
-There are two way to do this:
+There are two ways to do this:
 
 ##### Including the stylesheet
 
-Simply ensure that the stylesheet file `css/highlight.css` of the package is loaded. This requires knowing the exact URL to the package's vendor folder.
+Ensure that the stylesheet file `css/highlight.css` of the package is loaded. 
+This requires knowing the exact URL to the package's vendor folder.
 
 ```html
 <link rel="stylesheet" media="all" src="/vendor/mistralys/mailcode/css/highlight.css">
@@ -947,7 +1020,7 @@ use Mailcode\Mailcode;
 $styler = Mailcode::create()->createStyler();
 ```
 
-Getting the raw CSS code without the `<style>` tag, for example to use in a compiled stylesheet file:
+Getting the raw CSS code without the `<style>` tag, for example, to use in a compiled stylesheet file:
 
 ```php
 use Mailcode\Mailcode;
@@ -957,7 +1030,7 @@ $styler = Mailcode::create()->createStyler();
 $css = $styler->getCSS();
 ```
 
-Retrieving the CSS including the `<style>` tag, for example to add it inline in a page:
+Retrieving the CSS including the `<style>` tag, for example, to add it inline in a page:
 
 ```php
 use Mailcode\Mailcode;
@@ -999,7 +1072,10 @@ $stylesheetURL = $styler->getStylesheetURL('/url/to/vendor/folder');
 
 ### Highlighting variables in the final document
 
-The "MarkVariables" highlighter allows highlighting (not syntax highlighting) all variable type commands, even once they have been processed by the mail preprocessor. This is handy when testing, to quickly identify all places in an HTML document where variables are used.
+The "MarkVariables" highlighter allows highlighting (not syntax highlighting) 
+all variable type commands, even once they have been processed by the mail 
+preprocessor. This is handy when testing to quickly identify all places in 
+an HTML document where variables are used.
 
 ```php
 use Mailcode\Mailcode;
@@ -1039,7 +1115,7 @@ This then only has to be added to the target document.
 
 For HTML mailings, or cases where the styles cannot be easily injected, the inline mode will automatically add the necessary styles to every command instance.
 
-Simply enable the inline mode:
+Enable the inline mode like this:
 
 ```php
 use Mailcode\Mailcode;
@@ -1098,12 +1174,11 @@ See the [Velocity documentation][].
 ## Browser-enabled tools
 
 In the subfolder `tools` are a few utilities meant to be used in a browser. To use
-these, simply run a `composer install` in the package's folder, and point your 
-browser there.
+these, run a `composer install` in the package's folder, and point your browser there.
 
-- Syntax translator - Translate a document with Mailcode commands to a supported syntax.
-- Syntax highlighter - Syntax highlight a document with Mailcode commands.
-- Phone countries extractor - Extracts a country list for the `showphone` command.
+- Syntax translator: Translate a document with Mailcode commands to a supported syntax.
+- Syntax highlighter: Syntax highlighting of a document with Mailcode commands.
+- Phone countries extractor: Extracts a country list for the `showphone` command.
 
 
 [DateTool]: https://velocity.apache.org/tools/devel/apidocs/org/apache/velocity/tools/generic/DateTool.html
