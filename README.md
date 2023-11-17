@@ -1069,7 +1069,7 @@ $string = '(Text with Mailcode commands here)';
 $safeguard = Mailcode::create()->createSafeguard($string);
 
 // create the translator
-$apache = Mailcode::create()->createTranslator()->createSyntax('ApacheVelocity');
+$apache = Mailcode::create()->createTranslator()->createApacheVelocity();
 
 // convert all commands in the safeguarded string
 $convertedString = $apache->translateSafeguard($safeguard);
@@ -1082,7 +1082,7 @@ use Mailcode\Mailcode;
 use Mailcode\Mailcode_Factory;
 
 // create the translator
-$apache = Mailcode::create()->createTranslator()->createSyntax('ApacheVelocity');
+$apache = Mailcode::create()->createTranslator()->createApacheVelocity();
 
 // create a command
 $command = Mailcode_Factory::set()->var('VAR.NAME', '8');
