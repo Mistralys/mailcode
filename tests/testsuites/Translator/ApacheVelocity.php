@@ -104,8 +104,8 @@ ${CUSTOMER.CUSTOMER_ID}
     {
         $syntax = $this->translator->createApacheVelocity();
 
-        $subject = '{showvar: $CUSTOMER.CUSTOMER_ID decrypt="default" idnencode:}';
-        $expected = '${text.idn(${text.decrypt($CUSTOMER.CUSTOMER_ID, "default")})}';
+        $subject = '{showvar: $CUSTOMER.CUSTOMER_ID decrypt="my-key" idnencode:}';
+        $expected = '${text.idn(${text.decrypt($CUSTOMER.CUSTOMER_ID, "my-key")})}';
 
         $safeguard = Mailcode::create()->createSafeguard($subject);
         $result = $syntax->translateSafeguard($safeguard);

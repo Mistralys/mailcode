@@ -49,10 +49,10 @@ final class ShowVarTests extends MailcodeTestCase
                 'code' => 0
             ),
             array(
-                'label' => 'With valid variable and default decryption key',
+                'label' => 'With valid variable and default decryption key, but no default set',
                 'string' => '{showvar: $foo_bar decrypt=""}',
-                'valid' => true,
-                'code' => 0
+                'valid' => false,
+                'code' => DecryptInterface::VALIDATION_DECRYPT_NO_DEFAULT_KEY
             ),
             array(
                 'label' => 'With valid variable and custom decryption key',
@@ -130,10 +130,12 @@ final class ShowVarTests extends MailcodeTestCase
 
     public function test_decryptDefault() : void
     {
+        DecryptSettings::setDefaultKey('my-key');
+
         $cmd = $this->getCommandFromString('{showvar: $FOO decrypt="default"}');
 
         $this->assertTrue($cmd->isDecryptionEnabled());
-        $this->assertEquals('default', $cmd->getDecryptionKey());
+        $this->assertEquals('my-key', $cmd->getDecryptionKey());
         $this->assertEquals('{showvar: $FOO decrypt="default"}', $cmd->getNormalized());
     }
 
