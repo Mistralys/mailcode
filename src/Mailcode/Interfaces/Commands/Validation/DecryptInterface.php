@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Mailcode\Interfaces\Commands\Validation;
 
+use Mailcode\Decrypt\DecryptSettings;
 use Mailcode\Mailcode_Commands_Command_ShowVariable;
 use Mailcode\Mailcode_Interfaces_Commands_Command;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
@@ -31,6 +32,7 @@ interface DecryptInterface extends Mailcode_Interfaces_Commands_Command
     public const DEFAULT_DECRYPTION_KEY = 'default';
     public const VALIDATION_DECRYPT_NAME = 'check_decrypt';
     public const VALIDATION_DECRYPT_CODE_WRONG_TYPE = 142601;
+    public const VALIDATION_DECRYPT_NO_DEFAULT_KEY = 142602;
 
     /**
      * Retrieves the token containing the decryption key.
@@ -38,7 +40,7 @@ interface DecryptInterface extends Mailcode_Interfaces_Commands_Command
      * in the command.
      *
      * @return Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral|NULL
-     * @see Mailcode_Commands_Command_ShowVariable::setDefaultDecryptionKey()
+     * @see DecryptSettings::setDefaultKey()
      */
     public function getDecryptionKeyToken(): ?Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
 

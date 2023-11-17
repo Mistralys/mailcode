@@ -11,10 +11,12 @@ declare(strict_types=1);
 
 namespace Mailcode\Traits\Commands\Validation;
 
+use Mailcode\Decrypt\DecryptSettings;
 use Mailcode\Interfaces\Commands\Validation\DecryptInterface;
 use Mailcode\Mailcode_Commands_Command_ShowVariable;
 use Mailcode\Mailcode_Commands_Keywords;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
+use function AppUtils\sb;
 use function Mailcode\t;
 
 /**
@@ -39,14 +41,27 @@ trait DecryptTrait
             return;
         }
 
-        if ($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral) {
-            $this->decryptionKeyToken = $token;
+        if (!$token instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral) {
+            $this->validationResult->makeError(
+                t('Invalid decryption key token:') . ' ' . t('Expected a string.'),
+                DecryptInterface::VALIDATION_DECRYPT_CODE_WRONG_TYPE
+            );
+        }
+
+        $this->decryptionKeyToken = $token;
+
+        $key = $this->getDecryptionKey();
+
+        if($key !== DecryptInterface::DEFAULT_DECRYPTION_KEY) {
             return;
         }
 
         $this->validationResult->makeError(
-            t('Invalid decryption key token:') . ' ' . t('Expected a string.'),
-            DecryptInterface::VALIDATION_DECRYPT_CODE_WRONG_TYPE
+            (string)sb()
+            ->t('Cannot use the default decryption key:')
+            ->t('No default key has been specified.')
+            ->t('A default key must be set, or a key must be specified in the command.'),
+            DecryptInterface::VALIDATION_DECRYPT_NO_DEFAULT_KEY
         );
     }
 
@@ -58,11 +73,17 @@ trait DecryptTrait
     public function getDecryptionKey() : string
     {
         $key = $this->getDecryptionKeyToken();
-        if($key !== null) {
-            return $key->getText();
+        if($key === null) {
+            return '';
         }
 
-        return '';
+        $key = $key->getText();
+
+        if(empty($key) || $key === DecryptInterface::DEFAULT_DECRYPTION_KEY) {
+            return DecryptSettings::getDefaultKey();
+        }
+
+        return $key;
     }
 
     public function enableDecryption(string $key=DecryptInterface::DEFAULT_DECRYPTION_KEY) : self
@@ -90,7 +111,7 @@ trait DecryptTrait
     /**
      * Gets the decryption key to use for the command. If none has
      * been specified in the original command, the default
-     * decryption key is used as defined via {@see Mailcode_Commands_Command_ShowVariable::setDefaultDecryptionKey()}.
+     * decryption key is used as defined via {@see DecryptSettings::setDefaultKey()}.
      *
      * @return Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral|NULL
      */

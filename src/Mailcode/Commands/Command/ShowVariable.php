@@ -35,11 +35,6 @@ class Mailcode_Commands_Command_ShowVariable
     use IDNDecodeTrait;
     use DecryptTrait;
 
-    /**
-     * @var string|NULL
-     */
-    private static ?string $defaultDecryptionKey = null;
-
     public function getName(): string
     {
         return 'showvar';
@@ -84,25 +79,5 @@ class Mailcode_Commands_Command_ShowVariable
         }
 
         return $allowed;
-    }
-
-    /**
-     * @param string|NULL $decryptionKey A decryption key
-     * @return void
-     */
-    public static function setDefaultDecryptionKey(?string $decryptionKey): void
-    {
-        self::$defaultDecryptionKey = $decryptionKey;
-    }
-
-    /**
-     * Gets the default decryption key for decryption. If not set via
-     * {@see self::setDefaultDecryptionKey()}, this defaults to "default".
-     *
-     * @return string
-     */
-    public static function getDefaultDecryptionKey(): string
-    {
-        return self::$defaultDecryptionKey ?? "default";
     }
 }
