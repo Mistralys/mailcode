@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Mailcode\Factory\CommandSets\Set\Show;
 
+use Mailcode\Interfaces\Commands\Validation\TimezoneInterface;
 use Mailcode\Mailcode_Commands_Command_ShowDate;
 use Mailcode\Mailcode_Factory_CommandSets_Set;
 
@@ -38,12 +39,12 @@ class Date extends Mailcode_Factory_CommandSets_Set
         $timezone = '';
         if (!empty($timezoneString)) {
             $timezone = sprintf(
-                ' timezone: %s',
+                ' '.TimezoneInterface::PARAMETER_NAME.'=%s',
                 $this->quoteString($timezoneString)
             );
         } else if (!empty($timezoneVariable)) {
             $timezone = sprintf(
-                ' timezone: %s',
+                ' '.TimezoneInterface::PARAMETER_NAME.'=%s',
                 $timezoneVariable
             );
         }

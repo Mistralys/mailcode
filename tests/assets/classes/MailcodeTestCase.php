@@ -47,8 +47,8 @@ abstract class MailcodeTestCase extends TestCase
                 }
             }
             
-            $label .= 'Command:'.$test['string'];
-            
+            $label .= 'Command:'.$test['string'].PHP_EOL;
+
             $this->assertSame($test['valid'], $collection->isValid(), $label);
             
             if(!$test['valid'])

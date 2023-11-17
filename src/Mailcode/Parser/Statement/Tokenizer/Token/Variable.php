@@ -44,4 +44,9 @@ class Mailcode_Parser_Statement_Tokenizer_Token_Variable extends Mailcode_Parser
     {
         return $this->getVariable()->getFullName();
     }
+
+    public function hasSpacing(): bool
+    {
+        return true;
+    }
 }

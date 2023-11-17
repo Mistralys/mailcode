@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Mailcode;
 
 use AppUtils\ClassHelper;
+use Mailcode\Interfaces\Commands\Validation\CountInterface;
 
 /**
  * Factory utility used to create commands.
@@ -28,7 +29,12 @@ class Mailcode_Factory_CommandSets_Set_Set extends Mailcode_Factory_CommandSets_
         $commandID = ClassHelper::getClassTypeName(Mailcode_Commands_Command_SetVariable::class);
 
         if ($asCount) {
-            $params = $variableName . ' count: ' . $value;
+            $params = sprintf(
+                '%s %s=%s',
+                $variableName,
+                CountInterface::PARAMETER_NAME,
+                $value
+            );
         } else {
             if ($quoteValue) {
                 $value = $this->instantiator->quoteString($value);

@@ -83,6 +83,16 @@ class Mailcode_Factory
     }
 
     /**
+     * Return the command set for creating variables.
+     *
+     * @return Mailcode_Factory_CommandSets_Set_Variables
+     */
+    public static function var() : Mailcode_Factory_CommandSets_Set_Variables
+    {
+        return self::getSets()->var();
+    }
+
+    /**
     * Creates a renderer instance, which can be used to easily
     * create and convert commands to strings.
     * 

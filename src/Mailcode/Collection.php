@@ -287,7 +287,8 @@ class Mailcode_Collection
             $errors[] = new Mailcode_Collection_Error_Message(
                 '',
                 $result->getCode(),
-                $result->getErrorMessage()
+                $result->getErrorMessage(),
+                $result->getSubject()
             );
         }
 

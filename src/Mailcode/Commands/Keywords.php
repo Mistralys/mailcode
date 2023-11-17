@@ -32,10 +32,6 @@ class Mailcode_Commands_Keywords
     public const TYPE_NOHTML = 'nohtml:';
     public const TYPE_ABSOLUTE = 'absolute:';
     public const TYPE_NO_TRACKING = 'no-tracking:';
-    public const TYPE_BREAK_AT = 'break-at:';
-    public const TYPE_COUNT = 'count:';
-    public const TYPE_TIMEZONE = 'timezone:';
-    public const TYPE_DECRYPT = 'decrypt:';
 
     /**
      * @return string[]
@@ -53,11 +49,7 @@ class Mailcode_Commands_Keywords
             self::TYPE_IDN_DECODE,
             self::TYPE_NOHTML,
             self::TYPE_ABSOLUTE,
-            self::TYPE_NO_TRACKING,
-            self::TYPE_BREAK_AT,
-            self::TYPE_COUNT,
-            self::TYPE_TIMEZONE,
-            self::TYPE_DECRYPT,
+            self::TYPE_NO_TRACKING
         );
     }
 }

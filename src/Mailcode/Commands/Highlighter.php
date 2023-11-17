@@ -77,20 +77,27 @@ class Mailcode_Commands_Highlighter
 
         if(!empty($tokens))
         {
+            $this->parts[] = ' ';
             $this->parts[] = '<span class="mailcode-params">';
 
+            $prev = null;
             foreach ($tokens as $token)
             {
-                $this->appendParamToken($token);
+                $this->appendParamToken($token, $prev);
+                $prev = $token;
             }
 
             $this->parts[] = '</span>';
         }
     }
     
-    protected function appendParamToken(Mailcode_Parser_Statement_Tokenizer_Token $token) : void
+    protected function appendParamToken(Mailcode_Parser_Statement_Tokenizer_Token $token, ?Mailcode_Parser_Statement_Tokenizer_Token $previous=null) : void
     {
-        $this->parts[] = ' '.$this->renderTag(array('token-'.strtolower($token->getTypeID())), $token->getNormalized());
+        if($previous && $previous->hasSpacing()) {
+            $this->parts[] = ' ';
+        }
+
+        $this->parts[] = $this->renderTag(array('token-'.strtolower($token->getTypeID())), $token->getNormalized());
     }
     
     protected function appendLogicKeywords() : void

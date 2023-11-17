@@ -24,6 +24,11 @@ class Mailcode_Parser_Statement_Tokenizer_Token_Number extends Mailcode_Parser_S
     {
         return $this->matchedText;
     }
+
+    public function hasSpacing(): bool
+    {
+        return true;
+    }
     
     public function getValue() : string
     {

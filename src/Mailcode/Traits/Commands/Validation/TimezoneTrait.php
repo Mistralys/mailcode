@@ -35,11 +35,9 @@ trait TimezoneTrait
     {
         $this->timezoneToken = $this->requireParams()
             ->getInfo()
-            ->getTokenForKeyword(Mailcode_Commands_Keywords::TYPE_TIMEZONE);
+            ->getTokenByParamName(TimezoneInterface::PARAMETER_NAME);
 
-        $val = $this->validator->createKeyword(Mailcode_Commands_Keywords::TYPE_TIMEZONE);
-
-        if ($this->timezoneToken === null || !$val->isValid()) {
+        if ($this->timezoneToken === null) {
             return;
         }
 
@@ -76,21 +74,45 @@ trait TimezoneTrait
     private function createTimeZoneToken() : Mailcode_Parser_Statement_Tokenizer_Token
     {
         $default = Mailcode_Commands_Command_ShowDate::getDefaultTimezone();
+        $info = $this->requireParams()->getInfo();
 
         if($default instanceof Mailcode_Variables_Variable) {
-            return new Mailcode_Parser_Statement_Tokenizer_Token_Variable(
-                'showdate-timezone-token',
-                $default->getFullName(),
-                $default,
-                $this
-            );
+            $token = $info->addVariable($default);
+        } else {
+            $token = $info->addStringLiteral($default);
         }
 
-        return new Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral(
-            'showdate-timezone-token',
-            $default,
-            null,
-            $this
-        );
+        $info->setParamName($token, TimezoneInterface::PARAMETER_NAME);
+
+        return $token;
+    }
+
+    /**
+     * @param Mailcode_Variables_Variable|string|NULL $timezone
+     * @return $this
+     */
+    public function setTimezone($timezone) : self
+    {
+        $info = $this->requireParams()->getInfo();
+        $token = null;
+
+        $existing = $info->getTokenByParamName(TimezoneInterface::PARAMETER_NAME);
+        if($existing) {
+            $info->removeToken($existing);
+        }
+
+        if($timezone instanceof Mailcode_Variables_Variable) {
+            $token = $info->addVariable($timezone);
+        } else if(is_string($timezone)) {
+            $token = $info->addStringLiteral($timezone);
+        }
+
+        if($token !== null) {
+            $info->setParamName($token, TimezoneInterface::PARAMETER_NAME);
+        }
+
+        $this->timezoneToken = $token;
+
+        return $this;
     }
 }

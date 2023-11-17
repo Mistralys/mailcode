@@ -1,3 +1,42 @@
+### v3.2.3 - SetVar update
+- SetVar Command: Fixed the Velocity translation for counting single variables.
+
+### v3.2.2 - Fixed a test
+- Tests: Fixed a minor highlighting test not updated after v3.2.1.
+
+### v3.2.1 - Minor enhancements
+- Highlighting: Added support for the named parameters.
+- Highlighting: Fixed spacing in tokens, now using the token's `hasSpacing()`.
+- Browser Tools: Added a syntax highlighter to see the highlighting in action.
+- Core: Added `Mailcode::getName()` to get a human-readable package name.
+
+### v3.2.0 - Named parameters support (breaking)
+- Syntax: Added support for named parameters via `name=value` syntax.
+- ShowDate Command: `timezone:` keyword converted to a named parameter.
+- SetVar Command: `count:` keyword converted to a named parameter.
+- SetVar Command: Added `setCount()`.
+- For Command: `break-at:` keyword converted to a named parameter.
+- For Command: Added `setBreakAt()`.
+- ShowDate Command: Fixed incorrect conversion of some PHP date format signs.
+- ShowDate Command: Added `a`, `G` and `g` to the formats for AM/PM times.
+- ShowDate Command: Added tests for all format conversions.
+- ShowDate Command: Added constants for all PHP format signs.
+- ShowDate Command: Added `setTimezone()`.
+- Error Messages: Added `getCommand()` to fetch the originating command, if any.
+- Factory: Added the `var()` set to access variable related methods.
+
+#### Breaking changes
+
+Some keyword constants were removed because they have been replaced
+with named parameters:
+
+- `TYPE_TIMEZONE`
+- `TYPE_COUNT`
+- `TYPE_BREAK_AT`
+
+### v3.1.4 - Date formats update
+- ShowDate Command: Added milliseconds and time zone format support with `e` and `v`.
+
 ### v3.1.3 - Velocity translation fix
 - ListContains Command: Fixed the Velocity regex.
 

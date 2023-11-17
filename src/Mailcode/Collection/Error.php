@@ -23,17 +23,19 @@ abstract class Mailcode_Collection_Error
    /**
     * @var integer
     */
-    protected $code = 0;
+    protected int $code = 0;
 
    /**
     * @var string
     */
-    protected $matchedText = '';
+    protected string $matchedText = '';
 
    /**
     * @var string
     */
-    protected $message = '';
+    protected string $message = '';
+
+    protected ?Mailcode_Commands_Command $command = null;
     
     public function getCode() : int
     {
@@ -49,7 +51,12 @@ abstract class Mailcode_Collection_Error
     {
         return $this->message;
     }
-    
+
+    public function getCommand() : ?Mailcode_Commands_Command
+    {
+        return $this->command;
+    }
+
     public function isUnknownCommand() : bool
     {
         return $this->code === Mailcode_Commands_Command::VALIDATION_UNKNOWN_COMMAND_NAME;

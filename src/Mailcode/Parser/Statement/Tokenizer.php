@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use AppUtils\ClassHelper;
+use AppUtils\ClassHelper\BaseClassHelperException;
 use Mailcode\Parser\Statement\Tokenizer\EventHandler;
 use Mailcode\Parser\Statement\Tokenizer\SpecialChars;
 
@@ -27,19 +29,26 @@ class Mailcode_Parser_Statement_Tokenizer
     public const ERROR_TOKENIZE_METHOD_MISSING = 49801;
     public const ERROR_INVALID_TOKEN_CREATED = 49802;
     public const ERROR_INVALID_TOKEN_CLASS = 49803;
+    public const ERROR_TARGET_INSERT_TOKEN_NOT_FOUND = 49804;
 
     /**
      * @var string[]
      */
     protected array $tokenClasses = array(
+        Mailcode_Parser_Statement_Tokenizer_Process_LegacySyntaxConversion::class,
         Mailcode_Parser_Statement_Tokenizer_Process_Variables::class,
         Mailcode_Parser_Statement_Tokenizer_Process_NormalizeQuotes::class,
         Mailcode_Parser_Statement_Tokenizer_Process_EncodeSpecialChars::class,
-        Mailcode_Parser_Statement_Tokenizer_Process_StringLiterals::class,
         Mailcode_Parser_Statement_Tokenizer_Process_Keywords::class,
+        // Must be before named parameters to exclude equal signs in strings
+        Mailcode_Parser_Statement_Tokenizer_Process_StringLiterals::class,
+        // Must be before numbers, because named parameters can contain numbers
+        Mailcode_Parser_Statement_Tokenizer_Process_NamedParameters::class,
         Mailcode_Parser_Statement_Tokenizer_Process_Numbers::class,
         Mailcode_Parser_Statement_Tokenizer_Process_Operands::class,
-        Mailcode_Parser_Statement_Tokenizer_Process_ExtractTokens::class
+        Mailcode_Parser_Statement_Tokenizer_Process_ExtractTokens::class,
+        // Must be at the end when all tokens have been determined
+        Mailcode_Parser_Statement_Tokenizer_Process_SetNames::class,
     );
     
    /**
@@ -150,13 +159,19 @@ class Mailcode_Parser_Statement_Tokenizer
         {
             $string = $token->getNormalized();
             
-            if($string !== '')
-            {
-                $parts[] = $string;
+            if($string === '') {
+                continue;
             }
+
+            // Only add spaces between tokens if they require spacing
+            if($token->hasSpacing()) {
+                $string .= ' ';
+            }
+
+            $parts[] = $string;
         }
         
-        return implode(' ', $parts);
+        return trim(implode('', $parts));
     }
 
     /**
@@ -243,6 +258,14 @@ class Mailcode_Parser_Statement_Tokenizer
         );
     }
 
+    private function createVariable(Mailcode_Variables_Variable $variable) : Mailcode_Parser_Statement_Tokenizer_Token_Variable
+    {
+        return ClassHelper::requireObjectInstanceOf(
+            Mailcode_Parser_Statement_Tokenizer_Token_Variable::class,
+            $this->createToken('Variable', dollarize($variable->getFullName()), $variable)
+        );
+    }
+
     private function createKeyword(string $name) : Mailcode_Parser_Statement_Tokenizer_Token_Keyword
     {
         $name = rtrim($name, ':').':';
@@ -286,9 +309,34 @@ class Mailcode_Parser_Statement_Tokenizer
         );
     }
 
+    private function createNumber(string $number) : Mailcode_Parser_Statement_Tokenizer_Token_Number
+    {
+        $token = $this->createToken('Number', $number);
+
+        if($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_Number)
+        {
+            return $token;
+        }
+
+        throw new Mailcode_Parser_Exception(
+            'Invalid token created',
+            '',
+            self::ERROR_INVALID_TOKEN_CREATED
+        );
+    }
+
     public function appendStringLiteral(string $text) : Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
     {
         $token = $this->createStringLiteral($text);
+
+        $this->appendToken($token);
+
+        return $token;
+    }
+
+    public function appendNumber(string $number) : Mailcode_Parser_Statement_Tokenizer_Token_Number
+    {
+        $token = $this->createNumber($number);
 
         $this->appendToken($token);
 
@@ -306,6 +354,11 @@ class Mailcode_Parser_Statement_Tokenizer
 
     public function removeToken(Mailcode_Parser_Statement_Tokenizer_Token $token) : Mailcode_Parser_Statement_Tokenizer
     {
+        $name = $this->findNameToken($token);
+        if($name !== null) {
+            $this->removeToken($name);
+        }
+
         $keep = array();
         $tokenID = $token->getID();
         $removed = false;
@@ -405,5 +458,108 @@ class Mailcode_Parser_Statement_Tokenizer
     public function getEventHandler() : EventHandler
     {
         return $this->eventHandler;
+    }
+
+    public function appendVariable(Mailcode_Variables_Variable $variable) : Mailcode_Parser_Statement_Tokenizer_Token_Variable
+    {
+        $token = $this->createVariable($variable);
+        $this->appendToken($token);
+        return $token;
+    }
+
+    public function findNameToken(Mailcode_Parser_Statement_Tokenizer_Token $targetToken) : ?Mailcode_Parser_Statement_Tokenizer_Token_ParamName
+    {
+        $targetID = $targetToken->getID();
+
+        foreach($this->tokensOrdered as $idx => $token)
+        {
+            if($token->getID() === $targetID)
+            {
+                $prev = $this->tokensOrdered[$idx-1] ?? null;
+                if($prev instanceof Mailcode_Parser_Statement_Tokenizer_Token_ParamName)
+                {
+                    return $prev;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Injects a parameter name token into the statement, before
+     * the target token. Existing parameter names are replaced.
+     *
+     * @param Mailcode_Parser_Statement_Tokenizer_Token $targetToken
+     * @param string $name
+     * @return Mailcode_Parser_Statement_Tokenizer_Token_ParamName
+     *
+     * @throws Mailcode_Parser_Exception {@see self::ERROR_TARGET_INSERT_TOKEN_NOT_FOUND}
+     * @throws BaseClassHelperException
+     */
+    public function injectParamName(Mailcode_Parser_Statement_Tokenizer_Token $targetToken, string $name) : Mailcode_Parser_Statement_Tokenizer_Token_ParamName
+    {
+        $existing = $this->findNameToken($targetToken);
+        if($existing) {
+            $this->removeToken($existing);
+        }
+
+        $nameToken = ClassHelper::requireObjectInstanceOf(
+            Mailcode_Parser_Statement_Tokenizer_Token_ParamName::class,
+            $this->createToken('ParamName', $name.'=')
+        );
+
+        $this->insertBefore($targetToken, $nameToken);
+        $targetToken->registerNameToken($nameToken);
+
+        return $nameToken;
+    }
+
+    public function insertBefore(Mailcode_Parser_Statement_Tokenizer_Token $targetToken, Mailcode_Parser_Statement_Tokenizer_Token $newToken) : self
+    {
+        $targetID = $targetToken->getID();
+        $tokens = array();
+        $found = false;
+
+        foreach($this->tokensOrdered as $token)
+        {
+            if($token->getID() === $targetID)
+            {
+                $tokens[] = $newToken;
+                $found = true;
+            }
+
+            $tokens[] = $token;
+        }
+
+        if($found) {
+            $this->tokensOrdered = $tokens;
+
+            return $this;
+        }
+
+        throw new Mailcode_Parser_Exception(
+            'Could not find target token for insertion.',
+            sprintf(
+                'The token [%s] was not found in the statement [%s].',
+                $targetToken->getNormalized(),
+                $this->getNormalized()
+            ),
+            self::ERROR_TARGET_INSERT_TOKEN_NOT_FOUND
+        );
+    }
+
+    private function dumpTokens() : void
+    {
+        echo PHP_EOL;
+        echo 'Statement: ['.$this->getNormalized().']'.PHP_EOL;
+        echo 'Tokens:'.PHP_EOL;
+
+        foreach($this->tokensOrdered as $idx => $token)
+        {
+            echo '- #'.$idx.' '.$token->getID().''.PHP_EOL;
+            echo '     Type: '.$token->getTypeID().PHP_EOL;
+            echo '     Normalized: ['.$token->getNormalized().']'.PHP_EOL;
+        }
     }
 }

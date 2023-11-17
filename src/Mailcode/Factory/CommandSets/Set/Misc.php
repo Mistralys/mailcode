@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use Mailcode\Interfaces\Commands\Validation\BreakAtInterface;
 use Mailcode\Parser\PreParser;
 
 /**
@@ -69,7 +70,7 @@ class Mailcode_Factory_CommandSets_Set_Misc extends Mailcode_Factory_CommandSets
         }
 
         if (!empty($breakAtValue)) {
-            $breakAtValue = sprintf(' break-at: %s', $breakAtValue);
+            $breakAtValue = sprintf(' %s=%s', BreakAtInterface::PARAMETER_NAME, $breakAtValue);
         }
 
         $cmd = $this->commands->createCommand(

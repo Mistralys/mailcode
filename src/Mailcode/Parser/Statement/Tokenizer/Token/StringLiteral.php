@@ -44,6 +44,11 @@ class Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral extends Mailcode_P
     {
         return '"'.SpecialChars::escape($this->text).'"';
     }
+
+    public function hasSpacing(): bool
+    {
+        return true;
+    }
     
    /**
     * Retrieves the text with the surrounding quotes.

@@ -24,15 +24,11 @@ class Mailcode_Translator_Syntax_ApacheVelocity_SetVariable extends Mailcode_Tra
     {
         $assignmentString = $command->getAssignmentString();
 
-        if ($command->isCountEnabled()) {
-            $variable = $command->getCountVariable();
-
-            if ($variable != null) {
-                $assignmentString = sprintf(
-                    '$map.of(%s).keys("%s").count()',
-                    dollarize($variable->getPath()),
-                    $variable->getName()
-                );
+        if ($command->isCountEnabled())
+        {
+            $result = $this->buildCountAssignment($command);
+            if($result !== null) {
+                $assignmentString = $result;
             }
         }
 
@@ -40,6 +36,28 @@ class Mailcode_Translator_Syntax_ApacheVelocity_SetVariable extends Mailcode_Tra
             '#set(%s = %s)',
             $command->getVariable()->getFullName(),
             $assignmentString
+        );
+    }
+
+    private function buildCountAssignment(Mailcode_Commands_Command_SetVariable $command) : ?string
+    {
+        $variable = $command->getCountVariable();
+
+        if ($variable === null) {
+            return null;
+        }
+
+        if($variable->hasPath()) {
+            return sprintf(
+                '$map.of(%s).keys("%s").count()',
+                dollarize($variable->getPath()),
+                $variable->getName()
+            );
+        }
+
+        return sprintf(
+            '$map.of(%s).count()',
+            dollarize($variable->getName())
         );
     }
 }

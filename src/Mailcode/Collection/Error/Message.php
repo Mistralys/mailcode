@@ -20,10 +20,15 @@ namespace Mailcode;
  */
 class Mailcode_Collection_Error_Message extends Mailcode_Collection_Error
 {
-    public function __construct(string $matchedText, int $code, string $message)
+    public function __construct(string $matchedText, int $code, string $message, ?object $subject=null)
     {
         $this->matchedText = $matchedText;
         $this->code = $code;
         $this->message = $message;
+
+        if($subject instanceof Mailcode_Commands_Command)
+        {
+            $this->command = $subject;
+        }
     }
 }

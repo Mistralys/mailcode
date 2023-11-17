@@ -1,4 +1,9 @@
 <?php
+/**
+ * @package MailcodeTests
+ * @subpackage Commands
+ * @see \MailcodeTests\Commands\Types\ForTests
+ */
 
 declare(strict_types=1);
 
@@ -15,6 +20,11 @@ use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Variable;
 use Mailcode\Mailcode_Variables_Variable;
 use MailcodeTestCase;
 
+/**
+ * @package MailcodeTests
+ * @subpackage Commands
+ * @covers \Mailcode\Mailcode_Commands_Command_For
+ */
 final class ForTests extends MailcodeTestCase
 {
     public function test_validation(): void
@@ -88,31 +98,31 @@ final class ForTests extends MailcodeTestCase
             ),
             array(
                 'label' => 'Valid statement with break-at (number)',
-                'string' => '{for: $RECORD in: $LIST break-at: 13}{end}',
+                'string' => '{for: $RECORD in: $LIST break-at=13}{end}',
                 'valid' => true,
                 'code' => 0
             ),
             array(
                 'label' => 'Valid statement with break-at (variable)',
-                'string' => '{for: $RECORD in: $LIST break-at: $FOO.BAR}{end}',
+                'string' => '{for: $RECORD in: $LIST break-at=$FOO.BAR}{end}',
                 'valid' => true,
                 'code' => 0
             ),
             array(
                 'label' => 'String as break-at parameter',
-                'string' => '{for: $RECORD in: $LIST break-at: "13"}{end}',
+                'string' => '{for: $RECORD in: $LIST break-at="13"}{end}',
                 'valid' => false,
                 'code' => BreakAtInterface::VALIDATION_BREAK_AT_CODE_WRONG_TYPE
             ),
             array(
                 'label' => 'Unquoted text as break-at parameter',
-                'string' => '{for: $RECORD in: $LIST break-at: UnquotedText}{end}',
+                'string' => '{for: $RECORD in: $LIST break-at=UnquotedText}{end}',
                 'valid' => false,
                 'code' => Mailcode_Commands_Command::VALIDATION_INVALID_PARAMS_STATEMENT
             ),
             array(
                 'label' => 'Keyword as break-at parameter',
-                'string' => '{for: $RECORD in: $LIST break-at: idnencode:}{end}',
+                'string' => '{for: $RECORD in: $LIST break-at=idnencode:}{end}',
                 'valid' => false,
                 'code' => BreakAtInterface::VALIDATION_BREAK_AT_CODE_WRONG_TYPE
             )
@@ -217,5 +227,31 @@ final class ForTests extends MailcodeTestCase
 
         $this->assertNotNull($break);
         $this->assertSame(42, $break);
+    }
+
+    public function test_setBreakAtProgrammatically() : void
+    {
+        $cmd = Mailcode_Factory::misc()->for('LIST', 'RECORD', 42);
+
+        $this->assertSame(42, $cmd->getBreakAt());
+        $this->assertTrue($cmd->isBreakAtEnabled());
+
+        // Set an integer value
+        $cmd->setBreakAt(13);
+        $this->assertSame(13, $cmd->getBreakAt());
+        $this->assertTrue($cmd->isBreakAtEnabled());
+        $this->assertStringContainsString('break-at=13', $cmd->getNormalized());
+
+        // Remove the break at value entirely
+        $cmd->setBreakAt(null);
+        $this->assertNull($cmd->getBreakAt());
+        $this->assertFalse($cmd->isBreakAtEnabled());
+        $this->assertStringNotContainsString('break-at', $cmd->getNormalized());
+
+        // Set a variable value
+        $cmd->setBreakAt(Mailcode_Factory::var()->fullName('$FOO.BAR'));
+        $this->assertInstanceOf(Mailcode_Variables_Variable::class, $cmd->getBreakAt());
+        $this->assertTrue($cmd->isBreakAtEnabled());
+        $this->assertStringContainsString('break-at=$FOO.BAR', $cmd->getNormalized());
     }
 }

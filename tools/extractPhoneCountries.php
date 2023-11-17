@@ -15,7 +15,7 @@ declare(strict_types=1);
 use AppUtils\CSVHelper;
 use AppUtils\FileHelper;
 use libphonenumber\PhoneNumberFormat;
-use libphonenumber\PhoneNumberUtil;
+use libphonenumber\PhoneNumberUtil;use Mailcode\Mailcode;use function AppLocalize\pts;
 
 require_once 'prepend.php';
 
@@ -30,8 +30,8 @@ FileHelper::saveAsJSON($countries, $outputFile, true);
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Mailcode - Phone format countries</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+        <title><?php pts('Phone countries extractor') ?> - <?php echo Mailcode::getName(); ?></title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
         <style>
             BODY{
                 padding:2em 0;
@@ -43,6 +43,9 @@ FileHelper::saveAsJSON($countries, $outputFile, true);
     </head>
     <body>
         <div class="container">
+            <p>
+                <a href="./">&laquo; <?php pts('Back to overview'); ?></a>
+            </p>
             <h1>Phone number countries extraction</h1>
             <p>
                 This uses Google's <a href="https://github.com/google/libphonenumber">libphonenumber</a>
@@ -50,6 +53,13 @@ FileHelper::saveAsJSON($countries, $outputFile, true);
                 <a href="https://github.com/giggsey/libphonenumber-for-php">giggsey/libphonenumber-for-php</a>).
                 It generates a list of all supported countries for use in the <code>{showphone}</code>
                 command class, to validate the source country phone format parameter.
+            </p>
+            <p>
+                As the library does not contain human-readable country names, a separate CSV file
+                is used to map the ISO codes to the country names.
+                This file is based on the
+                <a href="https://countrycode.org">countrycode.org</a>
+                download.
             </p>
             <p>
                 Target class: <code>Mailcode_Commands_Command_ShowPhone</code><br>

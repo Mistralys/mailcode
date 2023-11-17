@@ -1,7 +1,7 @@
 .mailcode-bracket,
 .mailcode-hyphen,
 .mailcode-token-operand{
-color:#839496;
+color:#537b80;
 }
 
 .mailcode-command-name,
@@ -25,4 +25,8 @@ color:#859900;
 
 .mailcode-token-number{
 color:#6c71c4;
+}
+
+.mailcode-token-paramname{
+color:#537b80;
 }

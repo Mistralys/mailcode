@@ -28,7 +28,9 @@ use Psr\Log\LoggerInterface;
  */
 class Mailcode
 {
-   /**
+    public const PACKAGE_NAME = 'Mailcode';
+
+    /**
     * @var Mailcode_Parser|NULL
     */
     protected $parser = null;
@@ -56,8 +58,13 @@ class Mailcode
     {
         return new Mailcode();
     }
-    
-   /**
+
+    public static function getName() : string
+    {
+        return self::PACKAGE_NAME;
+    }
+
+    /**
     * Parses the string to detect all commands contained within.
     * 
     * @param string $string

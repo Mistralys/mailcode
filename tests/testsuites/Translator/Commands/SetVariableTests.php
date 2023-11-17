@@ -38,6 +38,11 @@ final class SetVariableTests extends VelocityTestCase
                 'label' => 'Count variable with path only',
                 'mailcode' => Mailcode_Factory::set()->var('FOO', '$BAR.COUNT', true, true),
                 'expected' => '#set($FOO = $map.of($BAR).keys("COUNT").count())'
+            ),
+            array(
+                'label' => 'Count and source variables with path only',
+                'mailcode' => Mailcode_Factory::set()->var('FOO', '$BAR', true, true),
+                'expected' => '#set($FOO = $map.of($BAR).count())'
             )
         );
 
@@ -51,7 +56,7 @@ final class SetVariableTests extends VelocityTestCase
      */
     public function test_weirdParseBehavior(): void
     {
-        $collection = Mailcode::create()->parseString('{setvar: $FOO count: $FOO.COUNT}');
+        $collection = Mailcode::create()->parseString('{setvar: $FOO count=$FOO.COUNT}');
 
         if (!$collection->isValid()) {
             $this->fail($collection->getFirstError()->getMessage());

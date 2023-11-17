@@ -24,13 +24,13 @@ namespace Mailcode;
 trait Mailcode_Traits_Formatting_HTMLHighlighting
 {
    /**
-    * Stored this way so we can use isset() instead
+    * Stored this way, so we can use isset() instead
     * of using in_array, which is some magnitudes slower.
     * The boolean value is not used otherwise.
     *
     * @var array<string,bool>
     */
-    private $excludeTags = array(
+    private array $excludeTags = array(
         'style' => true, // NOTE: style tags are excluded natively on the parser level.
         'script' => true
     );
@@ -39,10 +39,10 @@ trait Mailcode_Traits_Formatting_HTMLHighlighting
     * Adds an HTML tag name to the list of tags within which
     * commands may not be highlighted.
     *
-    * @param string $tagName Case insensitive.
+    * @param string $tagName Case-insensitive.
     * @return $this
     */
-    public function excludeTag(string $tagName)
+    public function excludeTag(string $tagName) : self
     {
         $tagName = strtolower($tagName);
         
@@ -52,12 +52,12 @@ trait Mailcode_Traits_Formatting_HTMLHighlighting
     }
     
    /**
-    * Adds several exluded tag names at once.
+    * Adds several excluded tag names at once.
     *
     * @param string[] $tagNames
     * @return $this
     */
-    public function excludeTags(array $tagNames)
+    public function excludeTags(array $tagNames) : self
     {
         foreach($tagNames as $tagName)
         {
@@ -68,7 +68,7 @@ trait Mailcode_Traits_Formatting_HTMLHighlighting
     }
     
    /**
-    * Whether the specified tag name is in the exlusion list.
+    * Whether the specified tag name is in the exclusion list.
     *
     * @param string $tagName
     * @return bool

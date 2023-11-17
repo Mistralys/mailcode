@@ -190,7 +190,7 @@ ${CUSTOMER.CUSTOMER_ID}
 
     public function test_showDate_keyword_behind_timezone(): void
     {
-        $subject = '{showdate: $FOO.BAR "Y-m-d" timezone: "Europe/Berlin" urlencode:}';
+        $subject = '{showdate: $FOO.BAR "Y-m-d" timezone="Europe/Berlin" urlencode:}';
 
         $internalFormat = 'yyyy-MM-dd';
         $expected = '${esc.url($time.input("' . $internalFormat . '", $FOO.BAR).output("yyyy-MM-dd").zone("Europe/Berlin"))}';
@@ -210,7 +210,7 @@ ${CUSTOMER.CUSTOMER_ID}
 
     public function test_showDate_keyword_before_timezone(): void
     {
-        $subject = '{showdate: urlencode: $FOO.BAR "Y-m-d" timezone: "Europe/Berlin"}';
+        $subject = '{showdate: urlencode: $FOO.BAR "Y-m-d" timezone="Europe/Berlin"}';
 
         $internalFormat = 'yyyy-MM-dd';
         $expected = '${esc.url($time.input("' . $internalFormat . '", $FOO.BAR).output("yyyy-MM-dd").zone("Europe/Berlin"))}';
@@ -230,7 +230,7 @@ ${CUSTOMER.CUSTOMER_ID}
 
     public function test_showDate_keyword_between_timezone(): void
     {
-        $subject = '{showdate: $FOO.BAR "Y-m-d" urlencode: timezone: "Europe/Berlin"}';
+        $subject = '{showdate: $FOO.BAR "Y-m-d" urlencode: timezone="Europe/Berlin"}';
 
         $internalFormat = 'yyyy-MM-dd';
         $expected = '${esc.url($time.input("' . $internalFormat . '", $FOO.BAR).output("yyyy-MM-dd").zone("Europe/Berlin"))}';
