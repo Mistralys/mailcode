@@ -28,7 +28,7 @@ EOD;
         $safeguard = Mailcode::create()->createSafeguard($string);
 
         $translator = new Mailcode_Translator();
-        $result = $translator->createSyntax('ApacheVelocity')->translateSafeguard($safeguard);
+        $result = $translator->createApacheVelocity()->translateSafeguard($safeguard);
 
         $this->assertEquals($expected, $result);
     }
