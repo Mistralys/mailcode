@@ -1,3 +1,6 @@
+### v3.2.4 - Minor update
+- Factory: Improved an error message when an invalid command is created.
+
 ### v3.2.3 - SetVar and Decryption
 - SetVar Command: Fixed the Velocity translation for counting single variables.
 - SetVar Command: Added the `decrypt` parameter.
