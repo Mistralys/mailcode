@@ -271,7 +271,12 @@ class Mailcode_Factory_Instantiator
         
         return dollarize($name);
     }
-    
+
+    /**
+     * @param Mailcode_Commands_Command $command
+     * @return void
+     * @throws Mailcode_Factory_Exception {@see Mailcode_Factory::ERROR_INVALID_COMMAND_CREATED}
+     */
     public function checkCommand(Mailcode_Commands_Command $command) : void
     {
         if($command->isValid())
@@ -281,7 +286,12 @@ class Mailcode_Factory_Instantiator
         
         throw new Mailcode_Factory_Exception(
             'Invalid command created.',
-            'Validation message: '.$command->getValidationResult()->getErrorMessage(),
+            sprintf(
+                'Command: %s'.PHP_EOL.
+                'Validation message: %s',
+                $command->getMatchedText(),
+                $command->getValidationResult()->getErrorMessage()
+            ),
             Mailcode_Factory::ERROR_INVALID_COMMAND_CREATED,
             null,
             $command
