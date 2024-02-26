@@ -28,7 +28,7 @@ final class Factory_IfVariableTests extends FactoryTestCase
         );
     }
     
-    public function test_ifVariableEquals()
+    public function test_ifVariableEquals() : void
     {
         $this->runCommand(
             'Variable string comparison',
@@ -38,6 +38,19 @@ final class Factory_IfVariableTests extends FactoryTestCase
         $this->runCommand(
             'Arithmetic operation',
             function() { return Mailcode_Factory::if()->varEquals('$FOO.BAR', '6 * 2'); }
+        );
+    }
+
+    public function test_ifVariableEqualsString() : void
+    {
+        $this->runCommand(
+            'Variable string comparison',
+            function() { return Mailcode_Factory::if()->varEqualsString('FOO.BAR', 'false', true); }
+        );
+
+        $this->runCommand(
+            'Variable string comparison',
+            function() { return Mailcode_Factory::if()->varEqualsString('$FOO.BAR', 'false', true); }
         );
     }
 }
