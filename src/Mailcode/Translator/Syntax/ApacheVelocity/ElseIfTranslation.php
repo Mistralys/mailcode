@@ -1,24 +1,41 @@
 <?php
 /**
- * File containing the {@see Mailcode_Translator_Syntax_ApacheVelocity_ElseIf} class.
- *
  * @package Mailcode
  * @subpackage Translator
- * @see Mailcode_Translator_Syntax_ApacheVelocity_ElseIf
  */
 
 declare(strict_types=1);
 
-namespace Mailcode;
+namespace Mailcode\Translator\Syntax\ApacheVelocity;
+
+use Mailcode\Mailcode_Commands_Command_ElseIf;
+use Mailcode\Mailcode_Commands_Command_ElseIf_BeginsWith;
+use Mailcode\Mailcode_Commands_Command_ElseIf_BiggerThan;
+use Mailcode\Mailcode_Commands_Command_ElseIf_Command;
+use Mailcode\Mailcode_Commands_Command_ElseIf_Contains;
+use Mailcode\Mailcode_Commands_Command_ElseIf_Empty;
+use Mailcode\Mailcode_Commands_Command_ElseIf_EndsWith;
+use Mailcode\Mailcode_Commands_Command_ElseIf_EqualsNumber;
+use Mailcode\Mailcode_Commands_Command_ElseIf_ListBeginsWith;
+use Mailcode\Mailcode_Commands_Command_ElseIf_ListContains;
+use Mailcode\Mailcode_Commands_Command_ElseIf_ListEndsWith;
+use Mailcode\Mailcode_Commands_Command_ElseIf_ListEquals;
+use Mailcode\Mailcode_Commands_Command_ElseIf_ListNotContains;
+use Mailcode\Mailcode_Commands_Command_ElseIf_NotContains;
+use Mailcode\Mailcode_Commands_Command_ElseIf_NotEmpty;
+use Mailcode\Mailcode_Commands_Command_ElseIf_SmallerThan;
+use Mailcode\Mailcode_Commands_Command_ElseIf_Variable;
+use Mailcode\Mailcode_Translator_Command_ElseIf;
+use Mailcode\Translator\Syntax\ApacheVelocity\Base\AbstractIfBase;
 
 /**
- * Translates the "ElseIf" command to Apache Velocity.
+ * Translates the {@see Mailcode_Commands_Command_ElseIf} command to Apache Velocity.
  *
  * @package Mailcode
  * @subpackage Translator
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Mailcode_Translator_Syntax_ApacheVelocity_ElseIf extends Mailcode_Translator_Syntax_ApacheVelocity_Base_AbstractIf implements Mailcode_Translator_Command_ElseIf
+class ElseIfTranslation extends AbstractIfBase implements Mailcode_Translator_Command_ElseIf
 {
     protected function getCommandTemplate() : string
     {

@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace testsuites\Translator\Commands;
 
 use Mailcode\Mailcode_Factory;
-use Mailcode\Mailcode_Translator_Syntax_ApacheVelocity_ShowDate;
+use Mailcode\Translator\Syntax\ApacheVelocity\ShowDateTranslation;
 use VelocityTestCase;
 
 final class ShowDateTests extends VelocityTestCase
 {
     public function test_translateCommand(): void
     {
-        $defaultFormat = Mailcode_Translator_Syntax_ApacheVelocity_ShowDate::DEFAULT_INTERNAL_FORMAT;
+        $defaultFormat = ShowDateTranslation::DEFAULT_INTERNAL_FORMAT;
 
         $tests = array(
             array(
@@ -77,7 +77,7 @@ final class ShowDateTests extends VelocityTestCase
     {
         $syntax = $this->translator->createApacheVelocity();
 
-        foreach(Mailcode_Translator_Syntax_ApacheVelocity_ShowDate::$charTable as $phpChar => $javaChar)
+        foreach(ShowDateTranslation::$charTable as $phpChar => $javaChar)
         {
             if($phpChar === ' ') {
                 continue;

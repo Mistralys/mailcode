@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace testsuites\Translator\Commands;
 
 use Mailcode\Mailcode_Factory;
-use Mailcode\Translator\Syntax\ApacheVelocity\ShowURL;
+use Mailcode\Translator\Syntax\ApacheVelocity\ShowURLTranslation;
 use VelocityTestCase;
 
 /**
- * @see ShowURL
+ * @see ShowURLTranslation
  */
 final class ShowURLTests extends VelocityTestCase
 {
@@ -208,9 +208,9 @@ EOT;
     {
         parent::setUp();
 
-        ShowURL::resetURLCounter();
+        ShowURLTranslation::resetURLCounter();
 
-        $this->varName = sprintf(ShowURL::URL_VAR_TEMPLATE, 1);
+        $this->varName = sprintf(ShowURLTranslation::URL_VAR_TEMPLATE, 1);
     }
 
     // endregion

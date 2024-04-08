@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Mailcode\Mailcode_Factory;
 
 /**
- * @see Mailcode\Mailcode_Translator_Syntax_ApacheVelocity_ShowSnippet
+ * @see \Mailcode\Translator\Syntax\ApacheVelocity\ShowSnippetTranslation
  */
 final class Translator_Velocity_ShowSnippetTests extends VelocityTestCase
 {

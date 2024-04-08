@@ -1,18 +1,22 @@
 <?php
 /**
- * File containing the {@see Mailcode_Translator_Syntax_ApacheVelocity} class.
+ * File containing the {@see \Mailcode\Translator\Syntax\ApacheVelocity} class.
  *
  * @package Mailcode
  * @subpackage Translator
- * @see Mailcode_Translator_Syntax_ApacheVelocity
+ * @see \Mailcode\Translator\Syntax\ApacheVelocity
  */
 
 declare(strict_types=1);
 
-namespace Mailcode;
+namespace Mailcode\Translator\Syntax;
 
 use Mailcode\Interfaces\Commands\EncodableInterface;
-use Mailcode\Interfaces\Commands\Validation\DecryptInterface;
+use Mailcode\Mailcode_Commands_Command;
+use Mailcode\Mailcode_Commands_Keywords;
+use Mailcode\Mailcode_Number_Info;
+use Mailcode\Translator\BaseCommandTranslation;
+use function Mailcode\dollarize;
 
 /**
  * Abstract base class for apache velocity command translation classes.
@@ -21,7 +25,7 @@ use Mailcode\Interfaces\Commands\Validation\DecryptInterface;
  * @subpackage Translator
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Translator_Command
+abstract class ApacheVelocity extends BaseCommandTranslation
 {
     /**
      * @var string[]
@@ -81,11 +85,6 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity extends Mailcode_Transl
         $string = str_replace('ESCQUOTE', '\\"', $string);
 
         return $string;
-    }
-
-    protected function hasVariableEncodings(Mailcode_Commands_Command $command) : bool
-    {
-        return $command instanceof EncodableInterface && $command->hasActiveEncodings();
     }
 
     protected function renderVariableEncodings(Mailcode_Commands_Command $command, string $varName): string

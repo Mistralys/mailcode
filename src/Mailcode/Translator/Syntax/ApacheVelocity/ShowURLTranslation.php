@@ -1,30 +1,28 @@
 <?php
 /**
- * File containing the class {@see \Mailcode\Translator\Syntax\ApacheVelocity\ShowURL}.
- *
  * @package Mailcode
  * @subpackage Translator
- * @see \Mailcode\Translator\Syntax\ApacheVelocity\ShowURL
  */
 
 declare(strict_types=1);
 
 namespace Mailcode\Translator\Syntax\ApacheVelocity;
 
-use AppUtils\ConvertHelper;
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands_Command_ShowURL;
-use Mailcode\Mailcode_Translator_Syntax_ApacheVelocity;
+use Mailcode\Mailcode_Exception;
+use Mailcode\Mailcode_Translator_Exception;
+use Mailcode\Translator\Syntax\ApacheVelocity;
 use Mailcode\Translator\Command\ShowURLInterface;
 
 /**
- * Translates the `showurl` command to ApacheVelocity.
+ * Translates the {@see Mailcode_Commands_Command_ShowURL} command to ApacheVelocity.
  *
  * @package Mailcode
  * @subpackage Translator
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class ShowURL extends Mailcode_Translator_Syntax_ApacheVelocity implements ShowURLInterface
+class ShowURLTranslation extends ApacheVelocity implements ShowURLInterface
 {
     public const URL_VAR_TEMPLATE = 'url_tpl%03d';
 
@@ -36,6 +34,12 @@ class ShowURL extends Mailcode_Translator_Syntax_ApacheVelocity implements ShowU
         self::$urlCounter = 0;
     }
 
+    /**
+     * @param Mailcode_Commands_Command_ShowURL $command
+     * @return string
+     * @throws Mailcode_Exception
+     * @throws Mailcode_Translator_Exception
+     */
     public function translate(Mailcode_Commands_Command_ShowURL $command) : string
     {
         self::$urlCounter++;
@@ -70,6 +74,13 @@ class ShowURL extends Mailcode_Translator_Syntax_ApacheVelocity implements ShowU
         );
     }
 
+    /**
+     * @param Mailcode_Commands_Command_ShowURL $command
+     * @param string $urlVar
+     * @return string
+     * @throws Mailcode_Exception
+     * @throws Mailcode_Translator_Exception
+     */
     private function renderURLTemplate(Mailcode_Commands_Command_ShowURL $command, string $urlVar) : string
     {
         return sprintf(
@@ -104,6 +115,12 @@ class ShowURL extends Mailcode_Translator_Syntax_ApacheVelocity implements ShowU
         );
     }
 
+    /**
+     * @param Mailcode_Commands_Command_ShowURL $command
+     * @return string
+     * @throws Mailcode_Exception
+     * @throws Mailcode_Translator_Exception
+     */
     private function resolveURL(Mailcode_Commands_Command_ShowURL $command) : string
     {
         // Remove newlines in the content.

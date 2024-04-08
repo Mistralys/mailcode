@@ -13,6 +13,9 @@ namespace Mailcode;
 
 use AppUtils\ClassHelper;
 use AppUtils\FileHelper;
+use Mailcode\Translator\Syntax;
+use Mailcode\Translator\Syntax\ApacheVelocity;
+use Mailcode\Translator\Syntax\HubL;
 
 /**
  * Used to translate mailcode syntax to other syntaxes.
@@ -29,13 +32,13 @@ class Mailcode_Translator
      * Creates an instance of the specified syntax.
      *
      * @param string $name The name of the syntax, e.g. "ApacheVelocity"
-     * @return Mailcode_Translator_Syntax
+     * @return Syntax
      */
-    public function createSyntax(string $name) : Mailcode_Translator_Syntax
+    public function createSyntax(string $name) : Syntax
     {
         if($this->syntaxExists($name))
         {
-            return new Mailcode_Translator_Syntax($name);
+            return new Syntax($name);
         }
 
         throw new Mailcode_Exception(
@@ -49,16 +52,21 @@ class Mailcode_Translator
         );
     }
 
-    public function createApacheVelocity() : Mailcode_Translator_Syntax
+    public function createApacheVelocity() : Syntax
     {
-        return $this->createSyntax(ClassHelper::getClassTypeName(Mailcode_Translator_Syntax_ApacheVelocity::class));
+        return $this->createSyntax(ClassHelper::getClassTypeName(ApacheVelocity::class));
+    }
+
+    public function createHubL() : Syntax
+    {
+        return $this->createSyntax(ClassHelper::getClassTypeName(HubL::class));
     }
 
     /**
      * Retrieves an instance for each syntax available
      * in the system.
      *
-     * @return Mailcode_Translator_Syntax[]
+     * @return Syntax[]
      */
     public function getSyntaxes() : array
     {

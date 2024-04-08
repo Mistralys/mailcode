@@ -1,15 +1,20 @@
 <?php
 /**
- * File containing the {@see Mailcode_Translator_Syntax} class.
+ * File containing the {@see \Mailcode\Translator\Syntax} class.
  *
  * @package Mailcode
  * @subpackage Translator
- * @see Mailcode_Translator_Syntax
+ * @see \Mailcode\Translator\Syntax
  */
 
 declare(strict_types=1);
 
-namespace Mailcode;
+namespace Mailcode\Translator;
+
+use Mailcode\Mailcode_Commands_Command;
+use Mailcode\Mailcode_Exception;
+use Mailcode\Mailcode_Parser_Safeguard;
+use Mailcode\Mailcode_Translator_Exception;
 
 /**
  * Abstract base class for a translator syntax, allowing the translation
@@ -19,7 +24,7 @@ namespace Mailcode;
  * @subpackage Translator
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Mailcode_Translator_Syntax
+class Syntax
 {
     public const ERROR_UNKNOWN_COMMAND_TYPE = 50401;
     public const ERROR_INVALID_COMMAND_INSTANCE = 50402;
@@ -35,7 +40,7 @@ class Mailcode_Translator_Syntax
     }
     
    /**
-    * Retrieves the syntax' type ID, e.g. "ApacheVelocity".
+    * Retrieves the syntax's type ID, e.g. "ApacheVelocity".
     * @return string
     */
     public function getTypeID() : string
@@ -54,24 +59,20 @@ class Mailcode_Translator_Syntax
     {
         return $this->createTranslator($command)->translate($command);
     }
-    
-    public function createTranslator(Mailcode_Commands_Command $command) : Mailcode_Translator_Command
+
+    /**
+     * @param Mailcode_Commands_Command $command
+     * @return BaseCommandTranslation
+     * @throws Mailcode_Translator_Exception
+     */
+    public function createTranslator(Mailcode_Commands_Command $command) : BaseCommandTranslation
     {
         $class = sprintf(
-            Mailcode_Translator_Syntax::class.'_%s_%s',
+            __CLASS__ .'\%s\%sTranslation',
             $this->getTypeID(),
             $command->getID()
         );
 
-        if(!class_exists($class))
-        {
-            $class = sprintf(
-                'Mailcode\Translator\Syntax\%s\%s',
-                $this->getTypeID(),
-                $command->getID()
-            );
-        }
-        
         if(!class_exists($class))
         {
             throw new Mailcode_Translator_Exception(
@@ -86,7 +87,7 @@ class Mailcode_Translator_Syntax
         
         $translator = new $class($command);
 
-        if($translator instanceof Mailcode_Translator_Command)
+        if($translator instanceof BaseCommandTranslation)
         {
             return $translator;
         }

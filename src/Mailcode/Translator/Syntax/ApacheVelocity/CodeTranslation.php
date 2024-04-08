@@ -1,24 +1,26 @@
 <?php
 /**
- * File containing the {@see Mailcode_Translator_Syntax_ApacheVelocity_For} class.
- *
  * @package Mailcode
  * @subpackage Translator
- * @see Mailcode_Translator_Syntax_ApacheVelocity_For
  */
 
 declare(strict_types=1);
 
-namespace Mailcode;
+namespace Mailcode\Translator\Syntax\ApacheVelocity;
+
+use Mailcode\Mailcode_Commands_Command_Code;
+use Mailcode\Mailcode_Exception;
+use Mailcode\Mailcode_Translator_Command_Code;
+use Mailcode\Translator\Syntax\ApacheVelocity;
 
 /**
- * Translates the "For" command to Apache Velocity.
+ * Translates the {@see Mailcode_Commands_Command_Code} command to Apache Velocity.
  *
  * @package Mailcode
  * @subpackage Translator
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Mailcode_Translator_Syntax_ApacheVelocity_Code extends Mailcode_Translator_Syntax_ApacheVelocity implements Mailcode_Translator_Command_Code
+class CodeTranslation extends ApacheVelocity implements Mailcode_Translator_Command_Code
 {
     private string $template = <<<'EOD'
 #**
@@ -28,6 +30,11 @@ class Mailcode_Translator_Syntax_ApacheVelocity_Code extends Mailcode_Translator
 #if(true)%2$s#{end}
 EOD;
 
+    /**
+     * @param Mailcode_Commands_Command_Code $command
+     * @return string
+     * @throws Mailcode_Exception
+     */
     public function translate(Mailcode_Commands_Command_Code $command): string
     {
         return sprintf(

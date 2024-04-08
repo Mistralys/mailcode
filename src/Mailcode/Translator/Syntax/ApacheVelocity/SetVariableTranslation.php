@@ -1,25 +1,33 @@
 <?php
 /**
- * File containing the {@see Mailcode_Translator_Syntax_ApacheVelocity_SetVariable} class.
- *
  * @package Mailcode
  * @subpackage Translator
- * @see Mailcode_Translator_Syntax_ApacheVelocity_SetVariable
  */
 
 declare(strict_types=1);
 
-namespace Mailcode;
+namespace Mailcode\Translator\Syntax\ApacheVelocity;
+
+use Mailcode\Mailcode_Commands_Command_SetVariable;
+use Mailcode\Mailcode_Exception;
+use Mailcode\Mailcode_Translator_Command_SetVariable;
+use Mailcode\Translator\Syntax\ApacheVelocity;
+use function Mailcode\dollarize;
 
 /**
- * Translates the "SetVariable" command to Apache Velocity.
+ * Translates the {@see Mailcode_Commands_Command_SetVariable} command to Apache Velocity.
  *
  * @package Mailcode
  * @subpackage Translator
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Mailcode_Translator_Syntax_ApacheVelocity_SetVariable extends Mailcode_Translator_Syntax_ApacheVelocity implements Mailcode_Translator_Command_SetVariable
+class SetVariableTranslation extends ApacheVelocity implements Mailcode_Translator_Command_SetVariable
 {
+    /**
+     * @param Mailcode_Commands_Command_SetVariable $command
+     * @return string
+     * @throws Mailcode_Exception
+     */
     public function translate(Mailcode_Commands_Command_SetVariable $command): string
     {
         $assignmentString = $command->getAssignmentString();

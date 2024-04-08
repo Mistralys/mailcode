@@ -1,15 +1,21 @@
 <?php
 /**
- * File containing the {@see Mailcode_Translator_Syntax_ApacheVelocity_Base_AbstractIf} class.
- *
  * @package Mailcode
  * @subpackage Translator
- * @see Mailcode_Translator_Syntax_ApacheVelocity_Base_AbstractIf
  */
 
 declare(strict_types=1);
 
-namespace Mailcode;
+namespace Mailcode\Translator\Syntax\ApacheVelocity\Base;
+
+use Mailcode\Commands\ParamsException;
+use Mailcode\Mailcode_Commands_IfBase;
+use Mailcode\Mailcode_Commands_LogicKeywords_Keyword;
+use Mailcode\Mailcode_Exception;
+use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
+use Mailcode\Mailcode_Variables_Variable;
+use Mailcode\Translator\Syntax\ApacheVelocity;
+use Mailcode\Translator\Syntax\ApacheVelocity\Contains\ContainsStatementBuilder;
 
 /**
  * Abstract base class for the IF/ELSEIF command translation classes.
@@ -18,7 +24,7 @@ namespace Mailcode;
  * @subpackage Translator
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-abstract class Mailcode_Translator_Syntax_ApacheVelocity_Base_AbstractIf extends Mailcode_Translator_Syntax_ApacheVelocity
+abstract class AbstractIfBase extends ApacheVelocity
 {
     public const ERROR_CANNOT_GET_KEYWORD_SIGN = 60801;
     public const ERROR_INVALID_KEYWORD_COMMAND_TYPE = 60802;
@@ -41,12 +47,18 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity_Base_AbstractIf extends
 
         if(method_exists($this, $method))
         {
-            return strval($this->$method($command));
+            return (string)$this->$method($command);
         }
 
         return '';
     }
-    
+
+    /**
+     * @param Mailcode_Commands_IfBase $command
+     * @return string
+     * @throws Mailcode_Exception
+     * @throws ParamsException
+     */
     protected function _translate(Mailcode_Commands_IfBase $command): string
     {
         $body = $this->translateBody($command);
@@ -77,7 +89,12 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity_Base_AbstractIf extends
         
         return sprintf($this->getCommandTemplate(), $body);
     }
-    
+
+    /**
+     * @param Mailcode_Commands_LogicKeywords_Keyword $keyword
+     * @return string
+     * @throws Mailcode_Exception
+     */
     protected function getSign(Mailcode_Commands_LogicKeywords_Keyword $keyword) : string
     {
         switch($keyword->getName())
@@ -178,7 +195,7 @@ abstract class Mailcode_Translator_Syntax_ApacheVelocity_Base_AbstractIf extends
      */
     protected function _translateContains(Mailcode_Variables_Variable $variable, bool $caseSensitive, bool $regexEnabled, array $searchTerms, string $containsType) : string
     {
-        $builder = new Mailcode_Translator_Syntax_ApacheVelocity_Contains_StatementBuilder($this, $variable, $caseSensitive, $regexEnabled, $searchTerms, $containsType);
+        $builder = new ContainsStatementBuilder($this, $variable, $caseSensitive, $regexEnabled, $searchTerms, $containsType);
         return $builder->render();
     }
 

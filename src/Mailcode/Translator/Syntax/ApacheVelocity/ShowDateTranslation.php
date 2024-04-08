@@ -1,26 +1,31 @@
 <?php
 /**
- * File containing the {@see Mailcode_Translator_Syntax_ApacheVelocity_ShowDate} class.
- *
  * @package Mailcode
  * @subpackage Translator
- * @see Mailcode_Translator_Syntax_ApacheVelocity_ShowDate
  */
 
 declare(strict_types=1);
 
-namespace Mailcode;
+namespace Mailcode\Translator\Syntax\ApacheVelocity;
 
 use AppUtils\ConvertHelper;
+use Mailcode\Mailcode_Commands_Command_ShowDate;
+use Mailcode\Mailcode_Date_FormatInfo;
+use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
+use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Variable;
+use Mailcode\Mailcode_Translator_Command_ShowDate;
+use Mailcode\Mailcode_Translator_Exception;
+use Mailcode\Translator\Syntax\ApacheVelocity;
+use function Mailcode\undollarize;
 
 /**
- * Translates the "ShowDate" command to Apache Velocity.
+ * Translates the {@see Mailcode_Commands_Command_ShowDate} command to Apache Velocity.
  *
  * @package Mailcode
  * @subpackage Translator
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Mailcode_Translator_Syntax_ApacheVelocity_ShowDate extends Mailcode_Translator_Syntax_ApacheVelocity implements Mailcode_Translator_Command_ShowDate
+class ShowDateTranslation extends ApacheVelocity implements Mailcode_Translator_Command_ShowDate
 {
     public const ERROR_UNKNOWN_DATE_FORMAT_CHARACTER = 55501;
     public const ERROR_UNHANDLED_TIME_ZONE_TOKEN_TYPE = 55502;

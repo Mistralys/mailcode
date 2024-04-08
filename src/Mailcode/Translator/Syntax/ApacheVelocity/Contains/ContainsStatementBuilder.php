@@ -2,52 +2,40 @@
 
 declare(strict_types=1);
 
-namespace Mailcode;
+namespace Mailcode\Translator\Syntax\ApacheVelocity\Contains;
 
-class Mailcode_Translator_Syntax_ApacheVelocity_Contains_StatementBuilder
+use Mailcode\Mailcode_Exception;
+use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
+use Mailcode\Mailcode_Variables_Variable;
+use Mailcode\Translator\Syntax\ApacheVelocity;
+use function Mailcode\dollarize;
+use function Mailcode\undollarize;
+
+class ContainsStatementBuilder
 {
     public const ERROR_INVALID_LIST_VARIABLE_NAME = 76701;
 
-    /**
-     * @var Mailcode_Variables_Variable
-     */
-    private $variable;
-
-    /**
-     * @var bool
-     */
-    private $caseSensitive;
+    private Mailcode_Variables_Variable $variable;
+    private bool $caseSensitive;
+    private string $containsType;
+    private ApacheVelocity $translator;
+    private bool $regexEnabled;
 
     /**
      * @var Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral[]
      */
-    private $searchTerms;
-
-    /**
-     * @var string
-     */
-    private $containsType;
-
-    /**
-     * @var Mailcode_Translator_Syntax_ApacheVelocity
-     */
-    private $translator;
-
-    /**
-     * @var bool
-     */
-    private $regexEnabled;
+    private array $searchTerms;
 
     /**
      * Mailcode_Translator_Syntax_ApacheVelocity_Contains_StatementBuilder constructor.
-     * @param Mailcode_Translator_Syntax_ApacheVelocity $translator
+     * @param ApacheVelocity $translator
      * @param Mailcode_Variables_Variable $variable
      * @param bool $caseSensitive
      * @param bool $regexEnabled
      * @param Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral[] $searchTerms
      * @param string $containsType
      */
-    public function __construct(Mailcode_Translator_Syntax_ApacheVelocity $translator, Mailcode_Variables_Variable $variable, bool $caseSensitive, bool $regexEnabled, array $searchTerms, string $containsType)
+    public function __construct(ApacheVelocity $translator, Mailcode_Variables_Variable $variable, bool $caseSensitive, bool $regexEnabled, array $searchTerms, string $containsType)
     {
         $this->translator = $translator;
         $this->variable = $variable;
@@ -63,7 +51,7 @@ class Mailcode_Translator_Syntax_ApacheVelocity_Contains_StatementBuilder
      */
     public function isNotContains() : bool
     {
-        return strstr($this->containsType, 'not-contains') !== false;
+        return strpos($this->containsType, 'not-contains') !== false;
     }
 
     /**
@@ -72,11 +60,11 @@ class Mailcode_Translator_Syntax_ApacheVelocity_Contains_StatementBuilder
      */
     public function isList() : bool
     {
-        return strstr($this->containsType, 'list-') !== false;
+        return strpos($this->containsType, 'list-') !== false;
     }
 
     /**
-     * Gets the sign to prepend the command with, i.e.
+     * Gets the sign to prepend the command with, i.e.,
      * whether to add the negation "!" or not, depending
      * on the type of command.
      *
@@ -95,11 +83,11 @@ class Mailcode_Translator_Syntax_ApacheVelocity_Contains_StatementBuilder
     /**
      * Gets the logical connector sign to combine several search
      * terms with, i.e. "&&" or "||" depending on whether it is
-     * a regular contains or not contains.
+     * a regular "contains" or "not contains".
      *
      * @return string
      */
-    public function getConnector()
+    public function getConnector() : string
     {
         if($this->isNotContains())
         {

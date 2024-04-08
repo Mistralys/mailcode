@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace testsuites\Translator\Commands;
 
 use Mailcode\Mailcode_Factory;
-use Mailcode\Mailcode_Translator_Syntax_ApacheVelocity_ShowVariable;
+use Mailcode\Translator\Syntax\ApacheVelocity\ShowVariableTranslation;
 use VelocityTestCase;
 
 /**
- * @see Mailcode_Translator_Syntax_ApacheVelocity_ShowVariable
+ * @see \Mailcode\Translator\Syntax\ApacheVelocity\ShowVariableTranslation
  */
 final class ShowVariableTests extends VelocityTestCase
 {

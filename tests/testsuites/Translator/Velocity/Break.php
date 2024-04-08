@@ -4,7 +4,7 @@ use Mailcode\Mailcode_Factory;
 
 final class Translator_Velocity_BreeakTests extends VelocityTestCase
 {
-    public function test_translateCommand()
+    public function test_translateCommand() : void
     {
         $tests = array(
             array(

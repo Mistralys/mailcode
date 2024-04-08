@@ -1,24 +1,25 @@
 <?php
 /**
- * File containing the {@see \Mailcode\Mailcode_Translator_Syntax_ApacheVelocity_ShowNumber} class.
- *
  * @package Mailcode
  * @subpackage Translator
- * @see \Mailcode\Mailcode_Translator_Syntax_ApacheVelocity_ShowNumber
  */
 
 declare(strict_types=1);
 
-namespace Mailcode;
+namespace Mailcode\Translator\Syntax\ApacheVelocity;
+
+use Mailcode\Mailcode_Commands_Command_ShowNumber;
+use Mailcode\Mailcode_Translator_Command_ShowNumber;
+use Mailcode\Translator\Syntax\ApacheVelocity;
 
 /**
- * Translates the "ShowNumber" command to Apache Velocity.
+ * Translates the {@see Mailcode_Commands_Command_ShowNumber} command to Apache Velocity.
  *
  * @package Mailcode
  * @subpackage Translator
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Mailcode_Translator_Syntax_ApacheVelocity_ShowNumber extends Mailcode_Translator_Syntax_ApacheVelocity implements Mailcode_Translator_Command_ShowNumber
+class ShowNumberTranslation extends ApacheVelocity implements Mailcode_Translator_Command_ShowNumber
 {
     public function translate(Mailcode_Commands_Command_ShowNumber $command): string
     {

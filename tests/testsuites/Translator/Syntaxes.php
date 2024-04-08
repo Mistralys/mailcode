@@ -2,7 +2,7 @@
 
 use Mailcode\Mailcode_Exception;
 use Mailcode\Mailcode_Translator;
-use Mailcode\Mailcode_Translator_Syntax;
+use Mailcode\Translator\Syntax;
 
 final class Translator_SyntaxesTests extends VelocityTestCase
 {
@@ -15,7 +15,7 @@ final class Translator_SyntaxesTests extends VelocityTestCase
 
         $syntax = array_pop($syntaxes);
 
-        $this->assertInstanceOf(Mailcode_Translator_Syntax::class, $syntax);
+        $this->assertInstanceOf(Syntax::class, $syntax);
     }
 
     public function test_getSyntaxNames() : void
