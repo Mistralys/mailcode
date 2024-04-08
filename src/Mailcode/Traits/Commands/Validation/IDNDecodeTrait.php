@@ -33,7 +33,7 @@ trait IDNDecodeTrait
      * @param bool $enabled
      * @return $this
      */
-    public function setIDNDecoding(bool $enabled) : self
+    public function setIDNDecoding(bool $enabled=true) : self
     {
         return $this->setEncodingEnabled(Mailcode_Commands_Keywords::TYPE_IDN_DECODE, $enabled);
     }
