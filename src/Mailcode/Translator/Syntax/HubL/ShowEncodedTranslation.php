@@ -22,10 +22,22 @@ use Mailcode\Translator\Command\ShowEncodedInterface;
  */
 class ShowEncodedTranslation extends HubL implements ShowEncodedInterface
 {
+    private static int $counter = 0;
+
     public function translate(Mailcode_Commands_Command_ShowEncoded $command) : string
     {
-        $stringLiteral = $this->renderQuotedValue($command->getText());
+        self::$counter++;
 
-        return $this->renderEncodings($command, $stringLiteral);
+        $stringLiteral = $this->renderQuotedValue($command->getText());
+        $name = sprintf('literal%03d', self::$counter);
+
+        $variable = '{% set '.$name.' = '.$stringLiteral.' %}';
+
+        return $variable.'{{ '.$this->renderEncodings($command, $name).' }}';
+    }
+
+    public static function resetCounter() : void
+    {
+        self::$counter = 0;
     }
 }
