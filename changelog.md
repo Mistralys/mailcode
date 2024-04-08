@@ -1,3 +1,11 @@
+### v3.3.0 - Hubspot HubL syntax support
+- Translator: Added a first iteration of HubL syntax support for a selection of commands.
+- Translator: Namespaced the command translation classes.
+- Tests: Moved PHPStan support files to `tests/phpstan`.
+- Tests: Added the test suites to the PHPStan analysis.
+- Tests: Partially added strict typing and namespaces.
+- Tests: Implemented PHPStan recommendations in tests.
+
 ### v3.2.4 - Minor update
 - Factory: Improved an error message when an invalid command is created.
 
