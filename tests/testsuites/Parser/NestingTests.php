@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+namespace MailcodeTests\Parser;
+
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Collection_Error_Command;
 use Mailcode\Mailcode_Collection_Error_Message;
@@ -9,14 +13,16 @@ use Mailcode\Mailcode_Commands_Command_If;
 use Mailcode\Mailcode_Commands_Command_ShowVariable;
 use Mailcode\Mailcode_Commands_Command_Type_Closing;
 use Mailcode\Mailcode_Commands_Command_Type_Opening;
+use Mailcode\Mailcode_Commands_Command_Type_Sibling;
 use Mailcode\Mailcode_Parser;
+use MailcodeTestCase;
 
-final class Parser_NestingTests extends MailcodeTestCase
+final class NestingTests extends MailcodeTestCase
 {
-    public function notest_simpleNesting() : void
+    public function notest_simpleNesting(): void
     {
         $string =
-        '{for: $RECORD in: $FOO}
+            '{for: $RECORD in: $FOO}
             {showvar: $RECORD.NAME}
             {showvar: $BARFOO}
         {end}';
@@ -30,17 +36,16 @@ final class Parser_NestingTests extends MailcodeTestCase
         $this->assertInstanceOf(Mailcode_Commands_Command_For::class, $for);
         $this->assertEquals(2, count($showCommands));
 
-        foreach($showCommands as $showCommand)
-        {
+        foreach ($showCommands as $showCommand) {
             $this->assertTrue($showCommand->hasParent());
             $this->assertEquals($for, $showCommand->getParent());
         }
     }
 
-    public function test_multiNesting() : void
+    public function test_multiNesting(): void
     {
         $string =
-        '{if empty: $LOPOS}
+            '{if empty: $LOPOS}
             {for: $RECORD in: $FOO}
                 {showvar: $RECORD.NAME}
             {end}
@@ -69,10 +74,10 @@ final class Parser_NestingTests extends MailcodeTestCase
      * The nesting handler must correctly set the command's opening
      * and closing command instances.
      */
-    public function test_openingAndClosing() : void
+    public function test_openingAndClosing(): void
     {
         $string =
-        '{if empty: $LOPOS}
+            '{if empty: $LOPOS}
             {for: $RECORD in: $FOO}
                 {showvar: $RECORD.NAME}
             {end}
@@ -87,6 +92,8 @@ final class Parser_NestingTests extends MailcodeTestCase
 
         $this->assertInstanceOf(Mailcode_Commands_Command_Type_Opening::class, $ifOpening);
         $this->assertInstanceOf(Mailcode_Commands_Command_Type_Closing::class, $ifClosing);
+        $this->assertInstanceOf(Mailcode_Commands_Command_Type_Opening::class, $forOpening);
+        $this->assertInstanceOf(Mailcode_Commands_Command_Type_Closing::class, $forClosing);
 
         $this->assertSame($ifClosing, $ifOpening->getClosingCommand());
         $this->assertSame($ifOpening, $ifClosing->getOpeningCommand());
@@ -98,10 +105,10 @@ final class Parser_NestingTests extends MailcodeTestCase
      * Ensure that sibling commands correctly get assigned their
      * whole siblings tree.
      */
-    public function test_siblings() : void
+    public function test_siblings(): void
     {
         $string =
-        '{if empty: $FIRST}
+            '{if empty: $FIRST}
             Text here
         {elseif empty: $SECOND}
             More text
@@ -119,6 +126,12 @@ final class Parser_NestingTests extends MailcodeTestCase
         $else = array_shift($commands);
         $end = array_shift($commands);
 
+        $this->assertInstanceOf(Mailcode_Commands_Command_Type_Opening::class, $ifFirst);
+        $this->assertInstanceOf(Mailcode_Commands_Command_Type_Sibling::class, $ifSecond);
+        $this->assertInstanceOf(Mailcode_Commands_Command_Type_Sibling::class, $ifThird);
+        $this->assertInstanceOf(Mailcode_Commands_Command_Type_Sibling::class, $else);
+        $this->assertInstanceOf(Mailcode_Commands_Command_Type_Closing::class, $end);
+
         $this->assertCount(3, $ifFirst->getSiblingCommands());
         $this->assertSame($ifFirst, $ifSecond->getOpeningCommand());
         $this->assertContains($ifThird, $ifSecond->getSiblingCommands());
@@ -132,7 +145,7 @@ final class Parser_NestingTests extends MailcodeTestCase
      * between two commands gets stripped out during the
      * safeguarding.
      */
-    public function test_spaceBug() : void
+    public function test_spaceBug(): void
     {
         $string = '<p>Dear %1$s %2$s,</p><p>Thank you for your patronage.</p>';
 

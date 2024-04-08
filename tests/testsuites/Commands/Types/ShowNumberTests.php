@@ -1,14 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
+namespace MailcodeTests\Commands\Types;
+
+use Mailcode\Interfaces\Commands\Validation\URLEncodingInterface;
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands_Command;
 use Mailcode\Mailcode_Commands_Command_ShowNumber;
 use Mailcode\Mailcode_Factory;
 use Mailcode\Mailcode_Commands_CommonConstants;
+use MailcodeTestCase;
 
-final class Mailcode_ShowNumberTests extends MailcodeTestCase
+final class ShowNumberTests extends MailcodeTestCase
 {
-    public function test_validation() : void
+    public function test_validation(): void
     {
         $tests = array(
             array(
@@ -54,30 +60,30 @@ final class Mailcode_ShowNumberTests extends MailcodeTestCase
                 'code' => 0
             )
         );
-        
+
         $this->runCollectionTests($tests);
     }
-    
-    public function test_getFormat() : void
+
+    public function test_getFormat(): void
     {
         $cmd = Mailcode_Factory::show()->number('foobar', '1 000,00:##');
-        
+
         $this->assertEquals('$foobar', $cmd->getVariable()->getFullName());
         $this->assertEquals('1 000,00:##', $cmd->getFormatString());
         $this->assertTrue($cmd->getFormatInfo()->hasPadding());
     }
 
-    public function test_urlencode() : void
+    public function test_urlencode(): void
     {
         $cmd = Mailcode::create()
             ->parseString('{shownumber: $FOO urlencode:}')
             ->getFirstCommand();
 
-        $this->assertNotNull($cmd);
+        $this->assertInstanceOf(URLEncodingInterface::class, $cmd);
         $this->assertTrue($cmd->isURLEncoded());
     }
 
-    public function test_absolute_factory() : void
+    public function test_absolute_factory(): void
     {
         $cmd = Mailcode_Factory::show()
             ->number('foobar', '1 000,00:##', true);
@@ -85,17 +91,17 @@ final class Mailcode_ShowNumberTests extends MailcodeTestCase
         $this->assertTrue($cmd->isAbsolute());
     }
 
-    public function test_absolute_string() : void
+    public function test_absolute_string(): void
     {
         $cmd = Mailcode::create()
             ->parseString('{shownumber: $FOO absolute:}')
             ->getFirstCommand();
 
-        $this->assertNotNull($cmd);
+        $this->assertInstanceOf(Mailcode_Commands_Command_ShowNumber::class, $cmd);
         $this->assertTrue($cmd->isAbsolute());
     }
 
-    public function test_absolute_default() : void
+    public function test_absolute_default(): void
     {
         $cmd = Mailcode_Factory::show()
             ->number('foobar', '1 000,00:##');
@@ -103,7 +109,7 @@ final class Mailcode_ShowNumberTests extends MailcodeTestCase
         $this->assertFalse($cmd->isAbsolute());
     }
 
-    public function test_absolute_set() : void
+    public function test_absolute_set(): void
     {
         $cmd = Mailcode_Factory::show()
             ->number('foobar', '1 000,00:##');
@@ -115,7 +121,7 @@ final class Mailcode_ShowNumberTests extends MailcodeTestCase
         $this->assertFalse($cmd->isAbsolute());
     }
 
-    public function test_absolute_normalized() : void
+    public function test_absolute_normalized(): void
     {
         $cmd = Mailcode_Factory::show()
             ->number('foobar', '1 000,00:##', true);

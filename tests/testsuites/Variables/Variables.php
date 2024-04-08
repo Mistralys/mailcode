@@ -200,7 +200,7 @@ final class Variables_VariablesTests extends MailcodeTestCase
     * Ensure that US numbers notation is not accidentally considered
     * like variables, or even invalid variables.
     */
-    public function test_USNumbers()
+    public function test_USNumbers() : void
     {
         $variables = new Mailcode_Variables();
         
@@ -215,7 +215,7 @@ final class Variables_VariablesTests extends MailcodeTestCase
         $this->assertSame(0, $result->countVariables());
     }
     
-    public function test_getByFullName()
+    public function test_getByFullName() : void
     {
         $tests = array(
             array(

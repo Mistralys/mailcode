@@ -1,13 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
+namespace MailcodeTests\Translator;
+
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Factory;
+use MailcodeTestClasses\VelocityTestCase;
 
-final class Translator_ApacheVelocityTests extends VelocityTestCase
+final class ApacheVelocityTests extends VelocityTestCase
 {
-    public function test_logicKeywords()
+    public function test_logicKeywords(): void
     {
-        $cmd = Mailcode_Factory::if()->var('FOO.BAR', '==', 20);
+        $cmd = Mailcode_Factory::if()->var('FOO.BAR', '==', '20');
         $cmd->getLogicKeywords()->appendAND('$BARFOO == "Other value"', 'variable');
 
         $expected = '#if($FOO.BAR == 20 && $BARFOO == "Other value")';
@@ -19,7 +24,7 @@ final class Translator_ApacheVelocityTests extends VelocityTestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function test_list_equals()
+    public function test_list_equals(): void
     {
         $cmd = Mailcode_Factory::if()->listEquals("FOO.BAR", ["true"]);
 
@@ -32,7 +37,7 @@ final class Translator_ApacheVelocityTests extends VelocityTestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function test_show_decryption()
+    public function test_show_decryption(): void
     {
         $cmd = Mailcode_Factory::show()
             ->var("FOO.BAR")
@@ -47,7 +52,7 @@ final class Translator_ApacheVelocityTests extends VelocityTestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function test_show_decryption_custom()
+    public function test_show_decryption_custom(): void
     {
         $cmd = Mailcode_Factory::show()->var("FOO.BAR")
             ->enableDecryption('barfoo');
@@ -61,7 +66,7 @@ final class Translator_ApacheVelocityTests extends VelocityTestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function test_translateSafeguard()
+    public function test_translateSafeguard(): void
     {
         $syntax = $this->translator->createApacheVelocity();
 
@@ -100,7 +105,7 @@ ${CUSTOMER.CUSTOMER_ID}
         $this->assertEquals($expected, $result);
     }
 
-    public function test_showvar_decrypt() : void
+    public function test_showvar_decrypt(): void
     {
         $syntax = $this->translator->createApacheVelocity();
 
@@ -113,7 +118,7 @@ ${CUSTOMER.CUSTOMER_ID}
         $this->assertEquals($expected, $result);
     }
 
-    public function test_showvar_decrypt_custom() : void
+    public function test_showvar_decrypt_custom(): void
     {
         $syntax = $this->translator->createApacheVelocity();
 
@@ -131,12 +136,12 @@ ${CUSTOMER.CUSTOMER_ID}
      * specific internal date format when they are translated,
      * while not translating them manually.
      */
-    public function test_translateSafeguard_dates() : void
+    public function test_translateSafeguard_dates(): void
     {
         $subject = '{showdate: $FOO.BAR "d.m.Y"}';
 
         $internalFormat = 'yyyy-MM-dd';
-        $expected = '${time.input("'.$internalFormat.'", $FOO.BAR).output("dd.MM.yyyy").zone("UTC")}';
+        $expected = '${time.input("' . $internalFormat . '", $FOO.BAR).output("dd.MM.yyyy").zone("UTC")}';
 
         $syntax = $this->translator->createApacheVelocity();
         $safeguard = Mailcode::create()->createSafeguard($subject);

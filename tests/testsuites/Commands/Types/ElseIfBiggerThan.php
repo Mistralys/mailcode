@@ -4,7 +4,7 @@ use Mailcode\Mailcode_Commands_CommonConstants;
 
 final class Mailcode_ElseIfBiggerThanTests extends MailcodeTestCase
 {
-    public function test_validation()
+    public function test_validation() : void
     {
         $tests = array(
             array(

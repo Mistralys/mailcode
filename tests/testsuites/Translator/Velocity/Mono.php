@@ -1,10 +1,11 @@
 <?php
 
 use Mailcode\Mailcode;
+use MailcodeTestClasses\VelocityTestCase;
 
 final class Translator_Velocity_MonoTests extends VelocityTestCase
 {
-    public function test_translateCommand()
+    public function test_translateCommand() : void
     {
         $string = '{mono}Monospaced{end}';
         $expected = 'Monospaced';

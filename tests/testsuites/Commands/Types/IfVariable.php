@@ -6,7 +6,7 @@ use Mailcode\Mailcode_Factory;
 
 final class Mailcode_IfVariableTests extends MailcodeTestCase
 {
-    public function test_validation_variable()
+    public function test_validation_variable() : void
     {
         $tests = array(
             array(

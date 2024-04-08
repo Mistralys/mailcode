@@ -2,6 +2,7 @@
 
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Translator;
+use MailcodeTestClasses\VelocityTestCase;
 
 final class Translator_Velocity_CodeTests extends VelocityTestCase
 {

@@ -4,14 +4,14 @@ use Mailcode\Mailcode;
 
 final class Mailcode_MailcodeTests extends MailcodeTestCase
 {
-    public function test_createCode()
+    public function test_createCode() : void
     {
         $code = Mailcode::create();
         
         $this->assertInstanceOf(Mailcode::class, $code);
     }
    
-    public function test_findVariableNames()
+    public function test_findVariableNames() : void
     {
         $tests = array(
             array(
@@ -87,7 +87,7 @@ final class Mailcode_MailcodeTests extends MailcodeTestCase
         }
     }
     
-    public function test_invalidVariables()
+    public function test_invalidVariables() : void
     {
         $mailcode = Mailcode::create();
         

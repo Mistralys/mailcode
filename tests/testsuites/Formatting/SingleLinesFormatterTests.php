@@ -1,17 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
+namespace MailcodeTests\Formatting;
+
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Exception;
+use MailcodeTestCase;
 
-final class Parser_SingleLinesFormatterTests extends MailcodeTestCase
+final class SingleLinesFormatterTests extends MailcodeTestCase
 {
-   /**
-    * NOTE: To be newline-style-agnostic, the test uses the placeholder
-    * [EOL] to mark where a newline should be inserted. The same 
-    * string is used as the starting text, but with the placeholders
-    * stripped out.
-    */
-    public function test_makeSafe_separateLines()
+    /**
+     * NOTE: To be newline-style-agnostic, the test uses the placeholder
+     * [EOL] to mark where a newline should be inserted. The same
+     * string is used as the starting text, but with the placeholders
+     * stripped out.
+     */
+    public function test_makeSafe_separateLines(): void
     {
         $tests = array(
             array(
@@ -28,8 +33,8 @@ final class Parser_SingleLinesFormatterTests extends MailcodeTestCase
             ),
             array(
                 'label' => 'On its own line, but with text appended',
-                'text' => 
-'Some text here.
+                'text' =>
+                    'Some text here.
 {setvar: $FOOBAR = "Value"}[EOL] also here.',
             ),
             array(
@@ -55,43 +60,39 @@ final class Parser_SingleLinesFormatterTests extends MailcodeTestCase
                 'text' => '{if: 0 == 1}[EOL]{if: 0 == 2}[EOL]{end}[EOL]{end}',
             )
         );
-        
+
         $parser = Mailcode::create()->getParser();
 
-        foreach($tests as $test)
-        {
+        foreach ($tests as $test) {
             $noEOL = str_replace('[EOL]', '', $test['text']);
-            
+
             $safeguard = $parser->createSafeguard($noEOL);
-            $label = $test['label']; 
-            
-            try
-            {
+            $label = $test['label'];
+
+            try {
                 $safe = $safeguard->makeSafe();
-                
+
                 $formatting = $safeguard->createFormatting($safeguard->makeSafe());
                 $formatter = $formatting->formatWithSingleLines();
-                
+
                 $withEOL = str_replace('[EOL]', $formatter->getEOLChar(), $test['text']);
-                
+
                 $result = $formatting->toString();
 
                 // test fail details
-                $label .= PHP_EOL.'Formatter log:'.PHP_EOL.
-                implode(PHP_EOL, $formatter->getLog());
-            }
-            catch(Mailcode_Exception $e)
-            {
+                $label .= PHP_EOL . 'Formatter log:' . PHP_EOL .
+                    implode(PHP_EOL, $formatter->getLog());
+            } catch (Mailcode_Exception $e) {
                 $this->fail(sprintf(
                     'Exception: #%2$s %3$s %1$s Details: %4$s %1$s Safe string: %1$s %5$s',
                     PHP_EOL,
                     $e->getCode(),
                     $e->getMessage(),
                     $e->getDetails(),
-                    $safe
+                    $safe ?? ''
                 ));
             }
-            
+
             $this->assertEquals($withEOL, $result, $label);
         }
     }

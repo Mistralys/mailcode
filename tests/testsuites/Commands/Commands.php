@@ -8,14 +8,14 @@ use Mailcode\Mailcode_Commands_Command;
 
 final class Mailcode_CommandsTests extends MailcodeTestCase
 {
-    public function test_createParser()
+    public function test_createParser() : void
     {
         $commands = Mailcode::create()->getCommands();
         
         $this->assertInstanceOf(Mailcode_Commands::class, $commands);
     }
     
-    public function test_getCommands()
+    public function test_getCommands() : void
     {
         $collection = Mailcode::create()->getCommands();
         
@@ -24,7 +24,7 @@ final class Mailcode_CommandsTests extends MailcodeTestCase
         $this->assertNotEmpty($commands);
     }
     
-    public function test_getCommandByID()
+    public function test_getCommandByID() : void
     {
         $collection = Mailcode::create()->getCommands();
         
@@ -35,7 +35,7 @@ final class Mailcode_CommandsTests extends MailcodeTestCase
         $this->assertEquals('showvar', $command->getName());
     }
 
-    public function test_isDummy()
+    public function test_isDummy() : void
     {
         $collection = Mailcode::create()->getCommands();
         
@@ -48,7 +48,7 @@ final class Mailcode_CommandsTests extends MailcodeTestCase
         $this->assertFalse($real->isDummy());
     }
 
-    public function test_hash()
+    public function test_hash() : void
     {
         $collection = Mailcode::create()->getCommands();
         
@@ -65,7 +65,7 @@ final class Mailcode_CommandsTests extends MailcodeTestCase
         $this->assertEquals($hash, $real->getHash());
     }
 
-    public function test_hashDummy()
+    public function test_hashDummy() : void
     {
         $collection = Mailcode::create()->getCommands();
         
@@ -76,7 +76,7 @@ final class Mailcode_CommandsTests extends MailcodeTestCase
         $dummy->getHash();
     }
     
-    public function test_nameExists()
+    public function test_nameExists() : void
     {
         $collection = Mailcode::create()->getCommands();
 
@@ -85,7 +85,7 @@ final class Mailcode_CommandsTests extends MailcodeTestCase
         $this->assertFalse($collection->nameExists('foo'));
     }
     
-    public function test_idExists()
+    public function test_idExists() : void
     {
         $collection = Mailcode::create()->getCommands();
         
@@ -94,7 +94,7 @@ final class Mailcode_CommandsTests extends MailcodeTestCase
         $this->assertFalse($collection->idExists('foo'));
     }
     
-    public function test_normalize()
+    public function test_normalize() : void
     {
         $tests = array(
             array(

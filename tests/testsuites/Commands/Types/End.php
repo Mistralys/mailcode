@@ -4,7 +4,7 @@ use Mailcode\Mailcode_Factory;
 
 final class Mailcode_EndTests extends MailcodeTestCase
 {
-    public function test_validation()
+    public function test_validation() : void
     {
         $tests = array(
             array(
@@ -21,7 +21,7 @@ final class Mailcode_EndTests extends MailcodeTestCase
         $this->runCollectionTests($tests);
     }
     
-    public function test_highlight()
+    public function test_highlight() : void
     {
         $end = Mailcode_Factory::misc()->end();
         

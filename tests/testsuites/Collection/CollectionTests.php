@@ -1,18 +1,22 @@
 <?php
 
-use Mailcode\Mailcode;
-use Mailcode\Mailcode_Commands_Command_ShowSnippet;
+declare(strict_types=1);
 
-final class Collection_CollectionTests extends MailcodeTestCase
+namespace MailcodeTests\Collection;
+
+use Mailcode\Mailcode;
+use MailcodeTestCase;
+
+final class CollectionTests extends MailcodeTestCase
 {
-    protected $tplShowVars = <<<'EOD'
+    protected string $tplShowVars = <<<'EOD'
 Simple {showvar: $SHOW} show command.
 Displaying {shownumber: $NUMBER} a number.
 It all happened on {showdate: $DATE}.
 Insert content of {showsnippet: $SNIPPET} here.
 EOD;
 
-    protected $tplListVars = <<<'EOD'
+    protected string $tplListVars = <<<'EOD'
 {for: $RECORD in: $FORLIST}
     {if list-contains: $CONTAINS.PROP "Term"}
     {end}
@@ -21,8 +25,7 @@ EOD;
 {end}
 EOD;
 
-
-    public function test_getCommands() : void
+    public function test_getCommands(): void
     {
         $collection = Mailcode::create()->parseString($this->tplShowVars);
 
@@ -31,7 +34,7 @@ EOD;
         $this->assertCount(1, $collection->getShowDateCommands());
     }
 
-    public function test_merge() : void
+    public function test_merge(): void
     {
         $collectionA = Mailcode::create()->parseString($this->tplShowVars);
         $collectionB = Mailcode::create()->parseString('{showvar: $OTHER}');
@@ -42,7 +45,7 @@ EOD;
         $this->assertCount(5, $merged->getCommands());
     }
 
-    public function test_getListVariables() : void
+    public function test_getListVariables(): void
     {
         $collection = Mailcode::create()->parseString($this->tplListVars);
         $commands = $collection->getListVariableCommands();
@@ -50,9 +53,8 @@ EOD;
         $this->assertCount(3, $commands);
 
         $names = array();
-        foreach($commands as $command)
-        {
-            $names = array_merge($names, $command->getListVariables()->getNames());
+        foreach ($commands as $command) {
+            array_push($names, ...$command->getListVariables()->getNames());
         }
 
         sort($names);
@@ -71,7 +73,7 @@ EOD;
      * a collection's commands, as this is where the nesting is
      * initialized.
      */
-    public function test_validateBeforeGetCommands() : void
+    public function test_validateBeforeGetCommands(): void
     {
         $string = '{showvar: $RECORD.NAME}';
 

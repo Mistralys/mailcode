@@ -7,7 +7,7 @@ namespace MailcodeTests\Translator\Commands;
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands_Command_SetVariable;
 use Mailcode\Mailcode_Factory;
-use VelocityTestCase;
+use MailcodeTestClasses\VelocityTestCase;
 
 final class SetVariableTests extends VelocityTestCase
 {

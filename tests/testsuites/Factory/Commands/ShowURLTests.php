@@ -59,7 +59,7 @@ class ShowURLTests extends MailcodeTestCase
     {
         $url = 'https://mistralys.eu?param={showvar: $FOO}';
 
-        $cmd = Mailcode_Factory::show()->url($url, 'trackme', array('foo', 'bar'));
+        $cmd = Mailcode_Factory::show()->url($url, 'trackme', array('foo' => 'bar'));
 
         $this->assertSame($url, $cmd->getURL());
     }

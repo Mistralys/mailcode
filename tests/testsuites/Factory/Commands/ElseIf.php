@@ -2,6 +2,7 @@
 
 use Mailcode\Mailcode_Factory;
 use Mailcode\Mailcode_Commands_Command_ElseIf;
+use MailcodeTestClasses\FactoryTestCase;
 
 final class Factory_ElseIfTests extends FactoryTestCase
 {
@@ -10,7 +11,7 @@ final class Factory_ElseIfTests extends FactoryTestCase
         return Mailcode_Commands_Command_ElseIf::class;
     }
     
-    public function test_elseIf()
+    public function test_elseIf() : void
     {
         $this->runCommand(
             'Variable string comparison',

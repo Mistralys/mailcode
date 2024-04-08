@@ -2,7 +2,7 @@
 
 final class Mailcode_ElseIfTests extends MailcodeTestCase
 {
-    public function test_validation_passthru()
+    public function test_validation_passthru() : void
     {
         $tests = array(
             array(

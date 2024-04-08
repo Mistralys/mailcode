@@ -2,6 +2,7 @@
 
 use Mailcode\Mailcode_Commands_Command_ElseIf_Contains;
 use Mailcode\Mailcode_Factory;
+use MailcodeTestClasses\FactoryTestCase;
 
 final class Factory_ElseIfContainsTests extends FactoryTestCase
 {
@@ -10,7 +11,7 @@ final class Factory_ElseIfContainsTests extends FactoryTestCase
         return Mailcode_Commands_Command_ElseIf_Contains::class;
     }
     
-    public function test_elseIfContains()
+    public function test_elseIfContains() : void
     {
         $this->runCommand(
             'Variable name without $',

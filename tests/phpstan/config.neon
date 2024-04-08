@@ -1,0 +1,7 @@
+parameters:
+    paths:
+        - ../../src
+        - ../../css
+        - ../../tools
+        - ../../tests/assets
+        - ../../tests/testsuites

@@ -1,8 +1,0 @@
-parameters:
-    tmpDir: ./
-    excludePaths:
-        - tests/*
-        - vendor/*
-    paths:
-        - ../../src
-        - ../../css

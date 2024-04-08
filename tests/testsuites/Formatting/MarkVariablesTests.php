@@ -1,13 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
+namespace MailcodeTests\Formatting;
+
 use AppUtils\FileHelper;
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Exception;
 use Mailcode\Mailcode_Factory;
+use MailcodeTestCase;
 
-final class Formatting_MarkVariablesTests extends MailcodeTestCase
+final class MarkVariablesTests extends MailcodeTestCase
 {
-    public function test_markVariables() : void
+    public function test_markVariables(): void
     {
         $tests = array(
             array(
@@ -53,143 +58,138 @@ final class Formatting_MarkVariablesTests extends MailcodeTestCase
                 'marked' => false
             )
         );
-        
+
         $parser = Mailcode::create()->getParser();
-        
-        foreach($tests as $test)
-        {
+
+        foreach ($tests as $test) {
             $safeguard = $parser->createSafeguard(sprintf($test['html'], $test['command']));
-            
-            try
-            {
+
+            try {
                 $safe = $safeguard->makeSafe();
-                
+
                 $formatting = $safeguard->createFormatting($safe);
                 $formatter = $formatting->formatWithMarkedVariables();
                 $template = $formatter->getTemplate();
-                
+
                 $highlighted = $formatting->toString();
 
                 $expected = sprintf($test['html'], $test['command']);
-                if($test['marked'])
-                {
+                if ($test['marked']) {
                     $expected = sprintf($test['html'], sprintf($template, $test['command']));
                 }
-            }
-            catch(Mailcode_Exception $e)
-            {
+            } catch (Mailcode_Exception $e) {
                 $this->fail(sprintf(
                     'Exception: #%2$s %3$s %1$s Details: %4$s %1$s Safe string: %1$s %5$s',
                     PHP_EOL,
                     $e->getCode(),
                     $e->getMessage(),
                     $e->getDetails(),
-                    $safe
+                    $safe ?? ''
                 ));
             }
-            
+
             $this->assertEquals($expected, $highlighted, $test['label']);
         }
     }
-    
-    public function test_setTemplate_noPlaceholder() : void
-    {
-        $parser = Mailcode::create()->getParser();
-        $safeguard = $parser->createSafeguard('');
-        $formatting = $safeguard->createFormatting('');
-        
-        $formatter = $formatting->formatWithMarkedVariables();
-        
-        $this->expectException(Mailcode_Exception::class);
-        
-        $formatter->setTemplate('foobar');
-    }
-    
-    public function test_setTemplate_severalPlaceholders() : void
+
+    public function test_setTemplate_noPlaceholder(): void
     {
         $parser = Mailcode::create()->getParser();
         $safeguard = $parser->createSafeguard('');
         $formatting = $safeguard->createFormatting('');
 
         $formatter = $formatting->formatWithMarkedVariables();
-        
+
         $this->expectException(Mailcode_Exception::class);
-        
+
+        $formatter->setTemplate('foobar');
+    }
+
+    public function test_setTemplate_severalPlaceholders(): void
+    {
+        $parser = Mailcode::create()->getParser();
+        $safeguard = $parser->createSafeguard('');
+        $formatting = $safeguard->createFormatting('');
+
+        $formatter = $formatting->formatWithMarkedVariables();
+
+        $this->expectException(Mailcode_Exception::class);
+
         $formatter->setTemplate('%s foo %s');
     }
-    
-    public function test_setTemplate() : void
+
+    public function test_setTemplate(): void
     {
         $command = '{showvar: $FOOBAR}';
         $template = '<test>%s</test>';
-        
+
         $parser = Mailcode::create()->getParser();
         $safeguard = $parser->createSafeguard($command);
         $formatting = $safeguard->createFormatting($safeguard->makeSafe());
-        
+
         $formatter = $formatting->formatWithMarkedVariables();
         $formatter->setTemplate($template);
-        
+
         $this->assertEquals(sprintf($template, $command), $formatting->toString());
     }
-    
-    public function test_getPrependAppend() : void
+
+    public function test_getPrependAppend(): void
     {
         $command = '{showvar: $FOOBAR}';
         $template = '<test>%s</test>';
-        
+
         $parser = Mailcode::create()->getParser();
         $safeguard = $parser->createSafeguard($command);
         $formatting = $safeguard->createFormatting($safeguard->makeSafe());
-        
+
         $formatter = $formatting->formatWithMarkedVariables();
         $formatter->setTemplate($template);
-        
+
         $this->assertEquals('<test>', $formatter->getPrependTag());
         $this->assertEquals('</test>', $formatter->getAppendTag());
     }
-    
-    public function test_combineWithHighlighting() : void
+
+    public function test_combineWithHighlighting(): void
     {
         $command = Mailcode_Factory::show()->var('FOOBAR');
         $commandString = $command->getNormalized();
         $template = '<test>%s</test>';
-        
+
         $parser = Mailcode::create()->getParser();
         $safeguard = $parser->createSafeguard($commandString);
         $formatting = $safeguard->createFormatting($safeguard->makeSafe());
         $formatting->replaceWithHTMLHighlighting();
-        
+
         $formatter = $formatting->formatWithMarkedVariables();
         $formatter->setTemplate($template);
-        
+
         $this->assertEquals(sprintf($template, $command->getHighlighted()), $formatting->toString());
     }
-    
-   /**
-    * Creates a file with the highlighting to check manually in a browser.
-    */
-    public function test_highlightExampleFile() : void
+
+    /**
+     * Creates a file with the highlighting to check manually in a browser.
+     */
+    public function test_highlightExampleFile(): void
     {
-        $sourceFile = __DIR__.'/../../assets/files/test-highlight.html';
-        $targetFile = __DIR__.'/../../assets/files/test-highlight-marked-variables.html';
-        
+        $sourceFile = __DIR__ . '/../../assets/files/test-highlight.html';
+        $targetFile = __DIR__ . '/../../assets/files/test-highlight-marked-variables.html';
+
         $content = FileHelper::readContents($sourceFile);
-        
+
         $parser = Mailcode::create()->getParser();
         $safeguard = $parser->createSafeguard($content);
         $formatting = $safeguard->createFormatting($safeguard->makeSafe());
         $formatting->formatWithMarkedVariables();
-        
+
         FileHelper::saveFile($targetFile, $formatting->toString());
-        
+
         $this->addToAssertionCount(1);
     }
 
     /**
      * Ensure that the switch to inline styles works as intended.
      */
-    public function test_inline() : void
+    public function test_inline(): void
     {
         $html = '<p>{showvar: $FOO.BAR}</p>';
 
@@ -209,7 +209,7 @@ final class Formatting_MarkVariablesTests extends MailcodeTestCase
         $this->assertEquals($expected, $highlighted);
     }
 
-    public function test_getCSS() : void
+    public function test_getCSS(): void
     {
         $parser = Mailcode::create()->getParser();
         $safeguard = $parser->createSafeguard("");
@@ -217,12 +217,12 @@ final class Formatting_MarkVariablesTests extends MailcodeTestCase
         $formatter = $formatting->formatWithMarkedVariables();
 
         $this->assertEquals(
-            FileHelper::readContents(MAILCODE_INSTALL_FOLDER.'/css/marked-variables.css'),
+            FileHelper::readContents(MAILCODE_INSTALL_FOLDER . '/css/marked-variables.css'),
             $formatter->getCSS()
         );
     }
 
-    public function test_getStyleTag() : void
+    public function test_getStyleTag(): void
     {
         $parser = Mailcode::create()->getParser();
         $safeguard = $parser->createSafeguard("");
@@ -230,7 +230,7 @@ final class Formatting_MarkVariablesTests extends MailcodeTestCase
         $formatter = $formatting->formatWithMarkedVariables();
 
         $this->assertEquals(
-            '<style>'.FileHelper::readContents(MAILCODE_INSTALL_FOLDER.'/css/marked-variables.css').'</style>',
+            '<style>' . FileHelper::readContents(MAILCODE_INSTALL_FOLDER . '/css/marked-variables.css') . '</style>',
             $formatter->getStyleTag()
         );
     }

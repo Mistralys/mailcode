@@ -33,6 +33,11 @@ abstract class MailcodeTestCase extends TestCase
         Mailcode::setDebugging(true);
     }
 
+    /**
+     * @param array<int,array{string:string,label:string,valid:bool,code:int,normalized?:string|NULL}> $tests
+     * @return void
+     * @throws Mailcode_Exception
+     */
     protected function runCollectionTests(array $tests) : void
     {
         foreach($tests as $test)

@@ -4,7 +4,7 @@ use Mailcode\Mailcode_Factory;
 
 final class Factory_RendererTests extends MailcodeTestCase
 {
-    public function test_setVar()
+    public function test_setVar() : void
     {
         $renderer = Mailcode_Factory::createRenderer();
         
@@ -32,7 +32,7 @@ final class Factory_RendererTests extends MailcodeTestCase
         }
     }
     
-    public function test_showSnippet()
+    public function test_showSnippet() : void
     {
         $renderer = Mailcode_Factory::createRenderer();
         

@@ -1,10 +1,11 @@
 <?php
 
 use Mailcode\Mailcode_Factory;
+use MailcodeTestClasses\VelocityTestCase;
 
 final class Translator_Velocity_IfListEqualsTests extends VelocityTestCase
 {
-    public function test_translateCommand()
+    public function test_translateCommand() : void
     {
         // NOTE: for readability purposes here in the tests,
         // the expected amount of slashes are replaced by

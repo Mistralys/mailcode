@@ -10,6 +10,6 @@ echo -------------------------------------------------------
 
 echo.
 
-call ../vendor/bin/phpstan analyse -c ./config/phpstan.neon -l %Level% > phpstan/output.txt
+call ../../vendor/bin/phpstan analyse -c ./config.neon -l %Level% > ./result.txt
 
-start "" "phpstan/output.txt"
+start "" "phpstan/result.txt"

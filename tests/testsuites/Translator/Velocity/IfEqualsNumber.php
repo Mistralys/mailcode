@@ -1,10 +1,11 @@
 <?php
 
 use Mailcode\Mailcode_Factory;
+use MailcodeTestClasses\VelocityTestCase;
 
 final class Translator_Velocity_IfEqualsNumberTests extends VelocityTestCase
 {
-    public function test_translateCommand()
+    public function test_translateCommand() : void
     {
         $tests = array(
             array(

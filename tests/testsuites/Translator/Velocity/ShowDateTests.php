@@ -6,7 +6,7 @@ namespace testsuites\Translator\Commands;
 
 use Mailcode\Mailcode_Factory;
 use Mailcode\Translator\Syntax\ApacheVelocity\ShowDateTranslation;
-use VelocityTestCase;
+use MailcodeTestClasses\VelocityTestCase;
 
 final class ShowDateTests extends VelocityTestCase
 {

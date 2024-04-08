@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Mailcode\Mailcode_Commands_Command_If_ListBeginsWith;
 use Mailcode\Mailcode_Factory;
+use MailcodeTestClasses\FactoryTestCase;
 
 final class Factory_IfListBeginsWithTests extends FactoryTestCase
 {
@@ -12,7 +13,7 @@ final class Factory_IfListBeginsWithTests extends FactoryTestCase
         return Mailcode_Commands_Command_If_ListBeginsWith::class;
     }
     
-    public function test_ifContains()
+    public function test_ifContains() : void
     {
         $this->runCommand(
             'Variable name without $',

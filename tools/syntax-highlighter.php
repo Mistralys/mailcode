@@ -26,10 +26,11 @@ $mailcode = Mailcode::create();
 $commandsText = '';
 $translated = '';
 $error = null;
+$highlighted = '';
 
 if($request->getBool('highlight'))
 {
-    $commandsText = $request->getParam('mailcode');
+    $commandsText = $request->registerParam('mailcode')->getString();
 
     try
     {
@@ -113,7 +114,7 @@ if($request->getBool('highlight'))
             {
                 ?>
                     <pre style="border: solid 1px #ccc;padding:12px;border-radius: 5px"><?php
-                            echo $highlighted;
+                        echo $highlighted;
                     ?></pre>
                 <?php
             }

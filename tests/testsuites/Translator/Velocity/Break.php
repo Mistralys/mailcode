@@ -1,6 +1,7 @@
 <?php
 
 use Mailcode\Mailcode_Factory;
+use MailcodeTestClasses\VelocityTestCase;
 
 final class Translator_Velocity_BreeakTests extends VelocityTestCase
 {

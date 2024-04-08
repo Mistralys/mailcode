@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
+namespace MailcodeTests\Commands\Types;
+
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands_Command;
-use Mailcode\Mailcode_Commands_Command_ShowNumber;
 use Mailcode\Mailcode_Commands_Command_ShowPhone;
 use Mailcode\Mailcode_Factory;
-use Mailcode\Mailcode_Commands_CommonConstants;
+use MailcodeTestCase;
 
-final class Mailcode_ShowPhoneTests extends MailcodeTestCase
+final class ShowPhoneTests extends MailcodeTestCase
 {
-    public function test_validation()
+    public function test_validation(): void
     {
         $tests = array(
             array(
@@ -45,42 +46,43 @@ final class Mailcode_ShowPhoneTests extends MailcodeTestCase
                 'code' => 0
             )
         );
-        
+
         $this->runCollectionTests($tests);
     }
-    
-    public function test_getVariable() : void
+
+    public function test_getVariable(): void
     {
         $cmd = Mailcode_Factory::show()->phone('PHONE', 'DE');
 
         $this->assertEquals('$PHONE', $cmd->getVariable()->getFullName());
     }
 
-    public function test_getFormat() : void
+    public function test_getFormat(): void
     {
         $cmd = Mailcode_Factory::show()->phone('PHONE', 'de');
 
         $this->assertEquals('DE', $cmd->getSourceFormat());
     }
 
-    public function test_urlEncoding() : void
+    public function test_urlEncoding(): void
     {
         $cmd = Mailcode_Factory::show()->phone('PHONE', 'DE', Mailcode_Factory::URL_ENCODING_ENCODE);
 
         $this->assertTrue($cmd->isURLEncoded());
     }
 
-    public function test_urlDecoding() : void
+    public function test_urlDecoding(): void
     {
         $cmd = Mailcode_Factory::show()->phone('PHONE', 'DE', Mailcode_Factory::URL_ENCODING_DECODE);
 
         $this->assertTrue($cmd->isURLDecoded());
     }
 
-    public function test_urlEncoding_commandString() : void
+    public function test_urlEncoding_commandString(): void
     {
         $cmd = Mailcode::create()->parseString('{showphone: $PHONE "DE" urlencode:}')->getFirstCommand();
 
+        $this->assertInstanceOf(Mailcode_Commands_Command_ShowPhone::class, $cmd);
         $this->assertTrue($cmd->isURLEncoded());
     }
 }

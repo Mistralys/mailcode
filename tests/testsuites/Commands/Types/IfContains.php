@@ -4,7 +4,7 @@ use Mailcode\Mailcode_Commands_CommonConstants;
 
 final class Mailcode_IfContainsTests extends MailcodeTestCase
 {
-    public function test_validation_contains()
+    public function test_validation_contains() : void
     {
         $tests = array(
             array(

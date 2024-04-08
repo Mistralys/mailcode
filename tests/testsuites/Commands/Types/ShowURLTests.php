@@ -220,6 +220,8 @@ EOT;
 
     // region: Support methods
 
+    protected string $autoLinkName;
+
     protected function setUp() : void
     {
         parent::setUp();

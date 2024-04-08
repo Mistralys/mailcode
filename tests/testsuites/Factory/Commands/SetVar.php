@@ -3,6 +3,7 @@
 use Mailcode\Mailcode_Commands_Command_SetVariable;
 use Mailcode\Mailcode_Factory;
 use Mailcode\Mailcode_Factory_Exception;
+use MailcodeTestClasses\FactoryTestCase;
 
 final class Factory_SetVarTests extends FactoryTestCase
 {

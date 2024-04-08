@@ -3,6 +3,7 @@
 use Mailcode\Mailcode_Commands_Command_ShowDate;
 use Mailcode\Mailcode_Factory;
 use Mailcode\Mailcode_Factory_Exception;
+use MailcodeTestClasses\FactoryTestCase;
 
 final class Factory_ShowDateTests extends FactoryTestCase
 {
@@ -11,7 +12,7 @@ final class Factory_ShowDateTests extends FactoryTestCase
         return Mailcode_Commands_Command_ShowDate::class;
     }
 
-    public function test_showDate()
+    public function test_showDate() : void
     {
         $this->runCommand(
             'Variable name without $',
@@ -44,21 +45,21 @@ final class Factory_ShowDateTests extends FactoryTestCase
         );
     }
 
-    public function test_showDate_variableError()
+    public function test_showDate_variableError() : void
     {
         $this->expectException(Mailcode_Factory_Exception::class);
 
         Mailcode_Factory::show()->date('0INVALIDVAR');
     }
 
-    public function test_showDate_formatError()
+    public function test_showDate_formatError() : void
     {
         $this->expectException(Mailcode_Factory_Exception::class);
 
         Mailcode_Factory::show()->date('VAR.NAME', 'd.m.Z');
     }
 
-    public function test_showDate_timezone_variableError()
+    public function test_showDate_timezone_variableError() : void
     {
         $this->expectException(Mailcode_Factory_Exception::class);
 

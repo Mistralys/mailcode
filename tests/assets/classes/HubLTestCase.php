@@ -24,6 +24,10 @@ abstract class HubLTestCase extends MailcodeTestCase
         ShowEncodedTranslation::resetCounter();
     }
 
+    /**
+     * @param array<int,array{mailcode:Mailcode_Commands_Command,expected:string,label:string}> $tests
+     * @return void
+     */
     protected function runCommands(array $tests) : void
     {
         $syntax = $this->translator->createHubL();

@@ -3,6 +3,7 @@
 use Mailcode\Mailcode_Commands_Command_For;
 use Mailcode\Mailcode_Factory;
 use Mailcode\Mailcode_Factory_Exception;
+use MailcodeTestClasses\FactoryTestCase;
 
 final class Factory_ForTests extends FactoryTestCase
 {
@@ -11,7 +12,7 @@ final class Factory_ForTests extends FactoryTestCase
         return Mailcode_Commands_Command_For::class;
     }
 
-    public function test_for()
+    public function test_for() : void
     {
         $this->runCommand(
             'Variable name without $',
@@ -42,21 +43,21 @@ final class Factory_ForTests extends FactoryTestCase
         );
     }
 
-    public function test_error_same_variable()
+    public function test_error_same_variable() : void
     {
         $this->expectException(Mailcode_Factory_Exception::class);
 
         Mailcode_Factory::misc()->for('$SOURCE', '$SOURCE');
     }
 
-    public function test_error_break_string()
+    public function test_error_break_string() : void
     {
         $this->expectException(Mailcode_Factory_Exception::class);
 
         Mailcode_Factory::misc()->for('$SOURCE', '$SOURCE', '"13"');
     }
 
-    public function test_error_break_unquotedtext()
+    public function test_error_break_unquotedtext() : void
     {
         $this->expectException(Mailcode_Factory_Exception::class);
 

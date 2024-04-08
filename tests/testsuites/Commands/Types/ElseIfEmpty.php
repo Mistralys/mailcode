@@ -4,7 +4,7 @@ use Mailcode\Mailcode_Commands_CommonConstants;
 
 final class Mailcode_ElseIfEmptyTests extends MailcodeTestCase
 {
-    public function test_validation_notEmpty()
+    public function test_validation_notEmpty() : void
     {
         $tests = array(
             array(

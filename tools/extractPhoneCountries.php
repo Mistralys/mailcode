@@ -12,9 +12,9 @@
 
 declare(strict_types=1);
 
-use AppUtils\CSVHelper;
-use AppUtils\FileHelper;
-use libphonenumber\PhoneNumberFormat;
+use AppUtils\ConvertHelper\JSONConverter;use AppUtils\CSVHelper;
+use AppUtils\CSVHelper_Exception;use AppUtils\FileHelper;
+use AppUtils\FileHelper_Exception;use libphonenumber\PhoneNumberFormat;
 use libphonenumber\PhoneNumberUtil;use Mailcode\Mailcode;use function AppLocalize\pts;
 
 require_once 'prepend.php';
@@ -69,15 +69,18 @@ FileHelper::saveAsJSON($countries, $outputFile, true);
                 The command reads the file to access the countries.
             </p>
             <p>
-                <strong>Extracted JSON data:</strong>
+                <label for="json_source"><strong>Extracted JSON data:</strong></label>
             </p>
-            <textarea rows="20" class="form-control"><?php echo json_encode($countries, JSON_PRETTY_PRINT) ?></textarea>
+            <textarea id="json_source" rows="20" class="form-control"><?php echo JSONConverter::var2json($countries, JSON_PRETTY_PRINT) ?></textarea>
         </div>
     </body>
 </html>
 
 <?php
 
+/**
+ * @return array<string,array{label:string,local:string,international:string}>
+ */
 function generateList() : array
 {
     $labels = extractLabels();
@@ -87,22 +90,23 @@ function generateList() : array
     $data = array();
     foreach ($regions as $code)
     {
+        $code = (string)$code;
+
         $meta = $phoneNumberUtil->getMetadataForRegion($code);
         if (!$meta) {
             die('No metadata for ' . $code);
         }
 
         $exampleNumber = $phoneNumberUtil->getExampleNumber($code);
+        if(empty($exampleNumber)) {
+            die('No example number for ' . $code);
+        }
+
         $local = $phoneNumberUtil->formatInOriginalFormat($exampleNumber, $code);
         $international = $phoneNumberUtil->format($exampleNumber, PhoneNumberFormat::INTERNATIONAL);
 
-        $label = $code;
-        if (isset($labels[$code])) {
-            $label = $labels[$code];
-        }
-
         $data[$code] = array(
-            'label' => $label,
+            'label' => $labels[$code] ?? $code,
             'local' => $local,
             'international' => $international
         );
@@ -113,6 +117,11 @@ function generateList() : array
     return $data;
 }
 
+/**
+ * @return array<string,string>
+ * @throws CSVHelper_Exception
+ * @throws FileHelper_Exception
+ */
 function extractLabels() : array
 {
     $lines = CSVHelper::parseFile('countrycodes.csv');

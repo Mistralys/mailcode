@@ -3,13 +3,14 @@
 declare(strict_types=1);
 
 use Mailcode\Mailcode_Factory;
+use MailcodeTestClasses\VelocityTestCase;
 
 /**
  * @see \Mailcode\Translator\Syntax\ApacheVelocity\ShowSnippetTranslation
  */
 final class Translator_Velocity_ShowSnippetTests extends VelocityTestCase
 {
-    public function test_translateCommand()
+    public function test_translateCommand() : void
     {
         $tests = array(
             array(

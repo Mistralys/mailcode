@@ -3,6 +3,7 @@
 use Mailcode\Mailcode_Factory;
 use Mailcode\Mailcode_Factory_Exception;
 use Mailcode\Mailcode_Commands_Command_ShowSnippet;
+use MailcodeTestClasses\FactoryTestCase;
 
 final class Factory_ShowSnippetTests extends FactoryTestCase
 {
@@ -11,7 +12,7 @@ final class Factory_ShowSnippetTests extends FactoryTestCase
         return Mailcode_Commands_Command_ShowSnippet::class;
     }
     
-    public function test_showSnippet()
+    public function test_showSnippet() : void
     {
         $this->runCommand(
             'Variable name without $',
@@ -24,7 +25,7 @@ final class Factory_ShowSnippetTests extends FactoryTestCase
         );
     }
     
-    public function test_showSnippet_error()
+    public function test_showSnippet_error() : void
     {
         $this->expectException(Mailcode_Factory_Exception::class);
         

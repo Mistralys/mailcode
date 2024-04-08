@@ -6,7 +6,7 @@ use Mailcode\Mailcode_Interfaces_Commands_Validation_ListPropertyVariable;
 
 final class Mailcode_ElseIfListContainsTests extends MailcodeTestCase
 {
-    public function test_validation_contains()
+    public function test_validation_contains() : void
     {
         $tests = array(
             array(

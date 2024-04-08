@@ -1,19 +1,29 @@
 <?php
 
+declare(strict_types=1);
+
+namespace MailcodeTestClasses;
+
 use Mailcode\Mailcode_Exception;
+use MailcodeTestCase;
 
 abstract class FactoryTestCase extends MailcodeTestCase
 {
-    abstract protected function getExpectedClass() : string;
-    
-    protected function runCommand(string $label, $callback) : void
+    /**
+     * @return class-string
+     */
+    abstract protected function getExpectedClass(): string;
+
+    /**
+     * @param string $label
+     * @param callable $callback
+     * @return void
+     */
+    protected function runCommand(string $label, callable $callback): void
     {
-        try
-        {
-            $cmd = call_user_func($callback);
-        }
-        catch(Mailcode_Exception $e)
-        {
+        try {
+            $cmd = $callback();
+        } catch (Mailcode_Exception $e) {
             $this->fail(sprintf(
                 '%s: #%s (%s)',
                 $e->getMessage(),
@@ -21,7 +31,7 @@ abstract class FactoryTestCase extends MailcodeTestCase
                 $e->getDetails()
             ));
         }
-        
-        $this->assertInstanceOf($this->getExpectedClass(), $cmd);
+
+        $this->assertInstanceOf($this->getExpectedClass(), $cmd, $label);
     }
 }

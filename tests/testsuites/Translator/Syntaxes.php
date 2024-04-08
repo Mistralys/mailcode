@@ -3,6 +3,7 @@
 use Mailcode\Mailcode_Exception;
 use Mailcode\Mailcode_Translator;
 use Mailcode\Translator\Syntax;
+use MailcodeTestClasses\VelocityTestCase;
 
 final class Translator_SyntaxesTests extends VelocityTestCase
 {

@@ -5,7 +5,7 @@ use Mailcode\Mailcode_Parser_Statement;
 
 final class Mailcode_Commands_StatementsTests extends MailcodeTestCase
 {
-    public function test_validation()
+    public function test_validation() : void
     {
         $tests = array(
             array(

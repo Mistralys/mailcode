@@ -4,7 +4,7 @@ use Mailcode\Mailcode_Commands_Command;
 
 final class Mailcode_CommentTests extends MailcodeTestCase
 {
-    public function test_validation()
+    public function test_validation() : void
     {
         $tests = array(
             array(

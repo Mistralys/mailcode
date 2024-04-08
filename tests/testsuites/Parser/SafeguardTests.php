@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+namespace MailcodeTests\Parser;
+
 use Mailcode\Interfaces\Commands\Validation\URLEncodingInterface;
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands_Command;
@@ -7,207 +11,205 @@ use Mailcode\Mailcode_Exception;
 use Mailcode\Mailcode_Factory;
 use Mailcode\Mailcode_Parser_Safeguard;
 use Mailcode\Mailcode_Parser_Safeguard_Formatter_Location;
+use MailcodeTestCase;
 use function AppUtils\parseURL;
 
-final class Parser_SafeguardTests extends MailcodeTestCase
+final class SafeguardTests extends MailcodeTestCase
 {
-   /**
-    * Test safeguarding with default settings.
-    */
-    public function test_safeguard()
+    /**
+     * Test safeguarding with default settings.
+     */
+    public function test_safeguard(): void
     {
         $parser = Mailcode::create()->getParser();
-        
+
         $original = 'Text with a {showvar: $VAR.NAME} variable.';
-        
+
         $safeguard = $parser->createSafeguard($original);
-        
+
         $text = $safeguard->makeSafe();
-        
+
         $this->assertStringContainsString($safeguard->getDelimiter(), $text);
-        
+
         // do something destructive that would usually break the command
         $text = str_replace('{', 'BRACE', $text);
-        
+
         $this->assertNotEquals($original, $text);
-        
+
         $result = $safeguard->makeWhole($text);
-        
+
         $this->assertEquals($original, $result);
     }
-    
-   /**
-    * Checks that the safeguarding is indeed case neutral.
-    */
-    public function test_caseNeutral()
+
+    /**
+     * Checks that the safeguarding is indeed case neutral.
+     */
+    public function test_caseNeutral(): void
     {
         $parser = Mailcode::create()->getParser();
-        
+
         $original = 'Text with a {showvar: $VAR.NAME} VARIABLE.';
-        
+
         $safeguard = $parser->createSafeguard($original);
-        
+
         $text = $safeguard->makeSafe();
-        
+
         $text = strtolower($text);
-        
+
         $result = $safeguard->makeWhole($text);
-        
+
         $this->assertEquals('text with a {showvar: $VAR.NAME} variable.', $result);
     }
-    
-   /**
-    * Test that trying to safeguard a string containing
-    * broken commands triggers an exception, and shows
-    * that it is not valid.
-    */
-    public function test_brokenCommand()
+
+    /**
+     * Test that trying to safeguard a string containing
+     * broken commands triggers an exception, and shows
+     * that it is not valid.
+     */
+    public function test_brokenCommand(): void
     {
         $parser = Mailcode::create()->getParser();
-       
+
         $original = 'Text with an unknown {unknowncommand} command.';
-        
+
         $safeguard = $parser->createSafeguard($original);
-        
+
         $this->assertFalse($safeguard->isValid());
-        
+
         $this->expectException(Mailcode_Exception::class);
-        
+
         $safeguard->makeSafe();
     }
-    
-   /**
-    * Ensures that calling makeWhole() with broken or missing
-    * placeholders will trigger an exception.
-    */
-    public function test_brokenPlaceholders()
+
+    /**
+     * Ensures that calling makeWhole() with broken or missing
+     * placeholders will trigger an exception.
+     */
+    public function test_brokenPlaceholders(): void
     {
         $parser = Mailcode::create()->getParser();
-        
+
         $original = 'Text with a {showvar: $VAR.NAME} variable.';
-        
+
         $safeguard = $parser->createSafeguard($original);
-        
+
         $text = $safeguard->makeSafe();
-        
+
         // break the placeholders by removing the delimiters 
         $text = str_replace($safeguard->getDelimiter(), '', $text);
 
         $this->expectException(Mailcode_Exception::class);
-        
+
         $safeguard->makeWhole($text);
     }
-    
-   /**
-    * Ensures that calling makeWholePartial() will ignore
-    * missing placeholders.
-    */
-    public function test_makeWholePartial()
+
+    /**
+     * Ensures that calling makeWholePartial() will ignore
+     * missing placeholders.
+     */
+    public function test_makeWholePartial(): void
     {
         $parser = Mailcode::create()->getParser();
-        
+
         $original = 'Text with {showvar: $VAR.NAME}_SPLIT_{showvar: $FOO.BAR} variables.';
-        
+
         $safeguard = $parser->createSafeguard($original);
         $safeguard->makeSafe();
-        
+
         $parts = explode('_SPLIT_', $original);
-        
+
         $whole = $safeguard->makeWholePartial(array_pop($parts));
-        
+
         $this->assertEquals('{showvar: $FOO.BAR} variables.', $whole);
     }
-    
-   /**
-    * Test changing the placeholder delimiter characters.
-    */
-    public function test_setDelimiter()
+
+    /**
+     * Test changing the placeholder delimiter characters.
+     */
+    public function test_setDelimiter(): void
     {
         $parser = Mailcode::create()->getParser();
-        
+
         $original = 'Text with a {showvar: $VAR.NAME} variable.';
-        
+
         $safeguard = $parser->createSafeguard($original);
         $safeguard->setDelimiter('222');
-        
+
         $text = $safeguard->makeSafe();
-        
+
         $this->assertStringContainsString($safeguard->getDelimiter(), $text);
-        
+
         // do something destructive that would break the command with the standard delimiter
         $text = str_replace('_', 'UNDERSCORE', $text);
-        
+
         $this->assertNotEquals($original, $text);
-        
+
         $result = $safeguard->makeWhole($text);
-        
+
         $this->assertEquals($original, $result);
     }
-    
-   /**
-    * Ensure that it is not possible to use empty delimiters.
-    */
-    public function test_setDelimiter_empty()
+
+    /**
+     * Ensure that it is not possible to use empty delimiters.
+     */
+    public function test_setDelimiter_empty(): void
     {
         $parser = Mailcode::create()->getParser();
-        
+
         $safeguard = $parser->createSafeguard('');
-        
+
         $this->expectException(Mailcode_Exception::class);
-        
+
         $safeguard->setDelimiter('');
     }
-    
-    public function test_makeSafe_invalidCollection()
+
+    public function test_makeSafe_invalidCollection(): void
     {
         $parser = Mailcode::create()->getParser();
-       
+
         $safeguard = $parser->createSafeguard('{if variable: $FOOBAR == "true"}');
 
         $this->expectException(Mailcode_Exception::class);
-        
+
         $safeguard->makeSafe();
     }
-    
-    public function test_makeSafePartial()
+
+    public function test_makeSafePartial(): void
     {
         $parser = Mailcode::create()->getParser();
-        
+
         $safeguard = $parser->createSafeguard('{if variable: $FOOBAR == "true"}');
-        
+
         $safeguard->makeSafePartial();
-        
+
         // no exception = success
         $this->addToAssertionCount(1);
     }
-    
-   /**
-    * Ensure that the safeguarded string correctly uses the 
-    * normalized variants of the commands, not the original
-    * matched strings.
-    */
-    public function test_normalize()
+
+    /**
+     * Ensure that the safeguarded string correctly uses the
+     * normalized variants of the commands, not the original
+     * matched strings.
+     */
+    public function test_normalize(): void
     {
         $parser = Mailcode::create()->getParser();
-        
+
         $original = 'Text with a {showvar:        $VAR.NAME            } VARIABLE.';
-        
+
         $safeguard = $parser->createSafeguard($original);
-        
+
         $text = $safeguard->makeSafe();
-        
-        try
-        {
+
+        try {
             $result = $safeguard->makeWhole($text);
-        }
-        catch(Mailcode_Exception $e)
-        {
+        } catch (Mailcode_Exception $e) {
             $this->fail(
-                'Exception #'.$e->getCode().': '.$e->getMessage().PHP_EOL.$e->getDetails().PHP_EOL.
+                'Exception #' . $e->getCode() . ': ' . $e->getMessage() . PHP_EOL . $e->getDetails() . PHP_EOL .
                 $e->getTraceAsString()
             );
         }
-        
+
         $this->assertEquals('Text with a {showvar: $VAR.NAME} VARIABLE.', $result);
     }
 
@@ -216,10 +218,10 @@ final class Parser_SafeguardTests extends MailcodeTestCase
      * must be automatically turned on, except in Email addresses, which
      * should be ignored.
      */
-    public function test_auto_url_encoding() : void
+    public function test_auto_url_encoding(): void
     {
         $original =
-            'Lorem ipsum dolor https://google.com?var={showvar: $FOO} sit amet. '.
+            'Lorem ipsum dolor https://google.com?var={showvar: $FOO} sit amet. ' .
             'Ipsum lorem mailto:{showvar: $BAR} dolor amet.';
 
         $parser = Mailcode::create()->getParser();
@@ -249,7 +251,7 @@ final class Parser_SafeguardTests extends MailcodeTestCase
      *
      * @see Mailcode_Parser_Safeguard::analyzeURLs()
      */
-    public function test_auto_url_encoding_notSupported() : void
+    public function test_auto_url_encoding_notSupported(): void
     {
         $parser = Mailcode::create()->getParser();
 
@@ -265,7 +267,7 @@ final class Parser_SafeguardTests extends MailcodeTestCase
         $this->addToAssertionCount(1);
     }
 
-    public function test_auto_url_encoding_ignoreIfDecoded() : void
+    public function test_auto_url_encoding_ignoreIfDecoded(): void
     {
         $original = 'Lorem ipsum dolor http://google.com?var={showvar: $FOO urldecode:} sit amet.';
 
@@ -279,10 +281,13 @@ final class Parser_SafeguardTests extends MailcodeTestCase
 
         $this->assertCount(1, $placeholders);
 
-        $this->assertFalse($placeholders[0]->getCommand()->isURLEncoded());
+        $command = $placeholders[0]->getCommand();
+
+        $this->assertInstanceOf(URLEncodingInterface::class, $command);
+        $this->assertFalse($command->isURLEncoded());
     }
 
-    public function test_auto_url_encoding_ignorePhoneURLs() : void
+    public function test_auto_url_encoding_ignorePhoneURLs(): void
     {
         $original = 'Lorem ipsum dolor tel://{showvar: $FOO} sit amet.';
 
@@ -296,7 +301,10 @@ final class Parser_SafeguardTests extends MailcodeTestCase
 
         $this->assertCount(1, $placeholders);
 
-        $this->assertFalse($placeholders[0]->getCommand()->isURLEncoded());
+        $command = $placeholders[0]->getCommand();
+
+        $this->assertInstanceOf(URLEncodingInterface::class, $command);
+        $this->assertFalse($command->isURLEncoded());
     }
 
     /**
@@ -309,7 +317,7 @@ final class Parser_SafeguardTests extends MailcodeTestCase
      * This is why placeholders were modified to use an ID
      * separator character, like this: "___10*000000000___".
      */
-    public function test_placeholder_duplicates() : void
+    public function test_placeholder_duplicates(): void
     {
         $markup = <<<'EOD'
 01. {showvar: $VAR.ABC}
@@ -330,8 +338,7 @@ EOD;
         $placeholders = $safeguard->getPlaceholdersCollection()->getAll();
         $stack = array();
 
-        foreach($placeholders as $placeholder)
-        {
+        foreach ($placeholders as $placeholder) {
             $replacement = $placeholder->getReplacementText();
 
             $this->assertNotContains($replacement, $stack, 'Found a duplicate placeholder!');
@@ -340,46 +347,39 @@ EOD;
         }
     }
 
-    public function test_invalidDelimiter() : void
-    {
-        $delimiters = array(
-            '_' => false, // min length = 2
-            '_*_' => false, // not urlencode independent
-            '__1' => true, // number at the end
-            '1__' => true, // number at the beginning
-            '999' => true,
-            '_1_' => true,
-            'AAA' => true,
-            'abc' => true,
-        );
+    /**
+     * @var array<int|string,bool>
+     */
+    private array $delimiters = array(
+        '_' => false, // min length = 2
+        '_*_' => false, // not urlencode independent
+        '__1' => true, // number at the end
+        '1__' => true, // number at the beginning
+        '999' => true,
+        '_1_' => true,
+        'AAA' => true,
+        'abc' => true,
+    );
 
-        foreach($delimiters as $delimiter => $valid)
-        {
+    public function test_invalidDelimiter(): void
+    {
+        foreach ($this->delimiters as $delimiter => $valid) {
             $safeguard = Mailcode::create()->createSafeguard('');
 
-            try
-            {
-                $safeguard->setDelimiter($delimiter);
-            }
-            catch(Mailcode_Exception $e)
-            {
-                if($valid)
-                {
-                    $this->fail('Delimiter ['.$delimiter.'] should be valid.');
-                }
-                else
-                {
+            try {
+                $safeguard->setDelimiter((string)$delimiter);
+            } catch (Mailcode_Exception $e) {
+                if ($valid) {
+                    $this->fail('Delimiter [' . $delimiter . '] should be valid.');
+                } else {
                     $this->addToAssertionCount(1);
                 }
                 continue;
             }
 
-            if(!$valid)
-            {
-                $this->fail('Delimiter ['.$delimiter.'] should be invalid.');
-            }
-            else
-            {
+            if (!$valid) {
+                $this->fail('Delimiter [' . $delimiter . '] should be invalid.');
+            } else {
                 $this->addToAssertionCount(1);
             }
         }
@@ -390,7 +390,7 @@ EOD;
      * restore a string using the strict, non-partial
      * replacement method.
      */
-    public function test_placeholderNotFound() : void
+    public function test_placeholderNotFound(): void
     {
         $subject = 'Here is some {showvar: $FOO} text.';
 
@@ -401,12 +401,9 @@ EOD;
         // Use a text in which the placeholder is missing
         $safe = 'Here is some text.';
 
-        try
-        {
+        try {
             $safeguard->makeWhole($safe);
-        }
-        catch (Mailcode_Exception $e)
-        {
+        } catch (Mailcode_Exception $e) {
             $this->assertEquals(
                 Mailcode_Parser_Safeguard_Formatter_Location::ERROR_PLACEHOLDER_NOT_FOUND,
                 $e->getCode()
@@ -426,7 +423,7 @@ EOD;
      *
      * @throws Mailcode_Exception
      */
-    public function test_makeSafe_URLEncodingPlaceholders() : void
+    public function test_makeSafe_URLEncodingPlaceholders(): void
     {
         $subject = 'Here is some {showvar: $FOO} text.';
 
@@ -448,7 +445,7 @@ EOD;
      * the highlighter replaces hyphens with "-<wbr>" to improve
      * word wrapping.
      */
-    public function test_highlightURL() : void
+    public function test_highlightURL(): void
     {
         $url = 'https://domain.com/path/?param={showvar: $FOO}&bar=lopos';
 
@@ -473,7 +470,7 @@ EOD;
      * In essence, this comparison is true in PHP:
      * <code>"45." == "45"</code>
      */
-    public function test_isPlaceholder_bugNumeric() : void
+    public function test_isPlaceholder_bugNumeric(): void
     {
         $text = '{showvar: $FOO}';
 
@@ -481,10 +478,8 @@ EOD;
 
         $placeholders = $safeguard->getPlaceholdersCollection()->getStrings();
 
-        foreach($placeholders as $placeholder)
-        {
-            if($safeguard->isPlaceholder($placeholder.'.'))
-            {
+        foreach ($placeholders as $placeholder) {
+            if ($safeguard->isPlaceholder($placeholder . '.')) {
                 $this->fail('Should not find a placeholder.');
             }
         }

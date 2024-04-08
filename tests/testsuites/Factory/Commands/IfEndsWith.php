@@ -2,6 +2,7 @@
 
 use Mailcode\Mailcode_Commands_Command_If_EndsWith;
 use Mailcode\Mailcode_Factory;
+use MailcodeTestClasses\FactoryTestCase;
 
 final class Factory_IfEndsWithTests extends FactoryTestCase
 {
@@ -10,7 +11,7 @@ final class Factory_IfEndsWithTests extends FactoryTestCase
         return Mailcode_Commands_Command_If_EndsWith::class;
     }
     
-    public function test_ifEndsWith()
+    public function test_ifEndsWith() : void
     {
         $this->runCommand(
             'Variable name without $',

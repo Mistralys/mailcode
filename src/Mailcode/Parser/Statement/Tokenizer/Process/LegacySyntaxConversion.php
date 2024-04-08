@@ -19,6 +19,9 @@ namespace Mailcode;
  */
 class Mailcode_Parser_Statement_Tokenizer_Process_LegacySyntaxConversion extends Mailcode_Parser_Statement_Tokenizer_Process
 {
+    /**
+     * @var array<string,string>
+     */
     private array $conversions = array(
         'timezone:' => 'timezone=',
         'break-at:' => 'break-at=',

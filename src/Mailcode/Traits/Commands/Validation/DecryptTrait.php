@@ -43,6 +43,7 @@ trait DecryptTrait
                 t('Invalid decryption key token:') . ' ' . t('Expected a string.'),
                 DecryptInterface::VALIDATION_DECRYPT_CODE_WRONG_TYPE
             );
+            return;
         }
 
         $this->decryptionKeyToken = $token;

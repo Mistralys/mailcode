@@ -2,6 +2,7 @@
 
 use Mailcode\Mailcode_Factory;
 use Mailcode\Mailcode_Commands_Command_If_Empty;
+use MailcodeTestClasses\FactoryTestCase;
 
 final class Factory_IfEmptyTests extends FactoryTestCase
 {
@@ -10,7 +11,7 @@ final class Factory_IfEmptyTests extends FactoryTestCase
         return Mailcode_Commands_Command_If_Empty::class;
     }
     
-    public function test_ifEmpty()
+    public function test_ifEmpty() : void
     {
         $this->runCommand(
             'Variable without dollar sign',

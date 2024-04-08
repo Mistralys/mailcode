@@ -4,7 +4,7 @@ use Mailcode\Mailcode_Factory;
 
 final class Factory_FactoryTests extends MailcodeTestCase
 {
-    public function test_filterVariableName()
+    public function test_filterVariableName() : void
     {
         $var = Mailcode_Factory::show()->var('     $FOO   .     BAR    ');
         

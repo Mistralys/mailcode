@@ -6,7 +6,7 @@ namespace testsuites\Translator\Commands;
 
 use Mailcode\Mailcode_Factory;
 use Mailcode\Translator\Syntax\ApacheVelocity\ShowVariableTranslation;
-use VelocityTestCase;
+use MailcodeTestClasses\VelocityTestCase;
 
 /**
  * @see \Mailcode\Translator\Syntax\ApacheVelocity\ShowVariableTranslation

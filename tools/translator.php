@@ -15,8 +15,9 @@ use AppUtils\Request;
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Exception;
 use Mailcode\Mailcode_Translator_Exception;
-use function \AppLocalize\pt;
-use function \AppLocalize\pts;
+use function AppLocalize\pt;
+use function AppLocalize\pts;
+use function AppLocalize\t;
 
 require_once 'prepend.php';
 
@@ -32,10 +33,10 @@ $activeSyntax = $syntaxes[0]->getTypeID();
 
 if($request->getBool('translate'))
 {
-    $commandsText = $request->getParam('mailcode');
-    $activeSyntax = (string)$request->registerParam('syntax')
+    $commandsText = $request->registerParam('mailcode')->getString();
+    $activeSyntax = $request->registerParam('syntax')
         ->setEnum($translator->getSyntaxNames())
-        ->get($activeSyntax);
+        ->getString($activeSyntax);
 
     try
     {

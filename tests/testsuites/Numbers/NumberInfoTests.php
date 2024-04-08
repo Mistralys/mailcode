@@ -1,11 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
+namespace MailcodeTests\Numbers;
+
 use Mailcode\Mailcode_Commands_Command_ShowNumber;
 use Mailcode\Mailcode_Number_Info;
+use MailcodeTestCase;
 
-final class Numbers_NumberInfoTests extends MailcodeTestCase
+final class NumberInfoTests extends MailcodeTestCase
 {
-    public function test_numbers_basic() : void
+    public function test_numbers_basic(): void
     {
         $test = new Mailcode_Number_Info('1000');
 
@@ -20,7 +25,7 @@ final class Numbers_NumberInfoTests extends MailcodeTestCase
         $this->assertFalse($test->hasPadding());
     }
 
-    public function test_numbers_padding() : void
+    public function test_numbers_padding(): void
     {
         $test = new Mailcode_Number_Info('1000:###');
 
@@ -33,7 +38,7 @@ final class Numbers_NumberInfoTests extends MailcodeTestCase
         $this->assertSame(1, $test->getPadding());
     }
 
-    public function test_numbers_thousands() : void
+    public function test_numbers_thousands(): void
     {
         $test = new Mailcode_Number_Info('1,000');
 
@@ -51,7 +56,7 @@ final class Numbers_NumberInfoTests extends MailcodeTestCase
         $this->assertSame('.', $test->getThousandsSeparator());
     }
 
-    public function test_numbers_decimals() : void
+    public function test_numbers_decimals(): void
     {
         $test = new Mailcode_Number_Info('1000,00');
 
@@ -66,7 +71,7 @@ final class Numbers_NumberInfoTests extends MailcodeTestCase
         $this->assertSame(1, $test->getDecimals());
     }
 
-    public function test_numbers_combined() : void
+    public function test_numbers_combined(): void
     {
         $test = new Mailcode_Number_Info('1.000,00:##');
 
@@ -92,7 +97,7 @@ final class Numbers_NumberInfoTests extends MailcodeTestCase
             ),
             array(
                 'label' => 'Whitespace string',
-                'format' => '   '."\t".'    ',
+                'format' => '   ' . "\t" . '    ',
                 'valid' => true,
                 'code' => 0
             ),
@@ -211,13 +216,16 @@ final class Numbers_NumberInfoTests extends MailcodeTestCase
         $this->processValidationTests($tests);
     }
 
-    private function processValidationTests(array $tests) : void
+    /**
+     * @param array<int,array{label:string,format:string,valid:bool,code:int}> $tests
+     * @return void
+     */
+    private function processValidationTests(array $tests): void
     {
-        foreach ($tests as $test)
-        {
+        foreach ($tests as $test) {
             $info = new Mailcode_Number_Info($test['format']);
 
-            $label = $test['label'].' ['.$test['format'].'] '.PHP_EOL.'Message: '.$info->getErrorMessage();
+            $label = $test['label'] . ' [' . $test['format'] . '] ' . PHP_EOL . 'Message: ' . $info->getErrorMessage();
 
             $this->assertSame($test['valid'], $info->isValid(), $label);
             $this->assertSame($test['code'], $info->getCode(), $label);

@@ -4,7 +4,7 @@ use Mailcode\Mailcode;
 
 final class Mailcode_Commands_NormalizeTests extends MailcodeTestCase
 {
-    public function test_normalizeShowVar()
+    public function test_normalizeShowVar() : void
     {
         $tests = array(
             array(
@@ -49,7 +49,7 @@ final class Mailcode_Commands_NormalizeTests extends MailcodeTestCase
         }
     }
     
-    public function test_normalizeShowDate()
+    public function test_normalizeShowDate() : void
     {
         $tests = array(
             array(
