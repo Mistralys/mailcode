@@ -17,3 +17,8 @@ These are the commands that can be used:
 
 > All other commands are replaced by a comment explaining that the command 
 > is not supported.
+
+## Variable name handling
+
+In HubL, the typical naming convention is to use lowercase variable
+names. The translation layer will convert all variable names to lowercase.
