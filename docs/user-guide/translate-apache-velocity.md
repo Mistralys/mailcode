@@ -1,8 +1,8 @@
-## Translate to: Apache Velocity
+# Translate to: Apache Velocity
 
 The Apache Velocity translator uses the formal reference notation for all commands, to minimize the risks of running into parsing conflicts. In general, all generated commands should be compatible from Apache Velocity 2.0 and upwards.
 
-**Requirements**
+## Requirements
 
 The following tools have to be enabled in the Velocity templates:
 
@@ -42,7 +42,7 @@ Commands that require these tools:
 
 If these tools are not available, these commands will throw errors if they are used in a template.
 
-### LibPhoneNumber
+## LibPhoneNumber
 
 This library is required for converting phone numbers to the E164 format, to create `tel:` URLs
 for clickable phone number links. The library is used to convert the localized phone number
@@ -69,7 +69,7 @@ Its usage is expected to look like this:
 ${phone.e164($PHONE.NUMBER, 'FR')}
 ```
 
-### Map command for lists
+## Map command for lists
 
 The commands `list-contains` and `list-not-contains` depend on a custom command which we implemented on the Velocity side for our project.
 
@@ -87,7 +87,7 @@ return list.stream().anyMatch(map -> map.get("NAME").matches("(?s)Value"));
 
 To use those commands, this has to be implemented in your Velocity engine.
 
-### NumericTool custom utility
+## NumericTool custom utility
 
 The `shownumber` command relies on the numeric tool class to be present
 in the `$numeric` variable in templates. This class is a custom implementation
@@ -112,7 +112,7 @@ ${numeric.format(${numeric.abs($FOO.BAR)}, 2, ',', ' ')}
 > The numeric tool expects all numbers to be specified without
 > thousands separator, and dots as decimal separator.
 
-### TrackingTool custom utility
+## TrackingTool custom utility
 
 The `showurl` command relies on a custom implementation on the Velocity
 side, which handles all the functionality. 
@@ -163,9 +163,9 @@ and a unique identifier of the request in the form of a hash string.
 Each call to `query` adds or replaces a single query parameter
 intended to be added to the final URL.
 
-### TextTool custom utility
+## TextTool custom utility
 
-#### IDN encoding
+## IDN encoding
 
 This tool offers the IDN encoding support for the following Velocity functions:
 
@@ -188,7 +188,7 @@ ${text.idn("öäü.com")}
 ${text.idn(${DOMAIN.NAME})}
 ```
 
-### Configuring date formats
+## Configuring date formats
 
 When working with dates, the generated velocity statement will assume the date to be provided in the default internal format:
 
@@ -209,7 +209,7 @@ $var->setTranslationParam('internal_format', 'yyyy-MM-dd');
 
 The translator will automatically use the specified format instead.
 
-### Configuring date formats via Safeguard
+## Configuring date formats via Safeguard
 
 To adjust the format of dates in a safeguarded string, the shortest way is to set the translation parameter for relevant date variables.
 
