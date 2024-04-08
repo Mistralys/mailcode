@@ -14,6 +14,7 @@ use Mailcode\Mailcode_Commands_Command_ShowURL;
 use Mailcode\Translator\Syntax\ApacheVelocity;
 use Mailcode\Translator\Syntax\HubL;
 use Mailcode\Translator\Command\ShowURLInterface;
+use testsuites\Translator\HubL\ShowURLTests;
 
 /**
  * Translates the {@see Mailcode_Commands_Command_ShowURL} command to HubL.
@@ -21,84 +22,14 @@ use Mailcode\Translator\Command\ShowURLInterface;
  * @package Mailcode
  * @subpackage Translator
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
+ *
+ * @see ShowURLTests
  */
 class ShowURLTranslation extends HubL implements ShowURLInterface
 {
-    public const URL_VAR_TEMPLATE = 'url_tpl%03d';
-
-    private static int $urlCounter = 0;
-
-    public static function resetURLCounter() : void
-    {
-        self::$urlCounter = 0;
-    }
-
     public function translate(Mailcode_Commands_Command_ShowURL $command) : string
     {
-        self::$urlCounter++;
-
-        $urlVar = sprintf(
-            self::URL_VAR_TEMPLATE,
-            self::$urlCounter
-        );
-
-        $statements = array();
-        $statements[] = $this->renderURL($urlVar);
-
-        if($command->isTrackingEnabled())
-        {
-            $statements[] = $this->renderTracking($command);
-        }
-
-        if($command->hasQueryParams())
-        {
-            $params = $command->getQueryParams();
-
-            foreach($params as $name => $value)
-            {
-                $statements[] = $this->renderQueryParam($name, $value);
-            }
-        }
-
-        return sprintf(
-            '%s${tracking.%s}',
-            $this->renderURLTemplate($command, $urlVar),
-            implode('.', $statements)
-        );
-    }
-
-    private function renderURLTemplate(Mailcode_Commands_Command_ShowURL $command, string $urlVar) : string
-    {
-        return sprintf(
-            '#{define}($%s)%s#{end}',
-            $urlVar,
-            $this->resolveURL($command)
-        );
-    }
-
-    private function renderQueryParam(string $name, string $value) : string
-    {
-        return sprintf(
-            'query(%s, %s)',
-            $this->renderQuotedValue($name),
-            $this->renderQuotedValue($value)
-        );
-    }
-
-    private function renderTracking(Mailcode_Commands_Command_ShowURL $command) : string
-    {
-        return sprintf(
-            "lt(\${tracking_host}, \${envelope.hash}, %s)",
-            $this->renderQuotedValue($command->getTrackingID())
-        );
-    }
-
-    private function renderURL(string $urlVar) : string
-    {
-        return sprintf(
-            'url(${%s})',
-            $urlVar
-        );
+        return $this->resolveURL($command);
     }
 
     private function resolveURL(Mailcode_Commands_Command_ShowURL $command) : string
