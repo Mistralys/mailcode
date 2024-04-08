@@ -1171,6 +1171,10 @@ $apacheString = $apache->translateCommand($command);
 
 See the [Velocity documentation][].
 
+### Translate to: Hubspot HubL
+
+See the [HubL documentation][].
+
 ## Browser-enabled tools
 
 In the subfolder `tools` are a few utilities meant to be used in a browser. To use
@@ -1186,4 +1190,4 @@ these, run a `composer install` in the package's folder, and point your browser 
 [StringUtils]: http://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/StringUtils.html
 [LibPhoneNumber]: https://github.com/google/libphonenumber  
 [Velocity documentation]: https://github.com/Mistralys/mailcode/tree/master/docs/user-guide/translate-apache-velocity.md
-
+[HubL documentation]: https://github.com/Mistralys/mailcode/tree/master/docs/user-guide/translate-hubl.md
