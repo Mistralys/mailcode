@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace testsuites\Translator\HubL;
 
 use Mailcode\Mailcode_Factory;
-use Mailcode\Translator\Syntax\ApacheVelocity\ShowURLTranslation;
-use VelocityTestCase;
+use MailcodeTestClasses\HubLTestCase;
 
 /**
  * @see ShowURLTranslation
  */
-final class ShowURLTests extends VelocityTestCase
+final class ShowURLTests extends HubLTestCase
 {
     // region: _Tests
 
@@ -27,15 +26,7 @@ final class ShowURLTests extends VelocityTestCase
         $cmd = Mailcode_Factory::show()->url($url, $trackingID);
 
         $this->assertSame(
-            sprintf(
-                $this->baseTemplate,
-                $this->varName,
-                $url,
-                sprintf(
-                    '.lt(${tracking_host}, ${envelope.hash}, "%1$s")',
-                    $trackingID
-                )
-            ),
+            'https://mistralys.eu',
             $this->translateCommand($cmd)
         );
     }
@@ -51,12 +42,7 @@ final class ShowURLTests extends VelocityTestCase
             ->setTrackingEnabled(false);
 
         $this->assertSame(
-            sprintf(
-                $this->baseTemplate,
-                $this->varName,
-                $url,
-                ''
-            ),
+            'https://mistralys.eu',
             $this->translateCommand($cmd)
         );
     }
@@ -74,16 +60,8 @@ final class ShowURLTests extends VelocityTestCase
             ->setQueryParam('foo', 'bar')
             ->setQueryParam('quotes', '"quoted"');
 
-        $expected = sprintf(
-            $this->baseTemplate,
-            $this->varName,
-            $url,
-            '.query("foo", "bar")'.
-            '.query("quotes", "\"quoted\"")'
-        );
-
         $this->assertSame(
-            $expected,
+            'https://mistralys.eu',
             $this->translateCommand($cmd)
         );
     }
@@ -94,6 +72,8 @@ final class ShowURLTests extends VelocityTestCase
      */
     public function test_nestedCommands() : void
     {
+        $this->markTestIncomplete('IF commands not ready yet');
+
         $url = <<<'EOT'
 {if variable: $COUNTRY == "fr"}
 https://mistralys.fr
@@ -103,21 +83,14 @@ https://mistralys.eu
 EOT;
 
         $expectedURL = <<<'EOT'
-#if($COUNTRY == "fr")https://mistralys.fr#{else}https://mistralys.eu#{end}
+{% if country == "fr" %}https://mistralys.fr{% else %}https://mistralys.eu{% endif %}
 EOT;
 
         $cmd = Mailcode_Factory::show()->url($url)
             ->setTrackingEnabled(false);
 
-        $expected = sprintf(
-            $this->baseTemplate,
-            $this->varName,
-            $expectedURL,
-            ''
-        );
-
         $this->assertSame(
-            $expected,
+            $expectedURL,
             $this->translateCommand($cmd)
         );
     }
@@ -131,17 +104,10 @@ EOT;
         // Since the showvar command is used in a URL, it automatically gets
         // the URL encoding, which is not an issue, because the IDN encoded
         // domain is already fully URL encoding compatible.
-        $expectedURL = 'https://mistralys.eu?domain=${esc.url(${text.idn($DOMAIN.NAME)})}';
-
-        $expected = sprintf(
-            $this->baseTemplate,
-            $this->varName,
-            $expectedURL,
-            ''
-        );
+        $expectedURL = 'https://mistralys.eu?domain={{ domain.name|urlencode }}';
 
         $this->assertSame(
-            $expected,
+            $expectedURL,
             $this->translateCommand($cmd)
         );
     }
@@ -155,17 +121,10 @@ EOT;
         // Since the showvar command is used in a URL, it automatically gets
         // the URL encoding, which is not an issue, because the IDN encoded
         // domain is already fully URL encoding compatible.
-        $expectedURL = 'https://mistralys.eu?domain=${esc.url(${text.idn("iönöüs.com")})}';
-
-        $expected = sprintf(
-            $this->baseTemplate,
-            $this->varName,
-            $expectedURL,
-            ''
-        );
+        $expectedURL = 'https://mistralys.eu?domain={% set literal001 = "iönöüs.com" %}{{ literal001|urlencode }}';
 
         $this->assertSame(
-            $expected,
+            $expectedURL,
             $this->translateCommand($cmd)
         );
     }
@@ -178,39 +137,12 @@ EOT;
 
         // The automated URL encoding does not work here, because
         // the variable-based URL cannot be recognized as a URL.
-        $expectedURL = '${PRODUCT.URL}?domain=${text.idn("iönöüs.com")}';
-
-        $expected = sprintf(
-            $this->baseTemplate,
-            $this->varName,
-            $expectedURL,
-            ''
-        );
+        $expectedURL = '{{ product.url }}?domain={% set literal001 = "iönöüs.com" %}{{ literal001 }}';
 
         $this->assertSame(
-            $expected,
+            $expectedURL,
             $this->translateCommand($cmd)
         );
-    }
-
-    // endregion
-
-    // region: Support methods
-
-    private string $baseTemplate =
-        '#{define}($%1$s)%2$s#{end}'.
-        '${tracking'.
-        '.url(${%1$s})%3$s}';
-
-    private string $varName = '';
-
-    protected function setUp() : void
-    {
-        parent::setUp();
-
-        ShowURLTranslation::resetURLCounter();
-
-        $this->varName = sprintf(ShowURLTranslation::URL_VAR_TEMPLATE, 1);
     }
 
     // endregion

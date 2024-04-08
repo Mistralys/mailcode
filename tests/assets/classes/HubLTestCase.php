@@ -8,6 +8,7 @@ use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands_Command;
 use Mailcode\Mailcode_Exception;
 use Mailcode\Mailcode_Translator;
+use Mailcode\Translator\Syntax\HubL\ShowEncodedTranslation;
 use MailcodeTestCase;
 
 abstract class HubLTestCase extends MailcodeTestCase
@@ -19,6 +20,8 @@ abstract class HubLTestCase extends MailcodeTestCase
         parent::setUp();
 
         $this->translator = Mailcode::create()->createTranslator();
+
+        ShowEncodedTranslation::resetCounter();
     }
 
     protected function runCommands(array $tests) : void
