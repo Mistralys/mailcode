@@ -13,3 +13,4 @@ tests/assets/files/test-highlight-output-raw.html
 docs/config/resultCache.php
 docs/phpdoc/phpDocumentor.phar
 composer.phar
+tests/phpstan/result.txt
