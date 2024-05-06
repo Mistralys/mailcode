@@ -5,6 +5,8 @@
 - HubL: Added `if equals-number`.
 - HubL: Added `if smaller-than`.
 - HubL: Added `if bigger-than`.
+- ShowPhone: Updated the phone number examples from the library.
+- Dependencies: Updated LibPhoneNumber to [v8.13.36](https://github.com/giggsey/libphonenumber-for-php/releases/tag/8.13.36).
 
 ### v3.3.0 - Hubspot HubL syntax support
 - Translator: Added a first iteration of HubL syntax support for a selection of commands.
