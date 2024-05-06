@@ -1,3 +1,11 @@
+### v3.3.1 - Added HubL IF and ELSEIF support
+- HubL: Added translation for a subset of `if` and `elseif` commands.
+- HubL: Added `if variable`.
+- HubL: Added `if empty`.
+- HubL: Added `if equals-number`.
+- HubL: Added `if smaller-than`.
+- HubL: Added `if bigger-than`.
+
 ### v3.3.0 - Hubspot HubL syntax support
 - Translator: Added a first iteration of HubL syntax support for a selection of commands.
 - Translator: Namespaced the command translation classes.
