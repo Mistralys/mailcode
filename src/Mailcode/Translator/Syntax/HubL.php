@@ -12,6 +12,7 @@ use Mailcode\Interfaces\Commands\EncodableInterface;
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands_Keywords;
 use Mailcode\Translator\BaseCommandTranslation;
+use function Mailcode\dollarize;
 use function Mailcode\undollarize;
 
 /**
@@ -93,5 +94,13 @@ abstract class HubL extends BaseCommandTranslation
         $template = $this->encodingTemplates[$keyword] ?? '%s';
 
         return sprintf($template, $result);
+    }
+
+    public function renderStringToNumber(string $varName): string
+    {
+        return sprintf(
+            '%s',
+            $this->formatVariableName($varName)
+        );
     }
 }
