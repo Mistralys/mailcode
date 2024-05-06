@@ -77,7 +77,7 @@ class Mailcode_Factory_CommandSets_Set_If extends Mailcode_Factory_CommandSets_I
             return $command;
         }
         
-        throw $this->instantiator->exceptionUnexpectedType('IfarEqualsString', $command);
+        throw $this->instantiator->exceptionUnexpectedType('IfVarEqualsString', $command);
     }
     
     public function varNotEquals(string $variable, string $value, bool $quoteValue=false, bool $insensitive=false) : Mailcode_Commands_Command_If_Variable
