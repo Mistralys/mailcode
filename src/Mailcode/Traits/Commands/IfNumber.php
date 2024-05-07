@@ -40,7 +40,7 @@ trait Mailcode_Traits_Commands_IfNumber
 
     public function getNumber() : float
     {
-        return floatval($this->getRawNumber());
+        return (float)$this->getRawNumber();
     }
 
     protected function getRawNumber() : string
