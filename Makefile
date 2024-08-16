@@ -1,11 +1,11 @@
 install: composer.lock
-	/usr/bin/php7 /usr/bin/composer install
+	/usr/bin/php /usr/bin/composer install
 
 update composer.lock: composer.json
-	/usr/bin/php7 /usr/bin/composer update
+	/usr/bin/php /usr/bin/composer update
 
 autoload composer.lock: composer.json
-	/usr/bin/php7 /usr/bin/composer dumpautoload
+	/usr/bin/php /usr/bin/composer dumpautoload
 
 testsuite: composer.lock
 ifdef testsuite
@@ -15,4 +15,4 @@ else
 endif
 
 phpstan:
-	vendor/bin/phpstan analyse -c docs/config/phpstan.neon -l 9 > docs/phpstan/output.txt
+	vendor/bin/phpstan analyse -c tests/phpstan/config.neon -l 9 --memory-limit=900M > tests/phpstan/result.txt
