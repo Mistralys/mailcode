@@ -7,12 +7,8 @@ update composer.lock: composer.json
 autoload composer.lock: composer.json
 	/usr/bin/php /usr/bin/composer dumpautoload
 
-testsuite: composer.lock
-ifdef testsuite
-	vendor/bin/phpunit --testsuite $(testsuite)
-else
-	@echo you must supply a testsuite
-endif
+test: composer.lock
+	vendor/bin/phpunit --verbose --testsuite all
 
 phpstan:
 	vendor/bin/phpstan analyse -c tests/phpstan/config.neon -l 9 --memory-limit=900M > tests/phpstan/result.txt

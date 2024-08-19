@@ -44,7 +44,7 @@ final class ShowDateTests extends MailcodeTestCase
                 'label' => 'Without variable',
                 'string' => '{showdate: "Some text"}',
                 'valid' => false,
-                'code' => Mailcode_Commands_CommonConstants::VALIDATION_VARIABLE_MISSING
+                'code' => Mailcode_Date_FormatInfo::VALIDATION_INVALID_FORMAT_CHARACTER
             ),
             array(
                 'label' => 'With valid variable, omitting format string',
@@ -127,6 +127,18 @@ final class ShowDateTests extends MailcodeTestCase
             array(
                 'label' => 'With valid variable, milliseconds and time zone formats',
                 'string' => '{showdate: $foo_bar "Y-m-d H:i:s ve"}',
+                'valid' => true,
+                'code' => 0
+            ),
+            array(
+                'label' => 'Current date, with milliseconds and time zone formats',
+                'string' => '{showdate: "Y-m-d H:i:s ve"}',
+                'valid' => true,
+                'code' => 0
+            ),
+            array(
+                'label' => 'Current date, with milliseconds and time zone formats',
+                'string' => '{showdate: "Y-m-d H:i:s ve" timezone="Europe/Berlin"}',
                 'valid' => true,
                 'code' => 0
             )

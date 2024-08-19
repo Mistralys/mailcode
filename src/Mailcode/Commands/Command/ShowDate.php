@@ -57,7 +57,7 @@ class Mailcode_Commands_Command_ShowDate
     protected function getValidations(): array
     {
         return array(
-            Mailcode_Interfaces_Commands_Validation_Variable::VALIDATION_NAME_VARIABLE,
+            Mailcode_Interfaces_Commands_Validation_Variable::VALIDATION_NAME_VARIABLE_OPTIONAL,
             'check_format',
             TimezoneInterface::VALIDATION_TIMEZONE_NAME
         );
@@ -116,7 +116,7 @@ class Mailcode_Commands_Command_ShowDate
      * @param string|Mailcode_Variables_Variable|NULL $zone A timezone identifier, e.g. <code>Europe/Paris</code> or a variable containing the zone identifier, or NULL to use the PHP default.
      * @return void
      */
-    public static function setDefaultTimezone($zone) : void
+    public static function setDefaultTimezone($zone): void
     {
         self::$defaultTimeZone = $zone;
     }
