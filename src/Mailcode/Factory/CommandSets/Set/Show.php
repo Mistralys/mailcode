@@ -15,6 +15,7 @@ use Mailcode\Factory\CommandSets\Set\Show\Date;
 use Mailcode\Factory\CommandSets\Set\Show\Encoded;
 use Mailcode\Factory\CommandSets\Set\Show\Number;
 use Mailcode\Factory\CommandSets\Set\Show\Phone;
+use Mailcode\Factory\CommandSets\Set\Show\Price;
 use Mailcode\Factory\CommandSets\Set\Show\Snippet;
 use Mailcode\Factory\CommandSets\Set\Show\URL;
 
@@ -58,6 +59,11 @@ class Mailcode_Factory_CommandSets_Set_Show extends Mailcode_Factory_CommandSets
     public function number(string $variableName, string $formatString = "", bool $absolute = false): Mailcode_Commands_Command_ShowNumber
     {
         return (new Number())->create($variableName, $formatString, $absolute);
+    }
+
+    public function price(string $variableName, bool $absolute = false, bool $withCurrencyName = true): Mailcode_Commands_Command_ShowPrice
+    {
+        return (new Price())->create($variableName, $absolute, $withCurrencyName);
     }
 
     /**
