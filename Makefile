@@ -1,14 +1,11 @@
-install: composer.lock
+vendor: composer.json $(wildcard composer.lock)
 	/usr/bin/php /usr/bin/composer install
 
-update composer.lock: composer.json
-	/usr/bin/php /usr/bin/composer update
-
-autoload composer.lock: composer.json
+autoload: vendor
 	/usr/bin/php /usr/bin/composer dumpautoload
 
-test: composer.lock
+test: vendor
 	vendor/bin/phpunit --verbose --testsuite all
 
-phpstan:
+phpstan: vendor
 	vendor/bin/phpstan analyse -c tests/phpstan/config.neon -l 9 --memory-limit=900M > tests/phpstan/result.txt
