@@ -4,7 +4,7 @@ use Mailcode\Mailcode_Commands_CommonConstants;
 
 final class Mailcode_ElseIfEqualsNumberTests extends MailcodeTestCase
 {
-    public function test_validation() : void
+    public function test_validation(): void
     {
         $tests = array(
             array(
@@ -38,13 +38,25 @@ final class Mailcode_ElseIfEqualsNumberTests extends MailcodeTestCase
                 'code' => 0
             ),
             array(
+                'label' => 'Valid floating-point number as string',
+                'string' => '{if: 1 == 1}{elseif equals-number: $FOOBAR 4.0}{end}',
+                'valid' => true,
+                'code' => 0
+            ),
+            array(
+                'label' => 'Valid floating-point number as string',
+                'string' => '{if: 1 == 1}{elseif equals-number: $FOOBAR "4.0"}{end}',
+                'valid' => true,
+                'code' => 0
+            ),
+            array(
                 'label' => 'Valid number as multiplication',
                 'string' => '{if: 1 == 1}{elseif equals-number: $FOOBAR 1 * 2}{end}',
                 'valid' => true,
                 'code' => 0
             )
         );
-        
+
         $this->runCollectionTests($tests);
     }
 }
