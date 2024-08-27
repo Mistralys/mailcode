@@ -23,6 +23,9 @@ class ForTranslation extends HubL implements Mailcode_Translator_Command_For
 {
     public function translate(Mailcode_Commands_Command_For $command): string
     {
-        return '{# ! for commands are not implemented ! #}';
+        return sprintf('{%% for %s in %s %%}',
+            $command->getLoopVariable()->getFullName(),
+            $command->getSourceVariable()->getFullName()
+        );
     }
 }

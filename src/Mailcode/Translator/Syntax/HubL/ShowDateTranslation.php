@@ -24,5 +24,10 @@ class ShowDateTranslation extends HubL implements Mailcode_Translator_Command_Sh
     public function translate(Mailcode_Commands_Command_ShowDate $command): string
     {
         return '{# ! show date commands are not implemented ! #}';
+
+        // TODO https://developers.hubspot.com/docs/cms/hubl/filters#format-datetime
+//        return sprintf('{{ %s | format_datetime() }}',
+//            $command->getVariableName()
+//        );
     }
 }
