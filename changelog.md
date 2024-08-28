@@ -1,3 +1,6 @@
+### v3.3.2 - Minor update
+- HubL: Added type casting to `float` for number comparisons.
+
 ### v3.3.1 - Added HubL IF and ELSEIF support
 - HubL: Added translation for a subset of `if` and `elseif` commands.
 - HubL: Added `if variable`.
