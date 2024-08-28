@@ -99,7 +99,7 @@ abstract class HubL extends BaseCommandTranslation
     public function renderStringToNumber(string $varName): string
     {
         return sprintf(
-            '%s',
+            '%s|float',
             $this->formatVariableName($varName)
         );
     }

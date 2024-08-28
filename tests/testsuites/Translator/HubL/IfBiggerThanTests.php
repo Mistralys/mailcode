@@ -17,21 +17,21 @@ final class IfBiggerThanTests extends HubLTestCase
                 'label' => 'Integer value',
                 'mailcode' => Mailcode_Factory::if()->biggerThan('FOO.BAR', '100'),
                 'expected' => <<<'EOD'
-{% if foo.bar > 100 %}
+{% if foo.bar|float > 100 %}
 EOD
             ),
             array(
                 'label' => 'Value with comma',
                 'mailcode' => Mailcode_Factory::if()->biggerThan('FOO.BAR', '45,12'),
                 'expected' => <<<'EOD'
-{% if foo.bar > 45.12 %}
+{% if foo.bar|float > 45.12 %}
 EOD
             ),
             array(
                 'label' => 'Value with dot',
                 'mailcode' => Mailcode_Factory::if()->biggerThan('FOO.BAR', '45.12'),
                 'expected' => <<<'EOD'
-{% if foo.bar > 45.12 %}
+{% if foo.bar|float > 45.12 %}
 EOD
             )
         );

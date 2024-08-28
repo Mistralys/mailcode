@@ -36,6 +36,11 @@ final class IfVariableTests extends HubLTestCase
                 'label' => 'If var equals number',
                 'mailcode' => Mailcode_Factory::if()->varEquals('FOO.BAR', '42'),
                 'expected' => '{% if foo.bar == 42 %}'
+            ),
+            array(
+                'label' => 'If var equals number',
+                'mailcode' => Mailcode_Factory::if()->varEqualsNumber('FOO.BAR', '42'),
+                'expected' => '{% if foo.bar|float == 42 %}'
             )
         );
 
