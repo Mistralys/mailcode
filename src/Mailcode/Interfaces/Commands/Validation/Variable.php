@@ -21,9 +21,13 @@ namespace Mailcode;
 interface Mailcode_Interfaces_Commands_Validation_Variable extends Mailcode_Interfaces_Commands_Command
 {
     public const VALIDATION_NAME_VARIABLE = 'variable';
+    public const VALIDATION_NAME_VARIABLE_OPTIONAL = 'variable_optional';
 
-    public function getVariable() : Mailcode_Variables_Variable;
-    public function getVariableName() : string;
-    public function isInLoop() : bool;
-    public function getLoopCommand() : ?Mailcode_Commands_Command_For;
+    public function getVariable(): Mailcode_Variables_Variable;
+
+    public function getVariableName(): string;
+
+    public function isInLoop(): bool;
+
+    public function getLoopCommand(): ?Mailcode_Commands_Command_For;
 }

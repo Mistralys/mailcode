@@ -27,14 +27,13 @@ class Mailcode_Parser_Statement_Info_Variables
      *
      * @return bool
      */
-    public function isAssignment() : bool
+    public function isAssignment(): bool
     {
         $variable = $this->getByIndex(0);
         $operand = $this->info->getOperandByIndex(1);
         $value = $this->info->getTokenByIndex(2);
 
-        if($variable && $operand && $value && $operand->isAssignment())
-        {
+        if ($variable && $operand && $value && $operand->isAssignment()) {
             return true;
         }
 
@@ -46,14 +45,13 @@ class Mailcode_Parser_Statement_Info_Variables
      *
      * @return bool
      */
-    public function isComparison() : bool
+    public function isComparison(): bool
     {
         $variable = $this->getByIndex(0);
         $operand = $this->info->getOperandByIndex(1);
         $value = $this->info->getTokenByIndex(2);
 
-        if($variable && $operand && $value && $operand->isComparator())
-        {
+        if ($variable && $operand && $value && $operand->isComparator()) {
             return true;
         }
 
@@ -66,16 +64,31 @@ class Mailcode_Parser_Statement_Info_Variables
      * @return Mailcode_Variables_Variable[]
      * @throws Mailcode_Parser_Exception
      */
-    public function getAll() : array
+    public function getAll(): array
     {
         $result = array();
         $tokens = $this->tokenizer->getTokens();
 
-        foreach($tokens as $token)
-        {
-            if($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable)
-            {
+        foreach ($tokens as $token) {
+            if ($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable) {
                 $result[] = $token->getVariable();
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @return Mailcode_Parser_Statement_Tokenizer_Token_Variable[]
+     */
+    public function getTokens(): array
+    {
+        $result = array();
+        $tokens = $this->tokenizer->getTokens();
+
+        foreach ($tokens as $token) {
+            if ($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable) {
+                $result[] = $token;
             }
         }
 
@@ -90,12 +103,11 @@ class Mailcode_Parser_Statement_Info_Variables
      * @param int $index Zero-based index.
      * @return Mailcode_Parser_Statement_Tokenizer_Token_Variable|NULL
      */
-    public function getByIndex(int $index) : ?Mailcode_Parser_Statement_Tokenizer_Token_Variable
+    public function getByIndex(int $index): ?Mailcode_Parser_Statement_Tokenizer_Token_Variable
     {
         $token = $this->info->getTokenByIndex($index);
 
-        if($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable)
-        {
+        if ($token instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable) {
             return $token;
         }
 

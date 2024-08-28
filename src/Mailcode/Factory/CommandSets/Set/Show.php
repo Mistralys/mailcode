@@ -55,6 +55,11 @@ class Mailcode_Factory_CommandSets_Set_Show extends Mailcode_Factory_CommandSets
         return (new Date())->create($variableName, $formatString, $timezoneString, $timezoneVariable);
     }
 
+    public function dateNow(string $formatString = "", string $timezoneString = null, string $timezoneVariable = null): Mailcode_Commands_Command_ShowDate
+    {
+        return (new Date())->now($formatString, $timezoneString, $timezoneVariable);
+    }
+
     public function number(string $variableName, string $formatString = "", bool $absolute = false): Mailcode_Commands_Command_ShowNumber
     {
         return (new Number())->create($variableName, $formatString, $absolute);

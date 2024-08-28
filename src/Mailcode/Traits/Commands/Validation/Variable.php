@@ -13,7 +13,7 @@ namespace Mailcode;
 
 /**
  * Command validation drop-in: checks for the presence
- * of a variable name. Will accept the first variable 
+ * of a variable name. Will accept the first variable
  * it finds.
  *
  * @package Mailcode
@@ -26,21 +26,18 @@ namespace Mailcode;
  */
 trait Mailcode_Traits_Commands_Validation_Variable
 {
-   /**
-    * @var Mailcode_Parser_Statement_Tokenizer_Token_Variable|NULL
-    */
+    /**
+     * @var Mailcode_Parser_Statement_Tokenizer_Token_Variable|NULL
+     */
     protected $variableToken;
-    
-    protected function validateSyntax_variable() : void
+
+    protected function validateSyntax_variable(): void
     {
         $var = $this->validator->createVariable();
-        
-        if($var->isValid())
-        {
+
+        if ($var->isValid()) {
             $this->variableToken = $var->getToken();
-        }
-        else
-        {
+        } else {
             $this->validationResult->makeError(
                 t('No variable has been specified.'),
                 Mailcode_Commands_CommonConstants::VALIDATION_VARIABLE_MISSING
@@ -48,10 +45,18 @@ trait Mailcode_Traits_Commands_Validation_Variable
         }
     }
 
-    public function getVariableToken() : Mailcode_Parser_Statement_Tokenizer_Token_Variable
+    protected function validateSyntax_variable_optional(): void
     {
-        if(isset($this->variableToken))
-        {
+        $var = $this->validator->createVariable();
+
+        if ($var->isValid()) {
+            $this->variableToken = $var->getToken();
+        }
+    }
+
+    public function getVariableToken(): Mailcode_Parser_Statement_Tokenizer_Token_Variable
+    {
+        if (isset($this->variableToken)) {
             return $this->variableToken;
         }
 
@@ -68,21 +73,20 @@ trait Mailcode_Traits_Commands_Validation_Variable
      * @return Mailcode_Variables_Variable
      * @throws Mailcode_Exception
      */
-    public function getVariable() : Mailcode_Variables_Variable
+    public function getVariable(): Mailcode_Variables_Variable
     {
-        if(isset($this->variableToken))
-        {
+        if (isset($this->variableToken)) {
             return $this->variableToken->getVariable();
         }
-        
+
         throw new Mailcode_Exception(
             'No variable available',
             null,
             Mailcode_Commands_CommonConstants::ERROR_NO_VARIABLE_AVAILABLE
         );
     }
-    
-    public function getVariableName() : string
+
+    public function getVariableName(): string
     {
         return $this->getVariable()->getFullName();
     }
@@ -92,7 +96,7 @@ trait Mailcode_Traits_Commands_Validation_Variable
      *
      * @return bool
      */
-    public function isInLoop() : bool
+    public function isInLoop(): bool
     {
         return $this->getLoopCommand() !== null;
     }
@@ -102,7 +106,7 @@ trait Mailcode_Traits_Commands_Validation_Variable
      *
      * @return Mailcode_Commands_Command_For|NULL
      */
-    public function getLoopCommand() : ?Mailcode_Commands_Command_For
+    public function getLoopCommand(): ?Mailcode_Commands_Command_For
     {
         return $this->findLoopRecursive($this);
     }
@@ -114,20 +118,23 @@ trait Mailcode_Traits_Commands_Validation_Variable
      * @param Mailcode_Commands_Command $subject
      * @return Mailcode_Commands_Command_For|null
      */
-    protected function findLoopRecursive(Mailcode_Commands_Command $subject) : ?Mailcode_Commands_Command_For
+    protected function findLoopRecursive(Mailcode_Commands_Command $subject): ?Mailcode_Commands_Command_For
     {
         $parent = $subject->getParent();
 
-        if($parent === null)
-        {
+        if ($parent === null) {
             return null;
         }
 
-        if($parent instanceof Mailcode_Commands_Command_For)
-        {
+        if ($parent instanceof Mailcode_Commands_Command_For) {
             return $parent;
         }
 
         return $this->findLoopRecursive($parent);
+    }
+
+    public function hasVariable(): bool
+    {
+        return isset($this->variableToken);
     }
 }
