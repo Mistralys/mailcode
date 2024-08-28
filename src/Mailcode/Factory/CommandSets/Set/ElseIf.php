@@ -59,7 +59,7 @@ class Mailcode_Factory_CommandSets_Set_ElseIf extends Mailcode_Factory_CommandSe
     public function varEquals(string $variable, string $value, bool $quoteValue=false, bool $insensitive=false) : Mailcode_Commands_Command_ElseIf_Variable
     {
         $command = $this->instantiator->buildIfVar('ElseIf', $variable, '==', $value, $quoteValue, $insensitive);
-        
+
         if($command instanceof Mailcode_Commands_Command_ElseIf_Variable)
         {
             return $command;
@@ -67,7 +67,7 @@ class Mailcode_Factory_CommandSets_Set_ElseIf extends Mailcode_Factory_CommandSe
         
         throw $this->instantiator->exceptionUnexpectedType('ElseIfVarEquals', $command);
     }
-    
+
     public function varEqualsString(string $variable, string $value, bool $insensitive=false) : Mailcode_Commands_Command_ElseIf_Variable
     {
         $command = $this->instantiator->buildIfVar('ElseIf', $variable, '==', $value, true, $insensitive);
@@ -79,7 +79,19 @@ class Mailcode_Factory_CommandSets_Set_ElseIf extends Mailcode_Factory_CommandSe
         
         throw $this->instantiator->exceptionUnexpectedType('ElseIfVarEqualsString', $command);
     }
-    
+
+    public function varEqualsNumber(string $variable, string $value) : Mailcode_Commands_Command_ElseIf_EqualsNumber
+    {
+        $command = $this->instantiator->buildIfEquals('ElseIf', $variable, $value);
+
+        if($command instanceof Mailcode_Commands_Command_ElseIf_EqualsNumber)
+        {
+            return $command;
+        }
+
+        throw $this->instantiator->exceptionUnexpectedType('IfEqualsNumber', $command);
+    }
+
     public function varNotEquals(string $variable, string $value, bool $quoteValue=false, bool $insensitive=false) : Mailcode_Commands_Command_ElseIf_Variable
     {
         $command = $this->instantiator->buildIfVar('ElseIf', $variable, '!=', $value, $quoteValue, $insensitive);
