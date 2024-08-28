@@ -18,29 +18,32 @@ namespace Mailcode;
  * @subpackage Commands
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Mailcode_Commands_Command_ShowSnippet extends Mailcode_Commands_ShowBase implements Mailcode_Interfaces_Commands_Validation_NoHTML
+class Mailcode_Commands_Command_ShowSnippet
+    extends Mailcode_Commands_ShowBase
+    implements
+    Mailcode_Interfaces_Commands_Validation_NoHTML
 {
     use Mailcode_Traits_Commands_Validation_NoHTML;
 
-    public function getName() : string
+    public function getName(): string
     {
         return 'showsnippet';
     }
-    
-    public function getLabel() : string
+
+    public function getLabel(): string
     {
         return t('Show text snippet');
     }
-    
-    protected function getValidations() : array
+
+    protected function getValidations(): array
     {
         return array(
             Mailcode_Interfaces_Commands_Validation_Variable::VALIDATION_NAME_VARIABLE,
             Mailcode_Interfaces_Commands_Validation_NoHTML::VALIDATION_NAME_NOHTML
         );
     }
-    
-    public function generatesContent() : bool
+
+    public function generatesContent(): bool
     {
         return true;
     }

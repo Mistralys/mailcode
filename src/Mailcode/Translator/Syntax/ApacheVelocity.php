@@ -15,6 +15,7 @@ use Mailcode\Interfaces\Commands\EncodableInterface;
 use Mailcode\Mailcode_Commands_Command;
 use Mailcode\Mailcode_Commands_Keywords;
 use Mailcode\Mailcode_Number_Info;
+use Mailcode\Mailcode_Number_LocalCurrency;
 use Mailcode\Translator\BaseCommandTranslation;
 use function Mailcode\dollarize;
 
@@ -121,6 +122,31 @@ abstract class ApacheVelocity extends BaseCommandTranslation
         return sprintf(
             '$numeric.toNumber(%s)',
             dollarize($varName)
+        );
+    }
+
+    public function renderPrice(string $varName, Mailcode_Number_LocalCurrency $localCurrency, bool $absolute = false, bool $withCurrencyName = true): string
+    {
+        $varName = dollarize($varName);
+
+        if ($absolute) {
+            $varName = sprintf('${numeric.abs(%s)}', $varName);
+        }
+
+        $numberInfo = $localCurrency->getFormatInfo();
+
+        $displayedCurrency = $withCurrencyName
+            ? $localCurrency->getCurrencyName()
+            : $localCurrency->getCurrencySymbol();
+
+        return sprintf(
+            "money.amount(%s, '%s').group('%s').unit('%s', '%s').separator('%s')",
+            $varName,
+            $numberInfo->getDecimalsSeparator(),
+            $numberInfo->getThousandsSeparator(),
+            $displayedCurrency,
+            $localCurrency->getCountry(),
+            $localCurrency->getUnitSeparator()
         );
     }
 
