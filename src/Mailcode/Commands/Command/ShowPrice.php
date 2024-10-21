@@ -20,10 +20,10 @@ namespace Mailcode;
  */
 class Mailcode_Commands_Command_ShowPrice extends Mailcode_Commands_ShowBase
     implements
-    CurrencyNameInterface
+    RegionInterface, CurrencyInterface, CurrencyNameInterface
 {
-    public const VALIDATION_CODE_1 = 163401;
-
+    use RegionTrait;
+    use CurrencyTrait;
     use CurrencyNameTrait;
 
     /**
@@ -50,7 +50,10 @@ class Mailcode_Commands_Command_ShowPrice extends Mailcode_Commands_ShowBase
     {
         return array(
             Mailcode_Interfaces_Commands_Validation_Variable::VALIDATION_NAME_VARIABLE,
-            'absolute'
+            'absolute',
+            'check_currency_exclusive',
+            'check_currency',
+            'check_region'
         );
     }
 
@@ -65,6 +68,26 @@ class Mailcode_Commands_Command_ShowPrice extends Mailcode_Commands_ShowBase
                 $this->absoluteKeyword = $keyword;
                 break;
             }
+        }
+    }
+
+    protected function validateSyntax_check_currency_exclusive(): void
+    {
+        $hasCurrencyNameKeyword = $this
+            ->requireParams()
+            ->getInfo()
+            ->hasKeyword(Mailcode_Commands_Keywords::TYPE_CURRENCY_NAME);
+
+        $hasCurrencyParameter = $this
+            ->requireParams()
+            ->getInfo()
+            ->getTokenByParamName(CurrencyInterface::CURRENCY_PARAMETER_NAME);
+
+        if ($hasCurrencyParameter && $hasCurrencyNameKeyword) {
+            $this->validationResult->makeError(
+                t("Can not use both 'currency-name' and 'currency'"),
+                CurrencyInterface::VALIDATION_CURRENCY_EXCLUSIVE
+            );
         }
     }
 

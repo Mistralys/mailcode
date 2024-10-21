@@ -11,8 +11,6 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
-use Mailcode\Interfaces\Commands\Validation\NoTrackingInterface;
-
 /**
  * Command validation drop-in: checks for the presence
  * of the `currency-name:` keyword in the command statement,
@@ -22,10 +20,13 @@ use Mailcode\Interfaces\Commands\Validation\NoTrackingInterface;
  * @subpackage Validation
  * @author Olaf Böcker <olaf.boecker@ionos.com>
  *
- * @see NoTrackingInterface
+ * @see CurrencyNameInterface
  */
 trait CurrencyNameTrait
 {
+    /**
+     * @throws Mailcode_Exception
+     */
     public function isCurrencyNameEnabled(): bool
     {
         return $this->requireParams()
@@ -47,6 +48,9 @@ trait CurrencyNameTrait
         return $this;
     }
 
+    /**
+     * @throws Mailcode_Exception
+     */
     public function getCurrencyNameToken(): ?Mailcode_Parser_Statement_Tokenizer_Token_Keyword
     {
         return $this->requireParams()

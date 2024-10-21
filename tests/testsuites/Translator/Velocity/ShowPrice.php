@@ -13,7 +13,7 @@ final class Translator_Velocity_ShowPriceTests extends VelocityTestCase
                 'mailcode' => Mailcode_Factory::show()
                     ->price('FOO.BAR'),
                 'expected' => <<<'EOD'
-${money.amount($FOO.BAR, '.').group(',').unit('USD', 'US').separator(' ')}
+${money.amount($FOO.BAR, ".").group(",").unit("$", "US").separator(" ")}
 EOD
             ),
             array(
@@ -21,15 +21,15 @@ EOD
                 'mailcode' => Mailcode_Factory::show()
                     ->price('FOO.BAR', true),
                 'expected' => <<<'EOD'
-${money.amount(${numeric.abs($FOO.BAR)}, '.').group(',').unit('USD', 'US').separator(' ')}
+${money.amount(${numeric.abs($FOO.BAR)}, ".").group(",").unit("$", "US").separator(" ")}
 EOD
             ),
             array(
-                'label' => 'With currency symbol instead of name',
+                'label' => 'With currency name instead of symbol',
                 'mailcode' => Mailcode_Factory::show()
-                    ->price('FOO.BAR', false, false),
+                    ->price('FOO.BAR', false, true),
                 'expected' => <<<'EOD'
-${money.amount($FOO.BAR, '.').group(',').unit('$', 'US').separator(' ')}
+${money.amount($FOO.BAR, ".").group(",").unit("USD", "US").separator(" ")}
 EOD
             )
         );

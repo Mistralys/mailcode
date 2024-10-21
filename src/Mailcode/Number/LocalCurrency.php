@@ -20,6 +20,9 @@ class Mailcode_Number_LocalCurrency extends OperationResult
     private string $unitSeparator;
     private string $formatString;
 
+    private ?Mailcode_Parser_Statement_Tokenizer_Token_Variable $currency = null;
+    private ?Mailcode_Parser_Statement_Tokenizer_Token_Variable $region = null;
+
     private static ?Mailcode_Number_LocalCurrency $instance = null;
 
     /**
@@ -28,14 +31,25 @@ class Mailcode_Number_LocalCurrency extends OperationResult
      * @param string $currencySymbol
      * @param string $unitSeparator
      * @param string $formatString
+     * @param ?Mailcode_Parser_Statement_Tokenizer_Token $currency
+     * @param ?Mailcode_Parser_Statement_Tokenizer_Token $region
      */
-    public function __construct(string $country, string $currencyName, string $currencySymbol, string $unitSeparator, string $formatString)
+    public function __construct(string                                     $country,
+                                string                                     $currencyName,
+                                string                                     $currencySymbol,
+                                string                                     $unitSeparator,
+                                string                                     $formatString,
+                                ?Mailcode_Parser_Statement_Tokenizer_Token $currency = null,
+                                ?Mailcode_Parser_Statement_Tokenizer_Token $region = null)
     {
         $this->country = $country;
         $this->currencyName = $currencyName;
         $this->currencySymbol = $currencySymbol;
         $this->unitSeparator = $unitSeparator;
         $this->formatString = $formatString;
+
+        $this->currency = $currency;
+        $this->region = $region;
     }
 
     public function getCountry(): string
@@ -61,6 +75,42 @@ class Mailcode_Number_LocalCurrency extends OperationResult
     public function getFormatString(): string
     {
         return $this->formatString;
+    }
+
+    public function getRegion(): ?Mailcode_Parser_Statement_Tokenizer_Token
+    {
+        return $this->region;
+    }
+
+    public function getCurrency(): ?Mailcode_Parser_Statement_Tokenizer_Token
+    {
+        return $this->currency;
+    }
+
+    public function withRegion(?Mailcode_Parser_Statement_Tokenizer_Token $region = null): Mailcode_Number_LocalCurrency
+    {
+        return new Mailcode_Number_LocalCurrency(
+            $this->country,
+            $this->currencyName,
+            $this->currencySymbol,
+            $this->unitSeparator,
+            $this->formatString,
+            $this->currency,
+            $region
+        );
+    }
+
+    public function withCurrency(?Mailcode_Parser_Statement_Tokenizer_Token $currency = null): Mailcode_Number_LocalCurrency
+    {
+        return new Mailcode_Number_LocalCurrency(
+            $this->country,
+            $this->currencyName,
+            $this->currencySymbol,
+            $this->unitSeparator,
+            $this->formatString,
+            $currency,
+            $this->region
+        );
     }
 
     public function getFormatInfo(): Mailcode_Number_Info

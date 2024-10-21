@@ -61,9 +61,11 @@ class Mailcode_Factory_CommandSets_Set_Show extends Mailcode_Factory_CommandSets
         return (new Number())->create($variableName, $formatString, $absolute);
     }
 
-    public function price(string $variableName, bool $absolute = false, bool $withCurrencyName = true): Mailcode_Commands_Command_ShowPrice
+    public function price(string $variableName, bool $absolute = false, bool $withCurrencyName = false,
+                          string $currencyString = null, string $currencyVariable = null,
+                          string $regionString = null, string $regionVariable = null): Mailcode_Commands_Command_ShowPrice
     {
-        return (new Price())->create($variableName, $absolute, $withCurrencyName);
+        return (new Price())->create($variableName, $absolute, $withCurrencyName, $currencyString, $currencyVariable, $regionString, $regionVariable);
     }
 
     /**

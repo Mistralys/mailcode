@@ -23,9 +23,23 @@ class ShowPriceTranslation extends ApacheVelocity implements Mailcode_Translator
 {
     public function translate(Mailcode_Commands_Command_ShowPrice $command): string
     {
+        $localCurrency = $command->getLocalCurrency();
+
+        if ($command->isRegionPresent()) {
+            $regionToken = $command->getRegionToken();
+
+            $localCurrency = $localCurrency->withRegion($regionToken);
+        }
+
+        if ($command->isCurrencyPresent()) {
+            $currencyToken = $command->getCurrencyToken();
+
+            $localCurrency = $localCurrency->withCurrency($currencyToken);
+        }
+
         $statement = $this->renderPrice(
             $command->getVariableName(),
-            $command->getLocalCurrency(),
+            $localCurrency,
             $command->isAbsolute(),
             $command->isCurrencyNameEnabled()
         );

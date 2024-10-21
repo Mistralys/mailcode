@@ -16,6 +16,8 @@ use Mailcode\Mailcode_Commands_Command;
 use Mailcode\Mailcode_Commands_Keywords;
 use Mailcode\Mailcode_Number_Info;
 use Mailcode\Mailcode_Number_LocalCurrency;
+use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
+use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Variable;
 use Mailcode\Translator\BaseCommandTranslation;
 use function Mailcode\dollarize;
 
@@ -135,17 +137,33 @@ abstract class ApacheVelocity extends BaseCommandTranslation
 
         $numberInfo = $localCurrency->getFormatInfo();
 
-        $displayedCurrency = $withCurrencyName
-            ? $localCurrency->getCurrencyName()
-            : $localCurrency->getCurrencySymbol();
+        $currencyToken = $localCurrency->getCurrency();
+        if ($currencyToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable) {
+            $displayedCurrency = $currencyToken->getNormalized();
+        } else if ($currencyToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral) {
+            $displayedCurrency = '"' . $currencyToken->getText() . '"';
+        } else if ($withCurrencyName) {
+            $displayedCurrency = '"' . $localCurrency->getCurrencyName() . '"';
+        } else {
+            $displayedCurrency = '"' . $localCurrency->getCurrencySymbol() . '"';
+        }
+
+        $regionToken = $localCurrency->getRegion();
+        if ($regionToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable) {
+            $displayedCountry = $regionToken->getNormalized();
+        } else if ($regionToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral) {
+            $displayedCountry = '"' . $regionToken->getText() . '"';
+        } else {
+            $displayedCountry = '"' . $localCurrency->getCountry() . '"';
+        }
 
         return sprintf(
-            "money.amount(%s, '%s').group('%s').unit('%s', '%s').separator('%s')",
+            'money.amount(%s, "%s").group("%s").unit(%s, %s).separator("%s")',
             $varName,
             $numberInfo->getDecimalsSeparator(),
             $numberInfo->getThousandsSeparator(),
             $displayedCurrency,
-            $localCurrency->getCountry(),
+            $displayedCountry,
             $localCurrency->getUnitSeparator()
         );
     }
