@@ -27,7 +27,7 @@ trait NamespaceTrait
         $token = $this
             ->requireParams()
             ->getInfo()
-            ->getTokenByParamName(NamespaceInterface::PARAMETER_NAME);
+            ->getTokenByParamName(NamespaceInterface::PARAMETER_NAMESPACE_NAME);
 
         if ($token === null) {
             return;
@@ -59,7 +59,7 @@ trait NamespaceTrait
         $this->namespaceToken = $this
             ->requireParams()
             ->getInfo()
-            ->addParamString(NamespaceInterface::PARAMETER_NAME, $namespace);
+            ->addParamString(NamespaceInterface::PARAMETER_NAMESPACE_NAME, $namespace);
 
         return $this;
     }

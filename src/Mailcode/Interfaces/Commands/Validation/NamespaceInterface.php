@@ -22,8 +22,9 @@ namespace Mailcode;
  */
 interface NamespaceInterface extends Mailcode_Interfaces_Commands_Command
 {
-    public const PARAMETER_NAME = 'namespace';
+    public const PARAMETER_NAMESPACE_NAME = 'namespace';
     public const DEFAULT_NAMESPACE = 'global';
+    public const VALIDATION_NAMESPACE_NAME = 'check_namespace';
     public const VALIDATION_NAMESPACE_WRONG_TYPE = 166401;
 
     public function isNamespacePresent(): bool;

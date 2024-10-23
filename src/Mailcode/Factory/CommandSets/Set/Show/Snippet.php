@@ -53,7 +53,7 @@ class Snippet extends Mailcode_Factory_CommandSets_Set
 
         if ($namespace) {
             $params[] = sprintf(
-                ' ' . NamespaceInterface::PARAMETER_NAME . '=%s',
+                ' ' . NamespaceInterface::PARAMETER_NAMESPACE_NAME . '=%s',
                 $this->quoteString($namespace)
             );
         }
