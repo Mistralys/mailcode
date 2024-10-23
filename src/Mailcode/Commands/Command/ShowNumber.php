@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use Mailcode\Interfaces\Commands\Validation\AbsoluteKeywordInterface;
+use Mailcode\Traits\Commands\Validation\AbsoluteKeywordTrait;
+
 /**
  * Mailcode command: show a date variable value.
  *
@@ -20,7 +23,10 @@ namespace Mailcode;
  */
 class Mailcode_Commands_Command_ShowNumber
     extends Mailcode_Commands_ShowBase
+    implements AbsoluteKeywordInterface
 {
+    use AbsoluteKeywordTrait;
+
     public const VALIDATION_PADDING_SEPARATOR_OVERFLOW = 72202;
     public const VALIDATION_INVALID_FORMAT_NUMBER = 72203;
     public const VALIDATION_INVALID_THOUSANDS_SEPARATOR = 72204;
@@ -37,11 +43,6 @@ class Mailcode_Commands_Command_ShowNumber
      */
     private string $formatString = Mailcode_Number_Info::DEFAULT_FORMAT;
 
-    /**
-     * @var Mailcode_Parser_Statement_Tokenizer_Token_Keyword|NULL
-     */
-    private ?Mailcode_Parser_Statement_Tokenizer_Token_Keyword $absoluteKeyword = null;
-
     public function getName(): string
     {
         return 'shownumber';
@@ -57,7 +58,7 @@ class Mailcode_Commands_Command_ShowNumber
         return array(
             Mailcode_Interfaces_Commands_Validation_Variable::VALIDATION_NAME_VARIABLE,
             'check_format',
-            'absolute'
+            AbsoluteKeywordInterface::VALIDATION_NAME
         );
     }
 
@@ -74,20 +75,6 @@ class Mailcode_Commands_Command_ShowNumber
 
         $token = array_pop($tokens);
         $this->parseFormatString($token->getText());
-    }
-
-    protected function validateSyntax_absolute(): void
-    {
-        $keywords = $this->requireParams()
-            ->getInfo()
-            ->getKeywords();
-
-        foreach ($keywords as $keyword) {
-            if ($keyword->getKeyword() === Mailcode_Commands_Keywords::TYPE_ABSOLUTE) {
-                $this->absoluteKeyword = $keyword;
-                break;
-            }
-        }
     }
 
     private function parseFormatString(string $format): void
@@ -113,29 +100,6 @@ class Mailcode_Commands_Command_ShowNumber
     public function getFormatString(): string
     {
         return $this->formatString;
-    }
-
-    public function isAbsolute(): bool
-    {
-        return isset($this->absoluteKeyword);
-    }
-
-    public function setAbsolute(bool $absolute): Mailcode_Commands_Command_ShowNumber
-    {
-        if ($absolute === false && isset($this->absoluteKeyword)) {
-            $this->requireParams()->getInfo()->removeKeyword($this->absoluteKeyword->getKeyword());
-            $this->absoluteKeyword = null;
-        }
-
-        if ($absolute === true && !isset($this->absoluteKeyword)) {
-            $this->requireParams()
-                ->getInfo()
-                ->addKeyword(Mailcode_Commands_Keywords::TYPE_ABSOLUTE);
-
-            $this->validateSyntax_absolute();
-        }
-
-        return $this;
     }
 
     /**

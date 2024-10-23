@@ -11,8 +11,11 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use Mailcode\Interfaces\Commands\Validation\AbsoluteKeywordInterface;
+use Mailcode\Traits\Commands\Validation\AbsoluteKeywordTrait;
+
 /**
- * Mailcode command: show a date variable value.
+ * Mailcode command: Display a variable containing a price with currency.
  *
  * @package Mailcode
  * @subpackage Commands
@@ -20,16 +23,15 @@ namespace Mailcode;
  */
 class Mailcode_Commands_Command_ShowPrice extends Mailcode_Commands_ShowBase
     implements
-    RegionInterface, CurrencyInterface, CurrencyNameInterface
+    RegionInterface,
+    CurrencyInterface,
+    CurrencyNameInterface,
+    AbsoluteKeywordInterface
 {
     use RegionTrait;
     use CurrencyTrait;
     use CurrencyNameTrait;
-
-    /**
-     * @var Mailcode_Parser_Statement_Tokenizer_Token_Keyword|NULL
-     */
-    private ?Mailcode_Parser_Statement_Tokenizer_Token_Keyword $absoluteKeyword = null;
+    use AbsoluteKeywordTrait;
 
     /**
      * @var Mailcode_Number_LocalCurrency
@@ -50,25 +52,11 @@ class Mailcode_Commands_Command_ShowPrice extends Mailcode_Commands_ShowBase
     {
         return array(
             Mailcode_Interfaces_Commands_Validation_Variable::VALIDATION_NAME_VARIABLE,
-            'absolute',
+            AbsoluteKeywordInterface::VALIDATION_NAME,
             'check_currency_exclusive',
             'check_currency',
             'check_region'
         );
-    }
-
-    protected function validateSyntax_absolute(): void
-    {
-        $keywords = $this->requireParams()
-            ->getInfo()
-            ->getKeywords();
-
-        foreach ($keywords as $keyword) {
-            if ($keyword->getKeyword() === Mailcode_Commands_Keywords::TYPE_ABSOLUTE) {
-                $this->absoluteKeyword = $keyword;
-                break;
-            }
-        }
     }
 
     protected function validateSyntax_check_currency_exclusive(): void
@@ -89,29 +77,6 @@ class Mailcode_Commands_Command_ShowPrice extends Mailcode_Commands_ShowBase
                 CurrencyInterface::VALIDATION_CURRENCY_EXCLUSIVE
             );
         }
-    }
-
-    public function isAbsolute(): bool
-    {
-        return isset($this->absoluteKeyword);
-    }
-
-    public function setAbsolute(bool $absolute): Mailcode_Commands_Command_ShowPrice
-    {
-        if ($absolute === false && isset($this->absoluteKeyword)) {
-            $this->requireParams()->getInfo()->removeKeyword($this->absoluteKeyword->getKeyword());
-            $this->absoluteKeyword = null;
-        }
-
-        if ($absolute === true && !isset($this->absoluteKeyword)) {
-            $this->requireParams()
-                ->getInfo()
-                ->addKeyword(Mailcode_Commands_Keywords::TYPE_ABSOLUTE);
-
-            $this->validateSyntax_absolute();
-        }
-
-        return $this;
     }
 
     public function getLocalCurrency(): Mailcode_Number_LocalCurrency
