@@ -92,6 +92,13 @@ With a custom date/time format:
 > Note: Also see the [section on date formats](#date-formats) for details 
 > on how to specify date and time.
 
+If no variable is specified, it is assumed that the current date 
+and time should be used:
+
+```
+{showdate: "d/m/Y"}
+```
+
 With a specific time zone:
 
 ```
@@ -148,6 +155,43 @@ keyword to ensure that the minus sign is not shown.
 {shownumber: $ORDER.PRICE "1,000.00" absolute:}
 ```
 
+### Display a price
+
+A number can be formatted to be displayed as a price with localized
+formatting and currency symbol/name.
+ 
+With default settings (USD):
+
+```
+{showprice: $ORDER.PRICE}
+```
+
+With a specific currency, as string or variable:
+
+```
+{showprice: $ORDER.PRICE currency="EUR"}
+{showprice: $ORDER.PRICE currency=$ORDER.CURRENCY_ISO}
+```
+
+For a specific region, as string or variable:
+
+```
+{showprice: $ORDER.PRICE region="fr_FR"}
+{showprice: $ORDER.PRICE region=$ORDER.REGION}
+```
+
+As an absolute number:
+
+```
+{showprice: $ORDER_PRICE absolute:}
+```
+
+Use the currency name (e.g. "EUR") instead of the symbol:
+
+```
+{showprice: $ORDER.PRICE currency-name:}
+```
+
 ### Display a text snippet
 
 Display a raw text snippet. Newlines are converted to HTML `<br>` 
@@ -161,6 +205,13 @@ To disable the  `<br>` tags, use the `nohtml:` keyword:
 
 ```
 {showsnippet: $snippet_name nohtml:}
+```
+
+A namespace can be specified if the target snippet should not
+be loaded from the global namespace:
+
+```
+{showsnippet: $snippet_name namespace="NamespaceName"}
 ```
 
 ### Display a URL with or without tracking
