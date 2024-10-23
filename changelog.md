@@ -1,3 +1,8 @@
+### v3.4.0 - Added ShowPrice command
+- Commands: Added the `{showprice}` command to format numbers as prices.
+- Traits: Added the `AbsoluteKeywordTrait`.
+- Dependencies: Updated AppLocalization to [v1.5.0](https://github.com/Mistralys/application-localization/releases/tag/1.5.0).
+
 ### v3.3.2 - Minor update
 - HubL: Added type casting to `float` for number comparisons.
 
