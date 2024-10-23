@@ -38,9 +38,11 @@ class ShowSnippetTranslation extends ApacheVelocity implements Mailcode_Translat
             $statement = sprintf('dictionary.global("%s")', $varName);
         }
 
-        $statement = $command->isHTMLEnabled()
-            ? sprintf('%s.replaceAll($esc.newline, "<br/>")', $statement)
-            : sprintf('%s', $statement);
+        if ($command->isHTMLEnabled()) {
+            $statement = sprintf('%s.replaceAll($esc.newline, "<br/>")', $statement);
+        } else {
+            $statement = sprintf('%s', $statement);
+        }
 
         return $this->renderVariableEncodings($command, $statement);
     }
