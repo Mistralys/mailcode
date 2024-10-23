@@ -40,8 +40,9 @@ interface DecryptInterface extends Mailcode_Interfaces_Commands_Command
      */
     public function getDecryptionKeyToken(): ?Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
 
-    public function enableDecryption(string $keyName=DecryptInterface::DEFAULT_DECRYPTION_KEY_NAME) : self;
+    public function enableDecryption(string $keyName = DecryptInterface::DEFAULT_DECRYPTION_KEY_NAME): self;
 
-    public function disableDecryption() : self;
-    public function isDecryptionEnabled() : bool;
+    public function disableDecryption(): self;
+
+    public function isDecryptionEnabled(): bool;
 }

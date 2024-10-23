@@ -15,14 +15,14 @@ use function Mailcode\undollarize;
 
 /**
  * Translates the {@see Mailcode_Commands_Command_ShowSnippet} command to Apache Velocity.
- * 
- * NOTE: Requires the `EscapeTool` VTL tool to be enabled 
+ *
+ * NOTE: Requires the `EscapeTool` VTL tool to be enabled
  * for the templates.
  *
  * @package Mailcode
  * @subpackage Translator
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
- * 
+ *
  * @see https://velocity.apache.org/tools/devel/apidocs/org/apache/velocity/tools/generic/EscapeTool.html
  */
 class ShowSnippetTranslation extends ApacheVelocity implements Mailcode_Translator_Command_ShowSnippet
@@ -31,19 +31,17 @@ class ShowSnippetTranslation extends ApacheVelocity implements Mailcode_Translat
     {
         $varName = undollarize($command->getVariableName());
 
-        if($command->isHTMLEnabled())
-        {
-            $statement = sprintf(
-                '%s.replaceAll($esc.newline, "<br/>")',
-                $varName
-            );
+        if ($command->isNamespacePresent()) {
+            $namespace = $command->getNamespaceToken()->getText();
+            $statement = sprintf('dictionary.namespace("%s").name("%s")', $namespace, $varName);
+        } else {
+            $statement = sprintf('dictionary.global("%s")', $varName);
         }
-        else
-        {
-            $statement = sprintf(
-                '%s',
-                $varName
-            );
+
+        if ($command->isHTMLEnabled()) {
+            $statement = sprintf('%s.replaceAll($esc.newline, "<br/>")', $statement);
+        } else {
+            $statement = sprintf('%s', $statement);
         }
 
         return $this->renderVariableEncodings($command, $statement);

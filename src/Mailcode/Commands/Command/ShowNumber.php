@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use Mailcode\Interfaces\Commands\Validation\AbsoluteKeywordInterface;
+use Mailcode\Traits\Commands\Validation\AbsoluteKeywordTrait;
+
 /**
  * Mailcode command: show a date variable value.
  *
@@ -18,8 +21,12 @@ namespace Mailcode;
  * @subpackage Commands
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Mailcode_Commands_Command_ShowNumber extends Mailcode_Commands_ShowBase
+class Mailcode_Commands_Command_ShowNumber
+    extends Mailcode_Commands_ShowBase
+    implements AbsoluteKeywordInterface
 {
+    use AbsoluteKeywordTrait;
+
     public const VALIDATION_PADDING_SEPARATOR_OVERFLOW = 72202;
     public const VALIDATION_INVALID_FORMAT_NUMBER = 72203;
     public const VALIDATION_INVALID_THOUSANDS_SEPARATOR = 72204;
@@ -29,75 +36,52 @@ class Mailcode_Commands_Command_ShowNumber extends Mailcode_Commands_ShowBase
     public const VALIDATION_INVALID_DECIMALS_CHARS = 72208;
     public const VALIDATION_INVALID_DECIMAL_SEPARATOR = 72209;
     public const VALIDATION_SEPARATORS_SAME_CHARACTER = 72210;
-    
-   /**
-    * The default number format string.
-    * @var string
-    */
-    private string $formatString = Mailcode_Number_Info::DEFAULT_FORMAT;
 
     /**
-     * @var Mailcode_Parser_Statement_Tokenizer_Token_Keyword|NULL
+     * The default number format string.
+     * @var string
      */
-    private ?Mailcode_Parser_Statement_Tokenizer_Token_Keyword $absoluteKeyword = null;
+    private string $formatString = Mailcode_Number_Info::DEFAULT_FORMAT;
 
-    public function getName() : string
+    public function getName(): string
     {
         return 'shownumber';
     }
 
-    public function getLabel() : string
+    public function getLabel(): string
     {
         return t('Show number variable');
     }
 
-    protected function getValidations() : array
+    protected function getValidations(): array
     {
         return array(
             Mailcode_Interfaces_Commands_Validation_Variable::VALIDATION_NAME_VARIABLE,
             'check_format',
-            'absolute'
+            AbsoluteKeywordInterface::VALIDATION_NAME
         );
     }
 
-    protected function validateSyntax_check_format() : void
+    protected function validateSyntax_check_format(): void
     {
-         $tokens = $this->requireParams()
-             ->getInfo()
-             ->getStringLiterals();
-         
-         // no format specified? Use the default one.
-         if(empty($tokens))
-         {
-             return;
-         }
-
-         $token = array_pop($tokens);
-         $this->parseFormatString($token->getText());
-    }
-
-    protected function validateSyntax_absolute() : void
-    {
-        $keywords = $this->requireParams()
+        $tokens = $this->requireParams()
             ->getInfo()
-            ->getKeywords();
+            ->getStringLiterals();
 
-        foreach($keywords as $keyword)
-        {
-            if($keyword->getKeyword() === Mailcode_Commands_Keywords::TYPE_ABSOLUTE)
-            {
-                $this->absoluteKeyword = $keyword;
-                break;
-            }
+        // no format specified? Use the default one.
+        if (empty($tokens)) {
+            return;
         }
+
+        $token = array_pop($tokens);
+        $this->parseFormatString($token->getText());
     }
 
-    private function parseFormatString(string $format) : void
+    private function parseFormatString(string $format): void
     {
         $result = new Mailcode_Number_Info($format);
 
-        if($result->isValid())
-        {
+        if ($result->isValid()) {
             $this->formatString = $format;
             return;
         }
@@ -107,40 +91,15 @@ class Mailcode_Commands_Command_ShowNumber extends Mailcode_Commands_ShowBase
             $result->getCode()
         );
     }
-    
-   /**
-    * Retrieves the format string used to format the number.
-    * 
-    * @return string
-    */
-    public function getFormatString() : string
+
+    /**
+     * Retrieves the format string used to format the number.
+     *
+     * @return string
+     */
+    public function getFormatString(): string
     {
         return $this->formatString;
-    }
-
-    public function isAbsolute() : bool
-    {
-        return isset($this->absoluteKeyword);
-    }
-
-    public function setAbsolute(bool $absolute) : Mailcode_Commands_Command_ShowNumber
-    {
-        if($absolute === false && isset($this->absoluteKeyword))
-        {
-            $this->requireParams()->getInfo()->removeKeyword($this->absoluteKeyword->getKeyword());
-            $this->absoluteKeyword = null;
-        }
-
-        if($absolute === true && !isset($this->absoluteKeyword))
-        {
-             $this->requireParams()
-                 ->getInfo()
-                 ->addKeyword(Mailcode_Commands_Keywords::TYPE_ABSOLUTE);
-
-             $this->validateSyntax_absolute();
-        }
-
-        return $this;
     }
 
     /**
@@ -148,7 +107,7 @@ class Mailcode_Commands_Command_ShowNumber extends Mailcode_Commands_ShowBase
      *
      * @return Mailcode_Number_Info
      */
-    public function getFormatInfo() : Mailcode_Number_Info
+    public function getFormatInfo(): Mailcode_Number_Info
     {
         return new Mailcode_Number_Info($this->getFormatString());
     }
