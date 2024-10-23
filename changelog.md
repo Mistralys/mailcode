@@ -1,6 +1,11 @@
 ### v3.4.0 - Added ShowPrice command
 - Commands: Added the `{showprice}` command to format numbers as prices.
+- Commands: Added the `namespace` parameter in the `{showsnippet}` command.
+- Commands: The date variable is now optional in the `{showdate}` command.
 - Traits: Added the `AbsoluteKeywordTrait`.
+- Traits: Added the `NamespaceTrait`.
+- Traits: Added the `CurrencyNameTrait`.
+- Traits: Added the `RegionTrait`.
 - Dependencies: Updated AppLocalization to [v1.5.0](https://github.com/Mistralys/application-localization/releases/tag/1.5.0).
 
 ### v3.3.2 - Minor update
