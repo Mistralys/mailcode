@@ -71,10 +71,20 @@ class Mailcode_Parser_Statement_Info
     /**
      * Retrieves all variables used in the statement.
      *
-     * @return Mailcode_Parser_Statement_Tokenizer_Token_Variable[]
+     * @return Mailcode_Variables_Variable[]
      * @throws Mailcode_Parser_Exception
      */
     public function getVariables(): array
+    {
+        return $this->variables->getAll();
+    }
+
+    /**
+     * Retrieves all variables used in the statement.
+     *
+     * @return Mailcode_Parser_Statement_Tokenizer_Token_Variable[]
+     */
+    public function getVariableTokens(): array
     {
         return $this->variables->getTokens();
     }
