@@ -15,6 +15,7 @@ The following tools have to be enabled in the Velocity templates:
 * TrackingTool (custom tool, see below)
 * TextTool (custom tool)
 * TimeTool (custom tool)
+* DictionaryTool (custom tool)
 
 These tools can be added to the context of templates like this:
 
@@ -30,7 +31,7 @@ to stay this way to be backwards compatible.
 Commands that require these tools:
 
 - ShowDate (TimeTool)
-- ShowSnippet (EscapeTool)
+- ShowSnippet (EscapeTool, DictionaryTool)
 - ShowXXX commands, for URL encoding support (EscapeTool)
 - ShowXXX commands, for IDN encoding support (TextTool)
 - If Empty / If Not Empty (StringUtils)

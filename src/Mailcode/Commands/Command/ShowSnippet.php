@@ -21,9 +21,11 @@ namespace Mailcode;
 class Mailcode_Commands_Command_ShowSnippet
     extends Mailcode_Commands_ShowBase
     implements
-    Mailcode_Interfaces_Commands_Validation_NoHTML
+    Mailcode_Interfaces_Commands_Validation_NoHTML,
+    NamespaceInterface
 {
     use Mailcode_Traits_Commands_Validation_NoHTML;
+    use NamespaceTrait;
 
     public function getName(): string
     {
@@ -39,7 +41,8 @@ class Mailcode_Commands_Command_ShowSnippet
     {
         return array(
             Mailcode_Interfaces_Commands_Validation_Variable::VALIDATION_NAME_VARIABLE,
-            Mailcode_Interfaces_Commands_Validation_NoHTML::VALIDATION_NAME_NOHTML
+            Mailcode_Interfaces_Commands_Validation_NoHTML::VALIDATION_NAME_NOHTML,
+            NamespaceInterface::VALIDATION_NAMESPACE_NAME
         );
     }
 
