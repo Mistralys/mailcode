@@ -81,13 +81,20 @@ class ShowDateTranslation extends ApacheVelocity implements Mailcode_Translator_
 
     public function translate(Mailcode_Commands_Command_ShowDate $command): string
     {
-        $statement = sprintf(
-            'time.input("%s", $%s).output("%s")%s',
-            $this->getInternalFormat($command),
-            undollarize($command->getVariableName()),
-            $this->resolveJavaFormat($command->getFormatString()),
-            $this->resolveTimeZoneFormat($command)
-        );
+        if ($command->hasVariable()) {
+            $statement = sprintf(
+                'time.input("%s", $%s).output("%s")%s',
+                $this->getInternalFormat($command),
+                undollarize($command->getVariableName()),
+                $this->resolveJavaFormat($command->getFormatString()),
+                $this->resolveTimeZoneFormat($command)
+            );
+        } else {
+            $statement = sprintf('date.get("%s")%s',
+                $this->resolveJavaFormat($command->getFormatString()),
+                $this->resolveTimeZoneFormat($command)
+            );
+        }
 
         return $this->renderVariableEncodings($command, $statement);
     }

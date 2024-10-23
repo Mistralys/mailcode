@@ -54,6 +54,16 @@ final class ShowDateTests extends VelocityTestCase
                 'label' => 'Show date with milliseconds and time zone format',
                 'mailcode' => Mailcode_Factory::show()->date('FOO.BAR', 'd.m.Y H:i:s v e'),
                 'expected' => '${time.input("' . $defaultFormat . '", $FOO.BAR).output("dd.MM.yyyy HH:mm:ss SSS XXX").zone("UTC")}'
+            ),
+            array(
+                'label' => 'Show current date with milliseconds and time zone format',
+                'mailcode' => Mailcode_Factory::show()->dateNow('d.m.Y H:i:s v e'),
+                'expected' => '${date.get("dd.MM.yyyy HH:mm:ss SSS XXX").zone("UTC")}'
+            ),
+            array(
+                'label' => 'Show current date with milliseconds and time zone format',
+                'mailcode' => Mailcode_Factory::show()->dateNow('d.m.Y H:i:s v e', "Europe/Berlin"),
+                'expected' => '${date.get("dd.MM.yyyy HH:mm:ss SSS XXX").zone("Europe/Berlin")}'
             )
         );
 
@@ -73,19 +83,18 @@ final class ShowDateTests extends VelocityTestCase
         $this->assertEquals('${time.input("yyyy-MM-dd", $FOO.BAR).output("dd.MM.yyyy").zone("UTC")}', $result);
     }
 
-    public function test_formatConversions() : void
+    public function test_formatConversions(): void
     {
         $syntax = $this->translator->createApacheVelocity();
 
-        foreach(ShowDateTranslation::$charTable as $phpChar => $javaChar)
-        {
-            if($phpChar === ' ') {
+        foreach (ShowDateTranslation::$charTable as $phpChar => $javaChar) {
+            if ($phpChar === ' ') {
                 continue;
             }
 
             $result = $syntax->translateCommand(Mailcode_Factory::show()->date('FOO.BAR', $phpChar));
 
-            $this->assertStringContainsString($javaChar, $result, 'PHP Char: ['.$phpChar.']');
+            $this->assertStringContainsString($javaChar, $result, 'PHP Char: [' . $phpChar . ']');
         }
     }
 }

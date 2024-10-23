@@ -12,7 +12,7 @@ final class Factory_ShowNumberTests extends FactoryTestCase
         return Mailcode_Commands_Command_ShowNumber::class;
     }
     
-    public function test_showVar() : void
+    public function test_showNumber() : void
     {
         $this->runCommand(
             'Variable name without $',
@@ -25,7 +25,7 @@ final class Factory_ShowNumberTests extends FactoryTestCase
         );
     }
     
-    public function test_showVar_error() : void
+    public function test_showNumber_error() : void
     {
         $this->expectException(Mailcode_Factory_Exception::class);
         

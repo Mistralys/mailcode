@@ -255,4 +255,46 @@ ${CUSTOMER.CUSTOMER_ID}
 
         $this->assertEquals($expected, $result);
     }
+
+    public function test_showPrice_defaults(): void
+    {
+        $subject = '{showprice: $FOO.BAR}';
+
+        $expected = '${money.amount($FOO.BAR, ".").group(",").unit("$", "US").separator(" ")}';
+
+        $syntax = $this->translator->createApacheVelocity();
+        $safeguard = Mailcode::create()->createSafeguard($subject);
+
+        $result = $syntax->translateSafeguard($safeguard);
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function test_showPrice_currencyName(): void
+    {
+        $subject = '{showprice: $FOO.BAR currency-name:}';
+
+        $expected = '${money.amount($FOO.BAR, ".").group(",").unit("USD", "US").separator(" ")}';
+
+        $syntax = $this->translator->createApacheVelocity();
+        $safeguard = Mailcode::create()->createSafeguard($subject);
+
+        $result = $syntax->translateSafeguard($safeguard);
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function test_showPrice_region_variable(): void
+    {
+        $subject = '{showprice: $FOO.BAR region=$FOO.REGION}';
+
+        $expected = '${money.amount($FOO.BAR, ".").group(",").unit("$", $FOO.REGION).separator(" ")}';
+
+        $syntax = $this->translator->createApacheVelocity();
+        $safeguard = Mailcode::create()->createSafeguard($subject);
+
+        $result = $syntax->translateSafeguard($safeguard);
+
+        $this->assertEquals($expected, $result);
+    }
 }

@@ -80,6 +80,16 @@ class Mailcode_Parser_Statement_Info
     }
 
     /**
+     * Retrieves all variables used in the statement.
+     *
+     * @return Mailcode_Parser_Statement_Tokenizer_Token_Variable[]
+     */
+    public function getVariableTokens(): array
+    {
+        return $this->variables->getTokens();
+    }
+
+    /**
      * Retrieves a variable by its position in the command's parameters.
      * Returns null if there is no parameter at the specified index, or
      * if it is of another type.
@@ -309,14 +319,12 @@ class Mailcode_Parser_Statement_Info
         return $this->tokenizer->prependStringLiteral($text);
     }
 
-    public function getTokenByParamName(string $name) : ?Mailcode_Parser_Statement_Tokenizer_Token
+    public function getTokenByParamName(string $name): ?Mailcode_Parser_Statement_Tokenizer_Token
     {
         $tokens = $this->tokenizer->getTokens();
 
-        foreach($tokens as $token)
-        {
-            if($token->getName() === $name)
-            {
+        foreach ($tokens as $token) {
+            if ($token->getName() === $name) {
                 return $token;
             }
         }
@@ -334,7 +342,7 @@ class Mailcode_Parser_Statement_Info
      *
      * @throws Mailcode_Parser_Exception {@see Mailcode_Parser_Statement_Tokenizer::ERROR_TARGET_INSERT_TOKEN_NOT_FOUND}
      */
-    public function setParamName(Mailcode_Parser_Statement_Tokenizer_Token $targetToken, string $name) : Mailcode_Parser_Statement_Tokenizer_Token_ParamName
+    public function setParamName(Mailcode_Parser_Statement_Tokenizer_Token $targetToken, string $name): Mailcode_Parser_Statement_Tokenizer_Token_ParamName
     {
         return $this->tokenizer->injectParamName($targetToken, $name);
     }
@@ -347,7 +355,7 @@ class Mailcode_Parser_Statement_Info
      * @return Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
      * @throws Mailcode_Parser_Exception
      */
-    public function addParamString(string $paramName, string $value) : Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
+    public function addParamString(string $paramName, string $value): Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
     {
         $token = $this->addStringLiteral($value);
         $this->setParamName($token, $paramName);

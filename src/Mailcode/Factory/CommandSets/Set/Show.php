@@ -15,6 +15,7 @@ use Mailcode\Factory\CommandSets\Set\Show\Date;
 use Mailcode\Factory\CommandSets\Set\Show\Encoded;
 use Mailcode\Factory\CommandSets\Set\Show\Number;
 use Mailcode\Factory\CommandSets\Set\Show\Phone;
+use Mailcode\Factory\CommandSets\Set\Show\Price;
 use Mailcode\Factory\CommandSets\Set\Show\Snippet;
 use Mailcode\Factory\CommandSets\Set\Show\URL;
 
@@ -55,9 +56,21 @@ class Mailcode_Factory_CommandSets_Set_Show extends Mailcode_Factory_CommandSets
         return (new Date())->create($variableName, $formatString, $timezoneString, $timezoneVariable);
     }
 
+    public function dateNow(string $formatString = "", string $timezoneString = null, string $timezoneVariable = null): Mailcode_Commands_Command_ShowDate
+    {
+        return (new Date())->now($formatString, $timezoneString, $timezoneVariable);
+    }
+
     public function number(string $variableName, string $formatString = "", bool $absolute = false): Mailcode_Commands_Command_ShowNumber
     {
         return (new Number())->create($variableName, $formatString, $absolute);
+    }
+
+    public function price(string $variableName, bool $absolute = false, bool $withCurrencyName = false,
+                          string $currencyString = null, string $currencyVariable = null,
+                          string $regionString = null, string $regionVariable = null): Mailcode_Commands_Command_ShowPrice
+    {
+        return (new Price())->create($variableName, $absolute, $withCurrencyName, $currencyString, $currencyVariable, $regionString, $regionVariable);
     }
 
     /**
@@ -79,9 +92,9 @@ class Mailcode_Factory_CommandSets_Set_Show extends Mailcode_Factory_CommandSets
      * @return Mailcode_Commands_Command_ShowSnippet
      * @throws Mailcode_Factory_Exception
      */
-    public function snippet(string $snippetName): Mailcode_Commands_Command_ShowSnippet
+    public function snippet(string $snippetName, string $namespace = null): Mailcode_Commands_Command_ShowSnippet
     {
-        return (new Snippet())->create($snippetName);
+        return (new Snippet())->create($snippetName, $namespace);
     }
 
     /**
