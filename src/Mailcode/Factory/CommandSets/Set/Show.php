@@ -79,9 +79,9 @@ class Mailcode_Factory_CommandSets_Set_Show extends Mailcode_Factory_CommandSets
      * @return Mailcode_Commands_Command_ShowSnippet
      * @throws Mailcode_Factory_Exception
      */
-    public function snippet(string $snippetName): Mailcode_Commands_Command_ShowSnippet
+    public function snippet(string $snippetName, string $namespace = null): Mailcode_Commands_Command_ShowSnippet
     {
-        return (new Snippet())->create($snippetName);
+        return (new Snippet())->create($snippetName, $namespace);
     }
 
     /**
