@@ -5,3 +5,10 @@ parameters:
         - ../../tools
         - ../../tests/assets
         - ../../tests/testsuites
+    ignoreErrors:
+        -
+            message: '#Mailcode_Translator::resolveSyntaxClasses\(\) should return array#'
+            path: ../../src/Mailcode/Translator.php
+        -
+            message: '#Strict comparison using === between libphonenumber\\PhoneNumber and null will always evaluate to false#'
+            path: ../../tools/extractPhoneCountries.php
