@@ -1,4 +1,17 @@
-### v3.4.0 - Added ShowPrice command
+## v3.5.0 - Translator changes and class cache (Breaking-L)
+- Translators: Added actual syntax classes that extend `BaseSyntax`.
+- Translators: Added  `SyntaxInterface`.
+- Translators: Syntaxes are now loaded using the class cache.
+- Translators: Added the `SYNTAX_NAME` constant to the syntax classes.
+- Translators: Narrowed the type of the `createApacheVelocity()` method.
+- Translators: Narrowed the type of the `createHubL()` method.
+- Translators: Added the `Mailcode_Translator::create()` factory method.
+
+### Breaking changes
+- It is now mandatory to set a cache folder with `Mailcode::setCacheFolder()`.
+- The Apache velocity and HubL translator syntax classes have been renamed.
+
+## v3.4.0 - Added ShowPrice command
 - Commands: Added the `{showprice}` command to format numbers as prices.
 - Commands: Added the `namespace` parameter in the `{showsnippet}` command.
 - Commands: The date variable is now optional in the `{showdate}` command.
@@ -8,10 +21,10 @@
 - Traits: Added the `RegionTrait`.
 - Dependencies: Updated AppLocalization to [v1.5.0](https://github.com/Mistralys/application-localization/releases/tag/1.5.0).
 
-### v3.3.2 - Minor update
+## v3.3.2 - Minor update
 - HubL: Added type casting to `float` for number comparisons.
 
-### v3.3.1 - Added HubL IF and ELSEIF support
+## v3.3.1 - Added HubL IF and ELSEIF support
 - HubL: Added translation for a subset of `if` and `elseif` commands.
 - HubL: Added `if variable`.
 - HubL: Added `if empty`.
@@ -21,7 +34,7 @@
 - ShowPhone: Updated the phone number examples from the library.
 - Dependencies: Updated LibPhoneNumber to [v8.13.36](https://github.com/giggsey/libphonenumber-for-php/releases/tag/8.13.36).
 
-### v3.3.0 - Hubspot HubL syntax support
+## v3.3.0 - Hubspot HubL syntax support
 - Translator: Added a first iteration of HubL syntax support for a selection of commands.
 - Translator: Namespaced the command translation classes.
 - Tests: Moved PHPStan support files to `tests/phpstan`.
@@ -29,10 +42,10 @@
 - Tests: Partially added strict typing and namespaces.
 - Tests: Implemented PHPStan recommendations in tests.
 
-### v3.2.4 - Minor update
+## v3.2.4 - Minor update
 - Factory: Improved an error message when an invalid command is created.
 
-### v3.2.3 - SetVar and Decryption
+## v3.2.3 - SetVar and Decryption
 - SetVar Command: Fixed the Velocity translation for counting single variables.
 - SetVar Command: Added the `decrypt` parameter.
 - Commands: Added the `DecryptInterface` for commands with decryption capability.
@@ -40,16 +53,16 @@
 - Parser: Added `addParamString()` to the statement info class.
 - Docs: Added encoding and decoding examples.
 
-### v3.2.2 - Fixed a test
+## v3.2.2 - Fixed a test
 - Tests: Fixed a minor highlighting test not updated after v3.2.1.
 
-### v3.2.1 - Minor enhancements
+## v3.2.1 - Minor enhancements
 - Highlighting: Added support for the named parameters.
 - Highlighting: Fixed spacing in tokens, now using the token's `hasSpacing()`.
 - Browser Tools: Added a syntax highlighter to see the highlighting in action.
 - Core: Added `Mailcode::getName()` to get a human-readable package name.
 
-### v3.2.0 - Named parameters support (breaking)
+## v3.2.0 - Named parameters support (breaking)
 - Syntax: Added support for named parameters via `name=value` syntax.
 - ShowDate Command: `timezone:` keyword converted to a named parameter.
 - SetVar Command: `count:` keyword converted to a named parameter.
@@ -64,7 +77,7 @@
 - Error Messages: Added `getCommand()` to fetch the originating command, if any.
 - Factory: Added the `var()` set to access variable related methods.
 
-#### Breaking changes
+### Breaking changes
 
 Some keyword constants were removed because they have been replaced
 with named parameters:
@@ -73,16 +86,16 @@ with named parameters:
 - `TYPE_COUNT`
 - `TYPE_BREAK_AT`
 
-### v3.1.4 - Date formats update
+## v3.1.4 - Date formats update
 - ShowDate Command: Added milliseconds and time zone format support with `e` and `v`.
 
-### v3.1.3 - Velocity translation fix
+## v3.1.3 - Velocity translation fix
 - ListContains Command: Fixed the Velocity regex.
 
-### v3.1.2 - Bugfix release
+## v3.1.2 - Bugfix release
 - Foreach: Fixed the `break-at:` keyword translation to Velocity not using the extended command syntax.
 
-### v3.1.1 - TimeZone update
+## v3.1.1 - TimeZone update
 - ShowDate Command: Fixed the command being considered invalid without a timezone.
 - ShowDate Command: Now using the PHP timezone as default if none is set.
 - ShowDate Command: Added the `timezone:` keyword to specify the timezone.
@@ -91,7 +104,7 @@ with named parameters:
 - Variables: Added `createVariable()` and `createVariableByName()`.
 - Translation: Added missing german translations.
 
-### v3.1.0 - New parameters update
+## v3.1.0 - New parameters update
 - Commands: Added `break-at:` keyword in the `for` command.
 - Commands: Added the `count:` keyword in the `setvar` command.
 - Velocity: Updated the time tool commands.
@@ -102,20 +115,20 @@ with named parameters:
 - Commands: Updated example phone numbers for some countries.
 - Parser: Fixed the tokenizer breaking same name variable mixes ($FOO + $FOO.BAR).
 
-### v3.0.4 - Dependencies update
+## v3.0.4 - Dependencies update
 - Loosened the `mistralys/application-tools` version constraint. 
 
-### v3.0.3 - ShowURL command syntax fix
+## v3.0.3 - ShowURL command syntax fix
 - Fixed the syntax of the `$tracking.url()` command.
 
-### v3.0.2 - Variable name bugfix
+## v3.0.2 - Variable name bugfix
 - Fixed the name of the `$envelope.hash` variable.
 
-### v3.0.1 - IDN encoding update
+## v3.0.1 - IDN encoding update
 - Renamed the IDN encoding methods to `$text.idn` and `$text.unidn`.
 - Added some missing german translations.
 
-### v3.0.0 - PHP 7.4 and new commands 
+## v3.0.0 - PHP 7.4 and new commands 
 
 - Added this changelog file.
 - Safeguard: Added the placeholder collection class to consolidate placeholders access.
@@ -169,7 +182,7 @@ Use the new method `getPlaceholdersCollection()` to access the safeguard's colle
 of placeholders. This class offers handy utility methods for most use cases.
 
 
-### v2.1.7 - Bugfix release
+## v2.1.7 - Bugfix release
 
 - Fixed erroneous detection of commands caused by the literal brackets detection.
 - Parser: Only regex brackets are now supported in string literals.
@@ -177,23 +190,23 @@ of placeholders. This class offers handy utility methods for most use cases.
 - Parser: Moved string preprocessing to a dedicated class.
 
 
-### v2.1.6 - Maintenance release
+## v2.1.6 - Maintenance release
 
 - Updated the `shownumber` command to use the price tool implementation.
 
 
-### v2.1.5 - Minor feature release
+## v2.1.5 - Minor feature release
 
 - Added the `absolute:` keyword to the `shownumber` command, to remove the minus signs of negative numbers.
 - It is now possible to use brackets (`{` and `}`) in string literals, for example for regex expressions in `list-contains`.
 
 
-### v2.1.4 - Minor improvement release
+## v2.1.4 - Minor improvement release
 
 - Added the `nohtml:` keyword to the `showsnippet` command, to turn off newlines to `<br>` tag conversion.
 
 
-### v2.1.3 - Bugfix & minor feature release
+## v2.1.3 - Bugfix & minor feature release
 
 - Fixed some methods not using the price tool instead of the number tool for number conversions.
 - Added constants in the validation interfaces for the validation names.
@@ -202,11 +215,11 @@ of placeholders. This class offers handy utility methods for most use cases.
 - Added support for the `insensitive:` keyword in the `if variable` command.
 
 
-### v2.1.2 - Bugfix release
+## v2.1.2 - Bugfix release
 - Fixed commands with optional parameters losing their parameters when normalized.
 
 
-### v2.1.1 - Phone number feature update
+## v2.1.1 - Phone number feature update
 
 - Improved the handling of countries in the `{showphone}` command.
 - Fixed US and other countries missing from the supported countries list.
@@ -214,7 +227,7 @@ of placeholders. This class offers handy utility methods for most use cases.
 - Added example phone numbers for all countries.
 
 
-### v2.1.0 - Phone formatting feature release
+## v2.1.0 - Phone formatting feature release
 
 - Commands: Added the `{showphone}` command to convert phone numbers to E164 format.
 - Translation: Added the translator web tool under `/tools/translator.php`.
@@ -225,7 +238,7 @@ of placeholders. This class offers handy utility methods for most use cases.
 - Exception: Added the `getCollection()` method to get the related collection instance if available.
 
 
-### v2.0.0 - Nesting and preprocessing feature release
+## v2.0.0 - Nesting and preprocessing feature release
 
 - Added preprocessing capability with the new PreProcessor class.
 - All opening, closing and sibling commands now have methods to retrieve the related commands.
