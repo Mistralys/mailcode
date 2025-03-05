@@ -7,6 +7,7 @@
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
 
+use AppUtils\FileHelper\FolderInfo;
 use Mailcode\Mailcode;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -30,7 +31,7 @@ if(!file_exists($autoloader))
 require_once $autoloader;
 
 $logger = new Logger('mailcode-testsuites');
-
 $logger->pushHandler(new StreamHandler('php://stdout', Logger::DEBUG));
 
 Mailcode::setLogger($logger);
+Mailcode::setCacheFolder(FolderInfo::factory(__DIR__.'/cache'));
