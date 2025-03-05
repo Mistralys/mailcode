@@ -2,7 +2,7 @@
 
 cls
 
-set Level=9
+set /p Level=<level.txt
 
 echo -------------------------------------------------------
 echo RUNNING PHPSTAN ANALYSIS @ LEVEL %Level%
