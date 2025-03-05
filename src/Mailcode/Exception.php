@@ -1,10 +1,7 @@
 <?php
 /**
- * File containing the {@see \Mailcode\Mailcode_Exception} class.
- *
  * @package Mailcode
  * @subpackage Core
- * @see \Mailcode\Mailcode_Exception
  */
 
 namespace Mailcode;
@@ -20,6 +17,8 @@ use AppUtils\BaseException;
  */
 class Mailcode_Exception extends BaseException
 {
+    public const ERROR_CACHE_FOLDER_NOT_SET = 173901;
+
     public function __construct(string $message, ?string $details = null, $code = null, $previous = null)
     {
         if(defined('TESTS_ROOT') && !empty($details)) {
