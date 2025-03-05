@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package Mailcode
+ * @subpackage Commands
+ */
 
 declare(strict_types=1);
 
