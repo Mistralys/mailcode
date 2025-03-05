@@ -53,13 +53,9 @@ final class Variables_VariablesTests extends MailcodeTestCase
         $merged = $collection1->mergeWith($collection2);
         
         $this->assertInstanceOf(Mailcode_Variables_Collection_Regular::class, $merged);
-        
-        if($merged instanceof Mailcode_Variables_Collection_Regular)
-        {
-            $this->assertSame(3, $merged->countVariables());
-            $this->assertSame(2, count($merged->getGroupedByName()));
-            $this->assertSame(1, $merged->getInvalid()->countVariables());
-        }
+        $this->assertSame(3, $merged->countVariables());
+        $this->assertCount(2, $merged->getGroupedByName());
+        $this->assertSame(1, $merged->getInvalid()->countVariables());
     }
     
     public function test_collection_commandVariables() : void

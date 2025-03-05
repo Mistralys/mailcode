@@ -22,6 +22,7 @@ use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Number;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Variable;
 use Mailcode\Mailcode_Variables_Variable;
+use function AppUtils\parseVariable;
 use function Mailcode\t;
 
 /**
@@ -100,7 +101,7 @@ trait BreakAtTrait
     }
 
     /**
-     * @param Mailcode_Variables_Variable|number|NULL $breakAt
+     * @param Mailcode_Variables_Variable|number|mixed|NULL $breakAt
      * @return $this
      * @throws CommandException {@see BreakAtInterface::ERROR_INVALID_BREAK_AT_VALUE}
      * @throws ParamsException
@@ -143,8 +144,8 @@ trait BreakAtTrait
         throw new CommandException(
             'Invalid break-at value',
             sprintf(
-                'Expected a number or variable, got: %s',
-                $breakAt instanceof Mailcode_Variables_Variable ? $breakAt->getFullName() : $breakAt
+                'Expected a number or variable, got: [%s].',
+                parseVariable($breakAt)->enableType()->toString()
             ),
             BreakAtInterface::ERROR_INVALID_BREAK_AT_VALUE
         );

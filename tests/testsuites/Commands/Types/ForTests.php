@@ -135,9 +135,6 @@ final class ForTests extends MailcodeTestCase
     {
         $cmd = Mailcode_Factory::misc()->for('SOURCE', 'LOOP');
 
-        $this->assertNotNull($cmd->getSourceVariable());
-        $this->assertNotNull($cmd->getLoopVariable());
-
         $this->assertEquals('$SOURCE', $cmd->getSourceVariable()->getFullName());
         $this->assertEquals('$LOOP', $cmd->getLoopVariable()->getFullName());
     }

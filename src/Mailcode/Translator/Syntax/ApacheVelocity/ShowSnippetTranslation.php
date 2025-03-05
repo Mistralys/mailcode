@@ -16,8 +16,8 @@ use function Mailcode\undollarize;
 /**
  * Translates the {@see Mailcode_Commands_Command_ShowSnippet} command to Apache Velocity.
  *
- * NOTE: Requires the `EscapeTool` VTL tool to be enabled
- * for the templates.
+ * > NOTE: Requires the `EscapeTool` VTL tool to be enabled
+ * > for the templates.
  *
  * @package Mailcode
  * @subpackage Translator
@@ -32,7 +32,7 @@ class ShowSnippetTranslation extends BaseApacheVelocityCommandTranslation implem
         $varName = undollarize($command->getVariableName());
 
         if ($command->isNamespacePresent()) {
-            $namespace = $command->getNamespaceToken()->getText();
+            $namespace = $command->requireNamespaceToken()->getText();
             $statement = sprintf('dictionary.namespace("%s").name("%s")', $namespace, $varName);
         } else {
             $statement = sprintf('dictionary.global("%s")', $varName);

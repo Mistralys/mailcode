@@ -1,10 +1,7 @@
 <?php
 /**
- * File containing the {@see Mailcode_StringContainer} class.
- *
  * @package Mailcode
  * @subpackage Parser
- * @see Mailcode_StringContainer
  */
 
 declare(strict_types=1);
@@ -131,7 +128,7 @@ class Mailcode_StringContainer
     * Adds a listener that will be informed every time the string is modified.
     * The callback gets the string container instance as parameter.
     * 
-    * @param callable $callback
+    * @param callable|mixed $callback
     * @throws Mailcode_Exception If it is not a valid callable.
     * @return int The listener number, to be able to remove it using `removeListener()`.
     * 

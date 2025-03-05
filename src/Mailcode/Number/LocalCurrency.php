@@ -20,8 +20,8 @@ class Mailcode_Number_LocalCurrency extends OperationResult
     private string $unitSeparator;
     private string $formatString;
 
-    private ?Mailcode_Parser_Statement_Tokenizer_Token_Variable $currency = null;
-    private ?Mailcode_Parser_Statement_Tokenizer_Token_Variable $region = null;
+    private ?Mailcode_Parser_Statement_Tokenizer_Token $currency;
+    private ?Mailcode_Parser_Statement_Tokenizer_Token $region;
 
     private static ?Mailcode_Number_LocalCurrency $instance = null;
 
@@ -31,8 +31,8 @@ class Mailcode_Number_LocalCurrency extends OperationResult
      * @param string $currencySymbol
      * @param string $unitSeparator
      * @param string $formatString
-     * @param ?Mailcode_Parser_Statement_Tokenizer_Token $currency
-     * @param ?Mailcode_Parser_Statement_Tokenizer_Token $region
+     * @param Mailcode_Parser_Statement_Tokenizer_Token|NULL $currency
+     * @param Mailcode_Parser_Statement_Tokenizer_Token|NULL $region
      */
     public function __construct(string                                     $country,
                                 string                                     $currencyName,
@@ -42,6 +42,8 @@ class Mailcode_Number_LocalCurrency extends OperationResult
                                 ?Mailcode_Parser_Statement_Tokenizer_Token $currency = null,
                                 ?Mailcode_Parser_Statement_Tokenizer_Token $region = null)
     {
+        parent::__construct();
+
         $this->country = $country;
         $this->currencyName = $currencyName;
         $this->currencySymbol = $currencySymbol;

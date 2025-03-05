@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use AppUtils\ArrayDataCollection;
 use AppUtils\FileHelper;
 use AppUtils\FileHelper_Exception;
 
@@ -150,14 +151,12 @@ class Mailcode_Commands_Command_ShowPhone extends Mailcode_Commands_ShowBase
                 continue;
             }
 
-            $label = $def['label'] ?? '';
-            $local = $def['local'] ?? '';
-            $int = $def['international'] ?? '';
+            $data = ArrayDataCollection::create($def);
 
             $result[$idx] = array(
-                'label' => (string)$label,
-                'local' => (string)$local,
-                'international' => (string)$int
+                'label' => $data->getString('label'),
+                'local' => $data->getString('local'),
+                'international' => $data->getString('international')
             );
         }
 

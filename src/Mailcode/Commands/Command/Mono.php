@@ -1,10 +1,7 @@
 <?php
 /**
- * File containing the {@see \Mailcode\Mailcode_Commands_Command_Mono} class.
- *
- * @see \Mailcode\Mailcode_Commands_Command_Mono
- *@subpackage Commands
  * @package Mailcode
+ * @subpackage Commands
  */
 
 declare(strict_types=1);
@@ -29,6 +26,7 @@ class Mailcode_Commands_Command_Mono
 {
     use Mailcode_Traits_Commands_Validation_Multiline;
     use Mailcode_Traits_Commands_Type_Opening;
+    use Mailcode_Traits_Commands_PreProcessing;
 
     public const ERROR_INVALID_CSS_CLASS_NAME = 82201;
 

@@ -1,10 +1,7 @@
 <?php
 /**
- * File containing the {@see Mailcode_Commands_Command} class.
- *
  * @package Mailcode
  * @subpackage Commands
- * @see Mailcode_Commands_Command
  */
 
 declare(strict_types=1);
@@ -30,16 +27,14 @@ class Mailcode_Commands_LogicKeywords extends OperationResult
     
     public const VALIDATION_CANNOT_MIX_LOGIC_KEYWORDS = 60701;
     public const VALIDATION_INVALID_SUB_COMMAND = 60702;
-    
-   /**
-    * @var string
-    */
-    private $paramsString;
+    public const ERROR_KEYWORD_SUBSTRING_NOT_FOUND = 60503;
+
+    private string $paramsString;
     
    /**
     * @var string[]
     */
-    private $names = array(
+    private array $names = array(
         'and', 
         'or'
     );
@@ -47,12 +42,9 @@ class Mailcode_Commands_LogicKeywords extends OperationResult
    /**
     * @var Mailcode_Commands_LogicKeywords_Keyword[]
     */
-    private $keywords = array();
+    private array $keywords = array();
     
-   /**
-    * @var string
-    */
-    private $mainParams = '';
+    private string $mainParams = '';
     
     public function __construct(Mailcode_Commands_Command $command, string $paramsString)
     {
@@ -73,14 +65,13 @@ class Mailcode_Commands_LogicKeywords extends OperationResult
     {
         foreach($this->names as $name)
         {
-            if(!stristr($this->paramsString, $name))
-            {
+            if(stripos($this->paramsString, $name) === false) {
                 continue;
             }
-            
-            $this->keywords = array_merge(
-                $this->keywords, 
-                $this->detectKeywords($name)
+
+            array_push(
+                $this->keywords,
+                ...$this->detectKeywords($name)
             );
         }
     }
@@ -152,7 +143,7 @@ class Mailcode_Commands_LogicKeywords extends OperationResult
         
         $stack[] = $params;
         
-        $this->mainParams = array_shift($stack);
+        $this->mainParams = (string)array_shift($stack);
         
         return $stack;
     }
@@ -181,6 +172,16 @@ class Mailcode_Commands_LogicKeywords extends OperationResult
         $length = strlen($search);
         
         $store = substr($params, 0, $pos);
+
+        if($store === false)
+        {
+            throw new Mailcode_Exception(
+                'Keyword substring not found',
+                null,
+                self::ERROR_KEYWORD_SUBSTRING_NOT_FOUND
+            );
+        }
+
         $params = trim(substr($params, $pos+$length));
         
         $stack[] = $store;
@@ -212,8 +213,7 @@ class Mailcode_Commands_LogicKeywords extends OperationResult
         {
             $name = $keyword->getName();
             
-            if(!in_array($name, $names))
-            {
+            if(!in_array($name, $names, true)) {
                 $names[] = $name;
             }
         }
@@ -222,8 +222,8 @@ class Mailcode_Commands_LogicKeywords extends OperationResult
     }
     
    /**
-    * Retrieves all keywords that were detected in the
-    * command's parameters string, if any.
+    * Retrieves all keywords detected in the
+    * command's parameter string, if any.
     * 
     * @return Mailcode_Commands_LogicKeywords_Keyword[]
     */
@@ -245,8 +245,7 @@ class Mailcode_Commands_LogicKeywords extends OperationResult
         $matches = array();
         preg_match_all($regex, $this->paramsString, $matches, PREG_PATTERN_ORDER);
         
-        if(!isset($matches[0][0]) || empty($matches[0][0]))
-        {
+        if(empty($matches[0][0])) {
             return array();
         }
         
