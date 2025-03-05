@@ -1,10 +1,7 @@
 <?php
 /**
- * File containing the {@see \Mailcode\Mailcode_Translator} class.
- *
  * @package Mailcode
  * @subpackage Translator
- * @see \Mailcode\Mailcode_Translator
  */
 
 declare(strict_types=1);
@@ -52,14 +49,20 @@ class Mailcode_Translator
         );
     }
 
-    public function createApacheVelocity() : Syntax
+    public function createApacheVelocity() : ApacheVelocity
     {
-        return $this->createSyntax(ClassHelper::getClassTypeName(ApacheVelocity::class));
+        return ClassHelper::requireObjectInstanceOf(
+            ApacheVelocity::class,
+            $this->createSyntax(ApacheVelocity::SYNTAX_NAME)
+        );
     }
 
-    public function createHubL() : Syntax
+    public function createHubL() : HubL
     {
-        return $this->createSyntax(ClassHelper::getClassTypeName(HubL::class));
+        return ClassHelper::requireObjectInstanceOf(
+            HubL::class,
+            $this->createSyntax(HubL::SYNTAX_NAME)
+        );
     }
 
     /**
