@@ -6,6 +6,9 @@
 - Translators: Narrowed the type of the `createApacheVelocity()` method.
 - Translators: Narrowed the type of the `createHubL()` method.
 - Translators: Added the `Mailcode_Translator::create()` factory method.
+- ShowPhone: Updated some example phone numbers from PhoneLib.
+- Code: Minor code tweaks for PHPStan recommendations.
+- Code: PHPStan clean @ level 9.
 
 ### Breaking changes
 - It is now mandatory to set a cache folder with `Mailcode::setCacheFolder()`.
