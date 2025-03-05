@@ -10,7 +10,7 @@ namespace Mailcode\Translator\Syntax\ApacheVelocity;
 
 use Mailcode\Mailcode_Commands_Command_ShowPrice;
 use Mailcode\Mailcode_Translator_Command_ShowPrice;
-use Mailcode\Translator\Syntax\ApacheVelocity;
+use Mailcode\Translator\Syntax\BaseApacheVelocityCommandTranslation;
 
 /**
  * Translates the {@see Mailcode_Commands_Command_ShowPrice} command to Apache Velocity.
@@ -19,7 +19,7 @@ use Mailcode\Translator\Syntax\ApacheVelocity;
  * @subpackage Translator
  * @author Olaf Böcker <olaf.boecker@ionos.com>
  */
-class ShowPriceTranslation extends ApacheVelocity implements Mailcode_Translator_Command_ShowPrice
+class ShowPriceTranslation extends BaseApacheVelocityCommandTranslation implements Mailcode_Translator_Command_ShowPrice
 {
     public function translate(Mailcode_Commands_Command_ShowPrice $command): string
     {

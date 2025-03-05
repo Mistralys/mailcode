@@ -26,7 +26,7 @@ use Mailcode\Mailcode_Commands_Command_If_NotEmpty;
 use Mailcode\Mailcode_Commands_Command_If_SmallerThan;
 use Mailcode\Mailcode_Commands_Command_If_Variable;
 use Mailcode\Mailcode_Translator_Command_If;
-use Mailcode\Translator\Syntax\HubL;
+use Mailcode\Translator\Syntax\BaseHubLCommandTranslation;
 use Mailcode\Translator\Syntax\HubL\Base\AbstractIfBase;
 
 /**

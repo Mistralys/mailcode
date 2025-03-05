@@ -12,7 +12,7 @@ use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands_Command_ShowURL;
 use Mailcode\Mailcode_Exception;
 use Mailcode\Mailcode_Translator_Exception;
-use Mailcode\Translator\Syntax\ApacheVelocity;
+use Mailcode\Translator\Syntax\BaseApacheVelocityCommandTranslation;
 use Mailcode\Translator\Command\ShowURLInterface;
 
 /**
@@ -22,7 +22,7 @@ use Mailcode\Translator\Command\ShowURLInterface;
  * @subpackage Translator
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class ShowURLTranslation extends ApacheVelocity implements ShowURLInterface
+class ShowURLTranslation extends BaseApacheVelocityCommandTranslation implements ShowURLInterface
 {
     public const URL_VAR_TEMPLATE = 'url_tpl%03d';
 

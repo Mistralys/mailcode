@@ -10,7 +10,7 @@ namespace Mailcode\Translator\Syntax\ApacheVelocity;
 
 use Mailcode\Mailcode_Commands_Command_For;
 use Mailcode\Mailcode_Translator_Command_For;
-use Mailcode\Translator\Syntax\ApacheVelocity;
+use Mailcode\Translator\Syntax\BaseApacheVelocityCommandTranslation;
 
 /**
  * Translates the {@see Mailcode_Commands_Command_For} command to Apache Velocity.
@@ -19,7 +19,7 @@ use Mailcode\Translator\Syntax\ApacheVelocity;
  * @subpackage Translator
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class ForTranslation extends ApacheVelocity implements Mailcode_Translator_Command_For
+class ForTranslation extends BaseApacheVelocityCommandTranslation implements Mailcode_Translator_Command_For
 {
     public function translate(Mailcode_Commands_Command_For $command): string
     {

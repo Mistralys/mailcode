@@ -15,7 +15,7 @@ use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Variable;
 use Mailcode\Mailcode_Translator_Command_ShowDate;
 use Mailcode\Mailcode_Translator_Exception;
-use Mailcode\Translator\Syntax\ApacheVelocity;
+use Mailcode\Translator\Syntax\BaseApacheVelocityCommandTranslation;
 use function Mailcode\undollarize;
 
 /**
@@ -25,7 +25,7 @@ use function Mailcode\undollarize;
  * @subpackage Translator
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class ShowDateTranslation extends ApacheVelocity implements Mailcode_Translator_Command_ShowDate
+class ShowDateTranslation extends BaseApacheVelocityCommandTranslation implements Mailcode_Translator_Command_ShowDate
 {
     public const ERROR_UNKNOWN_DATE_FORMAT_CHARACTER = 55501;
     public const ERROR_UNHANDLED_TIME_ZONE_TOKEN_TYPE = 55502;

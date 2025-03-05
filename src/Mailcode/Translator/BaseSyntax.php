@@ -1,10 +1,7 @@
 <?php
 /**
- * File containing the {@see \Mailcode\Translator\Syntax} class.
- *
  * @package Mailcode
  * @subpackage Translator
- * @see \Mailcode\Translator\Syntax
  */
 
 declare(strict_types=1);
@@ -15,6 +12,7 @@ use Mailcode\Mailcode_Commands_Command;
 use Mailcode\Mailcode_Exception;
 use Mailcode\Mailcode_Parser_Safeguard;
 use Mailcode\Mailcode_Translator_Exception;
+use Mailcode\Translator\Syntax\ApacheVelocitySyntax;
 
 /**
  * Abstract base class for a translator syntax, allowing the translation
@@ -24,51 +22,24 @@ use Mailcode\Mailcode_Translator_Exception;
  * @subpackage Translator
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class Syntax
+abstract class BaseSyntax implements SyntaxInterface
 {
     public const ERROR_UNKNOWN_COMMAND_TYPE = 50401;
     public const ERROR_INVALID_COMMAND_INSTANCE = 50402;
-    
-   /**
-    * @var string
-    */
-    protected string $typeID;
-    
-    public function __construct(string $typeID)
-    {
-        $this->typeID = $typeID;
-    }
-    
-   /**
-    * Retrieves the syntax's type ID, e.g. "ApacheVelocity".
-    * @return string
-    */
-    public function getTypeID() : string
-    {
-        return $this->typeID;
-    }
-    
-   /**
-    * Translates a single command to the target syntax.
-    * 
-    * @param Mailcode_Commands_Command $command
-    * @throws Mailcode_Translator_Exception
-    * @return string
-    */
+
     public function translateCommand(Mailcode_Commands_Command $command) : string
     {
         return $this->createTranslator($command)->translate($command);
     }
 
     /**
-     * @param Mailcode_Commands_Command $command
-     * @return BaseCommandTranslation
+     * @inheritDoc
      * @throws Mailcode_Translator_Exception
      */
     public function createTranslator(Mailcode_Commands_Command $command) : BaseCommandTranslation
     {
         $class = sprintf(
-            __CLASS__ .'\%s\%sTranslation',
+            'Mailcode\Translator\Syntax\%s\%sTranslation',
             $this->getTypeID(),
             $command->getID()
         );
@@ -85,7 +56,7 @@ class Syntax
             );
         }
         
-        $translator = new $class($command);
+        $translator = new $class($this);
 
         if($translator instanceof BaseCommandTranslation)
         {
@@ -103,11 +74,7 @@ class Syntax
     }
 
     /**
-     * Translates all safeguarded commands in the subject string to the
-     * target syntax in one go.
-     *
-     * @param Mailcode_Parser_Safeguard $safeguard
-     * @return string
+     * @inheritDoc
      * @throws Mailcode_Exception
      * @throws Mailcode_Translator_Exception
      */

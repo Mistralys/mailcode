@@ -10,7 +10,7 @@ namespace Mailcode\Translator\Syntax\ApacheVelocity;
 
 use Mailcode\Mailcode_Commands_Command_Break;
 use Mailcode\Mailcode_Translator_Command_Break;
-use Mailcode\Translator\Syntax\ApacheVelocity;
+use Mailcode\Translator\Syntax\BaseApacheVelocityCommandTranslation;
 
 /**
  * Translates the {@see Mailcode_Commands_Command_Break} command to Apache Velocity.
@@ -19,7 +19,7 @@ use Mailcode\Translator\Syntax\ApacheVelocity;
  * @subpackage Translator
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class BreakTranslation extends ApacheVelocity implements Mailcode_Translator_Command_Break
+class BreakTranslation extends BaseApacheVelocityCommandTranslation implements Mailcode_Translator_Command_Break
 {
     public function translate(Mailcode_Commands_Command_Break $command): string
     {

@@ -11,7 +11,7 @@ namespace Mailcode\Translator\Syntax\ApacheVelocity;
 use Mailcode\Mailcode_Commands_Command_SetVariable;
 use Mailcode\Mailcode_Exception;
 use Mailcode\Mailcode_Translator_Command_SetVariable;
-use Mailcode\Translator\Syntax\ApacheVelocity;
+use Mailcode\Translator\Syntax\BaseApacheVelocityCommandTranslation;
 use function Mailcode\dollarize;
 
 /**
@@ -21,7 +21,7 @@ use function Mailcode\dollarize;
  * @subpackage Translator
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class SetVariableTranslation extends ApacheVelocity implements Mailcode_Translator_Command_SetVariable
+class SetVariableTranslation extends BaseApacheVelocityCommandTranslation implements Mailcode_Translator_Command_SetVariable
 {
     /**
      * @param Mailcode_Commands_Command_SetVariable $command

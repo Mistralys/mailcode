@@ -14,7 +14,7 @@ use Mailcode\Mailcode_Commands_LogicKeywords_Keyword;
 use Mailcode\Mailcode_Exception;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
 use Mailcode\Mailcode_Variables_Variable;
-use Mailcode\Translator\Syntax\ApacheVelocity;
+use Mailcode\Translator\Syntax\BaseApacheVelocityCommandTranslation;
 use Mailcode\Translator\Syntax\ApacheVelocity\Contains\ContainsStatementBuilder;
 
 /**
@@ -24,7 +24,7 @@ use Mailcode\Translator\Syntax\ApacheVelocity\Contains\ContainsStatementBuilder;
  * @subpackage Translator
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-abstract class AbstractIfBase extends ApacheVelocity
+abstract class AbstractIfBase extends BaseApacheVelocityCommandTranslation
 {
     public const ERROR_CANNOT_GET_KEYWORD_SIGN = 60801;
     public const ERROR_INVALID_KEYWORD_COMMAND_TYPE = 60802;

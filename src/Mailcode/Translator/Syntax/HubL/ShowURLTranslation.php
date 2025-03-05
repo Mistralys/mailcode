@@ -11,8 +11,8 @@ namespace Mailcode\Translator\Syntax\HubL;
 use AppUtils\ConvertHelper;
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands_Command_ShowURL;
-use Mailcode\Translator\Syntax\ApacheVelocity;
-use Mailcode\Translator\Syntax\HubL;
+use Mailcode\Translator\Syntax\BaseApacheVelocityCommandTranslation;
+use Mailcode\Translator\Syntax\BaseHubLCommandTranslation;
 use Mailcode\Translator\Command\ShowURLInterface;
 use testsuites\Translator\HubL\ShowURLTests;
 
@@ -25,7 +25,7 @@ use testsuites\Translator\HubL\ShowURLTests;
  *
  * @see ShowURLTests
  */
-class ShowURLTranslation extends HubL implements ShowURLInterface
+class ShowURLTranslation extends BaseHubLCommandTranslation implements ShowURLInterface
 {
     public function translate(Mailcode_Commands_Command_ShowURL $command) : string
     {

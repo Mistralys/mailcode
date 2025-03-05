@@ -22,20 +22,8 @@ use function Mailcode\undollarize;
  * @subpackage Translator
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-abstract class HubL extends BaseCommandTranslation
+abstract class BaseHubLCommandTranslation extends BaseCommandTranslation
 {
-    public const SYNTAX_NAME = 'HubL';
-    
-    public function getLabel(): string
-    {
-        return 'Hubspot HubL';
-    }
-
-    public function getSyntaxName(): string
-    {
-        return self::SYNTAX_NAME;
-    }
-
     public static function areVariableNamesLowercase() : bool
     {
         return true;

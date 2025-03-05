@@ -11,7 +11,7 @@ namespace Mailcode\Translator\Syntax\ApacheVelocity;
 use Mailcode\Mailcode_Commands_Command_Code;
 use Mailcode\Mailcode_Exception;
 use Mailcode\Mailcode_Translator_Command_Code;
-use Mailcode\Translator\Syntax\ApacheVelocity;
+use Mailcode\Translator\Syntax\BaseApacheVelocityCommandTranslation;
 
 /**
  * Translates the {@see Mailcode_Commands_Command_Code} command to Apache Velocity.
@@ -20,7 +20,7 @@ use Mailcode\Translator\Syntax\ApacheVelocity;
  * @subpackage Translator
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class CodeTranslation extends ApacheVelocity implements Mailcode_Translator_Command_Code
+class CodeTranslation extends BaseApacheVelocityCommandTranslation implements Mailcode_Translator_Command_Code
 {
     private string $template = <<<'EOD'
 #**

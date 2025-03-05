@@ -10,7 +10,7 @@ namespace Mailcode\Translator\Syntax\ApacheVelocity;
 
 use Mailcode\Mailcode_Commands_Command_ShowSnippet;
 use Mailcode\Mailcode_Translator_Command_ShowSnippet;
-use Mailcode\Translator\Syntax\ApacheVelocity;
+use Mailcode\Translator\Syntax\BaseApacheVelocityCommandTranslation;
 use function Mailcode\undollarize;
 
 /**
@@ -25,7 +25,7 @@ use function Mailcode\undollarize;
  *
  * @see https://velocity.apache.org/tools/devel/apidocs/org/apache/velocity/tools/generic/EscapeTool.html
  */
-class ShowSnippetTranslation extends ApacheVelocity implements Mailcode_Translator_Command_ShowSnippet
+class ShowSnippetTranslation extends BaseApacheVelocityCommandTranslation implements Mailcode_Translator_Command_ShowSnippet
 {
     public function translate(Mailcode_Commands_Command_ShowSnippet $command): string
     {

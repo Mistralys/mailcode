@@ -10,7 +10,7 @@ namespace Mailcode\Translator\Syntax\ApacheVelocity;
 
 use Mailcode\Mailcode_Commands_Command_ShowPhone;
 use Mailcode\Mailcode_Translator_Command_ShowPhone;
-use Mailcode\Translator\Syntax\ApacheVelocity;
+use Mailcode\Translator\Syntax\BaseApacheVelocityCommandTranslation;
 use function Mailcode\dollarize;
 use function Mailcode\undollarize;
 
@@ -21,7 +21,7 @@ use function Mailcode\undollarize;
  * @subpackage Translator
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class ShowPhoneTranslation extends ApacheVelocity implements Mailcode_Translator_Command_ShowPhone
+class ShowPhoneTranslation extends BaseApacheVelocityCommandTranslation implements Mailcode_Translator_Command_ShowPhone
 {
     public function translate(Mailcode_Commands_Command_ShowPhone $command): string
     {

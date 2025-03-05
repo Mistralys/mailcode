@@ -14,7 +14,7 @@ use Mailcode\Mailcode_Commands_LogicKeywords_Keyword;
 use Mailcode\Mailcode_Exception;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
 use Mailcode\Mailcode_Variables_Variable;
-use Mailcode\Translator\Syntax\HubL;
+use Mailcode\Translator\Syntax\BaseHubLCommandTranslation;
 
 /**
  * Abstract base class for the IF/ELSEIF command translation classes.
@@ -23,7 +23,7 @@ use Mailcode\Translator\Syntax\HubL;
  * @subpackage Translator
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-abstract class AbstractIfBase extends HubL
+abstract class AbstractIfBase extends BaseHubLCommandTranslation
 {
     public const ERROR_CANNOT_GET_KEYWORD_SIGN = 60801;
     public const ERROR_INVALID_KEYWORD_COMMAND_TYPE = 60802;

@@ -13,7 +13,7 @@ use Mailcode\Mailcode_Commands_Command_For;
 use Mailcode\Mailcode_Commands_IfBase;
 use Mailcode\Mailcode_Interfaces_Commands_PreProcessing;
 use Mailcode\Mailcode_Translator_Command_End;
-use Mailcode\Translator\Syntax\HubL;
+use Mailcode\Translator\Syntax\BaseHubLCommandTranslation;
 
 /**
  * Translates the {@see Mailcode_Commands_Command_End} command to HubL.
@@ -22,7 +22,7 @@ use Mailcode\Translator\Syntax\HubL;
  * @subpackage Translator
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class EndTranslation extends HubL implements Mailcode_Translator_Command_End
+class EndTranslation extends BaseHubLCommandTranslation implements Mailcode_Translator_Command_End
 {
     public function translate(Mailcode_Commands_Command_End $command): string
     {

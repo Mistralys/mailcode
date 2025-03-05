@@ -10,7 +10,7 @@ namespace Mailcode\Translator\Syntax\HubL;
 
 use Mailcode\Mailcode_Commands_Command_Code;
 use Mailcode\Mailcode_Translator_Command_Code;
-use Mailcode\Translator\Syntax\HubL;
+use Mailcode\Translator\Syntax\BaseHubLCommandTranslation;
 
 /**
  * Translates the {@see Mailcode_Commands_Command_Code} command to HubL.
@@ -19,7 +19,7 @@ use Mailcode\Translator\Syntax\HubL;
  * @subpackage Translator
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class CodeTranslation extends HubL implements Mailcode_Translator_Command_Code
+class CodeTranslation extends BaseHubLCommandTranslation implements Mailcode_Translator_Command_Code
 {
     private string $template = <<<'EOD'
 {#

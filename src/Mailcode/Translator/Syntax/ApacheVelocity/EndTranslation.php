@@ -11,7 +11,7 @@ namespace Mailcode\Translator\Syntax\ApacheVelocity;
 use Mailcode\Mailcode_Commands_Command_End;
 use Mailcode\Mailcode_Interfaces_Commands_PreProcessing;
 use Mailcode\Mailcode_Translator_Command_End;
-use Mailcode\Translator\Syntax\ApacheVelocity;
+use Mailcode\Translator\Syntax\BaseApacheVelocityCommandTranslation;
 
 /**
  * Translates the {@see Mailcode_Commands_Command_End} command to Apache Velocity.
@@ -20,7 +20,7 @@ use Mailcode\Translator\Syntax\ApacheVelocity;
  * @subpackage Translator
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class EndTranslation extends ApacheVelocity implements Mailcode_Translator_Command_End
+class EndTranslation extends BaseApacheVelocityCommandTranslation implements Mailcode_Translator_Command_End
 {
     public function translate(Mailcode_Commands_Command_End $command): string
     {

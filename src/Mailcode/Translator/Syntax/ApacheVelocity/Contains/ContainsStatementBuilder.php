@@ -7,7 +7,7 @@ namespace Mailcode\Translator\Syntax\ApacheVelocity\Contains;
 use Mailcode\Mailcode_Exception;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
 use Mailcode\Mailcode_Variables_Variable;
-use Mailcode\Translator\Syntax\ApacheVelocity;
+use Mailcode\Translator\Syntax\BaseApacheVelocityCommandTranslation;
 use function Mailcode\dollarize;
 use function Mailcode\undollarize;
 
@@ -18,7 +18,7 @@ class ContainsStatementBuilder
     private Mailcode_Variables_Variable $variable;
     private bool $caseSensitive;
     private string $containsType;
-    private ApacheVelocity $translator;
+    private BaseApacheVelocityCommandTranslation $translator;
     private bool $regexEnabled;
 
     /**
@@ -28,14 +28,14 @@ class ContainsStatementBuilder
 
     /**
      * Mailcode_Translator_Syntax_ApacheVelocity_Contains_StatementBuilder constructor.
-     * @param ApacheVelocity $translator
+     * @param BaseApacheVelocityCommandTranslation $translator
      * @param Mailcode_Variables_Variable $variable
      * @param bool $caseSensitive
      * @param bool $regexEnabled
      * @param Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral[] $searchTerms
      * @param string $containsType
      */
-    public function __construct(ApacheVelocity $translator, Mailcode_Variables_Variable $variable, bool $caseSensitive, bool $regexEnabled, array $searchTerms, string $containsType)
+    public function __construct(BaseApacheVelocityCommandTranslation $translator, Mailcode_Variables_Variable $variable, bool $caseSensitive, bool $regexEnabled, array $searchTerms, string $containsType)
     {
         $this->translator = $translator;
         $this->variable = $variable;

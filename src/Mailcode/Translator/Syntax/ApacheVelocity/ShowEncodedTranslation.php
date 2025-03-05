@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Mailcode\Translator\Syntax\ApacheVelocity;
 
 use Mailcode\Mailcode_Commands_Command_ShowEncoded;
-use Mailcode\Translator\Syntax\ApacheVelocity;
+use Mailcode\Translator\Syntax\BaseApacheVelocityCommandTranslation;
 use Mailcode\Translator\Command\ShowEncodedInterface;
 
 /**
@@ -19,7 +19,7 @@ use Mailcode\Translator\Command\ShowEncodedInterface;
  * @subpackage Translator
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class ShowEncodedTranslation extends ApacheVelocity implements ShowEncodedInterface
+class ShowEncodedTranslation extends BaseApacheVelocityCommandTranslation implements ShowEncodedInterface
 {
     public function translate(Mailcode_Commands_Command_ShowEncoded $command) : string
     {

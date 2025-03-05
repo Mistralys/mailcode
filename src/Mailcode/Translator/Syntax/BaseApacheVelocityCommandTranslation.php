@@ -1,10 +1,7 @@
 <?php
 /**
- * File containing the {@see \Mailcode\Translator\Syntax\ApacheVelocity} class.
- *
  * @package Mailcode
  * @subpackage Translator
- * @see \Mailcode\Translator\Syntax\ApacheVelocity
  */
 
 declare(strict_types=1);
@@ -28,10 +25,8 @@ use function Mailcode\dollarize;
  * @subpackage Translator
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-abstract class ApacheVelocity extends BaseCommandTranslation
+abstract class BaseApacheVelocityCommandTranslation extends BaseCommandTranslation
 {
-    public const SYNTAX_NAME = 'ApacheVelocity';
-
     /**
      * @var string[]
      */
@@ -52,11 +47,6 @@ abstract class ApacheVelocity extends BaseCommandTranslation
         '(',
         ')'
     );
-
-    public function getLabel(): string
-    {
-        return 'Apache Velocity';
-    }
 
     /**
      * Filters the string for use in an Apache Velocity (Java)
@@ -176,11 +166,6 @@ abstract class ApacheVelocity extends BaseCommandTranslation
             '"%s"',
             str_replace('"', '\"', $value)
         );
-    }
-
-    public function getSyntaxName(): string
-    {
-        return self::SYNTAX_NAME;
     }
 
     /**

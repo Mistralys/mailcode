@@ -9,8 +9,8 @@ declare(strict_types=1);
 namespace Mailcode\Translator\Syntax\HubL;
 
 use Mailcode\Mailcode_Commands_Command_ShowEncoded;
-use Mailcode\Translator\Syntax\ApacheVelocity;
-use Mailcode\Translator\Syntax\HubL;
+use Mailcode\Translator\Syntax\BaseApacheVelocityCommandTranslation;
+use Mailcode\Translator\Syntax\BaseHubLCommandTranslation;
 use Mailcode\Translator\Command\ShowEncodedInterface;
 
 /**
@@ -20,7 +20,7 @@ use Mailcode\Translator\Command\ShowEncodedInterface;
  * @subpackage Translator
  * @author Sebastian Mordziol <s.mordziol@mistralys.eu>
  */
-class ShowEncodedTranslation extends HubL implements ShowEncodedInterface
+class ShowEncodedTranslation extends BaseHubLCommandTranslation implements ShowEncodedInterface
 {
     private static int $counter = 0;
 
