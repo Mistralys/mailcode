@@ -9,10 +9,9 @@ declare(strict_types=1);
 namespace Mailcode;
 
 use AppUtils\ClassHelper;
-use AppUtils\FileHelper;
-use Mailcode\Translator\Syntax;
-use Mailcode\Translator\Syntax\ApacheVelocity;
-use Mailcode\Translator\Syntax\HubL;
+use Mailcode\Translator\Syntax\ApacheVelocitySyntax;
+use Mailcode\Translator\Syntax\HubLSyntax;
+use Mailcode\Translator\SyntaxInterface;
 
 /**
  * Used to translate mailcode syntax to other syntaxes.
@@ -26,16 +25,39 @@ class Mailcode_Translator
     public const ERROR_INVALID_SYNTAX_NAME = 73001;
 
     /**
+     * @var array<string,SyntaxInterface>
+     */
+    private array $syntaxes = array();
+
+    private static ?Mailcode_Translator $instance = null;
+
+    public static function create() : Mailcode_Translator
+    {
+        if(is_null(self::$instance)) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
+    }
+
+    public function __construct()
+    {
+        foreach($this->resolveSyntaxClasses() as $class) {
+            $syntax = new $class();
+            $this->syntaxes[$syntax->getTypeID()] = $syntax;
+        }
+    }
+
+    /**
      * Creates an instance of the specified syntax.
      *
-     * @param string $name The name of the syntax, e.g. "ApacheVelocity"
-     * @return Syntax
+     * @param string $name The name of the syntax, e.g. {@see ApacheVelocitySyntax::SYNTAX_NAME}.
+     * @return SyntaxInterface
      */
-    public function createSyntax(string $name) : Syntax
+    public function createSyntax(string $name) : SyntaxInterface
     {
-        if($this->syntaxExists($name))
-        {
-            return new Syntax($name);
+        if(isset($this->syntaxes[$name])) {
+            return $this->syntaxes[$name];
         }
 
         throw new Mailcode_Exception(
@@ -49,19 +71,19 @@ class Mailcode_Translator
         );
     }
 
-    public function createApacheVelocity() : ApacheVelocity
+    public function createApacheVelocity() : ApacheVelocitySyntax
     {
         return ClassHelper::requireObjectInstanceOf(
-            ApacheVelocity::class,
-            $this->createSyntax(ApacheVelocity::SYNTAX_NAME)
+            ApacheVelocitySyntax::class,
+            $this->createSyntax(ApacheVelocitySyntax::SYNTAX_NAME)
         );
     }
 
-    public function createHubL() : HubL
+    public function createHubL() : HubLSyntax
     {
         return ClassHelper::requireObjectInstanceOf(
-            HubL::class,
-            $this->createSyntax(HubL::SYNTAX_NAME)
+            HubLSyntax::class,
+            $this->createSyntax(HubLSyntax::SYNTAX_NAME)
         );
     }
 
@@ -69,43 +91,44 @@ class Mailcode_Translator
      * Retrieves an instance for each syntax available
      * in the system.
      *
-     * @return Syntax[]
+     * @return SyntaxInterface[]
      */
     public function getSyntaxes() : array
     {
-        $names = $this->getSyntaxNames();
-        $result = array();
-
-        foreach($names as $name)
-        {
-            $result[] = $this->createSyntax($name);
-        }
-
-        return $result;
+        return array_values($this->syntaxes);
     }
 
     /**
-     * Retrieves a list of the names of all syntaxes supported
+     * Retrieves a list of names for all syntaxes supported
      * by the system.
      *
      * @return string[]
      */
     public function getSyntaxNames() : array
     {
-        return FileHelper::createFileFinder(__DIR__.'/Translator/Syntax')
-            ->getPHPClassNames();
+        return array_keys($this->syntaxes);
+    }
+
+    /**
+     * @return class-string<SyntaxInterface>[]
+     */
+    private function resolveSyntaxClasses() : array
+    {
+        return ClassCache::findClassesInFolder(
+            __DIR__.'/Translator/Syntax',
+            false,
+            SyntaxInterface::class
+        );
     }
 
     /**
      * Checks whether the specified syntax exists.
      *
-     * @param string $name The syntax name, e.g. "ApacheVelocity"
+     * @param string $name The syntax name, e.g. {@see ApacheVelocitySyntax::SYNTAX_NAME}.
      * @return bool
      */
     public function syntaxExists(string $name) : bool
     {
-        $names = $this->getSyntaxNames();
-
-        return in_array($name, $names);
+        return isset($this->syntaxes[$name]);
     }
 }

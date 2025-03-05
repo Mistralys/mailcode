@@ -140,12 +140,10 @@ class Mailcode_Commands_Command_Code
             return;
         }
 
-        $translator = new Mailcode_Translator();
-
         $this->validationResult->makeError(
             t('The target language has to be specified in the first parameter of the command.').' '.
             t('Possible values are:').' '.
-            '<code>'.implode('</code>, <code>', $translator->getSyntaxNames()).'</code>',
+            '<code>'.implode('</code>, <code>', Mailcode_Translator::create()->getSyntaxNames()).'</code>',
             self::VALIDATION_LANGUAGE_NOT_SPECIFIED
         );
     }

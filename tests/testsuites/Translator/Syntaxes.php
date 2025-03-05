@@ -2,26 +2,26 @@
 
 use Mailcode\Mailcode_Exception;
 use Mailcode\Mailcode_Translator;
-use Mailcode\Translator\Syntax;
+use Mailcode\Translator\BaseSyntax;
 use MailcodeTestClasses\VelocityTestCase;
 
 final class Translator_SyntaxesTests extends VelocityTestCase
 {
     public function test_getSyntaxes() : void
     {
-        $translator = new Mailcode_Translator();
+        $translator = Mailcode_Translator::create();
         $syntaxes = $translator->getSyntaxes();
 
         $this->assertNotEmpty($syntaxes);
 
         $syntax = array_pop($syntaxes);
 
-        $this->assertInstanceOf(Syntax::class, $syntax);
+        $this->assertInstanceOf(BaseSyntax::class, $syntax);
     }
 
     public function test_getSyntaxNames() : void
     {
-        $translator = new Mailcode_Translator();
+        $translator = Mailcode_Translator::create();
         $names = $translator->getSyntaxNames();
 
         $this->assertNotEmpty($names);
@@ -30,7 +30,7 @@ final class Translator_SyntaxesTests extends VelocityTestCase
 
     public function test_syntaxExists() : void
     {
-        $translator = new Mailcode_Translator();
+        $translator = Mailcode_Translator::create();
 
         $this->assertTrue($translator->syntaxExists('ApacheVelocity'));
         $this->assertFalse($translator->syntaxExists('UnknownSyntax'));
@@ -38,7 +38,7 @@ final class Translator_SyntaxesTests extends VelocityTestCase
 
     public function test_createSyntax() : void
     {
-        $translator = new Mailcode_Translator();
+        $translator = Mailcode_Translator::create();
 
         $syntax = $translator->createApacheVelocity();
 
@@ -47,7 +47,7 @@ final class Translator_SyntaxesTests extends VelocityTestCase
 
     public function test_createSyntax_notExists() : void
     {
-        $translator = new Mailcode_Translator();
+        $translator = Mailcode_Translator::create();
 
         try
         {
