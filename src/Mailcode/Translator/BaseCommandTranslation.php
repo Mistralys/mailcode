@@ -25,9 +25,22 @@ use Mailcode\Mailcode_Commands_Command;
  */
 abstract class BaseCommandTranslation
 {
-    abstract public function getLabel() : string;
+    private SyntaxInterface $syntax;
 
-    abstract public function getSyntaxName() : string;
+    public function getLabel() : string
+    {
+        return $this->syntax->getLabel();
+    }
+
+    public function getSyntaxName() : string
+    {
+        return $this->syntax->getTypeID();
+    }
+
+    public function __construct(SyntaxInterface $syntax)
+    {
+        $this->syntax = $syntax;
+    }
 
     protected function hasVariableEncodings(Mailcode_Commands_Command $command) : bool
     {
