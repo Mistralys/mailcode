@@ -1,10 +1,7 @@
 <?php
 /**
- * File containing the {@see Mailcode_Parser_Statement_Tokenizer} class.
- *
  * @package Mailcode
  * @subpackage Parser
- * @see Mailcode_Parser_Statement_Tokenizer
  */
 
 declare(strict_types=1);
@@ -547,19 +544,5 @@ class Mailcode_Parser_Statement_Tokenizer
             ),
             self::ERROR_TARGET_INSERT_TOKEN_NOT_FOUND
         );
-    }
-
-    private function dumpTokens() : void
-    {
-        echo PHP_EOL;
-        echo 'Statement: ['.$this->getNormalized().']'.PHP_EOL;
-        echo 'Tokens:'.PHP_EOL;
-
-        foreach($this->tokensOrdered as $idx => $token)
-        {
-            echo '- #'.$idx.' '.$token->getID().''.PHP_EOL;
-            echo '     Type: '.$token->getTypeID().PHP_EOL;
-            echo '     Normalized: ['.$token->getNormalized().']'.PHP_EOL;
-        }
     }
 }

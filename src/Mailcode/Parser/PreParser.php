@@ -390,20 +390,6 @@ class PreParser
         return $result;
     }
 
-    private function addClosingError(string $name) : void
-    {
-        $this->collection->addErrorMessage(
-            '',
-            (string)sb()
-                ->t('Incorrectly closed content command:')
-                ->t(
-                    'Please ensure that each of the commands has a matching %1$s closing tag.',
-                    sb()->code('{'.$name.'}')
-                ),
-            Mailcode_Commands_CommonConstants::VALIDATION_MISSING_CONTENT_CLOSING_TAG
-        );
-    }
-
     private function processCommand(CommandDef $commandDef) : void
     {
         $commandDef->extractContent($this->subject);
