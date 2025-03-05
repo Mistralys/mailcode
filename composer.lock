@@ -54,16 +54,16 @@
         },
         {
             "name": "giggsey/libphonenumber-for-php",
-            "version": "8.13.48",
+            "version": "8.13.55",
             "source": {
                 "type": "git",
                 "url": "https://github.com/giggsey/libphonenumber-for-php.git",
-                "reference": "0965dd46e34934ca24922be75f940defb213f73c"
+                "reference": "6e28b3d53cf96d7f41c83d9b80b6021ecbd00537"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/giggsey/libphonenumber-for-php/zipball/0965dd46e34934ca24922be75f940defb213f73c",
-                "reference": "0965dd46e34934ca24922be75f940defb213f73c",
+                "url": "https://api.github.com/repos/giggsey/libphonenumber-for-php/zipball/6e28b3d53cf96d7f41c83d9b80b6021ecbd00537",
+                "reference": "6e28b3d53cf96d7f41c83d9b80b6021ecbd00537",
                 "shasum": ""
             },
             "require": {
@@ -127,27 +127,28 @@
                 "issues": "https://github.com/giggsey/libphonenumber-for-php/issues",
                 "source": "https://github.com/giggsey/libphonenumber-for-php"
             },
-            "time": "2024-10-22T09:06:42+00:00"
+            "time": "2025-02-14T08:14:08+00:00"
         },
         {
             "name": "giggsey/locale",
-            "version": "2.6",
+            "version": "2.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/giggsey/Locale.git",
-                "reference": "37874fa473131247c348059fb7b8985efc18b5ea"
+                "reference": "a5c65ea3c2630f27ccb78977990eefbee6dd8f97"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/giggsey/Locale/zipball/37874fa473131247c348059fb7b8985efc18b5ea",
-                "reference": "37874fa473131247c348059fb7b8985efc18b5ea",
+                "url": "https://api.github.com/repos/giggsey/Locale/zipball/a5c65ea3c2630f27ccb78977990eefbee6dd8f97",
+                "reference": "a5c65ea3c2630f27ccb78977990eefbee6dd8f97",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.2"
+                "php": "^7.4|^8.0"
             },
             "require-dev": {
                 "ext-json": "*",
+                "friendsofphp/php-cs-fixer": "^3.64",
                 "pear/pear-core-minimal": "^1.9",
                 "pear/pear_exception": "^1.0",
                 "pear/versioncontrol_git": "^0.5",
@@ -157,7 +158,8 @@
                 "symfony/console": "^5.0|^6.0",
                 "symfony/filesystem": "^5.0|^6.0",
                 "symfony/finder": "^5.0|^6.0",
-                "symfony/process": "^5.0|^6.0"
+                "symfony/process": "^5.0|^6.0",
+                "symfony/var-exporter": "^5.2|^6.0"
             },
             "type": "library",
             "autoload": {
@@ -179,9 +181,9 @@
             "description": "Locale functions required by libphonenumber-for-php",
             "support": {
                 "issues": "https://github.com/giggsey/Locale/issues",
-                "source": "https://github.com/giggsey/Locale/tree/2.6"
+                "source": "https://github.com/giggsey/Locale/tree/2.7.0"
             },
-            "time": "2024-04-18T19:31:19+00:00"
+            "time": "2024-11-04T11:18:07+00:00"
         },
         {
             "name": "mistralys/application-localization",
@@ -245,16 +247,16 @@
         },
         {
             "name": "mistralys/application-utils",
-            "version": "3.0.5",
+            "version": "3.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Mistralys/application-utils.git",
-                "reference": "7923ba94c22edb6b59ba398f29f0fde6c60e6266"
+                "reference": "a86f40b1539249f788e1b0eef79106b37db953d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Mistralys/application-utils/zipball/7923ba94c22edb6b59ba398f29f0fde6c60e6266",
-                "reference": "7923ba94c22edb6b59ba398f29f0fde6c60e6266",
+                "url": "https://api.github.com/repos/Mistralys/application-utils/zipball/a86f40b1539249f788e1b0eef79106b37db953d2",
+                "reference": "a86f40b1539249f788e1b0eef79106b37db953d2",
                 "shasum": ""
             },
             "require": {
@@ -266,7 +268,9 @@
                 "ext-mbstring": "*",
                 "ext-simplexml": "*",
                 "ext-zip": "*",
-                "mistralys/application-utils-core": ">=1.0.3",
+                "mistralys/application-utils-core": ">=2.2.3",
+                "mistralys/application-utils-image": ">=1.1",
+                "mistralys/application-utils-result-handling": ">=1.0.1",
                 "parsecsv/php-parsecsv": ">=1.3",
                 "php": ">=7.4"
             },
@@ -280,8 +284,7 @@
             "type": "library",
             "autoload": {
                 "files": [
-                    "src/functions.php",
-                    "src/ImageHelper/ImageFunctions.php"
+                    "src/functions.php"
                 ],
                 "classmap": [
                     "src/"
@@ -301,9 +304,9 @@
             "description": "Drop-in utilities for PHP applications.",
             "support": {
                 "issues": "https://github.com/Mistralys/application-utils/issues",
-                "source": "https://github.com/Mistralys/application-utils/tree/3.0.5"
+                "source": "https://github.com/Mistralys/application-utils/tree/3.1.4"
             },
-            "time": "2024-07-30T07:14:10+00:00"
+            "time": "2025-03-04T17:40:06+00:00"
         },
         {
             "name": "mistralys/application-utils-collections",
@@ -354,22 +357,24 @@
         },
         {
             "name": "mistralys/application-utils-core",
-            "version": "2.3.1",
+            "version": "2.3.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Mistralys/application-utils-core.git",
-                "reference": "6c9b8490979ce727c45aae26b0e6d9b2d7fa9307"
+                "reference": "1598a080396c00f98dbca80278e24f7acfde1c20"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Mistralys/application-utils-core/zipball/6c9b8490979ce727c45aae26b0e6d9b2d7fa9307",
-                "reference": "6c9b8490979ce727c45aae26b0e6d9b2d7fa9307",
+                "url": "https://api.github.com/repos/Mistralys/application-utils-core/zipball/1598a080396c00f98dbca80278e24f7acfde1c20",
+                "reference": "1598a080396c00f98dbca80278e24f7acfde1c20",
                 "shasum": ""
             },
             "require": {
                 "ext-ctype": "*",
                 "ext-curl": "*",
+                "ext-dom": "*",
                 "ext-json": "*",
+                "ext-libxml": "*",
                 "ext-mbstring": "*",
                 "geshi/geshi": ">=1.0",
                 "neitanod/forceutf8": ">=2.0.4",
@@ -379,7 +384,8 @@
             "require-dev": {
                 "ext-gd": "*",
                 "phpstan/phpstan": ">=1.10",
-                "phpunit/phpunit": ">=9.6"
+                "phpstan/phpstan-phpunit": ">=2.0.1",
+                "phpunit/phpunit": "^9.6.22"
             },
             "suggest": {
                 "mistralys/application-localization": "Required to translate available texts, from date related methods or file size labels for example."
@@ -407,9 +413,112 @@
             "description": "Drop-in utilities for PHP applications.",
             "support": {
                 "issues": "https://github.com/Mistralys/application-utils-core/issues",
-                "source": "https://github.com/Mistralys/application-utils-core/tree/2.3.1"
+                "source": "https://github.com/Mistralys/application-utils-core/tree/2.3.6"
             },
-            "time": "2024-10-17T12:47:31+00:00"
+            "time": "2025-03-03T08:13:48+00:00"
+        },
+        {
+            "name": "mistralys/application-utils-image",
+            "version": "1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Mistralys/application-utils-image.git",
+                "reference": "df7255a6ce71be5001f3cd0f30a408cbcd485d61"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Mistralys/application-utils-image/zipball/df7255a6ce71be5001f3cd0f30a408cbcd485d61",
+                "reference": "df7255a6ce71be5001f3cd0f30a408cbcd485d61",
+                "shasum": ""
+            },
+            "require": {
+                "ext-gd": "*",
+                "mistralys/application-utils-collections": ">=1.1",
+                "mistralys/application-utils-core": ">=2.3.4",
+                "php": ">=7.4"
+            },
+            "require-dev": {
+                "phpstan/phpstan": ">=2.1",
+                "phpstan/phpstan-phpunit": ">=2.0.3",
+                "phpunit/phpunit": "^9.6"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/ImageHelper/ImageFunctions.php",
+                    "src/register-file-types.php"
+                ],
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sebastian Mordziol",
+                    "email": "s.mordziol@mistralys.eu",
+                    "role": "Lead"
+                }
+            ],
+            "description": "PHP image helper library for basic image operations and color management.",
+            "support": {
+                "issues": "https://github.com/Mistralys/application-utils-image/issues",
+                "source": "https://github.com/Mistralys/application-utils-image/tree/1.2.0"
+            },
+            "time": "2025-01-13T15:55:52+00:00"
+        },
+        {
+            "name": "mistralys/application-utils-result-handling",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Mistralys/application-utils-result-handling.git",
+                "reference": "e63464515c75b1deda3afaf5a30070a1e69eb501"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Mistralys/application-utils-result-handling/zipball/e63464515c75b1deda3afaf5a30070a1e69eb501",
+                "reference": "e63464515c75b1deda3afaf5a30070a1e69eb501",
+                "shasum": ""
+            },
+            "require": {
+                "mistralys/application-utils-core": ">=2.3.4",
+                "php": ">=7.4"
+            },
+            "require-dev": {
+                "phpstan/phpstan": ">=2.1",
+                "phpstan/phpstan-phpunit": ">=2.0.3",
+                "phpunit/phpunit": "^9.6"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/global-functions.php"
+                ],
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sebastian Mordziol",
+                    "email": "s.mordziol@mistralys.eu",
+                    "role": "Lead"
+                }
+            ],
+            "description": "Classes used to store information on the results of application operations.",
+            "support": {
+                "issues": "https://github.com/Mistralys/application-utils-result-handling/issues",
+                "source": "https://github.com/Mistralys/application-utils-result-handling/tree/1.0.1"
+            },
+            "time": "2025-01-13T18:13:56+00:00"
         },
         {
             "name": "mistralys/changelog-parser",
@@ -678,16 +787,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "2.9.3",
+            "version": "2.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "a30bfe2e142720dfa990d0a7e573997f5d884215"
+                "reference": "5cf826f2991858b54d5c3809bee745560a1042a7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/a30bfe2e142720dfa990d0a7e573997f5d884215",
-                "reference": "a30bfe2e142720dfa990d0a7e573997f5d884215",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/5cf826f2991858b54d5c3809bee745560a1042a7",
+                "reference": "5cf826f2991858b54d5c3809bee745560a1042a7",
                 "shasum": ""
             },
             "require": {
@@ -764,7 +873,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Seldaek/monolog/issues",
-                "source": "https://github.com/Seldaek/monolog/tree/2.9.3"
+                "source": "https://github.com/Seldaek/monolog/tree/2.10.0"
             },
             "funding": [
                 {
@@ -776,7 +885,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-04-12T20:52:51+00:00"
+            "time": "2024-11-12T12:43:37+00:00"
         },
         {
             "name": "neitanod/forceutf8",
@@ -959,8 +1068,8 @@
             "type": "library",
             "extra": {
                 "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
                 }
             },
             "autoload": {
@@ -1033,8 +1142,8 @@
             "type": "library",
             "extra": {
                 "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
                 }
             },
             "autoload": {
@@ -1167,16 +1276,16 @@
         },
         {
             "name": "myclabs/deep-copy",
-            "version": "1.12.0",
+            "version": "1.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/DeepCopy.git",
-                "reference": "3a6b9a42cd8f8771bd4295d13e1423fa7f3d942c"
+                "reference": "024473a478be9df5fdaca2c793f2232fe788e414"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/3a6b9a42cd8f8771bd4295d13e1423fa7f3d942c",
-                "reference": "3a6b9a42cd8f8771bd4295d13e1423fa7f3d942c",
+                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/024473a478be9df5fdaca2c793f2232fe788e414",
+                "reference": "024473a478be9df5fdaca2c793f2232fe788e414",
                 "shasum": ""
             },
             "require": {
@@ -1215,7 +1324,7 @@
             ],
             "support": {
                 "issues": "https://github.com/myclabs/DeepCopy/issues",
-                "source": "https://github.com/myclabs/DeepCopy/tree/1.12.0"
+                "source": "https://github.com/myclabs/DeepCopy/tree/1.13.0"
             },
             "funding": [
                 {
@@ -1223,20 +1332,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-06-12T14:39:25+00:00"
+            "time": "2025-02-12T12:17:51+00:00"
         },
         {
             "name": "nikic/php-parser",
-            "version": "v5.3.1",
+            "version": "v5.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "8eea230464783aa9671db8eea6f8c6ac5285794b"
+                "reference": "447a020a1f875a434d62f2a401f53b82a396e494"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/8eea230464783aa9671db8eea6f8c6ac5285794b",
-                "reference": "8eea230464783aa9671db8eea6f8c6ac5285794b",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/447a020a1f875a434d62f2a401f53b82a396e494",
+                "reference": "447a020a1f875a434d62f2a401f53b82a396e494",
                 "shasum": ""
             },
             "require": {
@@ -1279,9 +1388,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v5.3.1"
+                "source": "https://github.com/nikic/PHP-Parser/tree/v5.4.0"
             },
-            "time": "2024-10-08T18:51:32+00:00"
+            "time": "2024-12-30T11:07:19+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -1403,20 +1512,20 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.12.7",
+            "version": "2.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "dc2b9976bd8b0f84ec9b0e50cc35378551de7af0"
+                "reference": "6eaec7c6c9e90dcfe46ad1e1ffa5171e2dab641c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/dc2b9976bd8b0f84ec9b0e50cc35378551de7af0",
-                "reference": "dc2b9976bd8b0f84ec9b0e50cc35378551de7af0",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/6eaec7c6c9e90dcfe46ad1e1ffa5171e2dab641c",
+                "reference": "6eaec7c6c9e90dcfe46ad1e1ffa5171e2dab641c",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.2|^8.0"
+                "php": "^7.4|^8.0"
             },
             "conflict": {
                 "phpstan/phpstan-shim": "*"
@@ -1457,7 +1566,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-10-18T11:12:07+00:00"
+            "time": "2025-02-19T15:46:42+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -1780,16 +1889,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "9.6.21",
+            "version": "9.6.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "de6abf3b6f8dd955fac3caad3af7a9504e8c2ffa"
+                "reference": "f80235cb4d3caa59ae09be3adf1ded27521d1a9c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/de6abf3b6f8dd955fac3caad3af7a9504e8c2ffa",
-                "reference": "de6abf3b6f8dd955fac3caad3af7a9504e8c2ffa",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/f80235cb4d3caa59ae09be3adf1ded27521d1a9c",
+                "reference": "f80235cb4d3caa59ae09be3adf1ded27521d1a9c",
                 "shasum": ""
             },
             "require": {
@@ -1800,7 +1909,7 @@
                 "ext-mbstring": "*",
                 "ext-xml": "*",
                 "ext-xmlwriter": "*",
-                "myclabs/deep-copy": "^1.12.0",
+                "myclabs/deep-copy": "^1.12.1",
                 "phar-io/manifest": "^2.0.4",
                 "phar-io/version": "^3.2.1",
                 "php": ">=7.3",
@@ -1863,7 +1972,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.21"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.22"
             },
             "funding": [
                 {
@@ -1879,7 +1988,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-19T10:50:18+00:00"
+            "time": "2024-12-05T13:48:26+00:00"
         },
         {
             "name": "sebastian/cli-parser",

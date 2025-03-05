@@ -23,6 +23,9 @@
 		]
 	},
 	"autoload-dev": {
+		"files": [
+			"tests/bootstrap.php"
+		],
 		"classmap" :
 		[
 			"tests/assets"
