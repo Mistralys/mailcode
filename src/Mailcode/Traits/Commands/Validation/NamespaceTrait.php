@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use AppUtils\ConvertHelper;
+use Mailcode\Commands\CommandException;
+
 /**
  * @package Mailcode
  * @subpackage Validation
@@ -52,6 +55,25 @@ trait NamespaceTrait
     public function getNamespaceToken(): ?Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
     {
         return $this->namespaceToken;
+    }
+
+    public function requireNamespaceToken() : Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
+    {
+        $token = $this->getNamespaceToken();
+
+        if($token !== null) {
+            return $token;
+        }
+
+        throw new CommandException(
+            'The command does not have a namespace token.',
+            sprintf(
+                'A namespace token was required, but not present. '.PHP_EOL.
+                'Use [%s] to check for its presence before calling this method.',
+                ConvertHelper::callback2string(array($this, 'isNamespacePresent'))
+            ),
+            NamespaceInterface::ERROR_NO_NAMESPACE_TOKEN_PRESENT
+        );
     }
 
     public function setNamespace(string $namespace = NamespaceInterface::DEFAULT_NAMESPACE): self

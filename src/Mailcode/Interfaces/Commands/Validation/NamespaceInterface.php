@@ -27,9 +27,20 @@ interface NamespaceInterface extends Mailcode_Interfaces_Commands_Command
     public const VALIDATION_NAMESPACE_NAME = 'check_namespace';
     public const VALIDATION_NAMESPACE_WRONG_TYPE = 166401;
 
+    public const ERROR_NO_NAMESPACE_TOKEN_PRESENT = 174001;
+
+
     public function isNamespacePresent(): bool;
 
     public function getNamespaceToken(): ?Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
+
+    /**
+     * Like {@see self::getNamespaceToken()}, but with a guaranteed return
+     * value. Throws an exception if the token is not present.
+     *
+     * @return Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
+     */
+    public function requireNamespaceToken() : Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
 
     public function setNamespace(string $namespace = NamespaceInterface::DEFAULT_NAMESPACE): self;
 }
