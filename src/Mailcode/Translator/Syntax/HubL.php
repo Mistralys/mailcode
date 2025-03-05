@@ -24,6 +24,8 @@ use function Mailcode\undollarize;
  */
 abstract class HubL extends BaseCommandTranslation
 {
+    public const SYNTAX_NAME = 'HubL';
+    
     public function getLabel(): string
     {
         return 'Hubspot HubL';
@@ -31,7 +33,7 @@ abstract class HubL extends BaseCommandTranslation
 
     public function getSyntaxName(): string
     {
-        return 'HubL';
+        return self::SYNTAX_NAME;
     }
 
     public static function areVariableNamesLowercase() : bool

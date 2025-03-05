@@ -30,6 +30,8 @@ use function Mailcode\dollarize;
  */
 abstract class ApacheVelocity extends BaseCommandTranslation
 {
+    public const SYNTAX_NAME = 'ApacheVelocity';
+
     /**
      * @var string[]
      */
@@ -178,7 +180,7 @@ abstract class ApacheVelocity extends BaseCommandTranslation
 
     public function getSyntaxName(): string
     {
-        return 'ApacheVelocity';
+        return self::SYNTAX_NAME;
     }
 
     /**
