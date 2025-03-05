@@ -121,8 +121,8 @@
     },
     "BJ": {
         "label": "Benin",
-        "local": "20 21 12 34",
-        "international": "+229 20 21 12 34"
+        "local": "01 20 21 12 34",
+        "international": "+229 01 20 21 12 34"
     },
     "BL": {
         "label": "Saint Barthelemy",
@@ -801,8 +801,8 @@
     },
     "NG": {
         "label": "Nigeria",
-        "local": "01 804 0123",
-        "international": "+234 1 804 0123"
+        "local": "02033 12 3456",
+        "international": "+234 2033 12 3456"
     },
     "NI": {
         "label": "Nicaragua",
@@ -1146,7 +1146,7 @@
     },
     "UZ": {
         "label": "Uzbekistan",
-        "local": "8 66 905 01 23",
+        "local": "66 905 01 23",
         "international": "+998 66 905 01 23"
     },
     "VA": {
