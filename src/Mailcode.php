@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use AppUtils\ConvertHelper;
+use AppUtils\FileHelper\FolderInfo;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -30,26 +32,33 @@ class Mailcode
 {
     public const PACKAGE_NAME = 'Mailcode';
 
-    /**
-    * @var Mailcode_Parser|NULL
-    */
-    protected $parser = null;
-    
-   /**
-    * @var Mailcode_Commands|NULL
-    */
-    protected $commands = null;
-    
-   /**
-    * @var Mailcode_Variables|NULL
-    */
-    protected $variables = null;
-    
-   /**
-    * @var Mailcode_Translator|NULL
-    */
-    protected $translator = null;
-    
+    protected ?Mailcode_Parser $parser = null;
+    protected ?Mailcode_Commands $commands = null;
+    protected ?Mailcode_Variables $variables = null;
+
+    private static ?FolderInfo $cacheFolder = null;
+
+    public static function setCacheFolder(FolderInfo $cacheFolder) : void
+    {
+        self::$cacheFolder = $cacheFolder;
+    }
+
+    public static function getCacheFolder() : FolderInfo
+    {
+        if(isset(self::$cacheFolder)) {
+            return self::$cacheFolder;
+        }
+
+        throw new Mailcode_Exception(
+            'The cache folder has not been set.',
+            sprintf(
+                'The cache folder must be set with [%s] before using the library.',
+                ConvertHelper::callback2string(array(__CLASS__, 'setCacheFolder'))
+            ),
+            Mailcode_Exception::ERROR_CACHE_FOLDER_NOT_SET
+        );
+    }
+
    /**
     * Creates a new mailcode instance.
     * @return Mailcode
@@ -148,12 +157,7 @@ class Mailcode
     */
     public function createTranslator() : Mailcode_Translator
     {
-        if(!isset($this->translator))
-        {
-            $this->translator = new Mailcode_Translator(); 
-        }
-        
-        return $this->translator;
+        return Mailcode_Translator::create();
     }
     
    /**
