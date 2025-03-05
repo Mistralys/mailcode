@@ -7,6 +7,8 @@
 - Translators: Narrowed the type of the `createHubL()` method.
 - Translators: Added the `Mailcode_Translator::create()` factory method.
 - ShowPhone: Updated some example phone numbers from PhoneLib.
+- Core: Added `Mailcode::setCacheFolder()` to set the cache folder.
+- Core: Added the `ClassCache` class to handle dynamic class loading and caching.
 - Code: Minor code tweaks for PHPStan recommendations.
 - Code: PHPStan clean @ level 9.
 
