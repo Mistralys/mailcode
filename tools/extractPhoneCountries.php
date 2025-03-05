@@ -98,7 +98,9 @@ function generateList() : array
         }
 
         $exampleNumber = $phoneNumberUtil->getExampleNumber($code);
-        if(empty($exampleNumber)) {
+
+        // PHPStan complains about this, but the method can return null - it's not documented correctly.
+        if($exampleNumber === null) {
             die('No example number for ' . $code);
         }
 
