@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b7cf0d9cd608fd80ba790cd507fa71de",
+    "content-hash": "89063302095f0ba03606a735f9a36e90",
     "packages": [
         {
             "name": "geshi/geshi",
@@ -357,16 +357,16 @@
         },
         {
             "name": "mistralys/application-utils-core",
-            "version": "2.3.6",
+            "version": "2.3.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Mistralys/application-utils-core.git",
-                "reference": "1598a080396c00f98dbca80278e24f7acfde1c20"
+                "reference": "807457dddd3549097deb946dc06274adc745d937"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Mistralys/application-utils-core/zipball/1598a080396c00f98dbca80278e24f7acfde1c20",
-                "reference": "1598a080396c00f98dbca80278e24f7acfde1c20",
+                "url": "https://api.github.com/repos/Mistralys/application-utils-core/zipball/807457dddd3549097deb946dc06274adc745d937",
+                "reference": "807457dddd3549097deb946dc06274adc745d937",
                 "shasum": ""
             },
             "require": {
@@ -413,9 +413,9 @@
             "description": "Drop-in utilities for PHP applications.",
             "support": {
                 "issues": "https://github.com/Mistralys/application-utils-core/issues",
-                "source": "https://github.com/Mistralys/application-utils-core/tree/2.3.6"
+                "source": "https://github.com/Mistralys/application-utils-core/tree/2.3.7"
             },
-            "time": "2025-03-03T08:13:48+00:00"
+            "time": "2025-03-07T14:16:34+00:00"
         },
         {
             "name": "mistralys/application-utils-image",
@@ -1512,16 +1512,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.6",
+            "version": "2.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "6eaec7c6c9e90dcfe46ad1e1ffa5171e2dab641c"
+                "reference": "12567f91a74036d56ba0af6d56c8e73ac0e8d850"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/6eaec7c6c9e90dcfe46ad1e1ffa5171e2dab641c",
-                "reference": "6eaec7c6c9e90dcfe46ad1e1ffa5171e2dab641c",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/12567f91a74036d56ba0af6d56c8e73ac0e8d850",
+                "reference": "12567f91a74036d56ba0af6d56c8e73ac0e8d850",
                 "shasum": ""
             },
             "require": {
@@ -1566,7 +1566,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-02-19T15:46:42+00:00"
+            "time": "2025-03-05T13:43:55+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
