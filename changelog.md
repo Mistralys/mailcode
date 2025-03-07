@@ -1,3 +1,6 @@
+## v3.5.1 - Cache folder update
+- Core: The cache folder is now inherited from the AppUtil's `ClassHelper` if present.
+
 ## v3.5.0 - Translator changes and class cache (Breaking-L)
 - Translators: Added actual syntax classes that extend `BaseSyntax`.
 - Translators: Added  `SyntaxInterface`.
