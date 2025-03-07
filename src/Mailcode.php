@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use AppUtils\ClassHelper;
 use AppUtils\ConvertHelper;
 use AppUtils\FileHelper\FolderInfo;
 use Psr\Log\LoggerInterface;
@@ -47,6 +48,11 @@ class Mailcode
     {
         if(isset(self::$cacheFolder)) {
             return self::$cacheFolder;
+        }
+
+        $folder = ClassHelper::getCacheFolder();
+        if($folder !== null) {
+            return $folder;
         }
 
         throw new Mailcode_Exception(
