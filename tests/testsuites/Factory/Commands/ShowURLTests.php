@@ -153,4 +153,51 @@ EOT;
         $this->assertSame($expected, $cmd->getNormalized());
         $this->assertNotEmpty($cmd->getTrackingID()); // must be after getNormalized().
     }
+
+    public function test_shortenEnabled() : void
+    {
+        $url = 'https://mistralys.eu';
+
+        $cmd = Mailcode_Factory::show()->url($url)
+            ->setShortenEnabled(true);
+
+        $expected = <<<'EOT'
+{showurl: "link-001" shorten:}https://mistralys.eu{showurl}
+EOT;
+
+        $this->assertTrue($cmd->isShortenEnabled());
+        $this->assertSame($expected, $cmd->getNormalized());
+    }
+
+    public function test_shortenDisabled() : void
+    {
+        $url = 'https://mistralys.eu';
+
+        $cmd = Mailcode_Factory::show()->url($url)
+            ->setShortenEnabled(true)
+            ->setShortenEnabled(false);
+
+        $expected = <<<'EOT'
+{showurl: "link-001"}https://mistralys.eu{showurl}
+EOT;
+
+        $this->assertFalse($cmd->isShortenEnabled());
+        $this->assertSame($expected, $cmd->getNormalized());
+    }
+
+    public function test_shortenWithTracking() : void
+    {
+        $url = 'https://mistralys.eu';
+
+        $cmd = Mailcode_Factory::show()->url($url, 'trackme')
+            ->setShortenEnabled(true);
+
+        $expected = <<<'EOT'
+{showurl: "trackme" shorten:}https://mistralys.eu{showurl}
+EOT;
+
+        $this->assertTrue($cmd->isShortenEnabled());
+        $this->assertTrue($cmd->isTrackingEnabled());
+        $this->assertSame($expected, $cmd->getNormalized());
+    }
 }

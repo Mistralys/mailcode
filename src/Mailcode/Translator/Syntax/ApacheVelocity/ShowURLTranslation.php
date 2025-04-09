@@ -57,6 +57,11 @@ class ShowURLTranslation extends BaseApacheVelocityCommandTranslation implements
             $statements[] = $this->renderTracking($command);
         }
 
+        if($command->isShortenEnabled())
+        {
+            $statements[] = $this->renderShorten();
+        }
+
         if($command->hasQueryParams())
         {
             $params = $command->getQueryParams();
@@ -105,6 +110,11 @@ class ShowURLTranslation extends BaseApacheVelocityCommandTranslation implements
             "lt(\${tracking_host}, \${envelope.hash}, %s)",
             $this->renderQuotedValue($command->getTrackingID())
         );
+    }
+
+    private function renderShorten() : string
+    {
+        return 'shorten()';
     }
 
     private function renderURL(string $urlVar) : string

@@ -15,9 +15,11 @@ use Mailcode\Interfaces\Commands\TrackableInterface;
 use Mailcode\Interfaces\Commands\Validation\QueryParamsInterface;
 use Mailcode\Interfaces\Commands\Validation\TrackingIDInterface;
 use Mailcode\Interfaces\Commands\Validation\NoTrackingInterface;
+use Mailcode\Interfaces\Commands\Validation\ShortenInterface;
 use Mailcode\Traits\Commands\Validation\QueryParamsTrait;
 use Mailcode\Traits\Commands\Validation\TrackingIDTrait;
 use Mailcode\Traits\Commands\Validation\NoTrackingTrait;
+use Mailcode\Traits\Commands\Validation\ShortenTrait;
 
 /**
  * Mailcode command: `showurl` to format and display a URL
@@ -34,12 +36,14 @@ class Mailcode_Commands_Command_ShowURL
     implements
     Mailcode_Interfaces_Commands_ProtectedContent,
     TrackableInterface,
-    QueryParamsInterface
+    QueryParamsInterface,
+    ShortenInterface
 {
     use Mailcode_Traits_Commands_ProtectedContent;
     use NoTrackingTrait;
     use TrackingIDTrait;
     use QueryParamsTrait;
+    use ShortenTrait;
 
     public function getName() : string
     {
@@ -83,6 +87,7 @@ class Mailcode_Commands_Command_ShowURL
             TrackingIDInterface::VALIDATION_NAME_TRACKING_ID,
             QueryParamsInterface::VALIDATION_NAME_QUERY_PARAMS,
             Mailcode_Interfaces_Commands_ProtectedContent::VALIDATION_NAME_NESTED_MAILCODE,
+            ShortenInterface::VALIDATION_NAME_SHORTEN,
         );
     }
 
