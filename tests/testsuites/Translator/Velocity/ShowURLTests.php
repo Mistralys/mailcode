@@ -193,6 +193,70 @@ EOT;
         );
     }
 
+    public function test_shortenEnabled() : void
+    {
+        $url = 'https://mistralys.eu';
+        $cmd = Mailcode_Factory::show()->url($url)
+            ->setTrackingEnabled(false)
+            ->setShortenEnabled(true);
+
+        $expected = sprintf(
+            $this->baseTemplate,
+            $this->varName,
+            $url,
+            '.shorten()'
+        );
+
+        $this->assertSame(
+            $expected,
+            $this->translateCommand($cmd)
+        );
+    }
+
+    public function test_shortenWithTracking() : void
+    {
+        $url = 'https://mistralys.eu';
+        $trackingID = 'trackme';
+        $cmd = Mailcode_Factory::show()->url($url, $trackingID)
+            ->setShortenEnabled(true);
+
+        $expected = sprintf(
+            $this->baseTemplate,
+            $this->varName,
+            $url,
+            sprintf(
+                '.lt(${tracking_host}, ${envelope.hash}, "%1$s").shorten()',
+                $trackingID
+            )
+        );
+
+        $this->assertSame(
+            $expected,
+            $this->translateCommand($cmd)
+        );
+    }
+
+    public function test_shortenWithQueryParams() : void
+    {
+        $url = 'https://mistralys.eu';
+        $cmd = Mailcode_Factory::show()->url($url)
+            ->setTrackingEnabled(false)
+            ->setShortenEnabled(true)
+            ->setQueryParam('foo', 'bar');
+
+        $expected = sprintf(
+            $this->baseTemplate,
+            $this->varName,
+            $url,
+            '.shorten().query("foo", "bar")'
+        );
+
+        $this->assertSame(
+            $expected,
+            $this->translateCommand($cmd)
+        );
+    }
+
     // endregion
 
     // region: Support methods
