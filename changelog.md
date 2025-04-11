@@ -1,3 +1,6 @@
+## v3.5.2 - Add Shorten command
+- Command: Added the `shorten:` keyword to shorten URLs.
+
 ## v3.5.1 - Cache folder update
 - Core: The cache folder is now inherited from the AppUtil's `ClassHelper` if present.
 
