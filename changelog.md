@@ -1,3 +1,6 @@
+## v3.5.3 - PHP8.4 compatibility
+- Core: Fixed deprecation notices for PHP 8.4.
+
 ## v3.5.2 - Add Shorten command
 - Command: Added the `shorten:` keyword to shorten URLs.
 
