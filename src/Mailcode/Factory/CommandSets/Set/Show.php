@@ -51,12 +51,21 @@ class Mailcode_Factory_CommandSets_Set_Show extends Mailcode_Factory_CommandSets
         throw $this->instantiator->exceptionUnexpectedType('ShowVariable', $cmd);
     }
 
-    public function date(string $variableName, string $formatString = "", string $timezoneString = null, string $timezoneVariable = null): Mailcode_Commands_Command_ShowDate
+    public function date(
+        string $variableName,
+        string $formatString = "",
+        ?string $timezoneString = null,
+        ?string $timezoneVariable = null
+    ): Mailcode_Commands_Command_ShowDate
     {
         return (new Date())->create($variableName, $formatString, $timezoneString, $timezoneVariable);
     }
 
-    public function dateNow(string $formatString = "", string $timezoneString = null, string $timezoneVariable = null): Mailcode_Commands_Command_ShowDate
+    public function dateNow(
+        string $formatString = "",
+        ?string $timezoneString = null,
+        ?string $timezoneVariable = null
+    ): Mailcode_Commands_Command_ShowDate
     {
         return (new Date())->now($formatString, $timezoneString, $timezoneVariable);
     }
@@ -66,9 +75,15 @@ class Mailcode_Factory_CommandSets_Set_Show extends Mailcode_Factory_CommandSets
         return (new Number())->create($variableName, $formatString, $absolute);
     }
 
-    public function price(string $variableName, bool $absolute = false, bool $withCurrencyName = false,
-                          string $currencyString = null, string $currencyVariable = null,
-                          string $regionString = null, string $regionVariable = null): Mailcode_Commands_Command_ShowPrice
+    public function price(
+        string $variableName,
+        bool $absolute = false,
+        bool $withCurrencyName = false,
+        ?string $currencyString = null,
+        ?string $currencyVariable = null,
+        ?string $regionString = null,
+        ?string $regionVariable = null
+    ): Mailcode_Commands_Command_ShowPrice
     {
         return (new Price())->create($variableName, $absolute, $withCurrencyName, $currencyString, $currencyVariable, $regionString, $regionVariable);
     }
@@ -88,11 +103,11 @@ class Mailcode_Factory_CommandSets_Set_Show extends Mailcode_Factory_CommandSets
     }
 
     /**
-     * @param string $snippetName The name of the snippet to show.
+     * @param string|NULL $snippetName The name of the snippet to show.
      * @return Mailcode_Commands_Command_ShowSnippet
      * @throws Mailcode_Factory_Exception
      */
-    public function snippet(string $snippetName, string $namespace = null): Mailcode_Commands_Command_ShowSnippet
+    public function snippet(string $snippetName, ?string $namespace = null): Mailcode_Commands_Command_ShowSnippet
     {
         return (new Snippet())->create($snippetName, $namespace);
     }

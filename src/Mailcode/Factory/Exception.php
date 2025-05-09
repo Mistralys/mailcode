@@ -1,15 +1,14 @@
 <?php
 /**
- * File containing the {@see Mailcode_Factory_Exception} class.
- *
  * @package Mailcode
  * @subpackage Factory
- * @see Mailcode_Factory_Exception
  */
 
 declare(strict_types=1);
 
 namespace Mailcode;
+
+use Exception;
 
 /**
  * Factory-specific exception.
@@ -20,19 +19,16 @@ namespace Mailcode;
  */
 class Mailcode_Factory_Exception extends Mailcode_Exception
 {
-   /**
-    * @var Mailcode_Commands_Command|NULL
-    */
-    protected $command;
+    protected ?Mailcode_Commands_Command $command = null;
     
    /**
     * @param string $message
     * @param string|NULL $details
     * @param int|NULL $code
-    * @param \Exception|NULL $previous
+    * @param Exception|NULL $previous
     * @param Mailcode_Commands_Command|NULL $command
     */
-    public function __construct(string $message, $details=null, $code=null, $previous=null, Mailcode_Commands_Command $command=null)
+    public function __construct(string $message, $details=null, $code=null, $previous=null, ?Mailcode_Commands_Command $command=null)
     {
         parent::__construct($message, $details, $code, $previous);
         

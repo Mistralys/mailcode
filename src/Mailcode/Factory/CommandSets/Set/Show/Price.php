@@ -1,10 +1,7 @@
 <?php
 /**
- * File containing the class {@see \Mailcode\Factory\CommandSets\Set\Show\Price}.
- *
  * @package Mailcode
  * @subpackage Factory
- * @see \Mailcode\Factory\CommandSets\Set\Show\Price
  */
 
 declare(strict_types=1);
@@ -18,7 +15,7 @@ use Mailcode\Mailcode_Factory_CommandSets_Set;
 use Mailcode\RegionInterface;
 
 /**
- * Factory class for the `shownumber` command.
+ * Factory class for the `showprice` command.
  *
  * @package Mailcode
  * @subpackage Factory
@@ -26,9 +23,15 @@ use Mailcode\RegionInterface;
  */
 class Price extends Mailcode_Factory_CommandSets_Set
 {
-    public function create(string $variableName, bool $absolute = false, bool $withCurrencyName = true,
-                           string $currencyString = null, string $currencyVariable = null,
-                           string $regionString = null, string $regionVariable = null): Mailcode_Commands_Command_ShowPrice
+    public function create(
+        string $variableName,
+        bool $absolute = false,
+        bool $withCurrencyName = true,
+        ?string $currencyString = null,
+        ?string $currencyVariable = null,
+        ?string $regionString = null,
+        ?string $regionVariable = null
+    ): Mailcode_Commands_Command_ShowPrice
     {
         $variableName = $this->instantiator->filterVariableName($variableName);
 
@@ -56,9 +59,14 @@ class Price extends Mailcode_Factory_CommandSets_Set
         throw $this->instantiator->exceptionUnexpectedType('ShowPrice', $cmd);
     }
 
-    private function compilePriceParams(bool   $absolute = false, bool $withCurrencyName = true,
-                                        string $currencyString = null, string $currencyVariable = null,
-                                        string $regionString = null, string $regionVariable = null): string
+    private function compilePriceParams(
+        bool $absolute = false,
+        bool $withCurrencyName = true,
+        ?string $currencyString = null,
+        ?string $currencyVariable = null,
+        ?string $regionString = null,
+        ?string $regionVariable = null
+    ): string
     {
         $params = array();
 

@@ -24,7 +24,12 @@ use Mailcode\Mailcode_Factory_CommandSets_Set;
  */
 class Date extends Mailcode_Factory_CommandSets_Set
 {
-    public function create(string $variableName, string $formatString = "", string $timezoneString = null, string $timezoneVariable = null): Mailcode_Commands_Command_ShowDate
+    public function create(
+        string $variableName,
+        string $formatString = "",
+        ?string $timezoneString = null,
+        ?string $timezoneVariable = null
+    ): Mailcode_Commands_Command_ShowDate
     {
         $variableName = $this->instantiator->filterVariableName($variableName);
 
@@ -52,7 +57,11 @@ class Date extends Mailcode_Factory_CommandSets_Set
         throw $this->instantiator->exceptionUnexpectedType('ShowDate', $cmd);
     }
 
-    public function now(string $formatString = "", string $timezoneString = null, string $timezoneVariable = null): Mailcode_Commands_Command_ShowDate
+    public function now(
+        string $formatString = "",
+        ?string $timezoneString = null,
+        ?string $timezoneVariable = null
+    ): Mailcode_Commands_Command_ShowDate
     {
         $format = $this->getFormat($formatString);
         $timezone = $this->getTimezone($timezoneString, $timezoneVariable);

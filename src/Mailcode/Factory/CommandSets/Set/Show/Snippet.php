@@ -24,7 +24,7 @@ use Mailcode\NamespaceInterface;
  */
 class Snippet extends Mailcode_Factory_CommandSets_Set
 {
-    public function create(string $snippetName, string $namespace = null): Mailcode_Commands_Command_ShowSnippet
+    public function create(string $snippetName, ?string $namespace = null): Mailcode_Commands_Command_ShowSnippet
     {
         $snippetName = $this->instantiator->filterVariableName($snippetName);
         $paramsString = $this->compileParams($namespace);
@@ -47,7 +47,7 @@ class Snippet extends Mailcode_Factory_CommandSets_Set
         throw $this->instantiator->exceptionUnexpectedType('ShowSnippet', $cmd);
     }
 
-    private function compileParams(string $namespace = null): string
+    private function compileParams(?string $namespace = null): string
     {
         $params = array();
 
