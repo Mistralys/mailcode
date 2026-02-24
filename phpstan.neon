@@ -1,14 +1,15 @@
 parameters:
     paths:
-        - ../../src
-        - ../../css
-        - ../../tools
-        - ../../tests/assets
-        - ../../tests/testsuites
+        - src
+        - css
+        - tools
+        - tests/assets
+        - tests/testsuites
+    level: 9
     ignoreErrors:
         -
             message: '#Mailcode_Translator::resolveSyntaxClasses\(\) should return array#'
-            path: ../../src/Mailcode/Translator.php
+            path: src/Mailcode/Translator.php
         -
             message: '#Strict comparison using === between libphonenumber\\PhoneNumber and null will always evaluate to false#'
-            path: ../../tools/extractPhoneCountries.php
+            path: tools/extractPhoneCountries.php
