@@ -1,6 +1,9 @@
-## v3.6.0 - 
+## v3.6.0 - Maintenance Update
 - Docs: Added agentic coding support with a manifest and `AGENTS.md`.
+- Docs: Significantly expanded the user guide documentation.
+- Docs: Rewrote and simplified README.md.
 - Composer: Added test and analysis commands.
+- PHPStan: Moved config to the project root as `phpstan.neon`.
 - Dependencies: Updated AppUtils to [v3.2.0](https://github.com/Mistralys/application-utils/releases/tag/3.2.0).
 
 ## v3.5.3 - PHP8.4 compatibility
