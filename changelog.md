@@ -1,3 +1,8 @@
+## v3.6.0 - 
+- Docs: Added agentic coding support with a manifest and `AGENTS.md`.
+- Composer: Added test and analysis commands.
+- Dependencies: Updated AppUtils to [v3.2.0](https://github.com/Mistralys/application-utils/releases/tag/3.2.0).
+
 ## v3.5.3 - PHP8.4 compatibility
 - Core: Fixed deprecation notices for PHP 8.4.
 
