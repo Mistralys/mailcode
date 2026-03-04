@@ -1,4 +1,4 @@
-## v3.6.0 - 
+## v3.6.0 - Maintenance Update
 - Docs: Added agentic coding support with a manifest and `AGENTS.md`.
 - Composer: Added test and analysis commands.
 - Dependencies: Updated AppUtils to [v3.2.0](https://github.com/Mistralys/application-utils/releases/tag/3.2.0).
