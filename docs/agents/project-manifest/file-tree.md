@@ -225,6 +225,31 @@ mailcode/
 │       ├── PreProcessor/
 │       ├── StringContainer/
 │       ├── Translator/
+│       │   └── HubL/                          # HubL translation tests (24 files)
+│       │       ├── ElseIfBeginsWithTests.php  # ★ Added: begins-with (elseif)
+│       │       ├── ElseIfBiggerThanTests.php
+│       │       ├── ElseIfContainsTests.php    # ★ Added: contains (elseif)
+│       │       ├── ElseIfEmptyTests.php
+│       │       ├── ElseIfEndsWithTests.php    # ★ Added: ends-with (elseif)
+│       │       ├── ElseIfEqualsNumberTests.php
+│       │       ├── ElseIfNotContainsTests.php # ★ Added: not-contains (elseif)
+│       │       ├── ElseIfSmallerThanTests.php
+│       │       ├── ElseIfVariableTests.php
+│       │       ├── ForTests.php               # ★ Added: {for} loop translation
+│       │       ├── IfBeginsWithTests.php      # ★ Added: begins-with
+│       │       ├── IfBiggerThanTests.php
+│       │       ├── IfContainsTests.php        # ★ Added: contains
+│       │       ├── IfEmptyTests.php
+│       │       ├── IfEndsWithTests.php        # ★ Added: ends-with
+│       │       ├── IfEqualsNumberTests.php
+│       │       ├── IfNotContainsTests.php     # ★ Added: not-contains
+│       │       ├── IfSmallerThanTests.php
+│       │       ├── IfVariableTests.php
+│       │       ├── SetVariableTests.php
+│       │       ├── ShowDateTests.php          # ★ Added: {showdate} translation
+│       │       ├── ShowEncodedTests.php
+│       │       ├── ShowURLTests.php
+│       │       └── ShowVariableTests.php
 │       ├── Validator/
 │       └── Variables/
 │

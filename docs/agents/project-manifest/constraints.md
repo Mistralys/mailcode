@@ -56,7 +56,7 @@
 ## Translation Coverage
 
 - **Apache Velocity**: Full coverage — all commands have translation classes.
-- **Hubspot HubL**: Partial coverage — limited to `showvar`, `showencoded`, `showurl`, `setvar`, and a subset of `if`/`elseif` subtypes (`variable`, `empty`, `equals-number`, `smaller-than`, `bigger-than`).
+- **Hubspot HubL**: Partial coverage — limited to `showvar`, `showencoded`, `showurl`, `setvar`, `showdate`, `for`, and a subset of `if`/`elseif` subtypes (`variable`, `empty`, `equals-number`, `smaller-than`, `bigger-than`, `contains`, `not-contains`, `begins-with`, `ends-with`).
 - Each syntax lives in `Translator/Syntax/{SyntaxName}/` with one translation class per command.
 - Syntax classes are discovered dynamically via `ClassCache::findClassesInFolder()`.
 

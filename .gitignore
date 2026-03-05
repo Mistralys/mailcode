@@ -15,3 +15,5 @@ docs/phpdoc/phpDocumentor.phar
 composer.phar
 tests/phpstan/result.txt
 tests/cache/*.php
+docs/**/work/
+docs/**/work.md

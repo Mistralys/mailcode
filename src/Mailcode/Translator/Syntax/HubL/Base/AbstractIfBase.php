@@ -183,11 +183,42 @@ abstract class AbstractIfBase extends BaseHubLCommandTranslation
      * @param Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral[] $searchTerms
      * @param string $containsType
      * @return string
-     * @throws Mailcode_Exception
      */
     protected function _translateContains(Mailcode_Variables_Variable $variable, bool $caseSensitive, bool $regexEnabled, array $searchTerms, string $containsType) : string
     {
-        return $this->translateNotImplemented();
+        // List variants have no HubL equivalent — return the not-implemented stub.
+        if(strpos($containsType, 'list-') !== false)
+        {
+            return $this->translateNotImplemented();
+        }
+
+        $isNot = strpos($containsType, 'not-contains') !== false;
+        $varName = $this->formatVariableName($variable->getFullName());
+
+        // $caseSensitive is misnamed: true means case-insensitive.
+        if($caseSensitive)
+        {
+            $varName .= '|lower';
+        }
+
+        $operator = $isNot ? 'not in' : 'in';
+        $parts = array();
+
+        foreach($searchTerms as $token)
+        {
+            $rawTerm = trim($token->getNormalized(), '"');
+
+            if($caseSensitive)
+            {
+                $rawTerm = mb_strtolower($rawTerm);
+            }
+
+            $parts[] = sprintf('"%s" %s %s', $rawTerm, $operator, $varName);
+        }
+
+        $connector = $isNot ? ' and ' : ' or ';
+
+        return implode($connector, $parts);
     }
 
     protected function translateNotImplemented(): string
@@ -197,6 +228,23 @@ abstract class AbstractIfBase extends BaseHubLCommandTranslation
 
     protected function _translateSearch(string $mode, Mailcode_Variables_Variable $variable, bool $caseSensitive, string $searchTerm) : string
     {
-        return $this->translateNotImplemented();
+        $varName = $this->formatVariableName($variable->getFullName());
+        $rawTerm = trim($searchTerm, '"');
+
+        // $caseSensitive is misnamed: true means case-insensitive.
+        if($caseSensitive)
+        {
+            $varName .= '|lower';
+            $rawTerm = strtolower($rawTerm);
+        }
+
+        if($mode === 'starts')
+        {
+            return sprintf('%s is string_startingwith "%s"', $varName, $rawTerm);
+        }
+
+        // ends: use Jinjava string slicing with a negative index.
+        $n = mb_strlen($rawTerm);
+        return sprintf('%s[-%d:] == "%s"', $varName, $n, $rawTerm);
     }
 }
