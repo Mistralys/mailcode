@@ -315,6 +315,25 @@ class Mailcode_Translator
 }
 ```
 
+### `Translator\BaseSyntax`
+
+```php
+namespace Mailcode\Translator;
+
+abstract class BaseSyntax implements SyntaxInterface
+{
+    /**
+     * Returns a list of command IDs that this syntax does not support.
+     * translateCommand() checks this list before class resolution and returns
+     * a canonical "{# !command is not supported in SyntaxName! #}" comment.
+     * Override in concrete syntax classes to declare unsupported commands.
+     *
+     * @return string[]
+     */
+    protected function getUnsupportedCommands() : array;
+}
+```
+
 ### `Translator\SyntaxInterface`
 
 ```php

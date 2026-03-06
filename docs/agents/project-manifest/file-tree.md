@@ -1,6 +1,6 @@
 # File Tree
 
-> **Annotation policy:** Temporary `★ Added` markers are stripped after each plan's review cycle. The tree reflects the current state without historical markers.
+> **Annotation policy:** Temporary `Added` markers are stripped after each plan's review cycle. The tree reflects the current state without historical markers.
 
 ```
 mailcode/
@@ -30,7 +30,7 @@ mailcode/
 │
 ├── src/
 │   ├── functions.php                  # Global helper functions (t(), dollarize(), etc.)
-│   ├── Mailcode.php                   # ★ Main entry point class
+│   ├── Mailcode.php                   # Main entry point class
 │   └── Mailcode/
 │       ├── ClassCache.php             # Dynamic class discovery & caching
 │       ├── Collection.php             # Command container with validation
@@ -53,7 +53,7 @@ mailcode/
 │       │   └── TypeFilter.php         # Filter commands by type
 │       │
 │       ├── Commands/                  # Command definitions
-│       │   ├── Command.php            # ★ Abstract base for all commands
+│       │   ├── Command.php            # Abstract base for all commands
 │       │   ├── Command/               # Concrete command classes
 │       │   │   ├── Break.php
 │       │   │   ├── Code.php
@@ -95,14 +95,14 @@ mailcode/
 │       │   ├── CommandException.php
 │       │   ├── CommonConstants.php    # Shared command constants
 │       │   ├── Highlighter.php        # HTML highlight rendering
-│       │   ├── IfBase.php             # ★ Base for if/elseif commands
+│       │   ├── IfBase.php             # Base for if/elseif commands
 │       │   ├── Keywords.php           # Toggleable keyword flags
 │       │   ├── LogicKeywords.php      # AND/OR compound conditions
 │       │   ├── LogicKeywords/         # Logic keyword support classes
 │       │   ├── Normalizer.php         # Command text normalization
 │       │   ├── Normalizer/            # Normalizer utilities
 │       │   ├── ParamsException.php
-│       │   ├── ShowBase.php           # ★ Base for show* commands
+│       │   ├── ShowBase.php           # Base for show* commands
 │       │   └── Type/                  # Command type classes
 │       │       ├── Type.php           # Type base
 │       │       ├── Standalone         # Self-contained commands
@@ -151,7 +151,7 @@ mailcode/
 │       │   ├── ParseResult.php        # Parse operation result wrapper
 │       │   ├── PreParser.php          # Protected content extraction
 │       │   ├── PreParser/             # PreParser support classes
-│       │   ├── Safeguard.php          # ★ Placeholder-based protection
+│       │   ├── Safeguard.php          # Placeholder-based protection
 │       │   ├── Safeguard/
 │       │   │   ├── DelimiterValidator.php
 │       │   │   ├── Formatter.php      # Formatting entry interface
@@ -227,7 +227,8 @@ mailcode/
 │       ├── PreProcessor/
 │       ├── StringContainer/
 │       ├── Translator/
-│       │   └── HubL/                          # HubL translation tests (24 files)
+│       │   └── HubL/                          # HubL translation tests (26 files)
+│       │       ├── BreakTests.php
 │       │       ├── ElseIfBeginsWithTests.php
 │       │       ├── ElseIfBiggerThanTests.php
 │       │       ├── ElseIfContainsTests.php  
@@ -250,6 +251,7 @@ mailcode/
 │       │       ├── SetVariableTests.php
 │       │       ├── ShowDateTests.php        
 │       │       ├── ShowEncodedTests.php
+│       │       ├── ShowSnippetTests.php
 │       │       ├── ShowURLTests.php
 │       │       └── ShowVariableTests.php
 │       ├── Validator/

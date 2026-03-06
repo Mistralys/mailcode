@@ -59,4 +59,19 @@ abstract class HubLTestCase extends MailcodeTestCase
             ->createHubL()
             ->translateCommand($command);
     }
+
+    /**
+     * Builds the canonical "not supported in HubL" comment string for the given command ID.
+     *
+     * The format mirrors the one produced by {@see \Mailcode\Translator\BaseSyntax::translateCommand()} and
+     * must stay in sync with it. Use this method in all HubL stub test files instead of
+     * duplicating the format string as a private constant.
+     *
+     * @param string $commandId The command identifier (e.g. 'showsnippet', 'break').
+     * @return string The not-supported comment, e.g. '{# !showsnippet is not supported in HubL! #}'.
+     */
+    protected static function buildNotSupportedComment(string $commandId): string
+    {
+        return sprintf('{# !%s is not supported in HubL! #}', strtolower($commandId));
+    }
 }

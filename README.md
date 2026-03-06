@@ -151,7 +151,7 @@ All interactions start through the **`Mailcode`** class or the **`Mailcode_Facto
 | Syntax | Coverage |
 |--------|----------|
 | **Apache Velocity** | Full — all commands translated |
-| **Hubspot HubL** | Partial — `showvar`, `showencoded`, `showurl`, `setvar`, subset of `if`/`elseif` |
+| **Hubspot HubL** | 15 of 17 commands fully translated — `{break}` and `{showsnippet}` are not supported (emit a HubL comment stub) |
 
 ## License
 

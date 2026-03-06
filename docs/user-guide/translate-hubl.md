@@ -17,7 +17,6 @@ but a number of commands are available.
 - `{setvar}`
 - `{shownumber}`
 - `{showphone}`
-- `{showsnippet}`
 - `{comment}`
 - `{code}`
 - `{mono}`
@@ -80,6 +79,25 @@ The following commands are replaced by a HubL comment explaining
 that they are not supported:
 
 - `{break}`
+- `{showsnippet}` — Requires a server-side dictionary infrastructure (DictionaryTool) to resolve snippet names to their text content at send time. This infrastructure does not exist in HubL. The command is replaced by a HubL comment in the output.
+
+Each unsupported command produces a comment in this format:
+
+```
+{# !<command> is not supported in HubL! #}
+```
+
+**Examples:**
+
+| Mailcode command | HubL output |
+|---|---|
+| `{break}` | `{# !break is not supported in HubL! #}` |
+| `{showsnippet: "name"}` | `{# !showsnippet is not supported in HubL! #}` |
+
+> **Implementation note:** The unsupported-commands list is declared via `HubLSyntax::getUnsupportedCommands()`
+> (an override of `BaseSyntax::getUnsupportedCommands()`). The translation guard fires before any class
+> resolution, so no exception is thrown and the stub translation classes for these commands are
+> intentionally retained but bypassed at runtime.
 
 ## Variable name handling
 

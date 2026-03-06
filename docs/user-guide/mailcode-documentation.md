@@ -433,6 +433,8 @@ The `{showphone}` command can convert from the country-specific phone number for
 
 Text snippets are inserted using the `showsnippet` command:
 
+> **Prerequisite:** The `showsnippet` command depends on a server-side snippet dictionary that must be configured for the target mail platform. In Apache Velocity, this is provided by the `DictionaryTool`. HubL does not support this infrastructure and cannot use this command.
+
 ```
 Your selected product: {showsnippet: $product_cloudserver}
 ```

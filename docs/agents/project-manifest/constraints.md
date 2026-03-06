@@ -61,9 +61,44 @@
 ## Translation Coverage
 
 - **Apache Velocity**: Full coverage — all commands have translation classes.
-- **Hubspot HubL**: Partial coverage — limited to `showvar`, `showencoded`, `showurl`, `setvar`, `showdate`, `for`, and a subset of `if`/`elseif` subtypes (`variable`, `empty`, `equals-number`, `smaller-than`, `bigger-than`, `contains`, `not-contains`, `begins-with`, `ends-with`).
+- **Hubspot HubL**: 15 of 17 commands are fully translated. Two commands (`Break`, `ShowSnippet`) have no HubL equivalent. They are declared via the **unsupported-commands registry** (see below) and their stub translation classes are retained but bypassed at runtime.
+
+#### Unsupported-Commands Registry Pattern
+
+`BaseSyntax` provides an overridable `getUnsupportedCommands() : string[]` method that returns an empty list by default. `translateCommand()` checks this list **before** attempting class resolution: if the command's ID is in the list, a canonical `{# !command is not supported in SyntaxName! #}` comment is returned immediately, avoiding `Mailcode_Translator_Exception`. `HubLSyntax` overrides the method to declare `['Break', 'ShowSnippet']` as unsupported. Stub translation classes for these commands **must not be deleted** — they satisfy the `Mailcode_Translator_Command_*` interface contracts and serve as documentation of the unsupported status.
 - Each syntax lives in `Translator/Syntax/{SyntaxName}/` with one translation class per command.
 - Syntax classes are discovered dynamically via `ClassCache::findClassesInFolder()`.
+
+### HubL Translation Coverage Table
+
+All 17 translation classes in `src/Mailcode/Translator/Syntax/HubL/`:
+
+| Command | Translation Class | Tier |
+|---------|-------------------|------|
+| `break` | `BreakTranslation` | Stub / Not Supported |
+| `code` | `CodeTranslation` | Fully Translated |
+| `comment` | `CommentTranslation` | Fully Translated |
+| `elseif` | `ElseIfTranslation` | Fully Translated |
+| `else` | `ElseTranslation` | Fully Translated |
+| `end` | `EndTranslation` | Fully Translated |
+| `for` | `ForTranslation` | Fully Translated |
+| `if` | `IfTranslation` | Fully Translated |
+| `mono` | `MonoTranslation` | Fully Translated |
+| `setvar` | `SetVariableTranslation` | Fully Translated |
+| `showdate` | `ShowDateTranslation` | Fully Translated |
+| `showencoded` | `ShowEncodedTranslation` | Fully Translated |
+| `shownumber` | `ShowNumberTranslation` | Fully Translated |
+| `showphone` | `ShowPhoneTranslation` | Fully Translated |
+| `showsnippet` | `ShowSnippetTranslation` | Stub / Not Supported |
+| `showurl` | `ShowURLTranslation` | Fully Translated |
+| `showvar` | `ShowVariableTranslation` | Fully Translated |
+
+**Tier definitions:**
+
+| Tier | Definition |
+|------|------------|
+| **Fully Translated** | Class emits valid HubL output for the command. |
+| **Stub / Not Supported** | Class emits `{# !command is not supported in HubL! #}` — no HubL equivalent exists. |
 
 ## Command Parameter Syntax
 
@@ -97,13 +132,32 @@
 - Test bootstrap in `tests/bootstrap.php`.
 - Test assets (helper classes, fixture files) in `tests/assets/`.
 - Class cache for tests stored in `tests/cache/`.
-- **Test baseline:** 519 passing tests, 0 warnings. Use 519 as the baseline when verifying regressions in any WP.
+- **Test baseline:** 526 passing tests, 0 warnings. Use 526 as the baseline when verifying regressions in any WP.
 - **Universal test namespace pattern:** Every test file under `tests/testsuites/` must use the namespace `MailcodeTests\{Suite}[\{SubDir}]`, where `{Suite}` matches the top-level directory and `{SubDir}` matches any intermediate directory. Examples:
   - `tests/testsuites/Commands/Types/` → `namespace MailcodeTests\Commands\Types;`
   - `tests/testsuites/Translator/HubL/` → `namespace MailcodeTests\Translator\HubL;`
   - `tests/testsuites/Variables/` → `namespace MailcodeTests\Variables;`
   Do **not** use the bare `Mailcode` namespace, the legacy `testsuites\...` prefix, or mixed-case variants such as `MailCodeTests` (uppercase 'C'). All test files must end in `*Tests.php` and include `declare(strict_types=1)`.
 - **HubL-specific note (special case of the general pattern):** All HubL test files under `tests/testsuites/Translator/HubL/` use `namespace MailcodeTests\Translator\HubL;`. This is the canonical form — do **not** use `testsuites\Translator\HubL` or `MailCodeTests\Translator\HubL`.
+- **HubL not-supported test helper:** When testing a command that emits a "not supported" comment, use `self::buildNotSupportedComment(string $commandId): string` defined on `HubLTestCase` (`tests/assets/classes/HubLTestCase.php`). This method returns the canonical `{# !<commandId> is not supported in HubL! #}` string and stays in sync with `BaseSyntax::translateCommand()`. Do **not** duplicate the format string as a private constant in individual test files.
+
+### HubL Stub Test Convention
+
+HubL translator test files fall into two categories with distinct patterns:
+
+**Stub/unsupported commands** (e.g., `Break`, `ShowSnippet`):
+- Use **separate `test_<variant>()` methods**, one per command variant.
+- Each method contains a single `runCommands()` call.
+- Do NOT use a single `test_translateCommand()` method with an array.
+- This pattern makes test failures immediately locatable and keeps fixes granular.
+- Reference file: `tests/testsuites/Translator/HubL/ShowSnippetTests.php`
+
+**Fully-translated commands** (e.g., `ShowVariable`, `For`):
+- Use a single `test_translateCommand()` method with an array of cases.
+- Each array entry covers one output variant.
+
+**Expected-string source:**
+- Use `self::buildNotSupportedComment(string $commandId)` (defined on `HubLTestCase`) to derive the expected "not supported" comment. Do NOT hardcode private constants.
 
 ## Manifest Maintenance — Annotation Policy
 
