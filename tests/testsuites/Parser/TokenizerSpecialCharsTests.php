@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace testsuites\Parser;
+namespace MailcodeTests\Parser;
 
 use Mailcode\Parser\Statement\Tokenizer\SpecialChars;
 use MailcodeTestCase;

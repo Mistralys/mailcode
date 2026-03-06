@@ -67,6 +67,17 @@ abstract class BaseHubLCommandTranslation extends BaseCommandTranslation
         Mailcode_Commands_Keywords::TYPE_URLDECODE => '%s|urldecode',
     );
 
+    /**
+     * Applies any active encoding filters (e.g., urlencode, urldecode) to the given HubL statement.
+     *
+     * @note The $statement parameter must be the INNER expression only (e.g., `var|filter`),
+     *       without the surrounding `{{ }}` wrapper. Applying this method to a fully wrapped
+     *       output (e.g., `{{ var }}`) will produce invalid HubL like `{{ {{ var }}|urlencode }}`.
+     *
+     * @param EncodableInterface $command
+     * @param string $statement The inner HubL expression (without `{{ }}`).
+     * @return string
+     */
     protected function renderEncodings(EncodableInterface $command, string $statement): string
     {
         $encodings = $command->getActiveEncodings();

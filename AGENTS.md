@@ -107,11 +107,11 @@ PHPStan is configured via `phpstan.neon` in the project root (includes `tests/ph
 
 | Item | Value |
 |------|-------|
-| **Language / Runtime** | PHP >= 7.4 (tested through 8.4) |
+| **Language / Runtime** | PHP >= 8.4 |
 | **Architecture Pattern** | Registry + Factory + Strategy + Pipeline + Placeholder/Safeguard |
 | **Package Manager** | Composer (`composer.json`) |
-| **Test Framework** | PHPUnit >= 9.6 (`phpunit.xml`, suites under `tests/testsuites/`) |
-| **Static Analysis** | PHPStan >= 1.10, level 9 (`tests/phpstan/config.neon`) |
+| **Test Framework** | PHPUnit >= 12.0 (`phpunit.xml`, suites under `tests/testsuites/`) |
+| **Static Analysis** | PHPStan >= 2.1, level 9 (`tests/phpstan/config.neon`) |
 | **Build Tool** | Makefile |
 | **Strict Typing** | `declare(strict_types=1)` in all source files |
 | **Namespace Convention** | Underscore-delimited (`Mailcode_Component_Sub`) for most classes; namespaced (`Mailcode\...`) for newer code |

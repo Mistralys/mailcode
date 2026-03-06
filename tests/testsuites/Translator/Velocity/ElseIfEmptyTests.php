@@ -1,0 +1,29 @@
+<?php
+
+
+declare(strict_types=1);
+
+namespace MailcodeTests\Translator\Velocity;
+use Mailcode\Mailcode_Factory;
+use MailcodeTestClasses\VelocityTestCase;
+
+final class ElseIfEmptyTests extends VelocityTestCase
+{
+    public function test_translateCommand() : void
+    {
+        $tests = array(
+            array(
+                'label' => 'ElseIf empty',
+                'mailcode' => Mailcode_Factory::elseIf()->empty('FOO.BAR'),
+                'expected' => '#elseif($StringUtils.isEmpty($FOO.BAR))'
+            ),
+            array(
+                'label' => 'ElseIf not empty',
+                'mailcode' => Mailcode_Factory::elseIf()->notEmpty('FOO.BAR'),
+                'expected' => '#elseif(!$StringUtils.isEmpty($FOO.BAR))'
+            )
+        );
+        
+        $this->runCommands($tests);
+    }
+}

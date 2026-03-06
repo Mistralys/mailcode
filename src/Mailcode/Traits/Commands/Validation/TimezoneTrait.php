@@ -51,6 +51,25 @@ trait TimezoneTrait
     }
 
     /**
+     * Checks whether a timezone was explicitly provided in the command parameters,
+     * as opposed to relying on the default timezone.
+     *
+     * @return bool
+     */
+    public function hasExplicitTimezone() : bool
+    {
+        // Fresh lookup is intentional: $timezoneToken is only populated during
+        // validateSyntax_check_timezone() (parse-time). hasExplicitTimezone() must
+        // be safe to call at translate-time, before or without validation having run.
+        $token = $this->requireParams()
+            ->getInfo()
+            ->getTokenByParamName(TimezoneInterface::PARAMETER_NAME);
+
+        return $token instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
+            || $token instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable;
+    }
+
+    /**
      * Gets the time zone to use for the command. If none has
      * been specified in the original command, the default
      * time zone is used as defined via {@see Mailcode_Commands_Command_ShowDate::setDefaultTimezone()}.

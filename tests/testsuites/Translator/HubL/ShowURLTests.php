@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace testsuites\Translator\HubL;
+namespace MailcodeTests\Translator\HubL;
 
 use Mailcode\Mailcode_Factory;
 use MailcodeTestClasses\HubLTestCase;
@@ -74,6 +74,7 @@ final class ShowURLTests extends HubLTestCase
     {
         $this->markTestIncomplete('IF commands not ready yet');
 
+        // @phpstan-ignore-next-line deadCode.unreachable
         $url = <<<'EOT'
 {if variable: $COUNTRY == "fr"}
 https://mistralys.fr

@@ -1,5 +1,7 @@
 # File Tree
 
+> **Annotation policy:** Temporary `★ Added` markers are stripped after each plan's review cycle. The tree reflects the current state without historical markers.
+
 ```
 mailcode/
 ├── composer.json                      # Package metadata, dependencies, autoloading
@@ -226,27 +228,27 @@ mailcode/
 │       ├── StringContainer/
 │       ├── Translator/
 │       │   └── HubL/                          # HubL translation tests (24 files)
-│       │       ├── ElseIfBeginsWithTests.php  # ★ Added: begins-with (elseif)
+│       │       ├── ElseIfBeginsWithTests.php
 │       │       ├── ElseIfBiggerThanTests.php
-│       │       ├── ElseIfContainsTests.php    # ★ Added: contains (elseif)
+│       │       ├── ElseIfContainsTests.php  
 │       │       ├── ElseIfEmptyTests.php
-│       │       ├── ElseIfEndsWithTests.php    # ★ Added: ends-with (elseif)
+│       │       ├── ElseIfEndsWithTests.php  
 │       │       ├── ElseIfEqualsNumberTests.php
-│       │       ├── ElseIfNotContainsTests.php # ★ Added: not-contains (elseif)
+│       │       ├── ElseIfNotContainsTests.php
 │       │       ├── ElseIfSmallerThanTests.php
 │       │       ├── ElseIfVariableTests.php
-│       │       ├── ForTests.php               # ★ Added: {for} loop translation
-│       │       ├── IfBeginsWithTests.php      # ★ Added: begins-with
+│       │       ├── ForTests.php             
+│       │       ├── IfBeginsWithTests.php    
 │       │       ├── IfBiggerThanTests.php
-│       │       ├── IfContainsTests.php        # ★ Added: contains
+│       │       ├── IfContainsTests.php      
 │       │       ├── IfEmptyTests.php
-│       │       ├── IfEndsWithTests.php        # ★ Added: ends-with
+│       │       ├── IfEndsWithTests.php      
 │       │       ├── IfEqualsNumberTests.php
-│       │       ├── IfNotContainsTests.php     # ★ Added: not-contains
+│       │       ├── IfNotContainsTests.php   
 │       │       ├── IfSmallerThanTests.php
 │       │       ├── IfVariableTests.php
 │       │       ├── SetVariableTests.php
-│       │       ├── ShowDateTests.php          # ★ Added: {showdate} translation
+│       │       ├── ShowDateTests.php        
 │       │       ├── ShowEncodedTests.php
 │       │       ├── ShowURLTests.php
 │       │       └── ShowVariableTests.php

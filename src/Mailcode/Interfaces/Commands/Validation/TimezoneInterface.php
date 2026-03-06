@@ -32,6 +32,14 @@ interface TimezoneInterface extends Mailcode_Interfaces_Commands_Command
     public const VALIDATION_TIMEZONE_CODE_WRONG_TYPE = 135501;
 
     /**
+     * Checks whether a timezone was explicitly provided in the command parameters,
+     * as opposed to relying on the default timezone.
+     *
+     * @return bool
+     */
+    public function hasExplicitTimezone() : bool;
+
+    /**
      * Retrieves the token containing the timezone information.
      * @return Mailcode_Parser_Statement_Tokenizer_Token
      */

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace testsuites\Validator;
+namespace MailcodeTests\Validator;
 
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands_Keywords;

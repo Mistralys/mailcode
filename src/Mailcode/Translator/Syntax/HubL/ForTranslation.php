@@ -9,8 +9,6 @@ declare(strict_types=1);
 namespace Mailcode\Translator\Syntax\HubL;
 
 use Mailcode\Mailcode_Commands_Command_For;
-use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Number;
-use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Variable;
 use Mailcode\Mailcode_Translator_Command_For;
 use Mailcode\Mailcode_Variables_Variable;
 use Mailcode\Translator\Syntax\BaseHubLCommandTranslation;

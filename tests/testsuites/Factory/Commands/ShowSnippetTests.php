@@ -1,0 +1,38 @@
+<?php
+
+
+declare(strict_types=1);
+
+namespace MailcodeTests\Factory\Commands;
+use Mailcode\Mailcode_Factory;
+use Mailcode\Mailcode_Factory_Exception;
+use Mailcode\Mailcode_Commands_Command_ShowSnippet;
+use MailcodeTestClasses\FactoryTestCase;
+
+final class ShowSnippetTests extends FactoryTestCase
+{
+    protected function getExpectedClass() : string
+    {
+        return Mailcode_Commands_Command_ShowSnippet::class;
+    }
+    
+    public function test_showSnippet() : void
+    {
+        $this->runCommand(
+            'Variable name without $',
+            function() { return Mailcode_Factory::show()->snippet('snippet_name'); }
+        );
+        
+        $this->runCommand(
+            'Variable name with $',
+            function() { return Mailcode_Factory::show()->snippet('$snippet_name'); }
+        );
+    }
+    
+    public function test_showSnippet_error() : void
+    {
+        $this->expectException(Mailcode_Factory_Exception::class);
+        
+        Mailcode_Factory::show()->snippet('0invalid_var');
+    }
+}

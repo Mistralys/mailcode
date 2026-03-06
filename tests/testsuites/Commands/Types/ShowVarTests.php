@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace testsuites\Commands\Types;
+namespace MailcodeTests\Commands\Types;
 
 use Mailcode\Decrypt\DecryptSettings;
 use Mailcode\Mailcode;

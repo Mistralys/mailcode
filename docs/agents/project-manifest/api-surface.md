@@ -430,6 +430,7 @@ class Mailcode_StringContainer
 ```php
 class ClassCache
 {
+    /** @phpstan-param class-string|null $instanceOf */
     public static function findClassesInFolder(
         string|FolderInfo $folder,
         bool $recursive = false,
@@ -449,6 +450,28 @@ Keywords that can be appended to commands: `insensitive:`, `regex:`, `urlencode:
 ## `Mailcode_Commands_LogicKeywords` (Compound Conditions)
 
 Enables `and:` / `or:` connectors within `if`/`elseif` commands for compound conditions.
+
+---
+
+## `TimezoneInterface` / `TimezoneTrait` (Validation)
+
+**Location:** `src/Mailcode/Interfaces/Commands/Validation/TimezoneInterface.php` / `src/Mailcode/Traits/Commands/Validation/TimezoneTrait.php`
+
+Interface and trait pair for commands that support an explicit timezone parameter (`timezone:`). Implemented by `Mailcode_Commands_Command_ShowDate`.
+
+```php
+interface TimezoneInterface
+{
+    public const PARAMETER_NAME = 'timezone';
+    public const VALIDATION_TIMEZONE_NAME = 'check_timezone';
+    public const VALIDATION_TIMEZONE_CODE_WRONG_TYPE = 135501;
+
+    public function hasExplicitTimezone() : bool;  // true when a timezone token exists in the params
+    public function getTimezoneToken() : Mailcode_Parser_Statement_Tokenizer_Token;
+    /** @param Mailcode_Variables_Variable|string|null $timezone */
+    public function setTimezone($timezone) : self;
+}
+```
 
 ---
 

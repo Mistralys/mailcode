@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MailCodeTests\Translator\HubL;
+namespace MailcodeTests\Translator\HubL;
 
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands_Command_ShowEncoded;

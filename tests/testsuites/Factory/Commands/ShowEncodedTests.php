@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace testsuites\Factory\Commands;
+namespace MailcodeTests\Factory\Commands;
 
 use Mailcode\Mailcode_Commands_Keywords;
 use Mailcode\Mailcode_Factory;

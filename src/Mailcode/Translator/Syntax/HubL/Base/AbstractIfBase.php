@@ -178,13 +178,13 @@ abstract class AbstractIfBase extends BaseHubLCommandTranslation
 
     /**
      * @param Mailcode_Variables_Variable $variable
-     * @param bool $caseSensitive
+     * @param bool $caseInsensitive
      * @param bool $regexEnabled
      * @param Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral[] $searchTerms
      * @param string $containsType
      * @return string
      */
-    protected function _translateContains(Mailcode_Variables_Variable $variable, bool $caseSensitive, bool $regexEnabled, array $searchTerms, string $containsType) : string
+    protected function _translateContains(Mailcode_Variables_Variable $variable, bool $caseInsensitive, bool $regexEnabled, array $searchTerms, string $containsType) : string
     {
         // List variants have no HubL equivalent — return the not-implemented stub.
         if(strpos($containsType, 'list-') !== false)
@@ -195,8 +195,7 @@ abstract class AbstractIfBase extends BaseHubLCommandTranslation
         $isNot = strpos($containsType, 'not-contains') !== false;
         $varName = $this->formatVariableName($variable->getFullName());
 
-        // $caseSensitive is misnamed: true means case-insensitive.
-        if($caseSensitive)
+        if($caseInsensitive)
         {
             $varName .= '|lower';
         }
@@ -208,7 +207,7 @@ abstract class AbstractIfBase extends BaseHubLCommandTranslation
         {
             $rawTerm = trim($token->getNormalized(), '"');
 
-            if($caseSensitive)
+            if($caseInsensitive)
             {
                 $rawTerm = mb_strtolower($rawTerm);
             }
@@ -226,16 +225,15 @@ abstract class AbstractIfBase extends BaseHubLCommandTranslation
         return '{# ! if commands are not fully implemented ! #}';
     }
 
-    protected function _translateSearch(string $mode, Mailcode_Variables_Variable $variable, bool $caseSensitive, string $searchTerm) : string
+    protected function _translateSearch(string $mode, Mailcode_Variables_Variable $variable, bool $caseInsensitive, string $searchTerm) : string
     {
         $varName = $this->formatVariableName($variable->getFullName());
         $rawTerm = trim($searchTerm, '"');
 
-        // $caseSensitive is misnamed: true means case-insensitive.
-        if($caseSensitive)
+        if($caseInsensitive)
         {
             $varName .= '|lower';
-            $rawTerm = strtolower($rawTerm);
+            $rawTerm = mb_strtolower($rawTerm);
         }
 
         if($mode === 'starts')

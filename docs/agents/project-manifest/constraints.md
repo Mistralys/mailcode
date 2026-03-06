@@ -36,6 +36,11 @@
 
 - All source files use `declare(strict_types=1)`.
 - PHPStan analysis is clean at **level 9** (the strictest practical level).
+- **PHP 8.4 type system:** The project requires PHP >= 8.4. Native union types (`string|FolderInfo`), intersection types, and `never` are available and preferred over `@param`-only docblock annotations for all new and modified code. Use `@phpstan-param` annotations only when PHPStan requires a refinement that the native type cannot express (e.g., `class-string` narrowing within a `string` type).
+
+## String Functions
+
+- Use **`mb_strtolower()`** (not `strtolower()`) and **`mb_strtoupper()`** (not `strtoupper()`) whenever operating on strings that may contain non-ASCII characters (e.g., search terms, variable values, user content). The translator layer handles multilingual content and must be Unicode-safe throughout.
 
 ## Error Handling
 
@@ -92,3 +97,16 @@
 - Test bootstrap in `tests/bootstrap.php`.
 - Test assets (helper classes, fixture files) in `tests/assets/`.
 - Class cache for tests stored in `tests/cache/`.
+- **Test baseline:** 519 passing tests, 0 warnings. Use 519 as the baseline when verifying regressions in any WP.
+- **Universal test namespace pattern:** Every test file under `tests/testsuites/` must use the namespace `MailcodeTests\{Suite}[\{SubDir}]`, where `{Suite}` matches the top-level directory and `{SubDir}` matches any intermediate directory. Examples:
+  - `tests/testsuites/Commands/Types/` → `namespace MailcodeTests\Commands\Types;`
+  - `tests/testsuites/Translator/HubL/` → `namespace MailcodeTests\Translator\HubL;`
+  - `tests/testsuites/Variables/` → `namespace MailcodeTests\Variables;`
+  Do **not** use the bare `Mailcode` namespace, the legacy `testsuites\...` prefix, or mixed-case variants such as `MailCodeTests` (uppercase 'C'). All test files must end in `*Tests.php` and include `declare(strict_types=1)`.
+- **HubL-specific note (special case of the general pattern):** All HubL test files under `tests/testsuites/Translator/HubL/` use `namespace MailcodeTests\Translator\HubL;`. This is the canonical form — do **not** use `testsuites\Translator\HubL` or `MailCodeTests\Translator\HubL`.
+
+## Manifest Maintenance — Annotation Policy
+
+- Temporary `★ Added` markers may be placed in `file-tree.md` during a plan cycle to highlight new files.
+- After the plan's code-review cycle completes, all `★ Added` markers must be stripped from `file-tree.md`. The tree should always reflect the current state without historical markers.
+- Agents executing post-plan cleanup work packages must remove all `★ Added` annotations as part of the housekeeping pass.

@@ -173,15 +173,6 @@ class Mailcode_Commands_LogicKeywords extends OperationResult
         
         $store = substr($params, 0, $pos);
 
-        if($store === false)
-        {
-            throw new Mailcode_Exception(
-                'Keyword substring not found',
-                null,
-                self::ERROR_KEYWORD_SUBSTRING_NOT_FOUND
-            );
-        }
-
         $params = trim(substr($params, $pos+$length));
         
         $stack[] = $store;

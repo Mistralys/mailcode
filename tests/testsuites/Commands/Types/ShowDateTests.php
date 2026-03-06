@@ -5,6 +5,8 @@
  * @see \MailcodeTests\Commands\Types\ShowDateTests
  */
 
+
+declare(strict_types=1);
 namespace MailcodeTests\Commands\Types;
 
 use Mailcode\Interfaces\Commands\Validation\TimezoneInterface;

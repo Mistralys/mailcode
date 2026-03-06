@@ -134,6 +134,7 @@ function extractLabels() : array
     $result = array();
 
     foreach ($lines as $line) {
+        /** @var array<int, string> $line */
         $result[$line[$isoIdx]] = $line[$nameIdx];
     }
 

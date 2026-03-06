@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace Mailcode\Translator\Syntax\HubL;
 
-use Mailcode\Interfaces\Commands\Validation\TimezoneInterface;
 use Mailcode\Mailcode_Commands_Command_ShowDate;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Variable;
@@ -36,23 +35,7 @@ class ShowDateTranslation extends BaseHubLCommandTranslation implements Mailcode
             ? $this->formatVariableName($command->getVariableName())
             : 'local_dt';
 
-        // Inspect the command params directly to detect whether a timezone was
-        // explicitly provided. We avoid calling getTimezoneToken() here because
-        // that method creates a default timezone token on demand, which would
-        // make every command appear to have an explicit timezone.
-        $timezoneToken = null;
-        $params = $command->getParams();
-
-        if($params !== null)
-        {
-            $rawToken = $params->getInfo()->getTokenByParamName(TimezoneInterface::PARAMETER_NAME);
-
-            if($rawToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral
-                || $rawToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable)
-            {
-                $timezoneToken = $rawToken;
-            }
-        }
+        $timezoneToken = $command->hasExplicitTimezone() ? $command->getTimezoneToken() : null;
 
         if($timezoneToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral)
         {

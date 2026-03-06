@@ -1,0 +1,30 @@
+<?php
+
+
+declare(strict_types=1);
+
+namespace MailcodeTests\Factory\Commands;
+use Mailcode\Mailcode_Factory;
+use Mailcode\Mailcode_Commands_Command_If_Empty;
+use MailcodeTestClasses\FactoryTestCase;
+
+final class IfEmptyTests extends FactoryTestCase
+{
+    protected function getExpectedClass() : string
+    {
+        return Mailcode_Commands_Command_If_Empty::class;
+    }
+    
+    public function test_ifEmpty() : void
+    {
+        $this->runCommand(
+            'Variable without dollar sign',
+            function() { return Mailcode_Factory::if()->empty('FOO.BAR'); }
+        );
+        
+        $this->runCommand(
+            'Variable with dollar sign',
+            function() { return Mailcode_Factory::if()->empty('$FOO.BAR'); }
+        );
+    }
+}

@@ -103,7 +103,7 @@ class Mailcode_Factory_CommandSets_Set_Show extends Mailcode_Factory_CommandSets
     }
 
     /**
-     * @param string|NULL $snippetName The name of the snippet to show.
+     * @param string $snippetName The name of the snippet to show.
      * @return Mailcode_Commands_Command_ShowSnippet
      * @throws Mailcode_Factory_Exception
      */
