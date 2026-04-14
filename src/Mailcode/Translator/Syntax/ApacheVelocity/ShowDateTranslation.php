@@ -29,6 +29,7 @@ class ShowDateTranslation extends BaseApacheVelocityCommandTranslation implement
 {
     public const ERROR_UNKNOWN_DATE_FORMAT_CHARACTER = 55501;
     public const ERROR_UNHANDLED_TIME_ZONE_TOKEN_TYPE = 55502;
+    public const ERROR_INTERNAL_FORMAT_CONTAINS_OPTIONAL_BRACKETS = 55503;
 
     /**
      * The date format used in the date variable. This is used to convert
@@ -73,10 +74,26 @@ class ShowDateTranslation extends BaseApacheVelocityCommandTranslation implement
         $internalFormat = $command->getTranslationParam('internal_format');
 
         if (is_string($internalFormat) && !empty($internalFormat)) {
-            return $internalFormat;
+            $format = $internalFormat;
+        } else {
+            $format = self::DEFAULT_INTERNAL_FORMAT;
         }
 
-        return self::DEFAULT_INTERNAL_FORMAT;
+        $validation = Mailcode_Date_FormatInfo::validateJavaFormat($format);
+
+        if (!$validation->isValid()) {
+            throw new Mailcode_Translator_Exception(
+                'Internal date format contains optional-section brackets.',
+                sprintf(
+                    'The internal_format "%s" contains square brackets, which are not supported by SimpleDateFormat. ' .
+                    'Remove the brackets or use a compatible format string.',
+                    $format
+                ),
+                self::ERROR_INTERNAL_FORMAT_CONTAINS_OPTIONAL_BRACKETS
+            );
+        }
+
+        return $format;
     }
 
     public function translate(Mailcode_Commands_Command_ShowDate $command): string

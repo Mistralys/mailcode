@@ -210,6 +210,10 @@ $var->setTranslationParam('internal_format', 'yyyy-MM-dd');
 
 The translator will automatically use the specified format instead.
 
+> **Note:** The internal format must be a valid Java `SimpleDateFormat` pattern.
+> Optional-section brackets (`[` and `]`) from `DateTimeFormatter` are **not supported**
+> and will cause a `Mailcode_Translator_Exception` to be thrown during translation.
+
 ## Configuring date formats via Safeguard
 
 To adjust the format of dates in a safeguarded string, the shortest way is to set the translation parameter for relevant date variables.

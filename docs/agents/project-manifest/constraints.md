@@ -107,6 +107,12 @@ All 17 translation classes in `src/Mailcode/Translator/Syntax/HubL/`:
 - Special characters in strings: escape double quotes with `\"`, escape curly braces with `\{` and `\}`.
 - Keywords (flags) are appended with a colon suffix: `insensitive:`, `regex:`, `urlencode:`, etc.
 
+## Date Translation Constraints
+
+- **PHP format strings** are validated character-by-character against a closed whitelist (`Mailcode_Date_FormatInfo::validateFormat()`). Unrecognized characters are rejected.
+- **Java internal format strings** (used by the `internal_format` translation parameter) are validated by `Mailcode_Date_FormatInfo::validateJavaFormat()`. Optional-section brackets (`[` and `]`) from `DateTimeFormatter` are rejected because the target platforms (Apache Velocity and HubL) use `SimpleDateFormat`, which does not support them.
+- The **output LDML/Java format** is generated from a 1:1 character mapping table and cannot produce invalid characters.
+
 ## Collection Finalization
 
 - After parsing, `Mailcode_Collection::finalize()` is called, which:

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace MailcodeTests\Translator\Velocity;
 
 use Mailcode\Mailcode_Factory;
+use Mailcode\Mailcode_Date_FormatInfo;
+use Mailcode\Mailcode_Translator_Exception;
 use Mailcode\Translator\Syntax\ApacheVelocity\ShowDateTranslation;
 use MailcodeTestClasses\VelocityTestCase;
 
@@ -96,5 +98,54 @@ final class ShowDateTests extends VelocityTestCase
 
             $this->assertStringContainsString($javaChar, $result, 'PHP Char: [' . $phpChar . ']');
         }
+    }
+
+    public function test_internalFormat_withBrackets_throwsException(): void
+    {
+        $var = Mailcode_Factory::show()->date('FOO.BAR', 'd.m.Y');
+        $var->setTranslationParam('internal_format', "yyyy-MM-dd['T'HH:mm:ss]");
+
+        $syntax = $this->translator->createApacheVelocity();
+
+        $this->expectException(Mailcode_Translator_Exception::class);
+        $this->expectExceptionCode(ShowDateTranslation::ERROR_INTERNAL_FORMAT_CONTAINS_OPTIONAL_BRACKETS);
+
+        $syntax->translateCommand($var);
+    }
+
+    public function test_internalFormat_withoutBrackets_works(): void
+    {
+        $var = Mailcode_Factory::show()->date('FOO.BAR', 'd.m.Y');
+        $var->setTranslationParam('internal_format', 'yyyy-MM-dd');
+
+        $syntax = $this->translator->createApacheVelocity();
+        $result = $syntax->translateCommand($var);
+
+        $this->assertStringContainsString('yyyy-MM-dd', $result);
+    }
+
+    public function test_validateJavaFormat_withBrackets(): void
+    {
+        $result = Mailcode_Date_FormatInfo::validateJavaFormat("yyyy-MM-dd['T'HH:mm:ss]");
+        $this->assertFalse($result->isValid());
+        $this->assertSame(Mailcode_Date_FormatInfo::VALIDATION_JAVA_OPTIONAL_BRACKETS_NOT_SUPPORTED, $result->getCode());
+    }
+
+    public function test_validateJavaFormat_openBracketOnly(): void
+    {
+        $result = Mailcode_Date_FormatInfo::validateJavaFormat('yyyy-MM-dd[');
+        $this->assertFalse($result->isValid());
+    }
+
+    public function test_validateJavaFormat_closeBracketOnly(): void
+    {
+        $result = Mailcode_Date_FormatInfo::validateJavaFormat('yyyy-MM-dd]');
+        $this->assertFalse($result->isValid());
+    }
+
+    public function test_validateJavaFormat_cleanString(): void
+    {
+        $result = Mailcode_Date_FormatInfo::validateJavaFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+        $this->assertTrue($result->isValid());
     }
 }

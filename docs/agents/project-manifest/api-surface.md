@@ -349,6 +349,27 @@ interface SyntaxInterface
 
 ---
 
+## `Mailcode_Date_FormatInfo` (Date Format Validation)
+
+```php
+class Mailcode_Date_FormatInfo
+{
+    public const VALIDATION_INVALID_FORMAT_CHARACTER = 55801;
+    public const VALIDATION_EMPTY_FORMAT_STRING = 55802;
+    public const VALIDATION_JAVA_OPTIONAL_BRACKETS_NOT_SUPPORTED = 55803;
+
+    public static function getInstance(): Mailcode_Date_FormatInfo;
+    public function getDefaultFormat(): string;
+    public function setDefaultFormat(string $formatString): void;
+    public function validateFormat(string $formatString): OperationResult;
+    public static function validateJavaFormat(string $formatString): OperationResult;
+    public function getCharactersList(): array; // Mailcode_Date_FormatInfo_Character[]
+    public function getCharactersGrouped(): array; // array<string, Mailcode_Date_FormatInfo_Character[]>
+}
+```
+
+---
+
 ## `Mailcode_Variables` (Variable Parsing)
 
 ```php
