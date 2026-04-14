@@ -1,8 +1,12 @@
 <?php
 
-namespace Mailcode;
 
-final class Isolation_IsolatedTests extends \MailcodeTestCase
+declare(strict_types=1);
+namespace MailcodeTests\Isolation;
+
+
+use MailcodeTestCase;
+final class IsolatedTests extends MailcodeTestCase
 {
     public function test_isolated() : void
     {

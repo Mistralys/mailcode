@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace testsuites\Translator\Commands;
+namespace MailcodeTests\Translator\Velocity;
 
 use Mailcode\Mailcode_Factory;
 use Mailcode\Translator\Syntax\ApacheVelocity\ShowVariableTranslation;

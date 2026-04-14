@@ -5,7 +5,7 @@
 | Item | Value |
 |------|-------|
 | Language | PHP |
-| Minimum Version | `>= 7.4` (also supports PHP 8.x including 8.4) |
+| Minimum Version | `>= 8.4` |
 | Strict Typing | `declare(strict_types=1)` in all source files |
 | Namespace | `Mailcode` (root); sub-namespaces for `Parser`, `Translator`, `Commands`, etc. |
 
@@ -34,8 +34,8 @@
 
 | Package | Constraint | Purpose |
 |---------|-----------|---------|
-| `phpunit/phpunit` | `>= 9.6` | Unit testing |
-| `phpstan/phpstan` | `>= 1.10` | Static analysis (clean at level 9) |
+| `phpunit/phpunit` | `>= 12.0` | Unit testing |
+| `phpstan/phpstan` | `>= 2.1` | Static analysis (clean at level 9) |
 
 ## Autoloading
 

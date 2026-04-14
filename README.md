@@ -2,9 +2,6 @@
 
 **A backend-agnostic preprocessor command language for email templates.** Mailcode provides a unified, verbose syntax for variables, conditionals, loops, and formatting commands that can be translated into target preprocessor languages like **Apache Velocity** or **Hubspot HubL**.
 
-[![PHP](https://img.shields.io/badge/PHP-%3E%3D7.4-blue)](https://www.php.net/)
-[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
-
 ---
 
 ## Why Mailcode Exists
@@ -154,7 +151,7 @@ All interactions start through the **`Mailcode`** class or the **`Mailcode_Facto
 | Syntax | Coverage |
 |--------|----------|
 | **Apache Velocity** | Full — all commands translated |
-| **Hubspot HubL** | Partial — `showvar`, `showencoded`, `showurl`, `setvar`, subset of `if`/`elseif` |
+| **Hubspot HubL** | 15 of 17 commands fully translated — `{break}` and `{showsnippet}` are not supported (emit a HubL comment stub) |
 
 ## License
 

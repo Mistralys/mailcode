@@ -10,6 +10,7 @@ namespace Mailcode\Translator\Syntax\HubL;
 
 use Mailcode\Mailcode_Commands_Command_For;
 use Mailcode\Mailcode_Translator_Command_For;
+use Mailcode\Mailcode_Variables_Variable;
 use Mailcode\Translator\Syntax\BaseHubLCommandTranslation;
 
 /**
@@ -23,6 +24,25 @@ class ForTranslation extends BaseHubLCommandTranslation implements Mailcode_Tran
 {
     public function translate(Mailcode_Commands_Command_For $command): string
     {
-        return '{# ! for commands are not implemented ! #}';
+        $loopVar = $this->formatVariableName($command->getLoopVariable()->getFullName());
+        $sourceVar = $this->formatVariableName($command->getSourceVariable()->getFullName());
+
+        $sourceExpr = $sourceVar;
+
+        if($command->isBreakAtEnabled())
+        {
+            $breakAt = $command->getBreakAt();
+
+            if($breakAt instanceof Mailcode_Variables_Variable)
+            {
+                $sourceExpr .= sprintf('[:%s]', $this->formatVariableName($breakAt->getFullName()));
+            }
+            elseif(is_int($breakAt))
+            {
+                $sourceExpr .= sprintf('[:%d]', $breakAt);
+            }
+        }
+
+        return sprintf('{%% for %s in %s %%}', $loopVar, $sourceExpr);
     }
 }

@@ -56,10 +56,13 @@ class Mailcode_Commands_Normalizer_ProtectedContent extends Mailcode_Commands_No
 
     public function normalize() : string
     {
+        /** @var Mailcode_Commands_Command&Mailcode_Interfaces_Commands_ProtectedContent $command */
+        $command = $this->command;
+
         return
             parent::normalize().
-            $this->command->getContent().
-            '{'.$this->command->getName().'}';
+            $command->getContent().
+            '{'.$command->getName().'}';
     }
 
     protected function getParamsStatement(Mailcode_Commands_Command $command) : ?Mailcode_Parser_Statement

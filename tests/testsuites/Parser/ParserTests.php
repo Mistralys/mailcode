@@ -1,6 +1,8 @@
 <?php
 
-namespace testsuites\Parser;
+
+declare(strict_types=1);
+namespace MailcodeTests\Parser;
 
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Collection_Error_Command;

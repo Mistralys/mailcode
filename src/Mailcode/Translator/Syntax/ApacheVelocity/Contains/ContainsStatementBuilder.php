@@ -16,7 +16,7 @@ class ContainsStatementBuilder
     public const ERROR_INVALID_LIST_VARIABLE_NAME = 76701;
 
     private Mailcode_Variables_Variable $variable;
-    private bool $caseSensitive;
+    private bool $caseInsensitive;
     private string $containsType;
     private BaseApacheVelocityCommandTranslation $translator;
     private bool $regexEnabled;
@@ -27,19 +27,19 @@ class ContainsStatementBuilder
     private array $searchTerms;
 
     /**
-     * Mailcode_Translator_Syntax_ApacheVelocity_Contains_StatementBuilder constructor.
+     * ContainsStatementBuilder constructor.
      * @param BaseApacheVelocityCommandTranslation $translator
      * @param Mailcode_Variables_Variable $variable
-     * @param bool $caseSensitive
+     * @param bool $caseInsensitive
      * @param bool $regexEnabled
      * @param Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral[] $searchTerms
      * @param string $containsType
      */
-    public function __construct(BaseApacheVelocityCommandTranslation $translator, Mailcode_Variables_Variable $variable, bool $caseSensitive, bool $regexEnabled, array $searchTerms, string $containsType)
+    public function __construct(BaseApacheVelocityCommandTranslation $translator, Mailcode_Variables_Variable $variable, bool $caseInsensitive, bool $regexEnabled, array $searchTerms, string $containsType)
     {
         $this->translator = $translator;
         $this->variable = $variable;
-        $this->caseSensitive = $caseSensitive;
+        $this->caseInsensitive = $caseInsensitive;
         $this->searchTerms = $searchTerms;
         $this->containsType = $containsType;
         $this->regexEnabled = $regexEnabled;
@@ -161,7 +161,7 @@ class ContainsStatementBuilder
     private function renderRegex(Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral $searchTerm) : string
     {
         $opts = 's';
-        if($this->caseSensitive)
+        if($this->caseInsensitive)
         {
             $opts = 'is';
         }

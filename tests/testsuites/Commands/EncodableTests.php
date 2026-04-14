@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace testsuites\Commands;
+namespace MailcodeTests\Commands;
 
 use Mailcode\Mailcode_Commands_Command_ShowEncoded;
 use Mailcode\Mailcode_Commands_Keywords;

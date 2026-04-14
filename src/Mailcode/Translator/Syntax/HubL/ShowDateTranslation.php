@@ -9,7 +9,11 @@ declare(strict_types=1);
 namespace Mailcode\Translator\Syntax\HubL;
 
 use Mailcode\Mailcode_Commands_Command_ShowDate;
+use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral;
+use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_Variable;
 use Mailcode\Mailcode_Translator_Command_ShowDate;
+use Mailcode\Mailcode_Translator_Exception;
+use Mailcode\Translator\Syntax\ApacheVelocity\ShowDateTranslation as ApacheVelocityShowDateTranslation;
 use Mailcode\Translator\Syntax\BaseHubLCommandTranslation;
 
 /**
@@ -21,8 +25,76 @@ use Mailcode\Translator\Syntax\BaseHubLCommandTranslation;
  */
 class ShowDateTranslation extends BaseHubLCommandTranslation implements Mailcode_Translator_Command_ShowDate
 {
+    public const ERROR_UNKNOWN_DATE_FORMAT_CHARACTER = 119001;
+
     public function translate(Mailcode_Commands_Command_ShowDate $command): string
     {
-        return '{# ! show date commands are not implemented ! #}';
+        $ldmlFormat = $this->convertToLDML($command->getFormatString());
+
+        $varName = $command->hasVariable()
+            ? $this->formatVariableName($command->getVariableName())
+            : 'local_dt';
+
+        $timezoneToken = $command->hasExplicitTimezone() ? $command->getTimezoneToken() : null;
+
+        if($timezoneToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral)
+        {
+            $inner = sprintf(
+                '%s|format_datetime("%s", "%s")',
+                $varName,
+                $ldmlFormat,
+                $timezoneToken->getText()
+            );
+        }
+        elseif($timezoneToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable)
+        {
+            $tzVarName = $this->formatVariableName($timezoneToken->getVariable()->getFullName());
+            $inner = sprintf(
+                '%s|format_datetime("%s", %s)',
+                $varName,
+                $ldmlFormat,
+                $tzVarName
+            );
+        }
+        else
+        {
+            $inner = sprintf('%s|format_datetime("%s")', $varName, $ldmlFormat);
+        }
+
+        return sprintf('{{ %s }}', $this->renderEncodings($command, $inner));
+    }
+
+    /**
+     * Converts a PHP date format string to LDML format using the Apache
+     * Velocity character conversion table (shared between both syntaxes).
+     *
+     * @param string $formatString A PHP-compatible date format string.
+     * @return string LDML format string suitable for HubL's format_datetime filter.
+     * @throws Mailcode_Translator_Exception {@see self::ERROR_UNKNOWN_DATE_FORMAT_CHARACTER}
+     */
+    private function convertToLDML(string $formatString): string
+    {
+        $charTable = ApacheVelocityShowDateTranslation::$charTable;
+        $chars = str_split($formatString);
+        $result = array();
+
+        foreach($chars as $char)
+        {
+            if(!isset($charTable[$char]))
+            {
+                throw new Mailcode_Translator_Exception(
+                    'Unknown date format string character',
+                    sprintf(
+                        'No LDML translation available for PHP format character [%s].',
+                        $char
+                    ),
+                    self::ERROR_UNKNOWN_DATE_FORMAT_CHARACTER
+                );
+            }
+
+            $result[] = $charTable[$char];
+        }
+
+        return implode('', $result);
     }
 }

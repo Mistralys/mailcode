@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace testsuites\Numbers;
+namespace MailcodeTests\Numbers;
 
 use Mailcode\Mailcode_Number_LocalCurrency;
 use MailcodeTestCase;

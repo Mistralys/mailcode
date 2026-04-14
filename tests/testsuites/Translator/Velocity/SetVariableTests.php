@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MailcodeTests\Translator\Commands;
+namespace MailcodeTests\Translator\Velocity;
 
 use Mailcode\Mailcode;
 use Mailcode\Mailcode_Commands_Command_SetVariable;

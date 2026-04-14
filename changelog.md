@@ -1,3 +1,15 @@
+# Mailcode Changelog
+
+## v3.7.0 - HubL Extension
+- HubL: Added translation support for the `for` command.
+- HubL: Added translation support for the `show-date` command.
+- HubL: Added translation support for contains, begins-with, and ends-with variants (if and elseif).
+- HubL: Fixed inverted parameter name in case-insensitive search handling.
+- HubL: Fixed Unicode handling in case-insensitive string comparisons.
+- ShowDate: Added `hasExplicitTimezone()` to `TimezoneInterface`.
+- Tests: Fixed non-canon test file naming.
+- Docs: Updated the HubL translation user guide.
+
 ## v3.6.0 - Maintenance Update
 - Docs: Added agentic coding support with a manifest and `AGENTS.md`.
 - Docs: Significantly expanded the user guide documentation.

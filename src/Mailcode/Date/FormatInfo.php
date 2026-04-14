@@ -26,6 +26,7 @@ class Mailcode_Date_FormatInfo
 {
     public const VALIDATION_INVALID_FORMAT_CHARACTER = 55801;
     public const VALIDATION_EMPTY_FORMAT_STRING = 55802;
+    public const VALIDATION_JAVA_OPTIONAL_BRACKETS_NOT_SUPPORTED = 55803;
 
     public const CHARTYPE_DATE = 'date';
     public const CHARTYPE_TIME = 'time';
@@ -175,6 +176,31 @@ class Mailcode_Date_FormatInfo
 
                 return $result;
             }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Validates a Java date format string, rejecting
+     * optional-section brackets (`[` and `]`) that are
+     * supported by {@see \DateTimeFormatter} but not by
+     * Java's {@see SimpleDateFormat} used by Apache Velocity
+     * and HubL.
+     *
+     * @param string $formatString
+     * @return OperationResult
+     */
+    public static function validateJavaFormat(string $formatString): OperationResult
+    {
+        $result = new OperationResult(new self());
+
+        if (str_contains($formatString, '[') || str_contains($formatString, ']')) {
+            $result->makeError(
+                t('Java date format contains optional-section brackets, which are not supported by SimpleDateFormat:') . ' ' .
+                t('%1$s', '<code>' . $formatString . '</code>'),
+                self::VALIDATION_JAVA_OPTIONAL_BRACKETS_NOT_SUPPORTED
+            );
         }
 
         return $result;

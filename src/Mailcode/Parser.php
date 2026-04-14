@@ -176,7 +176,14 @@ class Mailcode_Parser
      */
     private function getStackLast() : Mailcode_Commands_Command
     {
-        $cmd = $this->stack[array_key_last($this->stack)];
+        $key = array_key_last($this->stack);
+
+        if($key === null)
+        {
+            throw new Mailcode_Exception('Stack is empty', '', self::ERROR_NOT_A_COMMAND);
+        }
+
+        $cmd = $this->stack[$key];
 
         if($cmd instanceof Mailcode_Commands_Command)
         {

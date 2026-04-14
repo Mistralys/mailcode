@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace testsuites\Parser;
+namespace MailcodeTests\Parser;
 
 use Mailcode\Mailcode_Parser_Statement;
 use Mailcode\Mailcode_Parser_Statement_Tokenizer_Token_ParamName;

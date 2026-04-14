@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace testsuites\Commands\Types;
+namespace MailcodeTests\Commands\Types;
 
 use Mailcode\CurrencyInterface;
 use Mailcode\Interfaces\Commands\Validation\URLEncodingInterface;

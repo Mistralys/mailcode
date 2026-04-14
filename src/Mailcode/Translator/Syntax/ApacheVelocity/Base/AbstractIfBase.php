@@ -186,23 +186,23 @@ abstract class AbstractIfBase extends BaseApacheVelocityCommandTranslation
 
     /**
      * @param Mailcode_Variables_Variable $variable
-     * @param bool $caseSensitive
+     * @param bool $caseInsensitive
      * @param bool $regexEnabled
      * @param Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral[] $searchTerms
      * @param string $containsType
      * @return string
      * @throws Mailcode_Exception
      */
-    protected function _translateContains(Mailcode_Variables_Variable $variable, bool $caseSensitive, bool $regexEnabled, array $searchTerms, string $containsType) : string
+    protected function _translateContains(Mailcode_Variables_Variable $variable, bool $caseInsensitive, bool $regexEnabled, array $searchTerms, string $containsType) : string
     {
-        $builder = new ContainsStatementBuilder($this, $variable, $caseSensitive, $regexEnabled, $searchTerms, $containsType);
+        $builder = new ContainsStatementBuilder($this, $variable, $caseInsensitive, $regexEnabled, $searchTerms, $containsType);
         return $builder->render();
     }
 
-    protected function _translateSearch(string $mode, Mailcode_Variables_Variable $variable, bool $caseSensitive, string $searchTerm) : string
+    protected function _translateSearch(string $mode, Mailcode_Variables_Variable $variable, bool $caseInsensitive, string $searchTerm) : string
     {
         $method = $mode.'With';
-        if($caseSensitive)
+        if($caseInsensitive)
         {
             $method = $mode.'WithIgnoreCase';
         }

@@ -1,0 +1,30 @@
+<?php
+
+
+declare(strict_types=1);
+
+namespace MailcodeTests\Factory\Commands;
+use Mailcode\Mailcode_Commands_Command_If_SmallerThan;
+use Mailcode\Mailcode_Factory;
+use MailcodeTestClasses\FactoryTestCase;
+
+final class IfSmallerThanTests extends FactoryTestCase
+{
+    protected function getExpectedClass() : string
+    {
+        return Mailcode_Commands_Command_If_SmallerThan::class;
+    }
+    
+    public function test_ifEmpty() : void
+    {
+        $this->runCommand(
+            'String number, variable without dollar',
+            function() { return Mailcode_Factory::if()->smallerThan('FOO.BAR', '45,12'); }
+        );
+
+        $this->runCommand(
+            'String number, variable with dollar',
+            function() { return Mailcode_Factory::if()->smallerThan('$FOO.BAR', '45,12'); }
+        );
+    }
+}

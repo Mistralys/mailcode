@@ -1,6 +1,8 @@
 <?php
 
-namespace testsuites\Parser;
+
+declare(strict_types=1);
+namespace MailcodeTests\Parser;
 
 use Mailcode\Interfaces\Commands\Validation\BreakAtInterface;
 use Mailcode\Interfaces\Commands\Validation\CountInterface;

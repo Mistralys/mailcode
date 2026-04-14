@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace testsuites\Formatting;
+namespace MailcodeTests\Formatting;
 
 use Mailcode\Mailcode;
 use MailcodeTestCase;

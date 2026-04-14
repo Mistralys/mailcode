@@ -27,8 +27,37 @@ abstract class BaseSyntax implements SyntaxInterface
     public const ERROR_UNKNOWN_COMMAND_TYPE = 50401;
     public const ERROR_INVALID_COMMAND_INSTANCE = 50402;
 
+    /**
+     * Returns a list of command IDs that this syntax does not support.
+     *
+     * When a command's ID appears in this list, {@see self::translateCommand()}
+     * returns a canonical "not supported" comment instead of attempting class
+     * resolution. This prevents {@see Mailcode_Translator_Exception} from being
+     * thrown for known-unsupported commands, while still allowing unknown commands
+     * to fail loudly.
+     *
+     * Override this method in a concrete syntax class to declare unsupported commands.
+     *
+     * @return string[] List of command IDs, e.g. ['Break', 'ShowSnippet']
+     */
+    protected function getUnsupportedCommands() : array
+    {
+        return array();
+    }
+
     public function translateCommand(Mailcode_Commands_Command $command) : string
     {
+        $unsupported = $this->getUnsupportedCommands();
+
+        if(in_array($command->getID(), $unsupported, true))
+        {
+            return sprintf(
+                '{# !%s is not supported in %s! #}',
+                strtolower($command->getID()),
+                $this->getTypeID()
+            );
+        }
+
         return $this->createTranslator($command)->translate($command);
     }
 

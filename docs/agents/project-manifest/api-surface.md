@@ -315,6 +315,25 @@ class Mailcode_Translator
 }
 ```
 
+### `Translator\BaseSyntax`
+
+```php
+namespace Mailcode\Translator;
+
+abstract class BaseSyntax implements SyntaxInterface
+{
+    /**
+     * Returns a list of command IDs that this syntax does not support.
+     * translateCommand() checks this list before class resolution and returns
+     * a canonical "{# !command is not supported in SyntaxName! #}" comment.
+     * Override in concrete syntax classes to declare unsupported commands.
+     *
+     * @return string[]
+     */
+    protected function getUnsupportedCommands() : array;
+}
+```
+
 ### `Translator\SyntaxInterface`
 
 ```php
@@ -325,6 +344,27 @@ interface SyntaxInterface
     public function getTypeID(): string;
     public function translateCommand(Mailcode_Commands_Command $command): string;
     public function translateSafeguard(Mailcode_Parser_Safeguard $safeguard): string;
+}
+```
+
+---
+
+## `Mailcode_Date_FormatInfo` (Date Format Validation)
+
+```php
+class Mailcode_Date_FormatInfo
+{
+    public const VALIDATION_INVALID_FORMAT_CHARACTER = 55801;
+    public const VALIDATION_EMPTY_FORMAT_STRING = 55802;
+    public const VALIDATION_JAVA_OPTIONAL_BRACKETS_NOT_SUPPORTED = 55803;
+
+    public static function getInstance(): Mailcode_Date_FormatInfo;
+    public function getDefaultFormat(): string;
+    public function setDefaultFormat(string $formatString): void;
+    public function validateFormat(string $formatString): OperationResult;
+    public static function validateJavaFormat(string $formatString): OperationResult;
+    public function getCharactersList(): array; // Mailcode_Date_FormatInfo_Character[]
+    public function getCharactersGrouped(): array; // array<string, Mailcode_Date_FormatInfo_Character[]>
 }
 ```
 
@@ -430,6 +470,7 @@ class Mailcode_StringContainer
 ```php
 class ClassCache
 {
+    /** @phpstan-param class-string|null $instanceOf */
     public static function findClassesInFolder(
         string|FolderInfo $folder,
         bool $recursive = false,
@@ -449,6 +490,28 @@ Keywords that can be appended to commands: `insensitive:`, `regex:`, `urlencode:
 ## `Mailcode_Commands_LogicKeywords` (Compound Conditions)
 
 Enables `and:` / `or:` connectors within `if`/`elseif` commands for compound conditions.
+
+---
+
+## `TimezoneInterface` / `TimezoneTrait` (Validation)
+
+**Location:** `src/Mailcode/Interfaces/Commands/Validation/TimezoneInterface.php` / `src/Mailcode/Traits/Commands/Validation/TimezoneTrait.php`
+
+Interface and trait pair for commands that support an explicit timezone parameter (`timezone:`). Implemented by `Mailcode_Commands_Command_ShowDate`.
+
+```php
+interface TimezoneInterface
+{
+    public const PARAMETER_NAME = 'timezone';
+    public const VALIDATION_TIMEZONE_NAME = 'check_timezone';
+    public const VALIDATION_TIMEZONE_CODE_WRONG_TYPE = 135501;
+
+    public function hasExplicitTimezone() : bool;  // true when a timezone token exists in the params
+    public function getTimezoneToken() : Mailcode_Parser_Statement_Tokenizer_Token;
+    /** @param Mailcode_Variables_Variable|string|null $timezone */
+    public function setTimezone($timezone) : self;
+}
+```
 
 ---
 

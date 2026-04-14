@@ -21,13 +21,12 @@ use AppUtils\FileHelper_Exception;
 class ClassCache
 {
     /**
-     * @param string|FolderInfo $folder
      * @param bool $recursive
-     * @param string|null $instanceOf
+     * @phpstan-param class-string|null $instanceOf
      * @return class-string[]
      * @throws FileHelper_Exception
      */
-    public static function findClassesInFolder($folder, bool $recursive=false, ?string $instanceOf=null) : array
+    public static function findClassesInFolder(string|FolderInfo $folder, bool $recursive=false, ?string $instanceOf=null) : array
     {
         return self::createCache()
             ->findClassesInFolder(
