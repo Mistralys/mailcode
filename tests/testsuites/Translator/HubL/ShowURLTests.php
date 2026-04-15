@@ -68,13 +68,10 @@ final class ShowURLTests extends HubLTestCase
 
     /**
      * When using a URL which in turn contains commands,
-     * these must be translated to Velocity as well.
+     * these must be translated to HubL as well.
      */
     public function test_nestedCommands() : void
     {
-        $this->markTestIncomplete('IF commands not ready yet');
-
-        // @phpstan-ignore-next-line deadCode.unreachable
         $url = <<<'EOT'
 {if variable: $COUNTRY == "fr"}
 https://mistralys.fr
@@ -83,9 +80,7 @@ https://mistralys.eu
 {end}
 EOT;
 
-        $expectedURL = <<<'EOT'
-{% if country == "fr" %}https://mistralys.fr{% else %}https://mistralys.eu{% endif %}
-EOT;
+        $expectedURL = '{% if country == "fr" %}https://mistralys.fr{% else %}https://mistralys.eu{% endif %}';
 
         $cmd = Mailcode_Factory::show()->url($url)
             ->setTrackingEnabled(false);
