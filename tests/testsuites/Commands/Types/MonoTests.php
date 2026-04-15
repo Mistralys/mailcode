@@ -8,6 +8,7 @@ namespace MailcodeTests\Commands\Types;
 use MailcodeTestCase;
 use Mailcode\Mailcode_Commands_Command;
 use Mailcode\Mailcode_Commands_Command_Code;
+use Mailcode\Mailcode_Commands_Command_Mono;
 use Mailcode\Mailcode_Factory;
 use Mailcode\Mailcode_Interfaces_Commands_ProtectedContent;
 use Mailcode\Mailcode;
@@ -63,27 +64,59 @@ final class MonoTests extends MailcodeTestCase
 
     public function test_normalize() : void
     {
-        $tests = array(
+        foreach($this->monoVariants() as $test)
+        {
+            $this->assertEquals($test['normalizedExpected'], $test['command']->getNormalized(), $test['label']);
+        }
+    }
+
+    public function test_highlight() : void
+    {
+        foreach($this->monoVariants() as $test)
+        {
+            if($test['hasParams'])
+            {
+                $this->assertStringContainsString(
+                    '<span class="mailcode-hyphen">:</span>',
+                    $test['command']->getHighlighted(),
+                    $test['label'].': command with params must contain a colon in highlighted output.'
+                );
+            }
+            else
+            {
+                $this->assertStringNotContainsString(
+                    '<span class="mailcode-hyphen">:</span>',
+                    $test['command']->getHighlighted(),
+                    $test['label'].': parameterless command must not contain a colon in highlighted output.'
+                );
+            }
+        }
+    }
+
+    /**
+     * @return array<int, array{label: string, command: Mailcode_Commands_Command_Mono, hasParams: bool, normalizedExpected: string}>
+     */
+    private function monoVariants() : array
+    {
+        return array(
             array(
                 'label' => 'Parameterless',
                 'command' => Mailcode_Factory::misc()->mono(),
-                'expected' => '{mono}'
+                'hasParams' => false,
+                'normalizedExpected' => '{mono}'
             ),
             array(
                 'label' => 'Multiline',
                 'command' => Mailcode_Factory::misc()->mono(true),
-                'expected' => '{mono: multiline:}'
+                'hasParams' => true,
+                'normalizedExpected' => '{mono: multiline:}'
             ),
             array(
                 'label' => 'Multiline, with class',
                 'command' => Mailcode_Factory::misc()->mono(true, array('class1', 'class2')),
-                'expected' => '{mono: multiline: "class1 class2"}'
+                'hasParams' => true,
+                'normalizedExpected' => '{mono: multiline: "class1 class2"}'
             )
         );
-
-        foreach($tests as $test)
-        {
-            $this->assertEquals($test['expected'], $test['command']->getNormalized(), $test['label']);
-        }
     }
 }
