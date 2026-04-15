@@ -129,6 +129,16 @@ trait Mailcode_Traits_Commands_ProtectedContent
         return (new Mailcode_Commands_Normalizer_ProtectedContent($this))->normalize();
     }
 
+    public function getHighlighted() : string
+    {
+        if(!$this->isValid())
+        {
+            return '';
+        }
+
+        return (new Mailcode_Commands_Highlighter_ProtectedContent($this))->highlight();
+    }
+
     public function getVariables() : Mailcode_Variables_Collection_Regular
     {
         $variables = parent::getVariables();
