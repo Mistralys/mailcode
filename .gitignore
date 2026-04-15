@@ -17,3 +17,4 @@ tests/phpstan/result.txt
 tests/cache/*.php
 docs/**/work/
 docs/**/work.md
+.phpunit.cache/test-results
