@@ -95,6 +95,8 @@ mailcode/
 │       │   ├── CommandException.php
 │       │   ├── CommonConstants.php    # Shared command constants
 │       │   ├── Highlighter.php        # HTML highlight rendering
+│       │   ├── Highlighter/
+│       │   │   └── ProtectedContent.php # Highlighter for protected content commands (strips content ID, appends content + closing tag)
 │       │   ├── IfBase.php             # Base for if/elseif commands
 │       │   ├── Keywords.php           # Toggleable keyword flags
 │       │   ├── LogicKeywords.php      # AND/OR compound conditions

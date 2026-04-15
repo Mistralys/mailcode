@@ -6,7 +6,8 @@
 - HubL: Added translation support for contains, begins-with, and ends-with variants (if and elseif).
 - HubL: Fixed inverted parameter name in case-insensitive search handling.
 - HubL: Fixed Unicode handling in case-insensitive string comparisons.
-- ShowDate: Added `hasExplicitTimezone()` to `TimezoneInterface`.
+- Mono CMD: Fixed missing colon in highlighted command.
+- ShowDate CMD: Added `hasExplicitTimezone()` to `TimezoneInterface`.
 - Tests: Fixed non-canon test file naming.
 - Docs: Updated the HubL translation user guide.
 
