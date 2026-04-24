@@ -112,6 +112,11 @@ All 17 translation classes in `src/Mailcode/Translator/Syntax/HubL/`:
 - **PHP format strings** are validated character-by-character against a closed whitelist (`Mailcode_Date_FormatInfo::validateFormat()`). Unrecognized characters are rejected.
 - **Java internal format strings** (used by the `internal_format` translation parameter) are validated by `Mailcode_Date_FormatInfo::validateJavaFormat()`. Optional-section brackets (`[` and `]`) from `DateTimeFormatter` are rejected because the target platforms (Apache Velocity and HubL) use `SimpleDateFormat`, which does not support them.
 - The **output LDML/Java format** is generated from a 1:1 character mapping table and cannot produce invalid characters.
+- **HubL `internal_format` conditional pattern:** When `internal_format` is set on a `{showdate}` command, `ShowDateTranslation` emits a Jinja2 `is string` condition to support both HubL date objects and raw date strings:
+  - String path: `var|strtotime("<internalFormat>")|format_datetime("<ldml>")`
+  - Object path: `var|format_datetime("<ldml>")`
+  - Full output: `{% if var is string %}{{ <string-path> }}{% else %}{{ <object-path> }}{% endif %}`
+  Without `internal_format`, no conditional is emitted and only the object path is used.
 
 ## Collection Finalization
 

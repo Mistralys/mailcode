@@ -31,8 +31,11 @@ but a number of commands are available.
 - Timezone string literal: `{showdate: $VAR "format" "Europe/Berlin"}` → `format_datetime("ldml", "Europe/Berlin")`
 - Timezone variable: `{showdate: $VAR "format" $TZ}` → `format_datetime("ldml", "", tz)`
 - No-variable case (`{showdate}`): uses HubL’s built-in `local_dt` variable as the source.
-- URL encoding is applied correctly to the inner Jinja expression before the `{{ }}` wrapper.
-
+- URL encoding is applied correctly to the inner Jinja expression before the `{{ }}` wrapper.- **`internal_format` translation parameter (date string support):** When a Java/SimpleDateFormat pattern is provided via `setTranslationParam('internal_format', 'dd/MM/yyyy')`, the output wraps the expression in a Jinja2 `is string` condition to handle both HubL date objects and raw date strings:
+  ```
+  {% if var is string %}{{ var|strtotime("dd/MM/yyyy")|format_datetime("dd/MM/yyyy") }}{% else %}{{ var|format_datetime("dd/MM/yyyy") }}{% endif %}
+  ```
+  Without `internal_format`, only the object path is emitted (no conditional wrapper).
 **{for} notes:**
 - `{for: $RECORD in: $SOURCE}` → `{% for record in source %}`
 - `break_at: N` (numeric) → `{% for record in source[:N] %}` (Jinja2 slice)
