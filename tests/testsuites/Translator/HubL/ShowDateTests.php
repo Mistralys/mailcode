@@ -51,4 +51,42 @@ final class ShowDateTests extends HubLTestCase
 
         $this->runCommands($tests);
     }
+
+    public function test_internalFormat_wrapsInStringConditional(): void
+    {
+        $cmd = Mailcode_Factory::show()->date('FOO.BAR', 'd/m/Y');
+        $cmd->setTranslationParam('internal_format', "yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+
+        $result = $this->translator->createHubL()->translateCommand($cmd);
+
+        $this->assertSame(
+            '{% if foo.bar is string %}{{ foo.bar|strtotime("yyyy-MM-dd\'T\'HH:mm:ss.SSSXXX")|format_datetime("dd/MM/yyyy") }}{% else %}{{ foo.bar|format_datetime("dd/MM/yyyy") }}{% endif %}',
+            $result
+        );
+    }
+
+    public function test_internalFormat_withTimezone(): void
+    {
+        $cmd = Mailcode_Factory::show()->date('FOO.BAR', 'd/m/Y', 'Europe/Paris');
+        $cmd->setTranslationParam('internal_format', 'yyyy-MM-dd');
+
+        $result = $this->translator->createHubL()->translateCommand($cmd);
+
+        $this->assertSame(
+            '{% if foo.bar is string %}{{ foo.bar|strtotime("yyyy-MM-dd")|format_datetime("dd/MM/yyyy", "Europe/Paris") }}{% else %}{{ foo.bar|format_datetime("dd/MM/yyyy", "Europe/Paris") }}{% endif %}',
+            $result
+        );
+    }
+
+    public function test_withoutInternalFormat_noConditional(): void
+    {
+        $cmd = Mailcode_Factory::show()->date('FOO.BAR', 'd/m/Y');
+
+        $result = $this->translator->createHubL()->translateCommand($cmd);
+
+        $this->assertSame(
+            '{{ foo.bar|format_datetime("dd/MM/yyyy") }}',
+            $result
+        );
+    }
 }

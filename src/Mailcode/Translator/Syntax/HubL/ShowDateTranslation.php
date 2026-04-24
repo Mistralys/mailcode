@@ -35,33 +35,75 @@ class ShowDateTranslation extends BaseHubLCommandTranslation implements Mailcode
             ? $this->formatVariableName($command->getVariableName())
             : 'local_dt';
 
+        $formatFilter = $this->buildFormatFilter($ldmlFormat, $command);
+        $internalFormat = $this->resolveInternalFormat($command);
+
+        if($internalFormat !== null)
+        {
+            $stringInner = sprintf(
+                '%s|strtotime("%s")%s',
+                $varName,
+                $internalFormat,
+                $formatFilter
+            );
+            $objectInner = $varName . $formatFilter;
+
+            return sprintf(
+                '{%% if %1$s is string %%}{{ %2$s }}{%% else %%}{{ %3$s }}{%% endif %%}',
+                $varName,
+                $this->renderEncodings($command, $stringInner),
+                $this->renderEncodings($command, $objectInner)
+            );
+        }
+
+        $inner = $varName . $formatFilter;
+
+        return sprintf('{{ %s }}', $this->renderEncodings($command, $inner));
+    }
+
+    /**
+     * Resolves the internal format from the command's translation parameters.
+     * Returns `null` if no internal format is configured.
+     *
+     * @param Mailcode_Commands_Command_ShowDate $command
+     * @return string|null The internal format string, or null if not set.
+     */
+    private function resolveInternalFormat(Mailcode_Commands_Command_ShowDate $command): ?string
+    {
+        $internalFormat = $command->getTranslationParam('internal_format');
+
+        if(is_string($internalFormat) && $internalFormat !== '')
+        {
+            return $internalFormat;
+        }
+
+        return null;
+    }
+
+    /**
+     * Builds the `|format_datetime(...)` filter portion of the HubL expression,
+     * including timezone if applicable.
+     *
+     * @param string $ldmlFormat The LDML output format string.
+     * @param Mailcode_Commands_Command_ShowDate $command
+     * @return string The filter string, e.g. `|format_datetime("dd/MM/yyyy", "Europe/Paris")`.
+     */
+    private function buildFormatFilter(string $ldmlFormat, Mailcode_Commands_Command_ShowDate $command): string
+    {
         $timezoneToken = $command->hasExplicitTimezone() ? $command->getTimezoneToken() : null;
 
         if($timezoneToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_StringLiteral)
         {
-            $inner = sprintf(
-                '%s|format_datetime("%s", "%s")',
-                $varName,
-                $ldmlFormat,
-                $timezoneToken->getText()
-            );
-        }
-        elseif($timezoneToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable)
-        {
-            $tzVarName = $this->formatVariableName($timezoneToken->getVariable()->getFullName());
-            $inner = sprintf(
-                '%s|format_datetime("%s", %s)',
-                $varName,
-                $ldmlFormat,
-                $tzVarName
-            );
-        }
-        else
-        {
-            $inner = sprintf('%s|format_datetime("%s")', $varName, $ldmlFormat);
+            return sprintf('|format_datetime("%s", "%s")', $ldmlFormat, $timezoneToken->getText());
         }
 
-        return sprintf('{{ %s }}', $this->renderEncodings($command, $inner));
+        if($timezoneToken instanceof Mailcode_Parser_Statement_Tokenizer_Token_Variable)
+        {
+            $tzVarName = $this->formatVariableName($timezoneToken->getVariable()->getFullName());
+            return sprintf('|format_datetime("%s", %s)', $ldmlFormat, $tzVarName);
+        }
+
+        return sprintf('|format_datetime("%s")', $ldmlFormat);
     }
 
     /**
