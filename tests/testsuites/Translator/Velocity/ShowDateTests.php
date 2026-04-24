@@ -100,17 +100,16 @@ final class ShowDateTests extends VelocityTestCase
         }
     }
 
-    public function test_internalFormat_withBrackets_throwsException(): void
+    public function test_internalFormat_withBrackets_accepted(): void
     {
         $var = Mailcode_Factory::show()->date('FOO.BAR', 'd.m.Y');
         $var->setTranslationParam('internal_format', "yyyy-MM-dd['T'HH:mm:ss]");
 
         $syntax = $this->translator->createApacheVelocity();
 
-        $this->expectException(Mailcode_Translator_Exception::class);
-        $this->expectExceptionCode(ShowDateTranslation::ERROR_INTERNAL_FORMAT_CONTAINS_OPTIONAL_BRACKETS);
+        $result = $syntax->translateCommand($var);
 
-        $syntax->translateCommand($var);
+        $this->assertStringContainsString("yyyy-MM-dd['T'HH:mm:ss]", $result);
     }
 
     public function test_internalFormat_withoutBrackets_works(): void

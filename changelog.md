@@ -1,5 +1,10 @@
 # Mailcode Changelog
 
+## v3.7.1 - HubL Date Fix
+- Velocity: Removed HubL exception triggered for Velocity-specific date formats.
+- HubL: Updated `showdate` with a conditional date format command.
+- HubL: `showdate` now correctly uses the internal date format for string dates.
+
 ## v3.7.0 - HubL Extension
 - HubL: Added translation support for the `for` command.
 - HubL: Added translation support for the `show-date` command.
