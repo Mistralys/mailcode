@@ -7,7 +7,7 @@ mailcode/
 ├── composer.json                      # Package metadata, dependencies, autoloading
 ├── phpunit.xml                        # PHPUnit configuration
 ├── Makefile                           # Build automation
-├── changelog.md                       # Version history (v3.5.3 current)
+├── changelog.md                       # Version history
 ├── README.md                          # Project overview and quick start
 ├── LICENSE                            # MIT license
 │
@@ -16,17 +16,15 @@ mailcode/
 │   └── marked-variables.css           # Variable marking styles
 │
 ├── docs/
-│   ├── architecture.md                # Internal architecture reference
 │   ├── phpdoc/                        # PHPDoc generation config
 │   └── user-guide/
-│       ├── usage-guide.md             # Full syntax reference and examples
+│       ├── mailcode-documentation.md  # Full syntax reference and examples
 │       ├── translate-apache-velocity.md
 │       └── translate-hubl.md
 │
 ├── localization/                      # i18n translation files
 │   ├── de_DE-mailcode-client.ini
-│   ├── de_DE-mailcode-server.ini
-│   └── storage.json
+│   └── de_DE-mailcode-server.ini
 │
 ├── src/
 │   ├── functions.php                  # Global helper functions (t(), dollarize(), etc.)
@@ -200,10 +198,10 @@ mailcode/
 │       │   └── Syntax/
 │       │       ├── ApacheVelocitySyntax.php           # Full coverage
 │       │       ├── BaseApacheVelocityCommandTranslation.php
-│       │       ├── ApacheVelocity/                    # 19 translation classes
+│       │       ├── ApacheVelocity/                    # Per-command translation classes
 │       │       ├── HubLSyntax.php                     # Partial coverage
 │       │       ├── BaseHubLCommandTranslation.php
-│       │       └── HubL/                              # 17 translation classes
+│       │       └── HubL/                              # Per-command translation classes (partial)
 │       │
 │       └── Variables/                 # Variable handling
 │           ├── Collection.php         # Variable collection base
@@ -214,7 +212,6 @@ mailcode/
 │   ├── bootstrap.php                  # Test bootstrapping
 │   ├── assets/                        # Test helper classes and fixtures
 │   ├── cache/                         # Class repository cache
-│   ├── phpstan/                       # PHPStan config and results
 │   └── testsuites/                    # PHPUnit test suites
 │       ├── Collection/
 │       ├── Commands/
@@ -229,7 +226,7 @@ mailcode/
 │       ├── PreProcessor/
 │       ├── StringContainer/
 │       ├── Translator/
-│       │   └── HubL/                          # HubL translation tests (26 files)
+│       └── HubL/                          # HubL translation tests
 │       │       ├── BreakTests.php
 │       │       ├── ElseIfBeginsWithTests.php
 │       │       ├── ElseIfBiggerThanTests.php

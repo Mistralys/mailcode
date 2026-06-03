@@ -61,7 +61,7 @@
 ## Translation Coverage
 
 - **Apache Velocity**: Full coverage — all commands have translation classes.
-- **Hubspot HubL**: 15 of 17 commands are fully translated. Two commands (`Break`, `ShowSnippet`) have no HubL equivalent. They are declared via the **unsupported-commands registry** (see below) and their stub translation classes are retained but bypassed at runtime.
+- **Hubspot HubL**: Partial coverage — see the table below. `Break` and `ShowSnippet` are declared unsupported via the registry and emit a "not supported" comment at runtime. `ShowPrice` has no translation class and is not declared in the unsupported registry; attempting to translate it to HubL will throw a `Mailcode_Translator_Exception` (unresolved defect).
 
 #### Unsupported-Commands Registry Pattern
 
@@ -71,7 +71,7 @@
 
 ### HubL Translation Coverage Table
 
-All 17 translation classes in `src/Mailcode/Translator/Syntax/HubL/`:
+Translation classes in `src/Mailcode/Translator/Syntax/HubL/`:
 
 | Command | Translation Class | Tier |
 |---------|-------------------|------|
@@ -89,6 +89,7 @@ All 17 translation classes in `src/Mailcode/Translator/Syntax/HubL/`:
 | `showencoded` | `ShowEncodedTranslation` | Fully Translated |
 | `shownumber` | `ShowNumberTranslation` | Fully Translated |
 | `showphone` | `ShowPhoneTranslation` | Fully Translated |
+| `showprice` | *(none)* | Missing — No Translation Class |
 | `showsnippet` | `ShowSnippetTranslation` | Stub / Not Supported |
 | `showurl` | `ShowURLTranslation` | Fully Translated |
 | `showvar` | `ShowVariableTranslation` | Fully Translated |
@@ -99,6 +100,7 @@ All 17 translation classes in `src/Mailcode/Translator/Syntax/HubL/`:
 |------|------------|
 | **Fully Translated** | Class emits valid HubL output for the command. |
 | **Stub / Not Supported** | Class emits `{# !command is not supported in HubL! #}` — no HubL equivalent exists. |
+| **Missing — No Translation Class** | No translation class exists and the command is not in the unsupported registry. Translating it will throw a `Mailcode_Translator_Exception`. |
 
 ## Command Parameter Syntax
 
@@ -132,6 +134,14 @@ The final output of any consumer pipeline (`makeWhole()`, `translateSafeguard()`
 - A `\{` or `\}` that appears in text that **looks like but fails to parse as** a command (e.g., `{comment: data \}` where the `\}` eats the closing brace) will be unescaped in the output. This is intentional: from the library's perspective, the text is template-level content.
 - **Double-escape** (`\\{`) to produce a literal `\{` in output is **not supported** in this version.
 
+## Nested Command Escaping (v3.7.2)
+
+Content-type commands (`{code}`, `{mono}`) cannot contain un-escaped Mailcode commands in their body. If a nested command is found unescaped inside the content block, `PreParser` adds a `VALIDATION_UNESCAPED_NESTED_COMMAND` error (code `49215`) to the collection with a message directing the author to escape the nested command's brackets.
+
+**Fix:** Prefix both brackets of the nested command with a backslash — `\{showvar: $NAME\}`. `StringPreProcessor.encodeBrackets()` converts `\{`/`\}` to internal placeholders before the parser runs, so the escaped syntax is never matched as a live command.
+
+**Key rule:** This applies only inside content-type command bodies. Template-level escaped brackets (`\{CHECKSUM\}`) outside commands follow the same mechanism but serve a different purpose (see "Template-Level Bracket Escaping" above).
+
 ## Date Translation Constraints
 
 - **PHP format strings** are validated character-by-character against a closed whitelist (`Mailcode_Date_FormatInfo::validateFormat()`). Unrecognized characters are rejected.
@@ -164,11 +174,10 @@ The final output of any consumer pipeline (`makeWhole()`, `translateSafeguard()`
 
 ## Testing
 
-- PHPUnit `>= 9.6` with test suites organized by subsystem under `tests/testsuites/`.
+- PHPUnit `>= 12.0` with test suites organized by subsystem under `tests/testsuites/`.
 - Test bootstrap in `tests/bootstrap.php`.
 - Test assets (helper classes, fixture files) in `tests/assets/`.
 - Class cache for tests stored in `tests/cache/`.
-- **Test baseline:** 526 passing tests, 0 warnings. Use 526 as the baseline when verifying regressions in any WP.
 - **Universal test namespace pattern:** Every test file under `tests/testsuites/` must use the namespace `MailcodeTests\{Suite}[\{SubDir}]`, where `{Suite}` matches the top-level directory and `{SubDir}` matches any intermediate directory. Examples:
   - `tests/testsuites/Commands/Types/` → `namespace MailcodeTests\Commands\Types;`
   - `tests/testsuites/Translator/HubL/` → `namespace MailcodeTests\Translator\HubL;`

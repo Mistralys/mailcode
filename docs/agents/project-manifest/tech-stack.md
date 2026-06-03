@@ -17,7 +17,7 @@
 | Type | Library |
 | License | MIT |
 | Author | Sebastian Mordziol (`s.mordziol@mistralys.eu`) |
-| Current Version | 3.5.3 |
+| Current Version | See [`changelog.md`](../../changelog.md) |
 
 ## Dependencies (Runtime)
 
@@ -67,7 +67,7 @@
 |------|-------------|---------|
 | Composer | `composer.json` | Dependency management and autoloading |
 | PHPUnit | `phpunit.xml` | Test runner — all suites under `tests/testsuites/` |
-| PHPStan | `tests/phpstan/config.neon` | Static analysis at level 9 |
+| PHPStan | `phpstan.neon` | Static analysis at level 9 |
 | Makefile | `Makefile` | Build automation |
 | PHPDoc | `docs/phpdoc/phpdoc.dist.xml` | API documentation generation |
 
@@ -76,4 +76,3 @@
 | Locale | Files |
 |--------|-------|
 | German (`de_DE`) | `localization/de_DE-mailcode-client.ini`, `localization/de_DE-mailcode-server.ini` |
-| Storage index | `localization/storage.json` |

@@ -2,6 +2,7 @@
 
 > **Source of Truth for AI agent sessions.**
 > Generated: 2026-02-20
+> Last updated: 2026-06-03
 
 Mailcode is a PHP library that provides a backend-agnostic preprocessor command language for email templates. Authors write in a single verbose syntax, and the library translates it to target preprocessor languages (Apache Velocity, Hubspot HubL).
 
