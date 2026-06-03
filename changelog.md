@@ -2,6 +2,8 @@
 
 ## v3.7.2 - Command Escaping
 - Syntax: Added escaping whole commands with `\{command\}` syntax.
+- Docs: Improved (simplified) the README somewhat.
+- Docs: Updated manifest; Removed unnecessary file counts.
 
 ## v3.7.1 - HubL Date Fix
 - Velocity: Removed HubL exception triggered for Velocity-specific date formats.
