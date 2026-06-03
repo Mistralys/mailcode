@@ -36,7 +36,7 @@ final class CommentTests extends MailcodeTestCase
             array(
                 'label' => 'With special characters and tokens',
                 'string' => '{comment: haha: $FOOBAR \\}',
-                'normalized' => '{comment: haha: $FOOBAR \\}',
+                'normalized' => '{comment: haha: $FOOBAR }',
                 'valid' => true,
                 'code' => 0
             )

@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Mailcode;
 
 use AppUtils\OperationResult;
+use Mailcode\Parser\PreParser;
 
 /**
  * Pre-Processor: Handles commands that apply formatting
@@ -51,7 +52,7 @@ class Mailcode_PreProcessor
 
     public function render() : string
     {
-        $formatting = $this->safeguard->createFormatting($this->safeSubject);
+        $formatting = $this->safeguard->createFormatting(PreParser::unescapeBrackets($this->safeSubject));
         $formatting->makePartial();
         $formatting->addFormatter($formatting->createPreProcessing());
         $formatting->applyFormatting();

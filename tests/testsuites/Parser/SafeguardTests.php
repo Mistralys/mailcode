@@ -486,4 +486,151 @@ EOD;
 
         $this->addToAssertionCount(1);
     }
+
+    // -------------------------------------------------------------------------
+    // Escaped bracket tests
+    // -------------------------------------------------------------------------
+
+    /**
+     * Escaped brackets alongside a real command: after makeWhole() the
+     * backslashes must be removed and the command must be restored.
+     */
+    public function test_escapedBrackets_makeWhole(): void
+    {
+        $original = 'Hello \{CHECKSUM\} {showvar: $NAME}';
+
+        $safeguard = Mailcode::create()->createSafeguard($original);
+        $safe = $safeguard->makeSafe();
+
+        // The escaped sequence must not have been treated as a command.
+        $this->assertCount(1, $safeguard->getPlaceholdersCollection()->getAll());
+
+        $result = $safeguard->makeWhole($safe);
+
+        $this->assertStringContainsString('{CHECKSUM}', $result);
+        $this->assertStringContainsString('{showvar: $NAME}', $result);
+        $this->assertStringNotContainsString('\{', $result);
+    }
+
+    /**
+     * Escaped brackets only (no real commands): makeWholePartial() must
+     * unescape them.
+     */
+    public function test_escapedBrackets_makeWholePartial(): void
+    {
+        $original = 'Hello \{TOKEN\} world';
+
+        $safeguard = Mailcode::create()->createSafeguard($original);
+        $safe = $safeguard->makeSafePartial();
+
+        $result = $safeguard->makeWholePartial($safe);
+
+        $this->assertEquals('Hello {TOKEN} world', $result);
+    }
+
+    /**
+     * A template containing only escaped brackets must parse as a valid
+     * collection with zero commands.
+     */
+    public function test_escapedBrackets_collectionValid(): void
+    {
+        $original = '\{CHECKSUM\}';
+
+        $safeguard = Mailcode::create()->createSafeguard($original);
+
+        $this->assertTrue($safeguard->isValid());
+        $this->assertCount(0, $safeguard->getPlaceholdersCollection()->getAll());
+    }
+
+    /**
+     * Only the opening bracket is escaped: \{TOKEN} must not produce a
+     * command match and makeWholePartial() must output {TOKEN}.
+     */
+    public function test_escapedBrackets_halfEscapedOpening(): void
+    {
+        $original = '\{TOKEN}';
+
+        $safeguard = Mailcode::create()->createSafeguard($original);
+
+        $this->assertTrue($safeguard->isValid());
+        $this->assertCount(0, $safeguard->getPlaceholdersCollection()->getAll());
+
+        $safe = $safeguard->makeSafePartial();
+        $result = $safeguard->makeWholePartial($safe);
+
+        $this->assertStringContainsString('{TOKEN}', $result);
+    }
+
+    /**
+     * Only the closing bracket is escaped: {TOKEN\} must not produce a
+     * command match and makeWholePartial() must output {TOKEN}.
+     */
+    public function test_escapedBrackets_halfEscapedClosing(): void
+    {
+        $original = '{TOKEN\}';
+
+        $safeguard = Mailcode::create()->createSafeguard($original);
+
+        $this->assertTrue($safeguard->isValid());
+        $this->assertCount(0, $safeguard->getPlaceholdersCollection()->getAll());
+
+        $safe = $safeguard->makeSafePartial();
+        $result = $safeguard->makeWholePartial($safe);
+
+        $this->assertStringContainsString('{TOKEN}', $result);
+    }
+
+    /**
+     * An escaped real command name (\{if\}) must not be treated as a
+     * command; output must contain literal {if}.
+     */
+    public function test_escapedBrackets_realCommandName(): void
+    {
+        $original = '\{if\} {showvar: $X}';
+
+        $safeguard = Mailcode::create()->createSafeguard($original);
+        $safe = $safeguard->makeSafe();
+
+        $this->assertCount(1, $safeguard->getPlaceholdersCollection()->getAll());
+
+        $result = $safeguard->makeWhole($safe);
+
+        $this->assertStringContainsString('{if}', $result);
+        $this->assertStringContainsString('{showvar: $X}', $result);
+    }
+
+    /**
+     * Multiple escaped sequences in one string must all be unescaped.
+     */
+    public function test_escapedBrackets_multiple(): void
+    {
+        $original = '\{A\} text \{B\}';
+
+        $safeguard = Mailcode::create()->createSafeguard($original);
+
+        $this->assertTrue($safeguard->isValid());
+        $this->assertCount(0, $safeguard->getPlaceholdersCollection()->getAll());
+
+        $safe = $safeguard->makeSafePartial();
+        $result = $safeguard->makeWholePartial($safe);
+
+        $this->assertEquals('{A} text {B}', $result);
+    }
+
+    /**
+     * Empty escaped braces \{\} must produce {} in output.
+     */
+    public function test_escapedBrackets_empty(): void
+    {
+        $original = '\{\}';
+
+        $safeguard = Mailcode::create()->createSafeguard($original);
+
+        $this->assertTrue($safeguard->isValid());
+
+        $safe = $safeguard->makeSafePartial();
+        $result = $safeguard->makeWholePartial($safe);
+
+        $this->assertEquals('{}', $result);
+    }
 }

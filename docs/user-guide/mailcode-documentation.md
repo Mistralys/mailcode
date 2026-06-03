@@ -52,6 +52,26 @@ To use curly braces in a document, or in string literals, they can be escaped:
 {end}
 ```
 
+#### Escaping template-level curly braces
+
+Sometimes a template contains `{...}` sequences that are **not** Mailcode commands — for example, a checksum token or a placeholder used by another templating system:
+
+```
+Your tracking token: \{CHECKSUM\}
+Hello {showvar: $CUSTOMER.NAME}
+```
+
+The escaped brackets are completely invisible to the Mailcode parser. The final output will contain the literal braces with the backslashes removed:
+
+```
+Your tracking token: {CHECKSUM}
+Hello John
+```
+
+Both the opening and closing brace must be escaped for the sequence to be treated as literal text. Escaping only one side (e.g., `\{TOKEN}` or `{TOKEN\}`) also prevents the sequence from being matched as a command, and the escaped bracket will likewise be unescaped in the output.
+
+> **Known limitation:** Double-escaping to produce a literal backslash-brace pair (`\\{`) in output is not supported. `\\{` is currently treated as a literal backslash followed by an escape sequence, producing `{` in output.
+
 ## Inserting variable values
 
 Variables are inserted using the `showvar` command:

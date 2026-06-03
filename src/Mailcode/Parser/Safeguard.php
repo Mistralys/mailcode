@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Mailcode;
 
+use Mailcode\Parser\PreParser;
+
 /**
  * Command safeguarder: used to replace the mailcode commands
  * in a string with placeholders, to allow safe text transformation
@@ -294,7 +296,7 @@ class Mailcode_Parser_Safeguard
             $this->requireValidCollection();
         }
         
-        $formatting = $this->createFormatting($string);
+        $formatting = $this->createFormatting(PreParser::unescapeBrackets($string));
 
         if($partial)
         {

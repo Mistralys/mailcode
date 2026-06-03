@@ -104,8 +104,33 @@ All 17 translation classes in `src/Mailcode/Translator/Syntax/HubL/`:
 
 - Parameters are parsed left-to-right by the tokenizer.
 - String literals must use **double quotes** (`"`). Single quotes are not supported.
-- Special characters in strings: escape double quotes with `\"`, escape curly braces with `\{` and `\}`.
+- Special characters in strings: escape double quotes with `\"`, escape curly braces with `\{` and `\}`. Note: `\{`/`\}` inside command parameters are handled by the `SpecialChars` tokenizer; the same escape syntax also works at the **template level** (outside commands) — see "Template-Level Bracket Escaping" below.
 - Keywords (flags) are appended with a colon suffix: `insensitive:`, `regex:`, `urlencode:`, etc.
+
+## Template-Level Bracket Escaping
+
+A user may need to include `{...}` sequences in template text that are **not** Mailcode commands (e.g., a checksum placeholder `{CHECKSUM}` used by a downstream system). Prefix both brackets with a backslash to mark them as escaped:
+
+```
+\{CHECKSUM\} {showvar: $NAME}
+```
+
+The final output of any consumer pipeline (`makeWhole()`, `translateSafeguard()`, `PreProcessor::render()`) will strip the backslashes, producing:
+
+```
+{CHECKSUM} <restored-or-translated-command>
+```
+
+**How it works (pipeline):**
+1. `StringPreProcessor::encodeBrackets()` converts `\{` → `__BRACKET_OPEN__` and `\}` → `__BRACKET_CLOSE__` before the parser regex runs, so escaped sequences are never mistaken for commands.
+2. The safe string (after `makeSafe()` / `makeSafePartial()`) still contains the raw `\{`/`\}` sequences in the template-level text (all commands have already been replaced by numeric placeholders at this point).
+3. At the output boundary of each consumer (`restore()` in `Safeguard`, `translateSafeguard()` in `BaseSyntax`, `render()` in `PreProcessor`), `PreParser::unescapeBrackets()` is called on the safe string **before** placeholder restoration. Because all commands are still placeholders at that point, only template-level escape sequences are unescaped — bracket escapes inside command parameters are untouched.
+
+**Key rules:**
+- Only template-level `\{`/`\}` sequences (outside of detected/parsed commands) are unescaped.
+- `\{` and `\}` inside a **parsed** command's parameters are decoded by the tokenizer (`SpecialChars`) and are not affected by the output-boundary unescape step.
+- A `\{` or `\}` that appears in text that **looks like but fails to parse as** a command (e.g., `{comment: data \}` where the `\}` eats the closing brace) will be unescaped in the output. This is intentional: from the library's perspective, the text is template-level content.
+- **Double-escape** (`\\{`) to produce a literal `\{` in output is **not supported** in this version.
 
 ## Date Translation Constraints
 

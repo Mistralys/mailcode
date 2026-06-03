@@ -36,8 +36,11 @@ User calls $safeguard->makeSafe()
 User processes the safe string freely (HTML filtering, encoding, etc.)
 
 User calls $safeguard->makeWhole($safeString)
+  → PreParser::unescapeBrackets() applied to $safeString first
+    → \\{ and \\} in template-level text are converted to { and }
+    → (Commands are still placeholders at this point, so their content is unaffected)
   → Placeholders replaced back with original command text
-  → Returns restored string with commands intact
+  → Returns restored string with commands intact and escaped brackets unescaped
 ```
 
 ## 3. Translate Commands to Target Syntax

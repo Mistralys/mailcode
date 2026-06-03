@@ -12,6 +12,7 @@ use Mailcode\Mailcode_Commands_Command;
 use Mailcode\Mailcode_Exception;
 use Mailcode\Mailcode_Parser_Safeguard;
 use Mailcode\Mailcode_Translator_Exception;
+use Mailcode\Parser\PreParser;
 use Mailcode\Translator\Syntax\ApacheVelocitySyntax;
 
 /**
@@ -113,8 +114,10 @@ abstract class BaseSyntax implements SyntaxInterface
         
         if(!$safeguard->hasPlaceholders())
         {
-            return $subject;
+            return PreParser::unescapeBrackets($subject);
         }
+        
+        $subject = PreParser::unescapeBrackets($subject);
         
         $placeholders = $safeguard->getPlaceholdersCollection()->getAll();
         
