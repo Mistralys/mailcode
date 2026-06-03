@@ -15,6 +15,10 @@ docs/phpdoc/phpDocumentor.phar
 composer.phar
 tests/phpstan/result.txt
 tests/cache/*.php
-docs/**/work/
-docs/**/work.md
 .phpunit.cache/test-results
+
+# Ledger temporary files
+/docs/agents/**/work/
+/docs/agents/**/work.md
+/docs/agents/**/audit.md
+/docs/agents/**/design-review.md
